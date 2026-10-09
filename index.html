@@ -1003,3 +1003,20 @@ setInterval(()=>{
 </script>
 </body>
   </html>
+$("adminLogin").onclick = () => {
+  const password = prompt("رمز مدیر AM TV:");
+  if (password === null) return;
+
+  if (password !== ADMIN_PASSWORD) {
+    toast("رمز اشتباه است.");
+    return;
+  }
+
+  setAdmin(true);
+  toast("ورود مدیر موفق بود.");
+};
+
+$("adminLogout").onclick = () => {
+  setAdmin(false);
+  toast("از مدیریت خارج شدی.");
+};
