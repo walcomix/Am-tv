@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101710">
 <title>AM TV 24/7</title>
 
@@ -89,7 +88,7 @@ main {max-width:1050px;margin:auto;padding:20px}
   gap:8px;padding:12px;background:#111a12;
 }
 .status {font-size:12px;color:var(--muted);padding:12px 2px}
-#message {color:var(--gold)}
+#message {color:var(--gold);overflow-wrap:anywhere}
 footer {
   text-align:center;padding:25px;color:var(--muted);
   font-size:11px;letter-spacing:1px;
@@ -121,14 +120,18 @@ body.admin-mode #adminPanel {display:block}
 .admin-item .item-name {flex:1;min-width:130px;font-size:12px}
 .admin-item button {padding:7px;font-size:11px}
 #loginBox {
-  display:none;margin:15px auto;max-width:400px;
-  padding:16px;background:var(--panel);border-radius:12px;
+  display:none;margin:15px auto;max-width:420px;
+  padding:16px;background:var(--panel);
+  border:1px solid var(--border);border-radius:12px;
 }
 #loginBox.open {display:block}
 #loginBox input {margin:5px 0 10px}
 .notice {
   color:var(--muted);font-size:11px;line-height:1.8;margin-top:10px;
 }
+.error {color:#ff9d8a}
+.success {color:#a8d69c}
+[hidden] {display:none!important}
 @media(max-width:600px) {
   header {padding:12px}
   main {padding:12px}
@@ -155,7 +158,6 @@ body.admin-mode #adminPanel {display:block}
 </header>
 
 <main>
-  <!-- نمای عمومی: بدون فایل‌ها، لیست پخش یا Schedule -->
   <section class="screen">
     <div class="screen-top">
       <strong id="channelName">AM TV 24/7</strong>
@@ -176,18 +178,19 @@ body.admin-mode #adminPanel {display:block}
         <h2 id="nowTitle">در انتظار برنامه</h2>
         <div class="small" id="nowInfo">AM TV 24/7</div>
       </div>
-      <div class="small" id="liveStatus">اتصال در حال بررسی...</div>
+      <div class="small" id="liveStatus">آماده</div>
     </div>
 
     <div class="controls">
-      <button class="secondary" id="soundBtn">صدا روشن / خاموش</button>
+      <button class="secondary" id="soundBtn">روشن‌کردن صدا</button>
       <button class="secondary" id="syncBtn">همگام‌سازی</button>
     </div>
   </section>
 
-  <div class="status" id="message">در حال اتصال به تلویزیون...</div>
+  <div class="status" id="message" role="status">
+    برای شروع، تنظیمات اتصال را بررسی کن.
+  </div>
 
-  <!-- پنل مدیریت فقط بعد از ورود مدیر ظاهر می‌شود -->
   <section id="adminPanel">
     <div class="admin-heading">
       <h2>پنل مدیریت AM TV</h2>
@@ -198,16 +201,17 @@ body.admin-mode #adminPanel {display:block}
       <div class="field wide">
         <label for="stationInput">نام تلویزیون</label>
         <input id="stationInput" maxlength="50" value="AM TV 24/7">
+        <button id="saveNameBtn">ذخیرهٔ نام تلویزیون</button>
       </div>
 
       <div class="field wide">
-        <label for="channelSelect">شبکهٔ انتخاب‌شده</label>
+        <label for="channelSelect">انتخاب شبکه</label>
         <select id="channelSelect"></select>
       </div>
 
       <div class="field">
         <label for="newChannel">نام شبکهٔ جدید</label>
-        <input id="newChannel" maxlength="50" placeholder="مثلاً AM Nostalgia">
+        <input id="newChannel" maxlength="50" placeholder="AM Nostalgia">
       </div>
       <div class="field">
         <label>&nbsp;</label>
@@ -218,41 +222,40 @@ body.admin-mode #adminPanel {display:block}
         <label for="videoUrl">لینک ویدیوی یوتیوب</label>
         <input id="videoUrl" placeholder="https://youtu.be/..." inputmode="url">
       </div>
+
       <div class="field wide">
-        <label for="videoTitle">نام برنامه (اختیاری)</label>
+        <label for="videoTitle">نام برنامه</label>
         <input id="videoTitle" maxlength="120" placeholder="نام برنامه">
-      </div>
-      <div class="field wide">
-        <button id="addVideoBtn">افزودن برنامه به پلی‌لیست</button>
+        <button id="addVideoBtn">افزودن به پلی‌لیست</button>
       </div>
 
       <div class="field wide">
-        <label for="localFiles">پخش فایل محلی این دستگاه</label>
-        <input id="localFiles" type="file" accept="video/*" multiple>
-        <div class="notice">
-          فایل‌های محلی فقط روی همین دستگاه قابل استفاده‌اند؛
-          برای پخش مشترک از لینک قابل‌دسترسی آنلاین استفاده کن.
-        </div>
-      </div>
-
-      <div class="field wide">
-        <label for="startIndex">شروع پخش از برنامهٔ شماره</label>
+        <label for="startIndex">شمارهٔ برنامه برای شروع پخش</label>
         <input id="startIndex" type="number" min="1" value="1">
-        <button id="startBtn">شروع برنامهٔ انتخاب‌شده برای همه</button>
+        <button id="startBtn">پخش برای همهٔ بیننده‌ها</button>
       </div>
 
       <div class="field wide">
-        <button class="secondary" id="saveNameBtn">ذخیرهٔ نام تلویزیون</button>
-        <button class="secondary" id="exportBtn">خروجی پشتیبان JSON</button>
-        <button class="secondary" id="importBtn">واردکردن JSON</button>
-        <input type="file" id="importFile" accept=".json,application/json" hidden>
+        <label for="localFiles">انتخاب فایل ویدیویی محلی</label>
+        <input id="localFiles" type="file" accept="video/*" multiple>
+        <p class="notice">
+          فایل محلی فقط روی همین دستگاه است و به بیننده‌های دیگر منتقل نمی‌شود.
+          برای پخش مشترک از لینک یوتیوب استفاده کن.
+        </p>
+      </div>
+
+      <div class="field wide">
+        <div class="actions">
+          <button class="secondary" id="exportBtn">پشتیبان JSON</button>
+          <button class="secondary" id="importBtn">واردکردن JSON</button>
+          <input id="importFile" type="file" accept=".json,application/json" hidden>
+        </div>
       </div>
     </div>
 
-    <h3>مدیریت پلی‌لیست این شبکه</h3>
+    <h3>پلی‌لیست مدیر</h3>
     <div class="notice">
-      این فهرست فقط برای مدیر قابل مشاهده است.
-      تغییرات آنلاین پس از ذخیره به سایر بیننده‌ها منتقل می‌شود.
+      این بخش برای بیننده‌ها نمایش داده نمی‌شود.
     </div>
     <div id="adminPlaylist"></div>
   </section>
@@ -264,20 +267,27 @@ body.admin-mode #adminPanel {display:block}
   <section id="loginBox">
     <h3>ورود مدیر AM TV</h3>
     <form id="loginForm">
-      <label for="email">ایمیل مدیر</label>
-      <input id="email" type="email" autocomplete="username" required>
-      <label for="password">رمز عبور</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-      <button type="submit">ورود</button>
-      <button type="button" class="secondary" id="cancelLogin">لغو</button>
+      <div class="field">
+        <label for="email">ایمیل حساب مدیر</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">رمز عبور حساب</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="actions">
+        <button id="loginBtn" type="submit">ورود</button>
+        <button type="button" class="secondary" id="cancelLogin">لغو</button>
+      </div>
     </form>
-    <p class="notice">ورود مدیر به حساب Supabase نیاز دارد.</p>
+    <p class="notice">
+      از ایمیل و رمز عبور حساب Supabase استفاده کن.
+      رمز جداگانه‌ای در این صفحه تعریف نشده است.
+    </p>
   </section>
 </main>
 
-<footer>
-  AM TV 24/7 · INDEPENDENT RETRO BROADCAST
-</footer>
+<footer>AM TV 24/7 · YOUR WORLD · YOUR CHANNEL</footer>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -286,7 +296,11 @@ body.admin-mode #adminPanel {display:block}
 (() => {
   "use strict";
 
-  // اطلاعات پروژه Supabase را اینجا وارد کن.
+  /*
+    این دو مقدار را از Supabase Dashboard بگیر:
+    Project Settings > API
+    از Publishable key یا anon key استفاده کن؛ هرگز service_role را نگذار.
+  */
   const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
   const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
@@ -298,28 +312,31 @@ body.admin-mode #adminPanel {display:block}
 
   let db = null;
   let session = null;
-  let state = {
-    stationName: "AM TV 24/7",
-    channels: [{ id: "main", name: "AM TV 24/7", color: "#e8b85b", list: [] }],
-    channelIndex: 0,
-    playback: { index: 0, startedAt: 0, nonce: 0 }
-  };
-
+  let busy = false;
   let player = null;
   let playerReady = false;
   let currentVideoId = "";
   let currentPlaybackKey = "";
-  let lastSyncAt = 0;
+  let lastSeekCheck = 0;
   let muted = true;
-  let localUrls = [];
-  let busy = false;
 
-  const validConfig =
+  let state = {
+    stationName: "AM TV 24/7",
+    channels: [
+      {id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}
+    ],
+    channelIndex:0,
+    playback:{index:0,startedAt:0,nonce:0}
+  };
+
+  const configured = () =>
+    window.supabase &&
     /^https:\/\/[a-zA-Z0-9.-]+$/.test(SUPABASE_URL) &&
     SUPABASE_PUBLISHABLE_KEY !== "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
-  function say(text) {
-    $("message").textContent = text;
+  function say(message, error = false) {
+    $("message").textContent = message;
+    $("message").className = "status" + (error ? " error" : "");
   }
 
   function isAdmin() {
@@ -327,69 +344,42 @@ body.admin-mode #adminPanel {display:block}
       session.user?.app_metadata?.role === "admin";
   }
 
-  function selectedChannel() {
+  function channel() {
     return state.channels[state.channelIndex] || state.channels[0];
   }
 
-  function playlist() {
-    return selectedChannel()?.list || [];
+  function list() {
+    return channel()?.list || [];
   }
 
   function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, ch => ({
-      "&":"&amp;", "<":"&lt;", ">":"&gt;",
-      '"':"&quot;", "'":"&#39;"
-    })[ch]);
-  }
-
-  function parseYoutubeId(input) {
-    try {
-      const url = new URL(input.trim());
-      const host = url.hostname.replace(/^www\./, "").toLowerCase();
-
-      if (host === "youtu.be") {
-        return url.pathname.split("/").filter(Boolean)[0] || null;
-      }
-
-      if (!["youtube.com", "m.youtube.com", "music.youtube.com"]
-        .includes(host)) return null;
-
-      if (url.pathname === "/watch") return url.searchParams.get("v");
-
-      const parts = url.pathname.split("/").filter(Boolean);
-      if (["embed", "shorts", "live", "v"].includes(parts[0])) {
-        return parts[1] || null;
-      }
-      return null;
-    } catch {
-      return null;
-    }
+    return String(value ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    })[c]);
   }
 
   function normalizeState(raw) {
     if (!raw || typeof raw !== "object") return null;
 
-    const channels = Array.isArray(raw.channels)
-      ? raw.channels.filter(ch => ch && Array.isArray(ch.list)).map((ch, i) => ({
-          id: String(ch.id || `channel-${i}`),
-          name: String(ch.name || `شبکه ${i + 1}`).slice(0, 50),
-          color: String(ch.color || "#e8b85b"),
-          list: ch.list.filter(v =>
+    let channels = Array.isArray(raw.channels)
+      ? raw.channels.filter(c => c && Array.isArray(c.list)).map((c, i) => ({
+          id: String(c.id || "channel-" + i),
+          name: String(c.name || "شبکه " + (i + 1)).slice(0, 50),
+          color: String(c.color || "#e8b85b"),
+          list: c.list.filter(v =>
             v && typeof v === "object" &&
-            (v.type === "local" || typeof v.id === "string")
+            typeof v.id === "string" &&
+            (v.type === "youtube" || v.type === "local")
           ).map(v => ({
-            id: String(v.id || ""),
-            type: v.type === "local" ? "local" : "youtube",
+            id: v.id,
+            type: v.type,
             title: String(v.title || "برنامه").slice(0, 120)
           }))
         }))
       : [];
 
     if (!channels.length) {
-      channels.push({
-        id: "main", name: "AM TV 24/7",
-        color: "#e8b85b", list: []
-      });
+      channels = [{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}];
     }
 
     const ci = Number.isInteger(raw.channelIndex) ? raw.channelIndex : 0;
@@ -407,11 +397,37 @@ body.admin-mode #adminPanel {display:block}
     };
   }
 
-  async function apiFetch(path, options = {}) {
+  function parseYoutubeId(input) {
+    try {
+      const u = new URL(input.trim());
+      const host = u.hostname.replace(/^www\./, "").toLowerCase();
+
+      if (host === "youtu.be") {
+        return u.pathname.split("/").filter(Boolean)[0] || null;
+      }
+
+      if (![
+        "youtube.com","m.youtube.com","music.youtube.com"
+      ].includes(host)) return null;
+
+      if (u.pathname === "/watch") return u.searchParams.get("v");
+
+      const parts = u.pathname.split("/").filter(Boolean);
+      if (["embed","shorts","live","v"].includes(parts[0])) {
+        return parts[1] || null;
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function request(path, options = {}) {
     if (!db) throw new Error("اتصال Supabase تنظیم نشده است.");
 
-    const { data: { session: activeSession } } = await db.auth.getSession();
-    const token = activeSession?.access_token || SUPABASE_PUBLISHABLE_KEY;
+    const {data:{session:active}} = await db.auth.getSession();
+    const token = active?.access_token || SUPABASE_PUBLISHABLE_KEY;
 
     const response = await fetch(SUPABASE_URL + path, {
       ...options,
@@ -426,7 +442,9 @@ body.admin-mode #adminPanel {display:block}
 
     if (!response.ok) {
       const detail = await response.text();
-      throw new Error(`Supabase ${response.status}: ${detail.slice(0, 220)}`);
+      throw new Error(
+        "خطای دیتابیس " + response.status + ": " + detail.slice(0, 180)
+      );
     }
 
     if (response.status === 204) return null;
@@ -434,12 +452,14 @@ body.admin-mode #adminPanel {display:block}
   }
 
   async function loadState() {
-    const rows = await apiFetch(
-      `/rest/v1/${TABLE}?id=eq.${ROW_ID}&select=data`
+    const rows = await request(
+      "/rest/v1/" + TABLE + "?id=eq." + ROW_ID + "&select=data"
     );
 
-    if (!rows || !rows.length) {
-      throw new Error("ردیف AM TV در دیتابیس وجود ندارد. SQL را اجرا کن.");
+    if (!Array.isArray(rows) || !rows.length) {
+      throw new Error(
+        "ردیف AM TV پیدا نشد؛ کد SQL را در Supabase اجرا کن."
+      );
     }
 
     const normalized = normalizeState(rows[0].data);
@@ -447,63 +467,122 @@ body.admin-mode #adminPanel {display:block}
   }
 
   async function saveState() {
-    if (!isAdmin()) throw new Error("فقط مدیر می‌تواند تغییرات را ذخیره کند.");
+    if (!isAdmin()) {
+      throw new Error("فقط مدیر اجازهٔ تغییر اطلاعات را دارد.");
+    }
 
-    const payload = {
-      data: state,
-      updated_at: new Date().toISOString()
-    };
-
-    await apiFetch(
-      `/rest/v1/${TABLE}?id=eq.${ROW_ID}`,
+    await request(
+      "/rest/v1/" + TABLE + "?id=eq." + ROW_ID,
       {
-        method: "PATCH",
-        headers: { "Prefer": "return=minimal" },
-        body: JSON.stringify(payload)
+        method:"PATCH",
+        headers:{"Prefer":"return=minimal"},
+        body:JSON.stringify({
+          data:state,
+          updated_at:new Date().toISOString()
+        })
       }
     );
 
-    say("تغییرات ذخیره و برای بیننده‌ها منتشر شد.");
-    renderAdmin();
+    say("تغییرات با موفقیت ذخیره شد.");
+  }
+
+  function currentVideo() {
+    const videos = list();
+    if (!videos.length) return null;
+    return videos[Math.min(state.playback.index, videos.length - 1)] || null;
+  }
+
+  function keyFor(video) {
+    return [
+      channel()?.id,
+      state.playback.index,
+      video?.id || "",
+      state.playback.startedAt,
+      state.playback.nonce
+    ].join("|");
+  }
+
+  function renderPublic() {
+    $("stationBrand").textContent = state.stationName;
+    $("channelName").textContent = channel()?.name || state.stationName;
+
+    const video = currentVideo();
+    $("nowTitle").textContent = video?.title || "در انتظار برنامه";
+    $("nowInfo").textContent = channel()?.name || state.stationName;
+    $("liveStatus").textContent = video ? "برنامهٔ آنلاین" : "در انتظار مدیر";
+  }
+
+  function renderAdmin() {
+    if (!isAdmin()) return;
+
+    $("stationInput").value = state.stationName;
+
+    $("channelSelect").innerHTML = state.channels.map((c, i) =>
+      `<option value="${i}">${escapeHtml(c.name)}</option>`
+    ).join("");
+
+    $("channelSelect").value = String(state.channelIndex);
+
+    $("adminPlaylist").innerHTML = list().length
+      ? list().map((v, i) => `
+        <div class="admin-item">
+          <span class="item-name">${i + 1}. ${escapeHtml(v.title)}</span>
+          <button class="secondary" data-up="${i}" ${i===0?"disabled":""}>↑</button>
+          <button class="secondary" data-down="${i}" ${i===list().length-1?"disabled":""}>↓</button>
+          <button class="secondary" data-play="${i}">پخش</button>
+          <button class="danger" data-delete="${i}">حذف</button>
+        </div>
+      `).join("")
+      : "<p class='small'>پلی‌لیست خالی است.</p>";
+  }
+
+  function setAdminView(enabled) {
+    document.body.classList.toggle("admin-mode", enabled);
+    $("adminEntryBtn").hidden = enabled;
+    $("loginBox").classList.remove("open");
+
+    if (enabled) {
+      renderAdmin();
+    } else {
+      $("adminPlaylist").innerHTML = "";
+    }
   }
 
   function playerError(event) {
-    const codes = {
-      2: "لینک یا شناسهٔ ویدیو معتبر نیست.",
-      5: "این ویدیو در پلیر HTML5 پخش نشد.",
-      100: "ویدیو پیدا نشد یا حذف شده است.",
-      101: "صاحب ویدیو پخش در سایت‌های دیگر را مجاز نکرده است.",
-      150: "صاحب ویدیو پخش در سایت‌های دیگر را مجاز نکرده است.",
-      153: "خطای شناسایی درخواست پخش؛ مرورگر یا تنظیمات پخش را بررسی کن."
+    const errors = {
+      2:"شناسهٔ ویدیو نامعتبر است.",
+      5:"ویدیو قابل پخش نیست.",
+      100:"ویدیو حذف شده یا در دسترس نیست.",
+      101:"این ویدیو اجازهٔ پخش تعبیه‌شده ندارد.",
+      150:"این ویدیو اجازهٔ پخش تعبیه‌شده ندارد.",
+      153:"خطای ۱۵۳ یوتیوب؛ درخواست پخش شناسایی نشد."
     };
-    say(codes[event.data] || "خطای پخش یوتیوب: " + event.data);
+    say(errors[event.data] || "خطای پخش: " + event.data, true);
   }
 
-  window.onYouTubeIframeAPIReady = function() {
-    createPlayer();
-  };
+  window.onYouTubeIframeAPIReady = createPlayer;
 
   function createPlayer() {
-    if (!window.YT || !YT.Player || player) return;
+    if (!window.YT?.Player || player) return;
 
     player = new YT.Player("player", {
-      width: "100%",
-      height: "100%",
-      videoId: "",
-      playerVars: {
-        autoplay: 0,
-        controls: 1,
-        rel: 0,
-        playsinline: 1,
-        iv_load_policy: 3
+      width:"100%",
+      height:"100%",
+      videoId:"",
+      playerVars:{
+        autoplay:0,
+        controls:1,
+        rel:0,
+        playsinline:1,
+        enablejsapi:1
       },
-      events: {
-        onReady: () => {
+      events:{
+        onReady:() => {
           playerReady = true;
-          applyState();
+          applyPlayback(true);
         },
-        onError: playerError,
-        onStateChange: event => {
+        onError:playerError,
+        onStateChange:event => {
           if (event.data === YT.PlayerState.PLAYING) {
             $("empty").style.display = "none";
           }
@@ -512,170 +591,126 @@ body.admin-mode #adminPanel {display:block}
     });
   }
 
-  function currentVideo() {
-    const list = playlist();
-    if (!list.length) return null;
-    const index = Math.min(state.playback.index, list.length - 1);
-    return list[index] || null;
-  }
-
-  function playbackKey(video) {
-    return [
-      selectedChannel()?.id,
-      state.playback.index,
-      video?.id,
-      state.playback.startedAt,
-      state.playback.nonce
-    ].join(":");
-  }
-
-  function applyState(force = false) {
-    $("stationBrand").textContent = state.stationName;
-    $("channelName").textContent = selectedChannel()?.name || "AM TV";
-    $("nowTitle").textContent = "در انتظار برنامه";
-    $("nowInfo").textContent = state.stationName;
+  function applyPlayback(force = false) {
+    renderPublic();
 
     const video = currentVideo();
+
     if (!video) {
       $("empty").style.display = "grid";
-      $("nowTitle").textContent = "هنوز برنامه‌ای اضافه نشده";
-      $("liveStatus").textContent = "در انتظار مدیر";
-      if (playerReady && player?.stopVideo) player.stopVideo();
+      $("empty").innerHTML =
+        "<strong>AM TV</strong><span>YOUR WORLD · YOUR CHANNEL</span><p>در انتظار برنامهٔ پخش...</p>";
+
+      if (playerReady) player.stopVideo();
+
       currentVideoId = "";
       currentPlaybackKey = "";
       return;
     }
 
-    $("nowTitle").textContent = video.title;
-    $("nowInfo").textContent = selectedChannel().name;
-
-    if (video.type === "local") {
-      $("liveStatus").textContent = "فایل محلی مدیر";
+    if (video.type !== "youtube") {
       $("empty").style.display = "grid";
       $("empty").innerHTML =
-        "<strong>AM TV</strong><span>فایل محلی فقط روی دستگاه مدیر است.</span>";
+        "<strong>AM TV</strong><span>این فایل محلی روی دستگاه مدیر قرار دارد.</span>";
       return;
     }
 
-    $("liveStatus").textContent = "برنامهٔ آنلاین";
-    const id = video.id;
-    const key = playbackKey(video);
+    const nextKey = keyFor(video);
 
     if (!playerReady || !player) {
-      currentVideoId = id;
-      currentPlaybackKey = key;
+      currentVideoId = video.id;
+      currentPlaybackKey = nextKey;
       return;
     }
 
-    if (!force && key === currentPlaybackKey && id === currentVideoId) {
-      correctPlaybackTime();
+    if (!force && currentVideoId === video.id &&
+        currentPlaybackKey === nextKey) {
+      correctTime();
       return;
     }
 
-    currentVideoId = id;
-    currentPlaybackKey = key;
+    currentVideoId = video.id;
+    currentPlaybackKey = nextKey;
 
-    $("empty").style.display = "grid";
-    const startedAt = state.playback.startedAt;
-    const elapsed = startedAt > 0
-      ? Math.max(0, (Date.now() - startedAt) / 1000)
+    const seconds = state.playback.startedAt
+      ? Math.max(0, (Date.now() - state.playback.startedAt) / 1000)
       : 0;
 
     try {
       player.loadVideoById({
-        videoId: id,
-        startSeconds: elapsed
+        videoId:video.id,
+        startSeconds:seconds
       });
       player.mute();
       muted = true;
       $("soundBtn").textContent = "روشن‌کردن صدا";
-      lastSyncAt = Date.now();
+      $("empty").style.display = "grid";
     } catch (error) {
-      say("شروع پخش ناموفق بود: " + error.message);
+      say("پخش شروع نشد: " + error.message, true);
     }
   }
 
-  function correctPlaybackTime() {
+  function correctTime() {
     if (!playerReady || !player || !currentVideoId) return;
-    if (Date.now() - lastSyncAt < 15000) return;
+    if (Date.now() - lastSeekCheck < 15000) return;
 
-    lastSyncAt = Date.now();
+    lastSeekCheck = Date.now();
 
     try {
       const desired = Math.max(
         0, (Date.now() - state.playback.startedAt) / 1000
       );
       const actual = player.getCurrentTime();
-      if (Math.abs(desired - actual) > 4) {
+
+      if (Math.abs(desired - actual) > 5) {
         player.seekTo(desired, true);
       }
     } catch {}
   }
 
-  async function refreshState() {
-    if (busy || !db) return;
+  async function refresh() {
+    if (!db || busy) return;
     busy = true;
+
     try {
-      const oldKey = playbackKey(currentVideo());
+      const before = keyFor(currentVideo());
       await loadState();
-      const newKey = playbackKey(currentVideo());
+      const after = keyFor(currentVideo());
+
       renderPublic();
-      if (oldKey !== newKey) applyState(true);
-      else applyState();
-      $("liveStatus").textContent = "متصل · همگام‌سازی آنلاین";
+
+      if (before !== after) applyPlayback(true);
+      else applyPlayback();
+
+      $("liveStatus").textContent = "اتصال برقرار است";
     } catch (error) {
-      $("liveStatus").textContent = "اتصال قطع شده";
-      say(error.message);
+      $("liveStatus").textContent = "اتصال ناموفق";
+      say(error.message, true);
     } finally {
       busy = false;
     }
   }
 
-  function renderPublic() {
-    $("stationBrand").textContent = state.stationName;
-    $("channelName").textContent = selectedChannel()?.name || "AM TV";
-    const video = currentVideo();
-    $("nowTitle").textContent = video?.title || "در انتظار برنامه";
-    $("nowInfo").textContent = selectedChannel()?.name || state.stationName;
-  }
-
-  function renderAdmin() {
-    if (!isAdmin()) return;
-
-    $("stationInput").value = state.stationName;
-    $("channelSelect").innerHTML = state.channels.map((ch, i) =>
-      `<option value="${i}">${escapeHtml(ch.name)}</option>`
-    ).join("");
-    $("channelSelect").value = String(state.channelIndex);
-
-    const list = playlist();
-    $("adminPlaylist").innerHTML = list.length ? list.map((video, i) => `
-      <div class="admin-item">
-        <span class="item-name">${i + 1}. ${escapeHtml(video.title)}</span>
-        <button class="secondary" data-move-up="${i}" ${i === 0 ? "disabled" : ""}>↑</button>
-        <button class="secondary" data-move-down="${i}" ${i === list.length - 1 ? "disabled" : ""}>↓</button>
-        <button class="secondary" data-play="${i}">پخش</button>
-        <button class="danger" data-delete="${i}">حذف</button>
-      </div>
-    `).join("") : "<p class='small'>این پلی‌لیست خالی است.</p>";
-  }
-
-  async function adminAction(action) {
+  async function adminAction(callback) {
     if (!isAdmin()) {
-      say("برای این کار باید مدیر وارد شده باشد.");
+      say("ابتدا با حساب مدیر وارد شو.", true);
       return;
     }
+
     try {
-      await action();
+      await callback();
       renderPublic();
       renderAdmin();
     } catch (error) {
-      say(error.message || "عملیات ناموفق بود.");
+      say(error.message || "عملیات ناموفق بود.", true);
     }
   }
 
   $("adminEntryBtn").addEventListener("click", () => {
     $("loginBox").classList.toggle("open");
+    if ($("loginBox").classList.contains("open")) {
+      $("email").focus();
+    }
   });
 
   $("cancelLogin").addEventListener("click", () => {
@@ -684,70 +719,71 @@ body.admin-mode #adminPanel {display:block}
 
   $("loginForm").addEventListener("submit", async event => {
     event.preventDefault();
-    if (!db) return say("ابتدا تنظیمات Supabase را وارد کن.");
+
+    if (!db) {
+      say("اتصال Supabase تنظیم نشده است.", true);
+      return;
+    }
+
+    const button = $("loginBtn");
+    button.disabled = true;
+    button.textContent = "در حال ورود...";
 
     try {
-      const { data, error } = await db.auth.signInWithPassword({
-        email: $("email").value.trim(),
-        password: $("password").value
+      const {data, error} = await db.auth.signInWithPassword({
+        email:$("email").value.trim(),
+        password:$("password").value
       });
+
       if (error) throw error;
 
       session = data.session;
+
       if (!isAdmin()) {
         await db.auth.signOut();
         session = null;
-        throw new Error("این حساب دسترسی مدیر AM TV را ندارد.");
+        throw new Error(
+          "این حساب نقش admin ندارد. نقش را در App Metadata حساب مدیر تنظیم کن."
+        );
       }
 
-      document.body.classList.add("admin-mode");
-      $("loginBox").classList.remove("open");
-      $("adminEntryBtn").style.display = "none";
-      renderAdmin();
-      say("ورود مدیر موفق بود.");
+      setAdminView(true);
+      say("با موفقیت وارد پنل مدیریت شدی.");
     } catch (error) {
-      say("ورود ناموفق: " + error.message);
+      setAdminView(false);
+      say("ورود ناموفق: " + error.message, true);
+    } finally {
+      button.disabled = false;
+      button.textContent = "ورود";
     }
   });
 
   $("logoutBtn").addEventListener("click", async () => {
-    if (db) await db.auth.signOut();
+    try {
+      if (db) {
+        const {error} = await db.auth.signOut();
+        if (error) throw error;
+      }
+    } catch (error) {
+      say("خروج ناموفق: " + error.message, true);
+      return;
+    }
+
     session = null;
-    document.body.classList.remove("admin-mode");
-    $("adminEntryBtn").style.display = "";
+    setAdminView(false);
     say("از پنل مدیریت خارج شدی.");
   });
-
-  if (window.supabase && validConfig) {
-    db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
-    );
-
-    db.auth.onAuthStateChange((_event, activeSession) => {
-      session = activeSession;
-      if (isAdmin()) {
-        document.body.classList.add("admin-mode");
-        $("adminEntryBtn").style.display = "none";
-        setTimeout(renderAdmin, 0);
-      } else {
-        document.body.classList.remove("admin-mode");
-        $("adminEntryBtn").style.display = "";
-      }
-    });
-
-    refreshState();
-    setInterval(refreshState, POLL_MS);
-  } else {
-    say("برای فعال‌شدن تلویزیون آنلاین، اطلاعات Supabase را در کد تنظیم کن.");
-  }
 
   $("channelSelect").addEventListener("change", event => {
     adminAction(async () => {
       state.channelIndex = Number(event.target.value) || 0;
-      state.playback = { index: 0, startedAt: Date.now(), nonce: Date.now() };
+      state.playback = {
+        index:0,
+        startedAt:Date.now(),
+        nonce:Date.now()
+      };
       await saveState();
-      applyState(true);
+      applyPlayback(true);
     });
   });
 
@@ -756,101 +792,126 @@ body.admin-mode #adminPanel {display:block}
     if (!name) throw new Error("نام شبکه را وارد کن.");
 
     state.channels.push({
-      id: "ch-" + crypto.randomUUID(),
+      id:"ch-" + crypto.randomUUID(),
       name,
-      color: "#e8b85b",
-      list: []
+      color:"#e8b85b",
+      list:[]
     });
+
     state.channelIndex = state.channels.length - 1;
-    state.playback = { index: 0, startedAt: Date.now(), nonce: Date.now() };
+    state.playback = {
+      index:0,
+      startedAt:Date.now(),
+      nonce:Date.now()
+    };
+
     await saveState();
     $("newChannel").value = "";
-    applyState(true);
+    applyPlayback(true);
   }));
 
   $("addVideoBtn").addEventListener("click", () => adminAction(async () => {
     const id = parseYoutubeId($("videoUrl").value);
-    if (!id) throw new Error("لینک یوتیوب معتبر نیست.");
+    if (!id) throw new Error("لینک معتبر یوتیوب وارد کن.");
 
-    const list = playlist();
-    list.push({
+    list().push({
       id,
-      type: "youtube",
-      title: $("videoTitle").value.trim() || "YouTube program"
+      type:"youtube",
+      title:$("videoTitle").value.trim() || "برنامهٔ یوتیوب"
     });
 
-    if (list.length === 1) {
-      state.playback = { index: 0, startedAt: Date.now(), nonce: Date.now() };
+    if (list().length === 1) {
+      state.playback = {
+        index:0,
+        startedAt:Date.now(),
+        nonce:Date.now()
+      };
     }
 
     await saveState();
     $("videoUrl").value = "";
     $("videoTitle").value = "";
-    applyState(true);
+    renderAdmin();
+    applyPlayback(true);
   }));
 
   $("saveNameBtn").addEventListener("click", () => adminAction(async () => {
     const name = $("stationInput").value.trim();
-    if (!name) throw new Error("نام تلویزیون خالی است.");
+    if (!name) throw new Error("نام تلویزیون را وارد کن.");
+
     state.stationName = name;
     await saveState();
+    renderPublic();
   }));
 
   $("startBtn").addEventListener("click", () => adminAction(async () => {
     const index = Number($("startIndex").value) - 1;
-    if (!Number.isInteger(index) || index < 0 || index >= playlist().length) {
+
+    if (!Number.isInteger(index) || index < 0 || index >= list().length) {
       throw new Error("شمارهٔ برنامه در پلی‌لیست وجود ندارد.");
     }
+
     state.playback = {
       index,
-      startedAt: Date.now(),
-      nonce: Date.now()
+      startedAt:Date.now(),
+      nonce:Date.now()
     };
+
     await saveState();
-    applyState(true);
+    applyPlayback(true);
   }));
 
   $("adminPlaylist").addEventListener("click", event => {
-    const btn = event.target.closest("button");
-    if (!btn) return;
+    const button = event.target.closest("button");
+    if (!button) return;
 
     adminAction(async () => {
-      const list = playlist();
+      const videos = list();
 
-      if (btn.dataset.delete !== undefined) {
-        list.splice(Number(btn.dataset.delete), 1);
+      if (button.dataset.delete !== undefined) {
+        const i = Number(button.dataset.delete);
+        videos.splice(i, 1);
         state.playback.index = Math.min(
-          state.playback.index, Math.max(0, list.length - 1)
+          state.playback.index,
+          Math.max(0, videos.length - 1)
         );
         state.playback.startedAt = Date.now();
         state.playback.nonce = Date.now();
       }
 
-      if (btn.dataset.moveUp !== undefined) {
-        const i = Number(btn.dataset.moveUp);
-        if (i > 0) [list[i - 1], list[i]] = [list[i], list[i - 1]];
+      if (button.dataset.up !== undefined) {
+        const i = Number(button.dataset.up);
+        if (i > 0) {
+          [videos[i - 1], videos[i]] = [videos[i], videos[i - 1]];
+        }
       }
 
-      if (btn.dataset.moveDown !== undefined) {
-        const i = Number(btn.dataset.moveDown);
-        if (i < list.length - 1) [list[i], list[i + 1]] = [list[i + 1], list[i]];
+      if (button.dataset.down !== undefined) {
+        const i = Number(button.dataset.down);
+        if (i < videos.length - 1) {
+          [videos[i], videos[i + 1]] = [videos[i + 1], videos[i]];
+        }
       }
 
-      if (btn.dataset.play !== undefined) {
+      if (button.dataset.play !== undefined) {
         state.playback = {
-          index: Number(btn.dataset.play),
-          startedAt: Date.now(),
-          nonce: Date.now()
+          index:Number(button.dataset.play),
+          startedAt:Date.now(),
+          nonce:Date.now()
         };
       }
 
       await saveState();
-      applyState(true);
+      applyPlayback(true);
     });
   });
 
   $("soundBtn").addEventListener("click", () => {
-    if (!playerReady || !player) return;
+    if (!playerReady || !player) {
+      say("هنوز برنامه‌ای برای پخش آماده نیست.");
+      return;
+    }
+
     if (muted) {
       player.unMute();
       player.setVolume(70);
@@ -864,66 +925,103 @@ body.admin-mode #adminPanel {display:block}
   });
 
   $("syncBtn").addEventListener("click", async () => {
-    await refreshState();
-    applyState(true);
+    await refresh();
+    applyPlayback(true);
   });
 
   $("localFiles").addEventListener("change", event => {
-    if (!isAdmin()) return say("فقط مدیر می‌تواند فایل انتخاب کند.");
-
-    for (const url of localUrls) URL.revokeObjectURL(url);
-    localUrls = [];
+    if (!isAdmin()) {
+      event.target.value = "";
+      say("فقط مدیر می‌تواند فایل محلی انتخاب کند.", true);
+      return;
+    }
 
     const files = Array.from(event.target.files || []);
     say(files.length
-      ? "فایل محلی انتخاب شد؛ فایل روی دستگاه مدیر باقی می‌ماند و برای دیگران پخش نمی‌شود."
+      ? "فایل انتخاب شد؛ برای پخش عمومی باید از منبع آنلاین استفاده کنی."
       : "فایلی انتخاب نشده است.");
   });
 
-  $("exportBtn").addEventListener("click", () => adminAction(async () => {
+  $("exportBtn").addEventListener("click", () => {
+    if (!isAdmin()) return say("دسترسی مدیر لازم است.", true);
+
     const blob = new Blob([JSON.stringify(state, null, 2)], {
-      type: "application/json"
+      type:"application/json"
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = "am-tv-backup.json";
     a.click();
-    URL.revokeObjectURL(url);
-  }));
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
 
   $("importBtn").addEventListener("click", () => {
     if (isAdmin()) $("importFile").click();
   });
 
-  $("importFile").addEventListener("change", async event => {
+  $("importFile").addEventListener("change", event => {
     if (!isAdmin()) return;
+
     const file = event.target.files?.[0];
     if (!file) return;
 
     adminAction(async () => {
       const parsed = JSON.parse(await file.text());
       const normalized = normalizeState(parsed);
+
       if (!normalized) throw new Error("فایل پشتیبان معتبر نیست.");
 
       state = normalized;
       state.playback.startedAt = Date.now();
       state.playback.nonce = Date.now();
+
       await saveState();
-      applyState(true);
+      applyPlayback(true);
     });
+
     event.target.value = "";
   });
 
   function updateClock() {
     $("clock").textContent = new Intl.DateTimeFormat("fa-IR", {
-      hour: "2-digit", minute: "2-digit", second: "2-digit"
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit"
     }).format(new Date());
   }
 
   updateClock();
   setInterval(updateClock, 1000);
+
+  if (configured()) {
+    db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    db.auth.onAuthStateChange((_event, activeSession) => {
+      session = activeSession;
+      setAdminView(isAdmin());
+    });
+
+    (async () => {
+      const {data, error} = await db.auth.getSession();
+      if (error) say(error.message, true);
+
+      session = data?.session || null;
+      setAdminView(isAdmin());
+
+      await refresh();
+    })();
+
+    setInterval(refresh, POLL_MS);
+  } else {
+    say(
+      "برای فعال‌شدن AM TV، آدرس پروژه و کلید عمومی Supabase را در کد وارد کن."
+    );
+  }
 })();
 </script>
 </body>
-</html>
+  </html>
