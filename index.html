@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#101b16">
 <title>AM TV — 24/7 Personal Broadcast</title>
 <style>
-:root{--bg:#101b16;--panel:#192820;--panel2:#21362a;--cream:#f4edda;--muted:#aab7a9;--line:#3b5140;--red:#e85d52;--ch:#e8b85b;--gold:#e8b85b}
+:root{--bg:#101b16;--panel:#192820;--panel2:#21362a;--cream:#f4edda;--muted:#aab7a9;--line:#3b5140;--red:#e85d52;--ch:#e8b85b}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--cream);font-family:Tahoma,Arial,sans-serif}
 button,input,select{font:inherit}
@@ -77,14 +77,15 @@ main{max-width:1050px;margin:auto;padding:15px}
 .track.active{border-color:var(--ch);background:#293527}
 .tracknum{color:var(--ch);min-width:24px;text-align:center;font-size:11px}
 .trackname{flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere}
+.trackname small{display:block;color:var(--muted);font-size:10px;margin-top:3px;font-family:monospace}
 .trackbuttons{display:flex;gap:4px}
 .trackbuttons button{padding:7px;font-size:11px}
 .empty{padding:20px 8px;text-align:center;color:var(--muted);font-size:12px;line-height:2}
 .guide-item{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:9px;background:#142119;border:1px solid #2e4233;position:relative;overflow:hidden;cursor:pointer}
 .guide-item.now{border-color:var(--ch);background:#1e2c20}
 .guide-item.now:after{content:"";position:absolute;bottom:0;right:0;height:3px;background:var(--ch);width:var(--p,0%);transition:width .9s linear;box-shadow:0 0 10px var(--ch)}
-.guide-item.past{opacity:.55}
-.guide-time{color:var(--ch);font-size:11px;min-width:65px;padding-top:2px;font-family:monospace}
+.guide-item.past{opacity:.5}
+.guide-time{color:var(--ch);font-size:11px;min-width:90px;padding-top:2px;font-family:monospace}
 .guide-info{flex:1;min-width:0}
 .guide-info strong{font-size:12px;display:block;overflow-wrap:anywhere}
 .guide-info small{color:var(--muted);font-size:10px;display:block;margin-top:4px}
@@ -132,7 +133,8 @@ body.watch.idle #exitWatchBtn{display:block}
 #syncBadge.show{display:block}
 .searchbar{display:flex;gap:8px;margin-bottom:10px}
 .pill{display:inline-flex;align-items:center;gap:6px;background:#0d1712;border:1px solid var(--ch);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--ch)}
-@media(max-width:650px){header{padding:12px}.brand h1{font-size:19px}.header-right{max-width:100px}#clock{font-size:15px}main{padding:9px}.panel{padding:11px}.two-col{grid-template-columns:1fr}.controls{gap:5px}.controls button{padding:9px 10px;font-size:11px}.addrow{flex-wrap:wrap}.addrow button{flex:1}.track{gap:5px}.trackbuttons button{padding:7px 5px}.watermark{top:7px;left:7px;padding:5px 6px;font-size:10px}.screen-meta{top:7px;right:7px;padding:5px 6px}.watchHud{padding:12px 14px 32px}.watchHud .hudTitle{font-size:14px}.watchHud .hudTime{font-size:16px}#nextBanner{bottom:60px;padding:10px}#nextBanner .nbTitle{font-size:11px}}
+#durHost{position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
+@media(max-width:650px){header{padding:12px}.brand h1{font-size:19px}.header-right{max-width:100px}#clock{font-size:15px}main{padding:9px}.panel{padding:11px}.two-col{grid-template-columns:1fr}.controls{gap:5px}.controls button{padding:9px 10px;font-size:11px}.addrow{flex-wrap:wrap}.addrow button{flex:1}.track{gap:5px}.trackbuttons button{padding:7px 5px}.watermark{top:7px;left:7px;padding:5px 6px;font-size:10px}.screen-meta{top:7px;right:7px;padding:5px 6px}.watchHud{padding:12px 14px 32px}.watchHud .hudTitle{font-size:14px}.watchHud .hudTime{font-size:16px}#nextBanner{bottom:60px;padding:10px}#nextBanner .nbTitle{font-size:11px}.guide-time{font-size:10px;min-width:76px}}
 </style>
 </head>
 <body>
@@ -151,7 +153,7 @@ body.watch.idle #exitWatchBtn{display:block}
       <span class="live"><span class="livedot"></span> ON AIR</span>
       <span id="nowTitle">به AM TV 24/7 خوش آمدی</span>
       <span id="channelBadge">CH 01</span>
-      <span class="pill" id="syncPill">⏰ SYNCED</span>
+      <span class="pill" id="syncPill">⏰ LIVE-SYNCED</span>
     </div>
     <div id="screen" class="crt">
       <div id="player"></div>
@@ -200,17 +202,17 @@ body.watch.idle #exitWatchBtn{display:block}
       </div>
       <div class="lbBarWrap"><div class="lbBar" id="lbBar"></div></div>
     </div>
-    <p class="hint">حالت ۲۴/۷: برنامه‌ها از ساعت <b>۰۰:۰۰ امروز</b> زمان‌بندی می‌شن. با هر رفرش، همون برنامه‌ای پخش می‌شه که «الان» باید باشه.</p>
+    <p class="hint">شبکهٔ شخصی ۲۴/۷: جدول پخش از <b>۰۰:۰۰ امروز</b> ساخته می‌شه و بر اساس <b>مدت واقعی</b> هر ویدیو چیده می‌شه. با هر رفرش یا هر لحظه، همون برنامه‌ای پخش می‌شه که «الان» باید باشه.</p>
   </section>
 
   <section class="panel">
     <div class="sectionhead"><h2>🔴 پخش ۲۴/۷</h2></div>
     <div class="settings">
       <button class="primary" id="auto247Btn">▶ شروع پخش ۲۴/۷</button>
-      <button id="allday247Btn">🌙 ۲۴ ساعته (endless)</button>
       <button id="jumpLiveBtn">🎯 پرش به «الان»</button>
+      <button id="refetchDurBtn">🔄 گرفتن مدت‌ها</button>
     </div>
-    <p class="hint">«پخش ۲۴/۷» = پخش یکسره + تماشا + هماهنگی خودکار با ساعت. «endless» = هیچ‌وقت وایسه، حتی اگه لیست تموم شه.</p>
+    <p class="hint">وقتی فعال باشه، پلیر همیشه با ساعت هماهنگه و بعد از پایان هر ویدیو، خودش می‌ره روی برنامهٔ بعدی جدول.</p>
   </section>
 
   <section class="panel">
@@ -261,9 +263,9 @@ body.watch.idle #exitWatchBtn{display:block}
   </div>
 
   <section class="panel">
-    <div class="sectionhead"><h2>📺 راهنمای برنامه‌ها (زنده)</h2><span class="muted">24/7 SCHEDULE</span></div>
+    <div class="sectionhead"><h2>📺 راهنمای برنامه‌ها (زنده)</h2><span class="muted" id="cycleMeta">24/7 SCHEDULE</span></div>
     <div id="guideList" class="guide-list"></div>
-    <p class="hint">هر برنامه ۳۰ دقیقه. زمان‌ها از ۰۰:۰۰ امروز حساب می‌شن.</p>
+    <p class="hint">زمان‌ها بر اساس مدت واقعی ویدیوها از ۰۰:۰۰ امروز چیده شدن. هر ویدیو = یک برنامه.</p>
   </section>
 
   <section class="panel">
@@ -282,26 +284,26 @@ body.watch.idle #exitWatchBtn{display:block}
 <div id="syncBadge">🎯 در حال هماهنگی…</div>
 
 <script>
-const $ = id => document.getElementById(id);
-const CHANNEL_KEY = "amtv_channels_v4";
-const SETTINGS_KEY = "amtv_settings_v3";
-const EPOCH_KEY = "amtv_epoch";
-const DB_NAME = "amtv_db";
-const DB_VERSION = 1;
-const STORE = "files";
-const SLOT_MS = 30 * 60 * 1000; // هر برنامه ۳۰ دقیقه
+/* ════════════════════ Constants ════════════════════ */
+const CHANNEL_KEY  = "amtv_channels_v5";
+const SETTINGS_KEY = "amtv_settings_v4";
+const EPOCH_KEY    = "amtv_epoch_v2";
+const MODE_KEY     = "amtv_247_v2";
+const DB_NAME      = "amtv_db";
+const DB_VERSION   = 1;
+const STORE        = "files";
+const FALLBACK_DUR = 60; // ثانیه — اگه مدت ویدیو معلوم نشد
 
+/* ════════════════════ State ════════════════════ */
 let channels = [];
 let activeChannel = 0;
 let current = -1;
-let player = null;
 let ready = false;
 let isPlaying = false;
 let autoplay = true;
 let repeat = true;
 let crt = true;
 let shuffle = false;
-let endless = true;      // 👈 پیش‌فرض برای 24/7
 let watchMode = false;
 let idleTimer = null;
 let toastTimer = null;
@@ -309,28 +311,47 @@ let sleepTimer = null;
 let sleepEnd = 0;
 let sleepTick = null;
 let searchQuery = "";
-let pendingYouTubeId = null;
+let pendingYouTube = null;   // {id, seek}
 let localUrlsById = new Map();
 let db = null;
 let liveTickInterval = null;
-let is24_7 = false;      // 👈 حالت ۲۴/۷ فعال
+let is24_7 = false;
+let player = null;
+
+/* duration fetcher */
+let durPlayer = null;
+let durReady = false;
+let durReadyCbs = [];
+let durCurrent = null;
+let durChain = Promise.resolve();
+
+/* ════════════════════ Helpers ════════════════════ */
+const $ = id => document.getElementById(id);
 
 function toast(m){
-  const t = $("toast"); t.textContent = m; t.style.display="block";
+  const t = $("toast"); t.textContent = m; t.style.display = "block";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.style.display="none",3200);
+  toastTimer = setTimeout(() => t.style.display = "none", 3200);
 }
 function getChannel(){ return channels[activeChannel] || null; }
 function getList(){ return getChannel()?.videos || []; }
 function isLocal(v){ return v?.type === "local"; }
 function isYouTube(v){ return v && !isLocal(v) && /^[\w-]{11}$/.test(v.id); }
-function fmtTime(s){ if(!isFinite(s)||s<0)s=0; const m=Math.floor(s/60), sec=Math.floor(s%60); return String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0"); }
+function fmtTime(s){
+  if (!isFinite(s) || s < 0) s = 0;
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,"0") + ":" + String(sec).padStart(2,"0");
+}
+function fmtClock(ms){
+  const d = new Date(ms);
+  return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+}
 function applyChannelTheme(){
   const c = getChannel()?.color || "#e8b85b";
   document.documentElement.style.setProperty("--ch", c);
 }
 
-/* ═══════════ IndexedDB ═══════════ */
+/* ════════════════════ IndexedDB ════════════════════ */
 function openDB(){
   return new Promise((res, rej) => {
     const r = indexedDB.open(DB_NAME, DB_VERSION);
@@ -342,13 +363,32 @@ function openDB(){
     r.onerror = () => rej(r.error);
   });
 }
-function dbPut(id, blob){ return new Promise((res,rej)=>{ const tx=db.transaction(STORE,"readwrite"); tx.objectStore(STORE).put({blob},id); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); }
-function dbGet(id){ return new Promise((res,rej)=>{ const tx=db.transaction(STORE,"readonly"); const rq=tx.objectStore(STORE).get(id); rq.onsuccess=()=>res(rq.result||null); rq.onerror=()=>rej(rq.error); }); }
-function dbDelete(id){ return new Promise((res,rej)=>{ const tx=db.transaction(STORE,"readwrite"); tx.objectStore(STORE).delete(id); tx.oncomplete=res; tx.onerror=()=>rej(tx.error); }); }
+function dbPut(id, blob){
+  return new Promise((res, rej) => {
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).put({blob}, id);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
+function dbGet(id){
+  return new Promise((res, rej) => {
+    const tx = db.transaction(STORE, "readonly");
+    const rq = tx.objectStore(STORE).get(id);
+    rq.onsuccess = () => res(rq.result || null);
+    rq.onerror = () => rej(rq.error);
+  });
+}
+function dbDelete(id){
+  return new Promise((res, rej) => {
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).delete(id);
+    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+  });
+}
 async function dbLoadAll(){
-  const out = new Map();
-  return new Promise((res,rej)=>{
-    const tx = db.transaction(STORE,"readonly");
+  return new Promise((res, rej) => {
+    const out = new Map();
+    const tx = db.transaction(STORE, "readonly");
     tx.objectStore(STORE).openCursor().onsuccess = e => {
       const c = e.target.result;
       if (c){ out.set(c.key, c.value); c.continue(); } else res(out);
@@ -361,26 +401,35 @@ async function dbClearUnused(used){
   for (const id of all.keys()) if (!used.has(id)) await dbDelete(id);
 }
 
-/* ═══════════ Storage ═══════════ */
-function saveChannels(){ try{ localStorage.setItem(CHANNEL_KEY, JSON.stringify(channels)); }catch(e){ toast("حافظه پر است."); } }
-function saveSettings(){ try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify({autoplay,repeat,crt,shuffle,endless})); }catch(e){} }
+/* ════════════════════ Storage ════════════════════ */
+function saveChannels(){
+  try { localStorage.setItem(CHANNEL_KEY, JSON.stringify(channels)); }
+  catch(e){ toast("حافظه پر است."); }
+}
+function saveSettings(){
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({autoplay, repeat, crt, shuffle})); }
+  catch(e){}
+}
 function cleanVideo(v){
   if (!v || typeof v.title !== "string") return null;
+  const dur = Number(v.duration) > 0 ? Math.round(Number(v.duration)) : 0;
   if (v.type === "local" && typeof v.id === "string" && v.id.startsWith("local_"))
-    return {type:"local", id:v.id, title:v.title.slice(0,200), fileName:String(v.fileName||v.title).slice(0,255)};
-  if (/^[\w-]{11}$/.test(v.id)) return {type:"youtube", id:v.id, title:v.title.slice(0,200)};
+    return {type:"local", id:v.id, title:v.title.slice(0,200),
+            fileName:String(v.fileName||v.title).slice(0,255), duration:dur};
+  if (/^[\w-]{11}$/.test(v.id))
+    return {type:"youtube", id:v.id, title:v.title.slice(0,200), duration:dur};
   return null;
 }
 function loadData(){
   try{
     const s = JSON.parse(localStorage.getItem(CHANNEL_KEY) || "null");
     if (Array.isArray(s) && s.length){
-      channels = s.filter(c => c && typeof c.name==="string" && Array.isArray(c.videos))
+      channels = s.filter(c => c && typeof c.name === "string" && Array.isArray(c.videos))
         .map(c => ({
-          id:String(c.id || ("ch"+Math.random().toString(36).slice(2))),
-          name:c.name.slice(0,32),
-          color:/^#[0-9a-f]{6}$/i.test(c.color||"") ? c.color : "#e8b85b",
-          videos:c.videos.map(cleanVideo).filter(Boolean)
+          id: String(c.id || ("ch"+Math.random().toString(36).slice(2))),
+          name: c.name.slice(0,32),
+          color: /^#[0-9a-f]{6}$/i.test(c.color||"") ? c.color : "#e8b85b",
+          videos: c.videos.map(cleanVideo).filter(Boolean)
         }));
     }
   }catch(e){ channels = []; }
@@ -390,86 +439,205 @@ function loadData(){
   }
   try{
     const s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-    if (typeof s.autoplay==="boolean") autoplay = s.autoplay;
-    if (typeof s.repeat==="boolean") repeat = s.repeat;
-    if (typeof s.crt==="boolean") crt = s.crt;
-    if (typeof s.shuffle==="boolean") shuffle = s.shuffle;
-    if (typeof s.endless==="boolean") endless = s.endless;
+    if (typeof s.autoplay === "boolean") autoplay = s.autoplay;
+    if (typeof s.repeat   === "boolean") repeat   = s.repeat;
+    if (typeof s.crt      === "boolean") crt      = s.crt;
+    if (typeof s.shuffle  === "boolean") shuffle  = s.shuffle;
   }catch(e){}
   activeChannel = 0;
 }
 
-/* ═══════════ 24/7 Time sync ═══════════ */
+/* ════════════════════ Epoch (00:00 today) ════════════════════ */
 function getEpoch(){
-  // epoch = 00:00 امروز (به وقت محلی)
   let e = Number(localStorage.getItem(EPOCH_KEY));
   const today = new Date(); today.setHours(0,0,0,0);
   const todayMs = today.getTime();
   if (!e || e < todayMs || e > todayMs + 86400000){
     e = todayMs;
-    try{ localStorage.setItem(EPOCH_KEY, e); }catch(_){}
+    try { localStorage.setItem(EPOCH_KEY, e); } catch(_){}
   }
   return e;
 }
 function resetEpoch(){
   const d = new Date(); d.setHours(0,0,0,0);
-  try{ localStorage.setItem(EPOCH_KEY, d.getTime()); }catch(_){}
-}
-function getLiveIndex(list){
-  if (!list.length) return -1;
-  const elapsed = Date.now() - getEpoch();
-  const slot = Math.floor(elapsed / SLOT_MS);
-  return ((slot % list.length) + list.length) % list.length;
-}
-function getSlotStartMs(index, list){
-  const cycleLen = SLOT_MS * list.length;
-  const elapsed = Date.now() - getEpoch();
-  const cycleIdx = Math.floor(elapsed / cycleLen);
-  return getEpoch() + (cycleIdx * list.length + index) * SLOT_MS;
+  try { localStorage.setItem(EPOCH_KEY, d.getTime()); } catch(_){}
 }
 
-/* ═══════════ YouTube ═══════════ */
+/* ════════════════════ Real-duration schedule ════════════════════ */
+function buildSchedule(list){
+  if (!list.length) return null;
+  let acc = 0;
+  const slots = [];
+  for (let i = 0; i < list.length; i++){
+    const v = list[i];
+    const durSec = (v.duration && v.duration > 0) ? v.duration : FALLBACK_DUR;
+    const durMs = durSec * 1000;
+    slots.push({ index:i, startMs:acc, endMs:acc+durMs, durationMs:durMs });
+    acc += durMs;
+  }
+  return { slots, cycleMs: acc };
+}
+function getLivePos(list, atMs){
+  atMs = atMs || Date.now();
+  const sch = buildSchedule(list);
+  if (!sch || sch.cycleMs <= 0) return null;
+  const epoch = getEpoch();
+  const elapsed = atMs - epoch;
+  if (elapsed < 0) return null;
+  const cycleIdx = Math.floor(elapsed / sch.cycleMs);
+  const posInCycle = elapsed - cycleIdx * sch.cycleMs;
+  let slot = sch.slots[sch.slots.length - 1];
+  for (const s of sch.slots){
+    if (posInCycle < s.endMs){ slot = s; break; }
+  }
+  const cycleStart = epoch + cycleIdx * sch.cycleMs;
+  return {
+    index: slot.index,
+    offsetSec: Math.max(0, (posInCycle - slot.startMs) / 1000),
+    slotStartMs: cycleStart + slot.startMs,
+    slotEndMs:   cycleStart + slot.endMs,
+    schedule: sch,
+    cycleStartMs: cycleStart,
+    cycleIdx
+  };
+}
+
+/* ════════════════════ Duration fetchers ════════════════════ */
+function ensureDurPlayer(){
+  if (durPlayer) return;
+  if (!window.YT || !YT.Player){ setTimeout(ensureDurPlayer, 400); return; }
+  if ($("durInner")) return;
+  const host = document.createElement("div");
+  host.id = "durHost";
+  const inner = document.createElement("div");
+  inner.id = "durInner";
+  host.appendChild(inner);
+  document.body.appendChild(host);
+  durPlayer = new YT.Player("durInner", {
+    height:"1", width:"1",
+    playerVars:{autoplay:0, controls:0, mute:1, playsinline:1},
+    events:{
+      onReady: () => { durReady = true; durReadyCbs.forEach(f=>f()); durReadyCbs = []; },
+      onStateChange: e => {
+        if ((e.data === YT.PlayerState.CUED || e.data === YT.PlayerState.PLAYING) && durCurrent){
+          const d = durPlayer.getDuration();
+          if (d > 0){ const r = durCurrent; durCurrent = null; r(Math.round(d)); }
+        }
+      },
+      onError: () => {
+        if (durCurrent){ const r = durCurrent; durCurrent = null; r(-1); }
+      }
+    }
+  });
+}
+function whenDurReady(){
+  return new Promise(res => durReady ? res() : durReadyCbs.push(res));
+}
+function fetchYTDurationInternal(id){
+  return new Promise(async res => {
+    await whenDurReady();
+    if (!durPlayer || !durPlayer.cueVideoById){ res(-1); return; }
+    durCurrent = res;
+    try { durPlayer.cueVideoById({videoId:id}); }
+    catch(e){ durCurrent = null; res(-1); return; }
+    setTimeout(() => {
+      if (durCurrent){ const r = durCurrent; durCurrent = null; r(-1); }
+    }, 9000);
+  });
+}
+function fetchYTDuration(id){
+  const p = durChain.then(() => fetchYTDurationInternal(id)).catch(()=>-1);
+  durChain = p.catch(()=>{});
+  return p;
+}
+function getLocalDuration(blob){
+  return new Promise(res => {
+    const url = URL.createObjectURL(blob);
+    const v = document.createElement("video");
+    v.preload = "metadata";
+    v.onloadedmetadata = () => { URL.revokeObjectURL(url); res(Math.round(v.duration||0)); };
+    v.onerror = () => { URL.revokeObjectURL(url); res(0); };
+    v.src = url;
+  });
+}
+async function fetchYTMeta(id){
+  try{
+    const r = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent("https://youtu.be/"+id)}&format=json`);
+    if (!r.ok) return null;
+    return await r.json();
+  }catch(e){ return null; }
+}
+
+async function refreshAllDurations(){
+  const list = getList();
+  const missing = list.filter(v => !v.duration || v.duration <= 0);
+  if (!missing.length){ toast("همهٔ مدت‌ها موجوده ✓"); return; }
+  toast("در حال گرفتن مدت " + missing.length + " ویدیو…");
+  for (const v of missing){
+    let d = 0;
+    if (isLocal(v)){
+      const rec = await dbGet(v.id);
+      if (rec) d = await getLocalDuration(rec.blob);
+    } else {
+      d = await fetchYTDuration(v.id);
+    }
+    if (d > 0) v.duration = d;
+    else v.duration = FALLBACK_DUR;
+    saveChannels();
+  }
+  renderGuide(); renderPlaylist();
+  toast("مدت‌ها آماده شد ✓");
+}
+
+/* ════════════════════ YouTube main player ════════════════════ */
 function loadAPI(){
   if (window.YT && window.YT.Player){ createPlayer(); return; }
   if ($("yt-api")) return;
   const s = document.createElement("script");
-  s.id = "yt-api"; s.src = "https://www.youtube.com/iframe_api";
+  s.id = "yt-api";
+  s.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(s);
 }
-window.onYouTubeIframeAPIReady = () => { if (player) return; createPlayer(); };
+window.onYouTubeIframeAPIReady = () => {
+  createPlayer();
+  ensureDurPlayer();
+};
 
 function createPlayer(){
   if (player || !window.YT || !YT.Player) return;
-  const first = getList()[current];
   player = new YT.Player("player", {
     width:"100%", height:"100%",
-    videoId:isYouTube(first) ? first.id : "",
+    videoId: "",
     playerVars:{autoplay:0, controls:1, playsinline:1, rel:0, enablejsapi:1, iv_load_policy:3},
     events:{
-      onReady:() => {
+      onReady: () => {
         ready = true;
-        if (pendingYouTubeId){
-          const id = pendingYouTubeId; pendingYouTubeId = null;
-          try{ player.loadVideoById(id); }catch(e){}
+        if (pendingYouTube){
+          const {id, seek} = pendingYouTube; pendingYouTube = null;
+          try { player.loadVideoById({videoId:id, startSeconds:seek||0}); } catch(e){}
         } else {
           const v = getList()[current];
           if (isYouTube(v)) player.cueVideoById(v.id);
         }
         updatePlayButton();
       },
-      onStateChange:e => {
+      onStateChange: e => {
         const v = getList()[current];
         if (!isYouTube(v)) return;
-        if (e.data === YT.PlayerState.PLAYING) { isPlaying = true; showLiveBar(); startLiveTick(); }
-        else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.CUED || e.data === YT.PlayerState.ENDED) isPlaying = false;
+        if (e.data === YT.PlayerState.PLAYING){ isPlaying = true; showLiveBar(); startLiveTick(); }
+        else if (e.data === YT.PlayerState.PAUSED ||
+                 e.data === YT.PlayerState.CUED ||
+                 e.data === YT.PlayerState.ENDED) isPlaying = false;
         updatePlayButton();
         if (e.data === YT.PlayerState.ENDED && autoplay) handleVideoEnd();
       },
-      onError:() => toast("یوتیوب نتونست این ویدیو رو پخش کنه.")
+      onError: () => toast("یوتیوب نتونست این ویدیو رو پخش کنه.")
     }
   });
 }
-function updatePlayButton(){ $("playBtn").textContent = isPlaying ? "⏸ توقف" : "▶ پخش"; }
+function updatePlayButton(){
+  $("playBtn").textContent = isPlaying ? "⏸ توقف" : "▶ پخش";
+}
 function updateNow(){
   const list = getList(); const ch = getChannel();
   const v = current >= 0 ? list[current] : null;
@@ -483,28 +651,32 @@ function updateNow(){
   $("hudChannelNum").textContent = "CH " + chNum;
 }
 function showYouTube(){
-  $("localPlayer").pause();
-  $("localPlayer").removeAttribute("src");
-  $("localPlayer").load();
-  $("localPlayer").style.display = "none";
+  const lp = $("localPlayer");
+  lp.pause();
+  lp.removeAttribute("src");
+  lp.load();
+  lp.style.display = "none";
   $("player").style.display = "block";
 }
 function showLocal(){
-  if (ready && player){ try{ player.pauseVideo(); }catch(e){} }
+  if (ready && player){ try { player.pauseVideo(); } catch(e){} }
   $("player").style.display = "none";
   $("localPlayer").style.display = "block";
 }
 function showLiveBar(){ $("livebar").classList.add("show"); }
-function hideLiveBar(){ $("livebar").classList.remove("show"); $("lbBar").style.width = "0"; }
+function hideLiveBar(){
+  $("livebar").classList.remove("show");
+  $("lbBar").style.width = "0";
+}
 
-/* ═══════════ Playback ═══════════ */
-async function playIndex(i, opts={}){
+/* ════════════════════ Playback ════════════════════ */
+function playAtOffset(i, offsetSec){
   const list = getList();
   if (!list.length){
     current = -1; isPlaying = false;
     showYouTube(); renderAll(); updatePlayButton(); hideLiveBar();
     $("nextBanner").classList.remove("show");
-    if (!opts.silent) toast("این کانال هنوز برنامه‌ای نداره.");
+    toast("این کانال هنوز برنامه‌ای نداره.");
     return;
   }
   current = (i + list.length) % list.length;
@@ -512,48 +684,65 @@ async function playIndex(i, opts={}){
   updateNow(); renderPlaylist(); renderGuide();
   $("nextBanner").classList.remove("show");
 
-  if (isLocal(v)){
-    const rec = await dbGet(v.id);
-    if (!rec){
-      isPlaying = false; updatePlayButton();
-      showLocal();
-      $("localPlayer").removeAttribute("src"); $("localPlayer").load();
-      toast("فایل «" + v.title + "» در مرورگر پیدا نشد.");
-      return;
-    }
-    showLocal();
-    let url = localUrlsById.get(v.id);
-    if (!url){ url = URL.createObjectURL(rec.blob); localUrlsById.set(v.id, url); }
-    const video = $("localPlayer");
-    video.src = url; video.load();
-    const p = video.play();
-    if (p && p.catch) p.catch(()=>toast("برای پخش، روی دکمهٔ پخش بزن."));
-    showLiveBar(); startLiveTick();
-    return;
-  }
+  if (isLocal(v)){ playLocalWithSeek(v, offsetSec); return; }
 
-  showYouTube();
-  loadAPI();
+  showYouTube(); loadAPI();
   if (ready && player){
-    try{ player.loadVideoById(v.id); }catch(e){ pendingYouTubeId = v.id; }
+    try { player.loadVideoById({videoId:v.id, startSeconds:offsetSec||0}); }
+    catch(e){ pendingYouTube = {id:v.id, seek:offsetSec||0}; }
   } else {
-    pendingYouTubeId = v.id;
+    pendingYouTube = {id:v.id, seek:offsetSec||0};
   }
 }
+function playIndex(i){ playAtOffset(i, 0); }
+
+async function playLocalWithSeek(v, offsetSec){
+  const rec = await dbGet(v.id);
+  if (!rec){
+    isPlaying = false; updatePlayButton();
+    showLocal();
+    const lp = $("localPlayer");
+    lp.removeAttribute("src"); lp.load();
+    toast("فایل «" + v.title + "» در مرورگر پیدا نشد.");
+    return;
+  }
+  showLocal();
+  let url = localUrlsById.get(v.id);
+  if (!url){ url = URL.createObjectURL(rec.blob); localUrlsById.set(v.id, url); }
+  const lp = $("localPlayer");
+  lp.onloadedmetadata = () => {
+    try { lp.currentTime = offsetSec || 0; } catch(_){}
+    lp.play().catch(()=>toast("برای پخش، روی دکمهٔ ▶ بزن."));
+    lp.onloadedmetadata = null;
+  };
+  lp.src = url; lp.load();
+  showLiveBar(); startLiveTick();
+}
+
+function handleVideoEnd(){
+  if (is24_7){
+    const list = getList();
+    // کمی جلو برو تا از مرز اسلات رد بشیم
+    const pos = getLivePos(list, Date.now() + 400);
+    if (pos){ playAtOffset(pos.index, pos.offsetSec); return; }
+  }
+  nextVideo();
+}
+
 function nextVideo(){
   const list = getList();
   if (!list.length) return;
-  // در ۲۴/۷: برو روی برنامهٔ «الان» بر اساس ساعت
   if (is24_7){
-    const liveIdx = getLiveIndex(list);
-    if (liveIdx !== current) { playIndex(liveIdx); return; }
+    // در ۲۴/۷، «بعدی» یعنی برو روی برنامهٔ زمان‌محور بعدی
+    const pos = getLivePos(list, Date.now() + 400);
+    if (pos){ playAtOffset(pos.index, pos.offsetSec); return; }
   }
   if (shuffle && list.length > 1){
-    let n; do { n = Math.floor(Math.random()*list.length); } while (n === current);
+    let n; do { n = Math.floor(Math.random() * list.length); } while (n === current);
     playIndex(n); return;
   }
   if (current < list.length - 1) playIndex(current + 1);
-  else if (repeat || endless) playIndex(0);
+  else if (repeat || true) playIndex(0);
   else toast("پایان پلی‌لیست.");
 }
 function previousVideo(){
@@ -569,32 +758,21 @@ function prevChannel(){
   if (channels.length < 2){ toast("فقط یک کانال داری."); return; }
   switchChannel((activeChannel - 1 + channels.length) % channels.length);
 }
-function handleVideoEnd(){
-  // در ۲۴/۷ همیشه برو روی برنامهٔ زمان‌محور
-  if (is24_7){
-    const list = getList();
-    const idx = getLiveIndex(list);
-    if (idx >= 0) { playIndex(idx); return; }
-  }
-  nextVideo();
-}
+
 function jumpToLive(){
   const list = getList();
   if (!list.length){ toast("پلی‌لیست خالیه."); return; }
-  const idx = getLiveIndex(list);
-  showSyncBadge("🎯 هماهنگ شد با " + fmtClock(getSlotStartMs(idx, list)));
-  playIndex(idx);
-}
-function fmtClock(ms){
-  const d = new Date(ms);
-  return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  const pos = getLivePos(list);
+  if (!pos){ toast("برای هماهنگی، اول مدت ویدیوها لازمه."); return; }
+  playAtOffset(pos.index, pos.offsetSec);
+  showSyncBadge("🎯 هماهنگ با " + fmtClock(pos.slotStartMs));
 }
 function showSyncBadge(txt){
   const b = $("syncBadge"); b.textContent = txt; b.classList.add("show");
-  setTimeout(()=>b.classList.remove("show"), 1800);
+  setTimeout(() => b.classList.remove("show"), 1800);
 }
 
-/* ═══════════ Live EPG ═══════════ */
+/* ════════════════════ Live tick (progress + banner) ════════════════════ */
 function startLiveTick(){
   if (liveTickInterval) return;
   liveTickInterval = setInterval(updateLiveProgress, 900);
@@ -612,12 +790,12 @@ function updateLiveProgress(){
     curTime = el.currentTime || 0;
     dur = el.duration || 0;
   } else if (ready && player && player.getCurrentTime){
-    try{ curTime = player.getCurrentTime() || 0; }catch(e){}
-    try{ dur = player.getDuration() || 0; }catch(e){}
+    try { curTime = player.getCurrentTime() || 0; } catch(e){}
+    try { dur = player.getDuration() || 0; } catch(e){}
   }
-
   if (!dur) return;
-  const pct = Math.max(0, Math.min(100, (curTime/dur)*100));
+
+  const pct = Math.max(0, Math.min(100, (curTime/dur) * 100));
   $("lbBar").style.width = pct + "%";
   $("lbTime").textContent = fmtTime(curTime) + " / " + fmtTime(dur);
   $("lbRemain").textContent = "باقی: " + fmtTime(Math.max(0, dur - curTime));
@@ -628,8 +806,7 @@ function updateLiveProgress(){
   // بنر «بعدی»
   const nb = $("nextBanner");
   const remain = Math.max(0, dur - curTime);
-  const hasNext = current < list.length - 1 || repeat || endless || shuffle;
-  if (hasNext && remain > 0 && remain <= 30){
+  if (remain > 0 && remain <= 30 && list.length > 1){
     const nv = list[(current + 1) % list.length];
     $("nbTitle").textContent = nv?.title || "—";
     $("nbCount").textContent = Math.ceil(remain);
@@ -639,7 +816,7 @@ function updateLiveProgress(){
   }
 }
 
-/* ═══════════ Watch Mode ═══════════ */
+/* ════════════════════ Watch Mode ════════════════════ */
 function enterWatch(){
   if (watchMode) return;
   watchMode = true;
@@ -661,20 +838,22 @@ function resetIdleTimer(){
   document.body.classList.remove("idle");
   clearTimeout(idleTimer);
   if (!watchMode) return;
-  idleTimer = setTimeout(()=>document.body.classList.add("idle"), 3000);
+  idleTimer = setTimeout(() => document.body.classList.add("idle"), 3000);
 }
-["mousemove","touchstart","keydown"].forEach(ev => document.addEventListener(ev, resetIdleTimer));
+["mousemove","touchstart","keydown"].forEach(ev =>
+  document.addEventListener(ev, resetIdleTimer));
 $("exitWatchBtn").onclick = exitWatch;
 $("watchBtn").onclick = enterWatch;
 
-/* ═══════════ 24/7 Mode ═══════════ */
-function start247(){
+/* ════════════════════ 24/7 mode ════════════════════ */
+async function start247(){
   if (!getList().length){ toast("اول یه برنامه اضافه کن."); return; }
   is24_7 = true;
-  autoplay = true; repeat = true; endless = true; shuffle = false;
+  autoplay = true; repeat = true; shuffle = false;
   saveSettings(); initSettings();
   $("auto247Btn").textContent = "● در حال پخش ۲۴/۷";
   $("auto247Btn").classList.add("on");
+  try { localStorage.setItem(MODE_KEY, "1"); } catch(_){}
   enterWatch();
   jumpToLive();
   toast("پخش ۲۴/۷ شروع شد — هماهنگ با ساعت");
@@ -683,20 +862,15 @@ function stop247(){
   is24_7 = false;
   $("auto247Btn").textContent = "▶ شروع پخش ۲۴/۷";
   $("auto247Btn").classList.remove("on");
+  try { localStorage.setItem(MODE_KEY, "0"); } catch(_){}
   toast("پخش ۲۴/۷ متوقف شد.");
 }
-$("auto247Btn").onclick = () => is24_7 ? stop247() : start247();
+$("auto247Btn").onclick  = () => is24_7 ? stop247() : start247();
 $("jumpLiveBtn").onclick = jumpToLive;
-$("allday247Btn").onclick = () => {
-  endless = !endless;
-  $("allday247Btn").textContent = endless ? "🌙 ۲۴ ساعته: روشن" : "🌙 ۲۴ ساعته: خاموش";
-  $("allday247Btn").classList.toggle("on", endless);
-  saveSettings();
-  toast("پخش بی‌پایان: " + (endless ? "روشن" : "خاموش"));
-};
-$("syncBtn").onclick = jumpToLive;
+$("syncBtn").onclick     = jumpToLive;
+$("refetchDurBtn").onclick = refreshAllDurations;
 
-/* ═══════════ Keyboard ═══════════ */
+/* ════════════════════ Keyboard ════════════════════ */
 document.addEventListener("keydown", e => {
   if (["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName)) return;
   if (e.key === "Escape" && watchMode){ exitWatch(); return; }
@@ -707,16 +881,22 @@ document.addEventListener("keydown", e => {
   }
   switch (e.key){
     case " ": e.preventDefault(); $("playBtn").click(); break;
-    case "ArrowRight": e.preventDefault(); nextChannel(); break;
-    case "ArrowLeft": e.preventDefault(); prevChannel(); break;
+    case "ArrowRight":
+      e.preventDefault();
+      e.shiftKey ? nextChannel() : nextVideo();
+      break;
+    case "ArrowLeft":
+      e.preventDefault();
+      e.shiftKey ? prevChannel() : previousVideo();
+      break;
     case "ArrowDown": e.preventDefault(); nextVideo(); break;
-    case "ArrowUp": e.preventDefault(); previousVideo(); break;
+    case "ArrowUp":   e.preventDefault(); previousVideo(); break;
     case "f": case "F": e.preventDefault(); $("fullBtn").click(); break;
     case "l": case "L": e.preventDefault(); jumpToLive(); break;
   }
 });
 
-/* ═══════════ Local player events ═══════════ */
+/* ════════════════════ Local player events ════════════════════ */
 $("localPlayer").addEventListener("play", () => {
   if (!isLocal(getList()[current])) return;
   isPlaying = true; updatePlayButton(); showLiveBar(); startLiveTick();
@@ -732,7 +912,7 @@ $("localPlayer").addEventListener("error", () => {
   if (isLocal(getList()[current])) toast("این فایل قابل پخش نیست.");
 });
 
-/* ═══════════ Main controls ═══════════ */
+/* ════════════════════ Main controls ════════════════════ */
 $("playBtn").onclick = () => {
   const list = getList();
   if (current < 0){
@@ -741,14 +921,14 @@ $("playBtn").onclick = () => {
   }
   const v = list[current];
   if (isLocal(v)){
-    const video = $("localPlayer");
-    if (!video.src){ playIndex(current); return; }
-    if (video.paused) video.play().catch(()=>{});
-    else video.pause();
+    const lp = $("localPlayer");
+    if (!lp.src){ playIndex(current); return; }
+    if (lp.paused) lp.play().catch(()=>{});
+    else lp.pause();
     return;
   }
   loadAPI();
-  if (!ready || !player){ pendingYouTubeId = v.id; toast("پلیر آماده می‌شه…"); return; }
+  if (!ready || !player){ pendingYouTube = {id:v.id, seek:0}; toast("پلیر آماده می‌شه…"); return; }
   if (isPlaying) player.pauseVideo(); else player.playVideo();
 };
 $("nextBtn").onclick = nextVideo;
@@ -764,7 +944,7 @@ document.addEventListener("fullscreenchange", () => {
   if (!document.fullscreenElement && watchMode) exitWatch();
 });
 
-/* ═══════════ Add video ═══════════ */
+/* ════════════════════ Add YouTube ════════════════════ */
 function getId(url){
   try{
     const u = new URL(url);
@@ -777,33 +957,47 @@ function getId(url){
     return /^[\w-]{11}$/.test(id) ? id : null;
   }catch(e){ return null; }
 }
-function videoTitle(url){
-  try{
-    const u = new URL(url);
-    if (u.pathname.startsWith("/shorts/")) return "YouTube Shorts";
-    if (u.pathname.startsWith("/live/")) return "YouTube Live";
-  }catch(e){}
-  return "برنامه YouTube";
-}
-$("addBtn").onclick = () => {
+
+$("addBtn").onclick = async () => {
   const url = $("videoUrl").value.trim();
   const id = getId(url);
   if (!id){ toast("لینک معتبر YouTube وارد کن."); return; }
   const list = getList();
   if (list.some(v => v.type !== "local" && v.id === id)){ toast("این ویدیو از قبل هست."); return; }
-  list.push({type:"youtube", id, title:videoTitle(url)});
-  saveChannels(); $("videoUrl").value = ""; renderAll();
-  if (current === -1) playIndex(0);
-  toast("اضافه شد.");
-};
-$("videoUrl").addEventListener("keydown", e => { if (e.key === "Enter") $("addBtn").click(); });
-$("linkHelpBtn").onclick = () => alert("از YouTube لینک ویدیو رو کپی کن.\nبرای فایل گوشی از دکمهٔ «انتخاب ویدیو» استفاده کن.");
 
-/* ═══════════ Add local ═══════════ */
+  const entry = {type:"youtube", id, title:"برنامه YouTube", duration:0};
+  list.push(entry);
+  saveChannels();
+  $("videoUrl").value = "";
+  renderAll();
+  if (current === -1) playIndex(0);
+
+  toast("اضافه شد، در حال گرفتن مدت…");
+
+  // به‌طور موازی: مدت از پلیر مخفی، عنوان از oEmbed
+  const [dur, meta] = await Promise.all([
+    fetchYTDuration(id),
+    fetchYTMeta(id)
+  ]);
+
+  entry.duration = dur > 0 ? dur : FALLBACK_DUR;
+  if (meta && meta.title) entry.title = meta.title.slice(0,200);
+  saveChannels(); renderAll();
+  toast("آماده شد ✓ (" + fmtTime(entry.duration) + ")");
+};
+$("videoUrl").addEventListener("keydown", e => {
+  if (e.key === "Enter") $("addBtn").click();
+});
+$("linkHelpBtn").onclick = () =>
+  alert("از YouTube لینک ویدیو رو کپی کن.\nبرای فایل گوشی از دکمهٔ «انتخاب ویدیو» استفاده کن.");
+
+/* ════════════════════ Add Local ════════════════════ */
 $("addLocalBtn").onclick = () => $("localFiles").click();
 $("localFiles").addEventListener("change", async e => {
-  const files = Array.from(e.target.files || []).filter(f => f.type.startsWith("video/") || /\.(mp4|webm|ogg|mov|m4v|mkv|avi)$/i.test(f.name));
+  const files = Array.from(e.target.files || [])
+    .filter(f => f.type.startsWith("video/") || /\.(mp4|webm|ogg|mov|m4v|mkv|avi)$/i.test(f.name));
   if (!files.length){ toast("فایل ویدیویی انتخاب نشد."); e.target.value = ""; return; }
+
   $("addStatus").textContent = "در حال ذخیره…";
   const list = getList();
   let added = 0;
@@ -812,9 +1006,18 @@ $("localFiles").addEventListener("change", async e => {
     try{
       const blob = file.slice(0, file.size, file.type || "video/mp4");
       await dbPut(id, blob);
-      list.push({type:"local", id, title:file.name.replace(/\.[^.]+$/, ""), fileName:file.name});
+      const dur = await getLocalDuration(blob);
+      list.push({
+        type:"local", id,
+        title:file.name.replace(/\.[^.]+$/, ""),
+        fileName:file.name,
+        duration: dur > 0 ? dur : FALLBACK_DUR
+      });
       added++;
-    }catch(err){ console.error(err); toast("ذخیرهٔ «" + file.name + "» ناموفق بود."); }
+    }catch(err){
+      console.error(err);
+      toast("ذخیرهٔ «" + file.name + "» ناموفق بود.");
+    }
   }
   saveChannels(); renderAll(); e.target.value = "";
   $("addStatus").textContent = added + " فایل ذخیره شد و دائمی موند.";
@@ -825,13 +1028,15 @@ $("localFiles").addEventListener("change", async e => {
   }
 });
 
-/* ═══════════ Channels ═══════════ */
+/* ════════════════════ Channels ════════════════════ */
 $("addChannelBtn").onclick = () => {
   const name = $("channelName").value.trim();
   const color = $("channelColor").value;
   if (!name){ toast("اسم کانال رو بنویس."); return; }
-  if (channels.some(c => c.name.toLowerCase() === name.toLowerCase())){ toast("این اسم از قبل هست."); return; }
-  channels.push({id:"ch" + Date.now(), name, color, videos:[]});
+  if (channels.some(c => c.name.toLowerCase() === name.toLowerCase())){
+    toast("این اسم از قبل هست."); return;
+  }
+  channels.push({id:"ch"+Date.now(), name, color, videos:[]});
   activeChannel = channels.length - 1;
   current = -1; isPlaying = false;
   $("localPlayer").pause();
@@ -862,21 +1067,23 @@ function releaseUnusedLocalUrls(){
   dbClearUnused(ids).catch(()=>{});
 }
 
-/* ═══════════ Rendering ═══════════ */
+/* ════════════════════ Rendering ════════════════════ */
 function renderChannels(){
-  const root = $("channelList");
-  root.innerHTML = "";
+  const root = $("channelList"); root.innerHTML = "";
   $("channelCount").textContent = channels.length + " کانال";
   channels.forEach((ch, i) => {
     const row = document.createElement("div");
     row.className = "channel" + (i === activeChannel ? " active" : "");
     row.style.setProperty("--ch", ch.color || "#e8b85b");
 
-    const sw = document.createElement("span"); sw.className = "channel-swatch"; sw.style.background = ch.color;
-    const num = document.createElement("span"); num.className = "channel-number"; num.textContent = "CH " + String(i+1).padStart(2,"0");
+    const sw = document.createElement("span");
+    sw.className = "channel-swatch"; sw.style.background = ch.color;
+    const num = document.createElement("span");
+    num.className = "channel-number"; num.textContent = "CH " + String(i+1).padStart(2,"0");
     const info = document.createElement("div"); info.className = "channel-info";
     const nm = document.createElement("strong"); nm.textContent = ch.name;
-    const ds = document.createElement("small"); ds.textContent = ch.videos.length + " برنامه";
+    const ds = document.createElement("small");
+    ds.textContent = ch.videos.length + " برنامه";
     info.append(nm, ds);
 
     const select = document.createElement("button");
@@ -912,22 +1119,51 @@ function renderPlaylist(){
   const q = searchQuery.trim().toLowerCase();
   const visible = list.map((v,i)=>({v,i})).filter(({v}) => !q || v.title.toLowerCase().includes(q));
   $("trackCount").textContent = list.length + " برنامه" + (q ? " · " + visible.length + " نتیجه" : "");
-  if (!list.length){ root.innerHTML = '<div class="empty">پلی‌لیست خالیه.<br>از بخش افزودن شروع کن.</div>'; return; }
+  if (!list.length){
+    root.innerHTML = '<div class="empty">پلی‌لیست خالیه.<br>از بخش افزودن شروع کن.</div>';
+    return;
+  }
   if (!visible.length){ root.innerHTML = '<div class="empty">چیزی پیدا نشد.</div>'; return; }
 
   visible.forEach(({v, i}) => {
     const row = document.createElement("div");
     row.className = "track" + (i === current ? " active" : "");
-    const num = document.createElement("span"); num.className = "tracknum"; num.textContent = String(i+1).padStart(2,"0");
+    const num = document.createElement("span");
+    num.className = "tracknum"; num.textContent = String(i+1).padStart(2,"0");
     const name = document.createElement("div"); name.className = "trackname";
-    name.textContent = (isLocal(v) ? "📂 " : "▶ ") + v.title;
+    const t1 = document.createTextNode((isLocal(v) ? "📂 " : "▶ ") + v.title);
+    const t2 = document.createElement("small");
+    t2.textContent = "⏱ " + fmtTime(v.duration || FALLBACK_DUR);
+    name.append(t1, t2);
     const acts = document.createElement("div"); acts.className = "trackbuttons";
-    const mk = (l, fn, aria) => { const b = document.createElement("button"); b.textContent = l; if (aria) b.setAttribute("aria-label", aria); b.onclick = fn; return b; };
+    const mk = (l, fn, aria) => {
+      const b = document.createElement("button");
+      b.textContent = l; if (aria) b.setAttribute("aria-label", aria);
+      b.onclick = fn; return b;
+    };
     acts.append(
       mk("▶", ()=>playIndex(i), "پخش"),
-      mk("↑", ()=>{ if(i===0)return; [list[i-1],list[i]]=[list[i],list[i-1]]; if(current===i)current=i-1; else if(current===i-1)current=i; saveChannels(); renderAll(); updateNow(); }, "بالا"),
-      mk("↓", ()=>{ if(i===list.length-1)return; [list[i+1],list[i]]=[list[i],list[i+1]]; if(current===i)current=i+1; else if(current===i+1)current=i; saveChannels(); renderAll(); updateNow(); }, "پایین"),
-      mk("✕", ()=>{ if(current===i){ $("localPlayer").pause(); if(ready&&player)player.stopVideo(); current=-1; isPlaying=false; showYouTube(); hideLiveBar(); } else if(current>i)current--; list.splice(i,1); releaseUnusedLocalUrls(); saveChannels(); renderAll(); updateNow(); updatePlayButton(); }, "حذف")
+      mk("↑", ()=>{
+        if (i===0) return;
+        [list[i-1], list[i]] = [list[i], list[i-1]];
+        if (current === i) current = i-1; else if (current === i-1) current = i;
+        saveChannels(); renderAll(); updateNow();
+      }, "بالا"),
+      mk("↓", ()=>{
+        if (i === list.length-1) return;
+        [list[i+1], list[i]] = [list[i], list[i+1]];
+        if (current === i) current = i+1; else if (current === i+1) current = i;
+        saveChannels(); renderAll(); updateNow();
+      }, "پایین"),
+      mk("✕", ()=>{
+        if (current === i){
+          $("localPlayer").pause();
+          if (ready && player) player.stopVideo();
+          current = -1; isPlaying = false; showYouTube(); hideLiveBar();
+        } else if (current > i) current--;
+        list.splice(i,1);
+        releaseUnusedLocalUrls(); saveChannels(); renderAll(); updateNow(); updatePlayButton();
+      }, "حذف")
     );
     row.append(num, name, acts);
     root.append(row);
@@ -940,35 +1176,45 @@ function renderGuide(){
   root.innerHTML = "";
   if (!list.length){
     root.innerHTML = '<div class="empty">با افزودن ویدیو، راهنما ساخته می‌شه.</div>';
+    $("cycleMeta").textContent = "24/7 SCHEDULE";
     return;
   }
-  const now = Date.now();
-  const liveIdx = getLiveIndex(list);
-  const cycleLen = SLOT_MS * list.length;
-  const cycleStart = getEpoch() + Math.floor((now - getEpoch()) / cycleLen) * cycleLen;
+  const pos = getLivePos(list);
+  if (!pos){
+    root.innerHTML = '<div class="empty">در حال آماده‌سازی جدول…</div>';
+    $("cycleMeta").textContent = "…";
+    return;
+  }
+  const sch = pos.schedule;
+  $("cycleMeta").textContent = "طول دوره: " + fmtTime(sch.cycleMs/1000) + " · " + list.length + " برنامه";
 
-  list.forEach((v, i) => {
-    const startMs = cycleStart + i * SLOT_MS;
-    const endMs = startMs + SLOT_MS;
-    const start = fmtClock(startMs);
-    const end = fmtClock(endMs);
-    const isNow = i === liveIdx;
-    const isPast = now >= endMs;
+  const nowMs = Date.now();
+  sch.slots.forEach(s => {
+    const v = list[s.index];
+    const startMs = pos.cycleStartMs + s.startMs;
+    const endMs   = pos.cycleStartMs + s.endMs;
+    const isNow = s.index === pos.index;
+    const isPast = nowMs >= endMs;
 
     const row = document.createElement("div");
     row.className = "guide-item" + (isNow ? " now" : "") + (isPast ? " past" : "");
-    const tm = document.createElement("span"); tm.className = "guide-time"; tm.textContent = start;
+    const tm = document.createElement("span"); tm.className = "guide-time";
+    tm.textContent = fmtClock(startMs) + "–" + fmtClock(endMs);
     const info = document.createElement("div"); info.className = "guide-info";
-    const title = document.createElement("strong"); title.textContent = (isLocal(v) ? "📂 " : "") + v.title;
-    const sub = document.createElement("small"); sub.textContent = "AM TV · CH " + String(activeChannel+1).padStart(2,"0") + " · تا " + end;
+    const title = document.createElement("strong");
+    title.textContent = (isLocal(v) ? "📂 " : "") + v.title;
+    const sub = document.createElement("small");
+    sub.textContent = "⏱ " + fmtTime(v.duration || FALLBACK_DUR) +
+      " · CH " + String(activeChannel+1).padStart(2,"0");
     info.append(title, sub);
     const state = document.createElement("span"); state.className = "guide-state";
     state.textContent = isNow ? "● LIVE" : (isPast ? "گذشت" : "بعدی");
     row.append(tm, info, state);
-    row.onclick = () => playIndex(i);
+    row.onclick = () => playAtOffset(s.index, 0);
     root.append(row);
   });
 }
+
 function renderAll(){
   applyChannelTheme();
   renderChannels();
@@ -977,8 +1223,10 @@ function renderAll(){
   updateNow();
 }
 
-/* ═══════════ Search / Clear ═══════════ */
-$("searchInput").addEventListener("input", e => { searchQuery = e.target.value; renderPlaylist(); });
+/* ════════════════════ Search / Clear ════════════════════ */
+$("searchInput").addEventListener("input", e => {
+  searchQuery = e.target.value; renderPlaylist();
+});
 $("clearBtn").onclick = () => {
   if (!confirm("همهٔ برنامه‌های این کانال پاک بشن؟")) return;
   getChannel().videos = [];
@@ -991,14 +1239,18 @@ $("clearBtn").onclick = () => {
   toast("پلی‌لیست پاک شد.");
 };
 
-/* ═══════════ Settings ═══════════ */
-$("autoBtn").onclick = () => { autoplay = !autoplay; saveSettings(); initSettings(); };
-$("repeatBtn").onclick = () => { repeat = !repeat; saveSettings(); initSettings(); };
-$("crtBtn").onclick = () => { crt = !crt; $("screen").classList.toggle("crt", crt); saveSettings(); initSettings(); };
+/* ════════════════════ Settings ════════════════════ */
+$("autoBtn").onclick    = () => { autoplay = !autoplay; saveSettings(); initSettings(); };
+$("repeatBtn").onclick  = () => { repeat   = !repeat;   saveSettings(); initSettings(); };
+$("crtBtn").onclick     = () => {
+  crt = !crt;
+  $("screen").classList.toggle("crt", crt);
+  saveSettings(); initSettings();
+};
 $("shuffleBtn").onclick = () => { shuffle = !shuffle; saveSettings(); initSettings(); };
 $("screen").addEventListener("dblclick", () => $("screen").classList.toggle("auto-hide"));
 
-/* ═══════════ Sleep timer ═══════════ */
+/* ════════════════════ Sleep timer ════════════════════ */
 const SLEEP_STEPS = [15,30,60,90,0];
 let sleepStepIdx = 4;
 $("sleepBtn").onclick = () => {
@@ -1006,7 +1258,10 @@ $("sleepBtn").onclick = () => {
   const mins = SLEEP_STEPS[sleepStepIdx];
   clearTimeout(sleepTimer); clearInterval(sleepTick);
   $("sleepBadge").classList.remove("show");
-  if (mins === 0){ $("sleepBtn").textContent = "😴 خواب"; toast("خواب تایمر خاموش شد."); return; }
+  if (mins === 0){
+    $("sleepBtn").textContent = "😴 خواب";
+    toast("خواب تایمر خاموش شد."); return;
+  }
   $("sleepBtn").textContent = "😴 " + mins + " دقیقه";
   sleepEnd = Date.now() + mins*60*1000;
   $("sleepBadge").classList.add("show");
@@ -1027,30 +1282,32 @@ $("sleepBtn").onclick = () => {
   toast("خواب تایمر: " + mins + " دقیقه");
 };
 
-/* ═══════════ Clock ═══════════ */
+/* ════════════════════ Clock ════════════════════ */
 function updateClock(){
   const now = new Date();
   $("clock").textContent = now.toLocaleTimeString("fa-IR", {hour12:false});
-  $("broadcastClock").textContent = now.toLocaleTimeString("fa-IR", {hour:"2-digit", minute:"2-digit", hour12:false});
-  $("date").textContent = now.toLocaleDateString("fa-IR", {day:"numeric", month:"short", year:"numeric"});
-  $("hudTime").textContent = now.toLocaleTimeString("fa-IR", {hour:"2-digit", minute:"2-digit", hour12:false});
-  $("hudDate").textContent = now.toLocaleDateString("fa-IR", {weekday:"long", day:"numeric", month:"long"});
+  $("broadcastClock").textContent =
+    now.toLocaleTimeString("fa-IR", {hour:"2-digit", minute:"2-digit", hour12:false});
+  $("date").textContent =
+    now.toLocaleDateString("fa-IR", {day:"numeric", month:"short", year:"numeric"});
+  $("hudTime").textContent =
+    now.toLocaleTimeString("fa-IR", {hour:"2-digit", minute:"2-digit", hour12:false});
+  $("hudDate").textContent =
+    now.toLocaleDateString("fa-IR", {weekday:"long", day:"numeric", month:"long"});
 }
 function initSettings(){
-  $("autoBtn").textContent = "▶ خودکار: " + (autoplay ? "روشن" : "خاموش");
+  $("autoBtn").textContent    = "▶ خودکار: "   + (autoplay ? "روشن" : "خاموش");
   $("autoBtn").classList.toggle("on", autoplay);
-  $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
+  $("repeatBtn").textContent  = "🔁 تکرار: "   + (repeat   ? "روشن" : "خاموش");
   $("repeatBtn").classList.toggle("on", repeat);
-  $("crtBtn").textContent = "📺 CRT: " + (crt ? "روشن" : "خاموش");
+  $("crtBtn").textContent     = "📺 CRT: "      + (crt      ? "روشن" : "خاموش");
   $("crtBtn").classList.toggle("on", crt);
-  $("shuffleBtn").textContent = "🔀 تصادفی: " + (shuffle ? "روشن" : "خاموش");
+  $("shuffleBtn").textContent = "🔀 تصادفی: " + (shuffle  ? "روشن" : "خاموش");
   $("shuffleBtn").classList.toggle("on", shuffle);
-  $("allday247Btn").textContent = endless ? "🌙 ۲۴ ساعته: روشن" : "🌙 ۲۴ ساعته: خاموش";
-  $("allday247Btn").classList.toggle("on", endless);
   $("screen").classList.toggle("crt", crt);
 }
 
-/* ═══════════ Boot ═══════════ */
+/* ════════════════════ Boot ════════════════════ */
 async function boot(){
   db = await openDB().catch(err => { console.error(err); return null; });
   loadData();
@@ -1058,28 +1315,37 @@ async function boot(){
   renderAll();
   updateClock();
   setInterval(updateClock, 1000);
-  // هر ۳۰ ثانیه، اگه کانال عوض شده بود، EPG رو رفرش کن
+
+  // رفرش خودکار EPG هر ۳۰ ثانیه (برای وقتی که اسلات عوض می‌شه)
+  setInterval(() => { renderGuide(); }, 30000);
+
+  // پلیر مخفی برای گرفتن مدت‌ها
+  ensureDurPlayer();
+
+  // گرفتن مدت ویدیوهای قدیمی که duration ندارن
+  setTimeout(() => {
+    if (getList().some(v => !v.duration || v.duration <= 0)){
+      refreshAllDurations();
+    }
+  }, 1500);
+
+  // چک دوره‌ای حالت ۲۴/۷: اگه از جدول عقب موندیم، برگرد
   setInterval(() => {
-    if (is24_7 && !isPlaying){
-      // اگه در ۲۴/۷ هستیم و پخش قطع شده، برگرد روی live
-      const list = getList();
-      if (!list.length) return;
-      const idx = getLiveIndex(list);
-      if (idx >= 0 && idx !== current) playIndex(idx, {silent:true});
+    if (!is24_7) return;
+    const list = getList();
+    if (!list.length) return;
+    const pos = getLivePos(list, Date.now() + 500);
+    if (pos && pos.index !== current){
+      playAtOffset(pos.index, pos.offsetSec);
     }
   }, 30000);
 
-  // شروع ۲۴/۷ اگه پلی‌لیست غیرخالی بود و کاربر قبلاً روشنش کرده
-  if (getList().length && localStorage.getItem("amtv_247") === "1"){
-    start247();
+  // اگه قبلاً ۲۴/۷ روشن بوده، ادامه بده
+  if (getList().length && localStorage.getItem(MODE_KEY) === "1"){
+    setTimeout(() => start247(), 500);
   }
 }
 boot();
-
-// ذخیرهٔ وضعیت ۲۴/۷
-const _origStart247 = start247, _origStop247 = stop247;
-start247 = function(){ _origStart247(); try{ localStorage.setItem("amtv_247","1"); }catch(_){} };
-stop247  = function(){ _origStop247();  try{ localStorage.setItem("amtv_247","0"); }catch(_){} };
 </script>
 </body>
-      </html>
+  </html>
