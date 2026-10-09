@@ -1,369 +1,157 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#101b16">
-<title>WALKO TV — Your Personal Television</title>
-
+<title>WALKO TV</title>
 <style>
-:root {
-  --bg:#101b16;
-  --panel:#192820;
-  --panel2:#21362a;
-  --cream:#f4edda;
-  --muted:#aab7a9;
-  --line:#3b5140;
-  --accent:#e8b85b;
-  --brightness:1;
-  --contrast:1;
-  --saturation:1;
-}
-* { box-sizing:border-box }
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--cream);
-  font-family:Tahoma,Arial,sans-serif;
-}
-button,input { font:inherit }
-button {
-  cursor:pointer;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--panel2);
-  color:var(--cream);
-  padding:10px 12px;
-}
-button:hover { border-color:var(--accent) }
-button.primary {
-  background:var(--accent);
-  color:#101b16;
-  font-weight:bold;
-}
-input {
-  width:100%;
-  min-width:0;
-  padding:11px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--bg);
-  color:var(--cream);
-}
-header {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  border-bottom:1px solid var(--line);
-  background:#121f18;
-}
-.logo {
-  width:52px;
-  height:52px;
-  display:grid;
-  place-items:center;
-  border:2px solid var(--accent);
-  border-radius:9px;
-  color:var(--accent);
-  font-weight:900;
-  font-size:13px;
-  text-align:center;
-  line-height:1.15;
-}
-.brand h1 {
-  margin:0;
-  color:var(--accent);
-  letter-spacing:2px;
-  font-size:22px;
-}
-.brand p {
-  margin:5px 0 0;
-  font-size:10px;
-  color:var(--muted);
-}
-.header-right {
-  margin-right:auto;
-  text-align:left;
-}
-#clock { color:var(--accent);font-weight:bold;font-size:18px }
-#date { color:var(--muted);font-size:10px;margin-top:4px }
-main { max-width:1000px;margin:auto;padding:14px }
-.panel {
-  background:var(--panel);
-  border:1px solid #293c30;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:14px;
-}
-.eyebrow {
-  font-size:10px;
-  letter-spacing:2px;
-  color:var(--accent);
-}
-.nowbar {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin:12px 0;
-}
-.live { color:#ffb1a9;font-size:11px;font-weight:bold }
-.dot {
-  display:inline-block;
-  width:7px;height:7px;
-  border-radius:50%;
-  background:#e85d52;
-  margin-left:5px;
-  animation:pulse 1.5s infinite;
-}
-@keyframes pulse { 50%{opacity:.35} }
-#nowTitle { flex:1;font-size:13px;overflow-wrap:anywhere }
-.badge {
-  border:1px solid var(--accent);
-  color:var(--accent);
-  border-radius:5px;
-  padding:5px 8px;
-  font-size:10px;
-}
-#screen {
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  overflow:hidden;
-  background:#050806;
-  border:1px solid var(--accent);
-  border-radius:10px;
-  isolation:isolate;
-}
-#player {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-}
-#player iframe {
-  width:100%;
-  height:100%;
-  border:0;
-  filter:brightness(var(--brightness))
-    contrast(var(--contrast))
-    saturate(var(--saturation));
-}
-#screen:fullscreen {
-  width:100vw;height:100vh;
-  aspect-ratio:auto;
-  border:0;border-radius:0;
-}
-.watermark {
-  position:absolute;
-  z-index:5;
-  top:12px;left:12px;
-  display:flex;align-items:center;gap:7px;
-  padding:7px 9px;
-  border:1px solid var(--accent);
-  border-radius:6px;
-  background:#101b16dc;
-  color:var(--accent);
-  font-size:12px;
-  font-weight:bold;
-  pointer-events:none;
-}
-.wm-icon { border:1px solid var(--accent);padding:3px;border-radius:3px }
-.screen-meta {
-  position:absolute;z-index:5;
-  top:12px;right:12px;
-  padding:6px 8px;
-  background:#101b16dc;
-  border:1px solid var(--line);
-  border-radius:5px;
-  font-size:10px;
-  pointer-events:none;
-}
-#ident {
-  position:absolute;z-index:10;
-  inset:0;
-  display:none;
-  place-items:center;
-  background:#101b16;
-  color:var(--accent);
-  text-align:center;
-}
-#ident.show { display:grid;animation:fadein .4s }
-#ident strong {
-  display:block;
-  font-size:clamp(30px,8vw,65px);
-  letter-spacing:5px;
-}
-#ident small {
-  display:block;margin-top:12px;
-  color:var(--cream);letter-spacing:2px;
-}
-@keyframes fadein { from{opacity:0}to{opacity:1} }
-#radioVisual {
-  display:none;
-  position:absolute;z-index:3;
-  inset:0;place-items:center;
-  background:radial-gradient(ellipse,#293b2a,#050806 75%);
-  color:var(--accent);
-  font-size:clamp(22px,6vw,48px);
-  letter-spacing:5px;font-weight:bold;
-  text-shadow:0 0 22px var(--accent);
-  pointer-events:none;
-}
-#screen.radio #radioVisual { display:grid }
-#screen.radio #player iframe { opacity:0 }
-.crt:after {
-  content:"";
-  position:absolute;z-index:4;
-  inset:0;pointer-events:none;
-  background:repeating-linear-gradient(
-    to bottom,transparent 0,transparent 3px,#00000015 4px
-  );
-}
-.controls {
-  display:flex;justify-content:center;align-items:center;
-  gap:7px;flex-wrap:wrap;margin-top:12px;
-}
-.controls button { flex:1;min-width:65px }
-.status {
-  font-size:11px;color:var(--muted);
-  line-height:1.9;margin-top:9px;
-}
-.sectionhead {
-  display:flex;justify-content:space-between;
-  align-items:center;gap:8px;margin-bottom:12px;
-}
-.sectionhead h2 { font-size:15px;margin:0 }
-.addrow { display:flex;gap:8px;margin-top:8px }
-.addrow button { white-space:nowrap }
-.settings { display:flex;gap:8px;flex-wrap:wrap }
-.settings button { font-size:11px }
-.list { display:flex;flex-direction:column;gap:8px }
-.track {
-  display:flex;align-items:center;gap:8px;
-  padding:10px;background:#142119;
-  border:1px solid var(--line);border-radius:8px;
-}
-.track.active { border-color:var(--accent) }
-.track-title {
-  flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere;
-}
-.track button { padding:7px;font-size:11px }
-.track-num { color:var(--accent);font-size:11px }
-.empty {
-  padding:20px 8px;text-align:center;
-  color:var(--muted);font-size:12px;line-height:2;
-}
-.guide-item {
-  display:flex;align-items:center;gap:10px;
-  padding:10px;background:#142119;
-  border:1px solid var(--line);border-radius:8px;cursor:pointer;
-}
-.guide-time {
-  color:var(--accent);font-family:monospace;
-  font-size:12px;min-width:65px;
-}
-.guide-title { flex:1;font-size:12px;overflow-wrap:anywhere }
-.guide-state { font-size:10px;color:var(--muted) }
-label {
-  display:block;color:var(--muted);
-  font-size:12px;margin:10px 0 6px;
-}
-input[type=range] { padding:0;accent-color:var(--accent) }
-#customizePanel { display:none }
-.hint { color:var(--muted);font-size:11px;line-height:1.9 }
-footer {
-  text-align:center;padding:20px;
-  color:#718276;font-size:10px;line-height:2;
-}
-#toast {
-  position:fixed;z-index:30;bottom:16px;left:50%;
-  transform:translateX(-50%);display:none;
-  max-width:90%;padding:11px 15px;
-  border:1px solid var(--accent);border-radius:9px;
-  background:#25382a;color:var(--cream);
-  font-size:12px;text-align:center;
-}
-@media(max-width:650px) {
-  header { padding:10px }
-  .brand h1 { font-size:18px }
-  .logo { width:45px;height:45px }
-  main { padding:9px }
-  .panel { padding:11px }
-  .screen-meta { font-size:9px }
-  .watermark { top:7px;left:7px;font-size:10px }
-}
+:root{--bg:#101b16;--panel:#192820;--panel2:#21362a;--cream:#f4edda;--muted:#aab7a9;--line:#3b5140;--accent:#e8b85b;--br:1;--co:1;--sa:1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:Tahoma,Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--cream);padding:10px 12px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#101b16;font-weight:bold}
+input{width:100%;min-width:0;padding:11px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--cream)}
+input[type=range]{padding:0;accent-color:var(--accent)}
+input[type=color]{padding:2px;height:40px}
+header{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--line);background:#121f18}
+.logo{width:52px;height:52px;display:grid;place-items:center;border:2px solid var(--accent);border-radius:9px;color:var(--accent);font-weight:900;font-size:13px;text-align:center;line-height:1.15}
+.brand h1{margin:0;color:var(--accent);letter-spacing:2px;font-size:22px}
+.brand p{margin:5px 0 0;font-size:10px;color:var(--muted)}
+.hr{margin-right:auto;text-align:left}
+#clock{color:var(--accent);font-weight:bold;font-size:18px;font-family:monospace}
+#date{color:var(--muted);font-size:10px;margin-top:4px}
+main{max-width:1000px;margin:auto;padding:14px}
+.panel{background:var(--panel);border:1px solid #293c30;border-radius:12px;padding:14px;margin-bottom:14px}
+.eyebrow{font-size:10px;letter-spacing:2px;color:var(--accent)}
+.nowbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.live{color:#ffb1a9;font-size:11px;font-weight:bold}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e85d52;margin-left:5px;animation:pulse 1.5s infinite}
+@keyframes pulse{50%{opacity:.3}}
+#nowTitle{flex:1;font-size:13px;overflow-wrap:anywhere}
+.badge{border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:5px 8px;font-size:10px}
+
+/* ---------- TV screen ---------- */
+#screen{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;border:2px solid var(--accent);border-radius:14px;isolation:isolate}
+#screen:fullscreen{width:100vw;height:100vh;aspect-ratio:auto;border:0;border-radius:0}
+#pw{position:absolute;inset:0;z-index:1;animation:flick 4s infinite}
+#pw iframe{width:100%;height:100%;border:0;filter:brightness(var(--br)) contrast(var(--co)) saturate(var(--sa))}
+@keyframes flick{0%,100%{opacity:1}50%{opacity:.985}}
+#noise{position:absolute;inset:0;z-index:2;width:100%;height:100%;display:none;image-rendering:pixelated}
+#radioVisual{display:none;position:absolute;inset:0;z-index:3;place-items:center;background:radial-gradient(ellipse,#293b2a,#050806 75%);color:var(--accent);font-size:clamp(22px,6vw,48px);letter-spacing:5px;font-weight:bold;text-shadow:0 0 22px var(--accent);pointer-events:none}
+#screen.radio #radioVisual{display:grid}
+#screen.radio #pw{opacity:0}
+.crt:after{content:"";position:absolute;inset:0;z-index:6;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,#00000020 4px);box-shadow:inset 0 0 70px #000c}
+.watermark{position:absolute;z-index:5;top:10px;left:10px;display:flex;align-items:center;gap:6px;padding:5px 8px;border:1px solid var(--accent);border-radius:6px;background:#101b16cc;color:var(--accent);font-size:11px;font-weight:bold;pointer-events:none}
+.wm-icon{border:1px solid var(--accent);padding:2px;border-radius:3px}
+#meta{position:absolute;z-index:5;bottom:10px;left:10px;padding:5px 8px;background:#101b16cc;border:1px solid var(--line);border-radius:5px;font-size:10px;font-family:monospace;pointer-events:none}
+#osd{position:absolute;z-index:7;top:10px;right:12px;color:#7dff8a;font-family:monospace;font-size:clamp(20px,6vw,38px);font-weight:bold;text-shadow:0 0 8px #000,2px 2px 0 #000;opacity:0;transition:opacity .4s;pointer-events:none}
+#osd.show{opacity:1}
+#lower{position:absolute;z-index:7;bottom:34px;right:0;max-width:85%;padding:8px 14px;background:linear-gradient(90deg,transparent,#101bf0 0) ,#101b16ee;border-right:4px solid var(--accent);font-size:12px;transform:translateX(110%);transition:transform .5s;pointer-events:none;overflow-wrap:anywhere}
+#lower.show{transform:none}
+#lower small{display:block;color:var(--accent);font-size:9px;letter-spacing:2px;margin-bottom:3px}
+#ident{position:absolute;inset:0;z-index:10;display:none;place-items:center;text-align:center;background:radial-gradient(ellipse at center,#1d3326,#0a110d 80%);color:var(--accent);padding:8px}
+#ident.show{display:grid;animation:fadein .4s}
+@keyframes fadein{from{opacity:0}}
+#identName{display:block;font-size:clamp(24px,7vw,56px);letter-spacing:5px}
+#ident small{display:block;margin:4px 0 8px;color:var(--cream);letter-spacing:3px;font-size:clamp(8px,2vw,12px)}
+#identList{width:min(420px,92%);margin:auto;font-size:clamp(9px,2.4vw,13px)}
+#identList div{display:flex;gap:10px;padding:3px 8px;border-bottom:1px solid #ffffff18;color:var(--cream);text-align:right}
+#identList div span:first-child{color:var(--accent);font-family:monospace}
+#identList div.now{color:var(--accent);font-weight:bold}
+.ibar{width:min(420px,92%);height:3px;background:#ffffff22;margin:10px auto 0}
+.ibar i{display:block;height:100%;width:0;background:var(--accent)}
+#pbtn{display:none;position:absolute;inset:0;z-index:12;width:100%;border:0;border-radius:0;background:#000;color:var(--accent);font-size:clamp(14px,4vw,24px);place-items:center}
+#screen.off #pbtn{display:grid}
+#screen.off>*:not(#pbtn){visibility:hidden}
+#screen.boot{animation:pon .6s}
+@keyframes pon{0%{transform:scale(.6,.01);filter:brightness(5)}60%{transform:scale(1,.03);filter:brightness(3)}100%{transform:none}}
+
+.controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px}
+.controls button{flex:1;min-width:80px}
+.controls input{flex:1;min-width:90px}
+.status{font-size:11px;color:var(--muted);line-height:1.9;margin-top:9px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.sectionhead h2{font-size:15px;margin:0}
+.addrow{display:flex;gap:8px;margin-top:8px}
+.addrow button{white-space:nowrap}
+.settings{display:flex;gap:8px;flex-wrap:wrap}
+.settings button{font-size:11px}
+.settings button.on{border-color:var(--accent)}
+.list{display:flex;flex-direction:column;gap:8px}
+.track,.gi{display:flex;align-items:center;gap:8px;padding:10px;background:#142119;border:1px solid var(--line);border-radius:8px}
+.track.active,.gi.live{border-color:var(--accent)}
+.track-title,.gt{flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere}
+.track button{padding:7px;font-size:11px}
+.track-num,.gtime{color:var(--accent);font-size:11px;font-family:monospace}
+.track small{color:var(--muted);font-family:monospace;font-size:10px}
+.gstate{font-size:10px;color:var(--muted)}
+.gi.live .gstate{color:#ffb1a9}
+.empty{padding:20px 8px;text-align:center;color:var(--muted);font-size:12px;line-height:2}
+label{display:block;color:var(--muted);font-size:12px;margin:10px 0 6px}
+#customizePanel{display:none}
+.hint{color:var(--muted);font-size:11px;line-height:1.9}
+footer{text-align:center;padding:20px;color:#718276;font-size:10px;line-height:2}
+#toast{position:fixed;z-index:30;bottom:16px;left:50%;transform:translateX(-50%);display:none;max-width:90%;padding:11px 15px;border:1px solid var(--accent);border-radius:9px;background:#25382a;font-size:12px;text-align:center}
+@media(max-width:650px){header{padding:10px}.brand h1{font-size:18px}.logo{width:45px;height:45px}main{padding:9px}.panel{padding:11px}}
 </style>
 </head>
-
 <body>
 <header>
   <div class="logo">WAL<br>KO</div>
-  <div class="brand">
-    <h1 id="brandName">WALKO TV</h1>
-    <p>YOUR WORLD · YOUR CHANNEL</p>
-  </div>
-  <div class="header-right">
-    <div id="clock">00:00:00</div>
-    <div id="date">WALKO BROADCAST</div>
-  </div>
+  <div class="brand"><h1 id="brandName">WALKO TV</h1><p>YOUR WORLD · YOUR CHANNEL</p></div>
+  <div class="hr"><div id="clock">00:00:00</div><div id="date"></div></div>
 </header>
 
 <main>
   <section class="panel">
-    <div class="eyebrow">WALKO TELEVISION · PERSONAL BROADCAST</div>
+    <div class="eyebrow">WALKO TELEVISION · 24/7 BROADCAST</div>
     <div class="nowbar">
       <span class="live"><span class="dot"></span>ON AIR</span>
       <span id="nowTitle">به WALKO TV خوش آمدی!</span>
       <span class="badge">CH 01</span>
     </div>
 
-    <div id="screen" class="crt">
-      <div id="player"></div>
+    <div id="screen" class="crt off">
+      <div id="pw"><div id="player"></div></div>
+      <canvas id="noise" width="128" height="72"></canvas>
       <div id="radioVisual">WALKO RADIO</div>
-      <div class="watermark">
-        <span class="wm-icon">WK</span>
-        <span id="watermarkName">WALKO TV</span>
-      </div>
-      <div class="screen-meta">CH 01 · BROADCAST</div>
+      <div class="watermark"><span class="wm-icon">WK</span><span id="wmName">WALKO TV</span></div>
+      <div id="meta">CH 01</div>
+      <div id="osd">CH 01</div>
+      <div id="lower"></div>
       <div id="ident">
         <div>
           <strong id="identName">WALKO TV</strong>
-          <small id="identCaption">UP NEXT · PLEASE STAY TUNED</small>
+          <small>SCHEDULE · جدول پخش</small>
+          <div id="identList"></div>
+          <div class="ibar"><i id="identBar"></i></div>
         </div>
       </div>
+      <button id="pbtn">⏻ روشن‌کردن تلویزیون</button>
     </div>
 
     <div class="controls">
-      <button id="prevBtn">⏮ قبلی</button>
-      <button id="playBtn" class="primary">▶ پخش</button>
-      <button id="nextBtn">بعدی ⏭</button>
+      <button id="pwrBtn">⏻ روشن</button>
+      <button id="playBtn" class="primary">▶ پخش زنده</button>
+      <button id="syncBtn">🎯 همگام</button>
       <button id="fullBtn">⛶ تمام‌صفحه</button>
+      <input id="vol" type="range" min="0" max="100" value="80" title="صدا">
     </div>
-    <div class="status" id="playerStatus">
-      برای شروع، یک ویدیو به پلی‌لیست اضافه کن.
-    </div>
+    <div class="status" id="status">برای شروع، یک ویدیو اضافه کن و تلویزیون را روشن کن.</div>
   </section>
 
   <section class="panel">
-    <div class="sectionhead">
-      <h2>📡 جدول پخش WALKO</h2>
-      <span class="badge">ONE CHANNEL</span>
-    </div>
+    <div class="sectionhead"><h2>📡 جدول پخش امروز</h2><span class="badge">ONE CHANNEL</span></div>
     <div id="guide" class="list"></div>
-    <p class="hint">برنامه‌ها به ترتیب پلی‌لیست پخش می‌شن.</p>
+    <p class="hint">جدول از ساعت ۰۰:۰۰ شروع می‌شود و دور می‌زند. قبل از هر برنامه، لوگو و جدول نمایش داده می‌شود.</p>
   </section>
 
   <section class="panel">
-    <div class="sectionhead">
-      <h2>📼 برنامه‌های من</h2>
-      <span class="badge" id="trackCount">۰ برنامه</span>
-    </div>
-    <input id="videoUrl" type="url"
-      placeholder="لینک ویدیوی YouTube را وارد کن">
+    <div class="sectionhead"><h2>📼 برنامه‌های من</h2><span class="badge" id="trackCount">۰ برنامه</span></div>
+    <input id="videoUrl" type="url" placeholder="لینک ویدیوی YouTube را وارد کن">
     <div class="addrow">
       <button id="addBtn" class="primary">＋ افزودن برنامه</button>
       <button id="clearBtn">پاک‌کردن لیست</button>
@@ -374,549 +162,344 @@ footer {
   <section class="panel">
     <div class="sectionhead"><h2>⚙ کنترل تلویزیون</h2></div>
     <div class="settings">
-      <button id="radioBtn">📻 حالت رادیو: خاموش</button>
-      <button id="repeatBtn">🔁 تکرار: روشن</button>
+      <button id="radioBtn">📻 حالت رادیو</button>
       <button id="crtBtn">📺 افکت CRT: روشن</button>
       <button id="customizeBtn">🎨 شخصی‌سازی</button>
     </div>
     <div id="customizePanel">
       <label for="stationName">نام شبکه</label>
-      <input id="stationName" maxlength="32" value="WALKO TV">
-      <label for="brightness">روشنایی تصویر</label>
-      <input id="brightness" type="range" min="50" max="150" value="100">
-      <label for="contrast">کنتراست تصویر</label>
-      <input id="contrast" type="range" min="50" max="180" value="100">
-      <label for="saturation">اشباع رنگ</label>
-      <input id="saturation" type="range" min="0" max="200" value="100">
-      <button id="saveNameBtn" class="primary" style="margin-top:12px">
-        ذخیرهٔ تنظیمات
-      </button>
+      <input id="stationName" maxlength="32">
+      <label for="accent">رنگ اصلی</label>
+      <input id="accent" type="color">
+      <label for="br">روشنایی تصویر</label>
+      <input id="br" type="range" min="50" max="150">
+      <label for="co">کنتراست تصویر</label>
+      <input id="co" type="range" min="50" max="180">
+      <label for="sa">اشباع رنگ</label>
+      <input id="sa" type="range" min="0" max="200">
+      <button id="resetBtn" style="margin-top:12px">بازنشانی تصویر</button>
     </div>
   </section>
 </main>
 
-<footer>
-  <strong id="footerName">WALKO TV</strong><br>
-  YOUR WORLD · YOUR CHANNEL<br>
-  PERSONAL BROADCAST SYSTEM
-</footer>
+<footer><strong id="footerName">WALKO TV</strong><br>YOUR WORLD · YOUR CHANNEL<br>PERSONAL BROADCAST SYSTEM</footer>
 <div id="toast"></div>
+<div id="probe" style="position:fixed;left:-9999px;top:0;width:200px;height:200px"></div>
 
 <script>
 "use strict";
-
 const $ = id => document.getElementById(id);
-const STORE_KEY = "walkotv_beta1_playlist";
-const SETTINGS_KEY = "walkotv_beta1_settings";
+const KEY = "walkotv_v2", IDENT = 8;
 
-let playlist = [];
-let current = -1;
-let player = null;
-let playerReady = false;
-let repeat = true;
-let crt = true;
-let radio = false;
-let identTimer = null;
-let nextAfterIdent = null;
-let toastTimer = null;
+let list = [];
+let cfg = {name:"WALKO TV", accent:"#e8b85b", crt:true, radio:false, on:false, br:100, co:100, sa:100, vol:80};
+let P, ready = false, Q, qReady = false, queue = [], busy = false;
+let loaded = "", identKey = "", guideKey = "", curIdx = -1, perm = false;
+let toastT, tuneT, osdT, lowT, noiseOn = false;
 
-function toast(message) {
-  const el = $("toast");
-  el.textContent = message;
-  el.style.display = "block";
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.style.display = "none", 3500);
+/* ---------- helpers ---------- */
+const pad = n => String(n).padStart(2, "0");
+function clk(s){ s = Math.floor(s) % 86400; return pad(Math.floor(s/3600)) + ":" + pad(Math.floor(s%3600/60)) + ":" + pad(s%60); }
+function fmt(s){ s = Math.max(0, Math.floor(s)); const h = Math.floor(s/3600), m = Math.floor(s%3600/60); return (h ? h + ":" + pad(m) : m) + ":" + pad(s%60); }
+function secs(){ const d = new Date(); return (d - new Date(d).setHours(0,0,0,0)) / 1000; }
+function toast(m){ const e = $("toast"); e.textContent = m; e.style.display = "block"; clearTimeout(toastT); toastT = setTimeout(() => e.style.display = "none", 3000); }
+
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({list, cfg})); }catch(e){ toast("حافظهٔ مرورگر در دسترس نیست."); } }
+function load(){
+  try{
+    const d = JSON.parse(localStorage.getItem(KEY) || "{}");
+    if(Array.isArray(d.list)) list = d.list
+      .filter(v => v && /^[\w-]{11}$/.test(v.id) && typeof v.title === "string")
+      .map(v => ({id:v.id, title:v.title, dur:+v.dur > 0 ? Math.round(+v.dur) : 60, pend:!!v.pend}));
+    if(d.cfg) Object.assign(cfg, d.cfg);
+  }catch(e){}
+  cfg.on = false;
 }
 
-function savePlaylist() {
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify(playlist));
-  } catch {
-    toast("حافظهٔ مرورگر در دسترس نیست.");
-  }
-}
-
-function loadPlaylist() {
-  try {
-    const data = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
-    if (Array.isArray(data)) {
-      playlist = data.filter(v =>
-        v && typeof v.id === "string" &&
-        /^[\w-]{11}$/.test(v.id) &&
-        typeof v.title === "string"
-      );
+function getId(input){
+  try{
+    const u = new URL(input), h = u.hostname.replace(/^www\./, "");
+    if(h === "youtu.be") return u.pathname.split("/").filter(Boolean)[0] || null;
+    if(h.endsWith("youtube.com") || h.endsWith("youtube-nocookie.com")){
+      const v = u.searchParams.get("v"); if(v) return v;
+      const p = u.pathname.split("/").filter(Boolean), i = p.findIndex(x => ["embed","shorts","live"].includes(x));
+      if(i >= 0) return p[i+1] || null;
     }
-  } catch {
-    playlist = [];
+  }catch(e){}
+  return /^[\w-]{11}$/.test(input.trim()) ? input.trim() : null;
+}
+
+/* ---------- schedule (24/7, anchored to midnight) ---------- */
+function slot(){
+  if(!list.length) return null;
+  const tot = list.reduce((a, v) => a + v.dur + IDENT, 0), n = secs(), cyc = Math.floor(n / tot) * tot;
+  const t = n - cyc; let acc = 0;
+  for(let i = 0; i < list.length; i++){
+    const L = list[i].dur + IDENT;
+    if(t < acc + L) return {i, off:t - acc, len:L, tot, cyc, st:cyc + acc};
+    acc += L;
+  }
+  return null;
+}
+
+/* ---------- TV effects ---------- */
+const cv = $("noise"), cx = cv.getContext("2d");
+setInterval(() => {
+  if(!noiseOn) return;
+  const im = cx.createImageData(128, 72);
+  for(let i = 0; i < im.data.length; i += 4){ const v = Math.random() * 255; im.data[i] = im.data[i+1] = im.data[i+2] = v; im.data[i+3] = 255; }
+  cx.putImageData(im, 0, 0);
+}, 70);
+function noise(on, ms){
+  noiseOn = on; cv.style.display = on ? "block" : "none"; clearTimeout(tuneT);
+  if(on && ms) tuneT = setTimeout(() => noise(false), ms);
+}
+function osd(t){ const e = $("osd"); e.textContent = t; e.classList.add("show"); clearTimeout(osdT); osdT = setTimeout(() => e.classList.remove("show"), 3000); }
+function lower(t){
+  const e = $("lower"); e.replaceChildren();
+  const s = document.createElement("small"); s.textContent = "NOW PLAYING";
+  e.append(s, document.createTextNode(t));
+  e.classList.add("show"); clearTimeout(lowT); lowT = setTimeout(() => e.classList.remove("show"), 6000);
+}
+
+/* ---------- ident + schedule card (start of every program) ---------- */
+function renderIdent(s){
+  const k = s.i + ":" + s.cyc + ":" + list.length;
+  if(identKey === k) return;
+  identKey = k;
+  $("identName").textContent = cfg.name;
+  const box = $("identList"); box.replaceChildren();
+  let t = s.st;
+  const n = Math.min(list.length, 5);
+  for(let j = 0; j < n; j++){
+    const idx = (s.i + j) % list.length;
+    const row = document.createElement("div"); row.className = j ? "" : "now";
+    const a = document.createElement("span"), b = document.createElement("span");
+    a.textContent = clk(t + IDENT).slice(0, 5);
+    b.textContent = (j ? "" : "● ") + list[idx].title;
+    row.append(a, b); box.append(row);
+    t += list[idx].dur + IDENT;
   }
 }
 
-function getVideoId(input) {
-  try {
-    const url = new URL(input);
-    const host = url.hostname.toLowerCase();
-
-    if (host === "youtu.be") {
-      return url.pathname.split("/").filter(Boolean)[0] || null;
-    }
-
-    if (
-      host === "youtube.com" ||
-      host.endsWith(".youtube.com") ||
-      host === "youtube-nocookie.com" ||
-      host.endsWith(".youtube-nocookie.com")
-    ) {
-      const v = url.searchParams.get("v");
-      if (v) return v;
-
-      const parts = url.pathname.split("/").filter(Boolean);
-      const i = parts.findIndex(x =>
-        ["embed", "shorts", "live"].includes(x)
-      );
-      if (i >= 0) return parts[i + 1] || null;
-    }
-  } catch {}
-
-  const text = input.trim();
-  return /^[\w-]{11}$/.test(text) ? text : null;
-}
-
-function addVideo() {
-  const id = getVideoId($("videoUrl").value.trim());
-
-  if (!id || !/^[\w-]{11}$/.test(id)) {
-    toast("لینک معتبر YouTube وارد کن.");
-    return;
-  }
-  if (playlist.some(v => v.id === id)) {
-    toast("این ویدیو قبلاً اضافه شده.");
-    return;
-  }
-
-  playlist.push({id, title:"YouTube · " + id});
-  savePlaylist();
-  renderAll();
-  $("videoUrl").value = "";
-  toast("برنامه اضافه شد. برای دریافت عنوان، ویدیو را پخش کن.");
-}
-
-function renderPlaylist() {
-  const root = $("playlist");
-  root.replaceChildren();
-  $("trackCount").textContent = playlist.length + " برنامه";
-
-  if (!playlist.length) {
-    root.innerHTML = '<div class="empty">هنوز برنامه‌ای نداری.<br>لینک YouTube را بالا وارد کن.</div>';
-    return;
-  }
-
-  playlist.forEach((video, index) => {
-    const row = document.createElement("div");
-    row.className = "track" + (index === current ? " active" : "");
-
-    const num = document.createElement("span");
-    num.className = "track-num";
-    num.textContent = String(index + 1).padStart(2, "0");
-
-    const title = document.createElement("div");
-    title.className = "track-title";
-    title.textContent = video.title;
-
-    const play = document.createElement("button");
-    play.textContent = "▶";
-    play.title = "پخش برنامه";
-    play.onclick = () => playIndex(index, true);
-
-    const up = document.createElement("button");
-    up.textContent = "↑";
-    up.disabled = index === 0;
-    up.onclick = () => moveVideo(index, -1);
-
-    const down = document.createElement("button");
-    down.textContent = "↓";
-    down.disabled = index === playlist.length - 1;
-    down.onclick = () => moveVideo(index, 1);
-
-    const remove = document.createElement("button");
-    remove.textContent = "✕";
-    remove.onclick = () => removeVideo(index);
-
-    row.append(num, title, play, up, down, remove);
-    root.append(row);
-  });
-}
-
-function renderGuide() {
-  const root = $("guide");
-  root.replaceChildren();
-
-  if (!playlist.length) {
-    root.innerHTML = '<div class="empty">جدول پخش خالی است.</div>';
-    return;
-  }
-
-  playlist.forEach((video, index) => {
-    const row = document.createElement("div");
-    row.className = "guide-item";
-
-    const time = document.createElement("span");
-    time.className = "guide-time";
-    time.textContent = String(index + 1).padStart(2, "0");
-
-    const title = document.createElement("span");
-    title.className = "guide-title";
-    title.textContent = video.title;
-
-    const state = document.createElement("span");
-    state.className = "guide-state";
-    state.textContent = index === current ? "● LIVE" :
-      index === current + 1 ? "بعدی" : "در لیست";
-
-    row.append(time, title, state);
-    row.onclick = () => playIndex(index, true);
-    root.append(row);
-  });
-}
-
-function renderAll() {
-  renderPlaylist();
+/* ---------- main loop ---------- */
+function tick(){
+  $("clock").textContent = clk(secs());
+  $("date").textContent = new Date().toLocaleDateString([], {weekday:"short", day:"numeric", month:"short"});
   renderGuide();
-}
+  if(!cfg.on) return;
+  $("meta").textContent = "CH 01 · " + clk(secs()).slice(0, 5);
 
-function updateNowTitle() {
-  const video = playlist[current];
-  $("nowTitle").textContent = video ? video.title : "به WALKO TV خوش آمدی!";
-  $("playerStatus").textContent = video
-    ? "برنامهٔ انتخاب‌شده: " + video.title
-    : "برای شروع، یک ویدیو به پلی‌لیست اضافه کن.";
-}
+  const s = slot();
+  if(!s){
+    noise(true, 0); perm = true;
+    $("nowTitle").textContent = "بدون برنامه";
+    $("status").textContent = "جدول خالی است؛ ویدیو اضافه کن.";
+    return;
+  }
+  if(perm){ noise(false); perm = false; }
 
-function showIdent(caption, callback) {
-  clearTimeout(identTimer);
-  nextAfterIdent = callback;
-  $("identName").textContent = localStorage.getItem("walkotv_name") || "WALKO TV";
-  $("identCaption").textContent = caption;
-  $("ident").classList.add("show");
+  const v = list[s.i]; curIdx = s.i;
+  $("nowTitle").textContent = v.title;
 
-  identTimer = setTimeout(() => {
+  if(s.off < IDENT){                       // ident phase
+    if(loaded){ loaded = ""; if(ready) P.stopVideo(); }
+    renderIdent(s);
+    $("identBar").style.width = (s.off / IDENT * 100) + "%";
+    $("ident").classList.add("show");
+    $("status").textContent = "به‌زودی: " + v.title;
+  } else {                                 // program phase
     $("ident").classList.remove("show");
-    const action = nextAfterIdent;
-    nextAfterIdent = null;
-    if (action) action();
-  }, 1200);
+    const key = v.id + ":" + s.cyc + ":" + s.i;
+    if(loaded !== key && ready){
+      loaded = key; noise(true, 700); lower(v.title);
+      P.loadVideoById({videoId:v.id, startSeconds:Math.floor(s.off - IDENT)});
+    }
+    $("status").textContent = "در حال پخش: " + v.title + " — باقی‌مانده " + fmt(s.len - s.off);
+  }
 }
 
-function playIndex(index, withIdent = false) {
-  if (!playlist.length) {
-    toast("اول یک برنامه اضافه کن.");
-    return;
-  }
-
-  index = (index + playlist.length) % playlist.length;
-  current = index;
-  updateNowTitle();
-  renderAll();
-
-  if (withIdent) {
-    showIdent("UP NEXT · " + playlist[index].title, loadCurrentVideo);
+/* ---------- power ---------- */
+function setPower(on){
+  if(on && !ready){ toast("پلیر هنوز آماده نیست؛ چند ثانیه صبر کن."); return; }
+  if(on && !list.length){ toast("اول یک برنامه اضافه کن."); return; }
+  cfg.on = on;
+  const sc = $("screen");
+  sc.classList.toggle("off", !on);
+  $("pwrBtn").textContent = on ? "⏻ خاموش" : "⏻ روشن";
+  loaded = ""; identKey = "";
+  if(on){
+    sc.classList.remove("boot"); void sc.offsetWidth; sc.classList.add("boot");
+    noise(true, 900); osd("CH 01"); P.setVolume(cfg.vol); tick();
   } else {
-    loadCurrentVideo();
+    if(ready) P.stopVideo();
+    noise(false); $("ident").classList.remove("show");
+    $("status").textContent = "تلویزیون خاموش است.";
   }
 }
 
-function loadCurrentVideo() {
-  const video = playlist[current];
-  if (!video) return;
-
-  updateNowTitle();
-  renderAll();
-
-  if (!playerReady || !player) {
-    toast("پلیر هنوز آماده نیست؛ چند ثانیه صبر کن.");
-    return;
-  }
-
-  try {
-    player.loadVideoById(video.id);
-  } catch {
-    toast("پخش ویدیو شروع نشد. دوباره امتحان کن.");
-  }
-}
-
-function nextVideo() {
-  if (!playlist.length) return;
-  if (current + 1 < playlist.length) {
-    playIndex(current + 1, true);
-  } else if (repeat) {
-    playIndex(0, true);
-  } else {
-    toast("پلی‌لیست به پایان رسید.");
-  }
-}
-
-function previousVideo() {
-  if (!playlist.length) return;
-  playIndex(current <= 0 ? playlist.length - 1 : current - 1, true);
-}
-
-function moveVideo(index, direction) {
-  const target = index + direction;
-  if (target < 0 || target >= playlist.length) return;
-
-  [playlist[index], playlist[target]] = [playlist[target], playlist[index]];
-
-  if (current === index) current = target;
-  else if (current === target) current = index;
-
-  savePlaylist();
-  renderAll();
-}
-
-function removeVideo(index) {
-  const removedCurrent = index === current;
-  playlist.splice(index, 1);
-
-  if (!playlist.length) {
-    current = -1;
-    if (playerReady) player.stopVideo();
-  } else if (index < current) {
-    current--;
-  } else if (removedCurrent) {
-    current = Math.min(index, playlist.length - 1);
-    loadCurrentVideo();
-  }
-
-  savePlaylist();
-  renderAll();
-  updateNowTitle();
-}
-
-function togglePlay() {
-  if (!playlist.length) {
-    toast("اول یک برنامه اضافه کن.");
-    return;
-  }
-  if (current < 0) {
-    playIndex(0, false);
-    return;
-  }
-  if (!playerReady) {
-    toast("پلیر هنوز آماده نیست.");
-    return;
-  }
-
-  const state = player.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) player.pauseVideo();
-  else player.playVideo();
-}
-
-function toggleRadio() {
-  radio = !radio;
-  $("screen").classList.toggle("radio", radio);
-  $("radioBtn").textContent = radio
-    ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
-  saveSettings();
-}
-
-function applyPictureSettings() {
-  document.documentElement.style.setProperty("--brightness", Number($("brightness").value) / 100);
-  document.documentElement.style.setProperty("--contrast", Number($("contrast").value) / 100);
-  document.documentElement.style.setProperty("--saturation", Number($("saturation").value) / 100);
-  saveSettings();
-}
-
-function saveSettings() {
-  const settings = {
-    repeat, crt, radio,
-    brightness:$("brightness").value,
-    contrast:$("contrast").value,
-    saturation:$("saturation").value
-  };
-  try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  } catch {}
-}
-
-function loadSettings() {
-  let s = {};
-  try { s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch {}
-
-  repeat = s.repeat !== false;
-  crt = s.crt !== false;
-  radio = s.radio === true;
-
-  $("brightness").value = s.brightness || 100;
-  $("contrast").value = s.contrast || 100;
-  $("saturation").value = s.saturation || 100;
-
-  $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
-  $("crtBtn").textContent = "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
-  $("radioBtn").textContent = radio ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
-
-  $("screen").classList.toggle("crt", crt);
-  $("screen").classList.toggle("radio", radio);
-  applyPictureSettings();
-}
-
-function applyStationName(name) {
-  name = name.trim().slice(0, 32) || "WALKO TV";
-  try { localStorage.setItem("walkotv_name", name); } catch {}
-
-  $("brandName").textContent = name;
-  $("watermarkName").textContent = name;
-  $("identName").textContent = name;
-  $("footerName").textContent = name;
-  document.title = name + " — Your Personal Television";
-}
-
-function updateClock() {
-  const now = new Date();
-  $("clock").textContent = now.toLocaleTimeString([], {
-    hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
-  });
-  $("date").textContent = now.toLocaleDateString([], {
-    weekday:"short", day:"numeric", month:"short"
+/* ---------- rendering ---------- */
+function renderPlaylist(){
+  const root = $("playlist"); root.replaceChildren();
+  $("trackCount").textContent = list.length + " برنامه";
+  if(!list.length){ root.innerHTML = '<div class="empty">هنوز برنامه‌ای نداری.<br>لینک YouTube را بالا وارد کن.</div>'; return; }
+  list.forEach((v, i) => {
+    const row = document.createElement("div"); row.className = "track" + (i === curIdx && cfg.on ? " active" : "");
+    const num = document.createElement("span"); num.className = "track-num"; num.textContent = pad(i + 1);
+    const t = document.createElement("div"); t.className = "track-title"; t.textContent = v.title;
+    const d = document.createElement("small"); d.textContent = v.pend ? "⏳" : fmt(v.dur);
+    const mk = (txt, fn, dis) => { const b = document.createElement("button"); b.textContent = txt; b.disabled = !!dis; b.onclick = fn; return b; };
+    row.append(num, t, d, mk("↑", () => move(i, -1), i === 0), mk("↓", () => move(i, 1), i === list.length - 1), mk("✕", () => removeVideo(i)));
+    root.append(row);
   });
 }
 
-$("addBtn").onclick = addVideo;
-$("videoUrl").addEventListener("keydown", e => {
-  if (e.key === "Enter") addVideo();
-});
-$("playBtn").onclick = togglePlay;
-$("nextBtn").onclick = nextVideo;
-$("prevBtn").onclick = previousVideo;
+function renderGuide(){
+  const s = slot();
+  const k = (s ? s.i + ":" + s.cyc : "x") + "|" + list.map(v => v.title + v.dur).join("~");
+  if(k === guideKey) return;
+  guideKey = k;
+  const root = $("guide"); root.replaceChildren();
+  if(!s){ root.innerHTML = '<div class="empty">جدول پخش خالی است.</div>'; return; }
+  let t = s.cyc;
+  list.forEach((v, i) => {
+    const row = document.createElement("div"); row.className = "gi" + (i === s.i ? " live" : "");
+    const a = document.createElement("span"); a.className = "gtime"; a.textContent = clk(t + IDENT).slice(0, 5);
+    const b = document.createElement("span"); b.className = "gt"; b.textContent = v.title;
+    const c = document.createElement("span"); c.className = "gstate";
+    c.textContent = i === s.i ? "● LIVE" : i === (s.i + 1) % list.length ? "بعدی" : i < s.i ? "گذشت" : "در لیست";
+    row.append(a, b, c); root.append(row);
+    t += v.dur + IDENT;
+  });
+}
 
-$("fullBtn").onclick = async () => {
-  try {
-    if (!document.fullscreenElement) await $("screen").requestFullscreen();
-    else await document.exitFullscreen();
-  } catch {
-    toast("تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود.");
-  }
-};
+function renderAll(){ guideKey = ""; renderPlaylist(); renderGuide(); }
 
-$("radioBtn").onclick = toggleRadio;
+function applyCfg(){
+  const r = document.documentElement.style;
+  r.setProperty("--accent", cfg.accent);
+  r.setProperty("--br", cfg.br / 100);
+  r.setProperty("--co", cfg.co / 100);
+  r.setProperty("--sa", cfg.sa / 100);
+  ["brandName", "wmName", "footerName", "identName"].forEach(i => $(i).textContent = cfg.name);
+  document.title = cfg.name + " — Personal TV";
+  $("screen").classList.toggle("crt", cfg.crt);
+  $("screen").classList.toggle("radio", cfg.radio);
+  $("crtBtn").textContent = "📺 افکت CRT: " + (cfg.crt ? "روشن" : "خاموش");
+  $("radioBtn").textContent = cfg.radio ? "📺 حالت تلویزیون" : "📻 حالت رادیو";
+  $("radioBtn").classList.toggle("on", cfg.radio);
+  if(ready) P.setVolume(cfg.vol);
+}
 
-$("repeatBtn").onclick = () => {
-  repeat = !repeat;
-  $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
-  saveSettings();
-};
+/* ---------- playlist actions ---------- */
+function addVideo(){
+  const id = getId($("videoUrl").value.trim());
+  if(!id){ toast("لینک معتبر YouTube وارد کن."); return; }
+  if(list.some(v => v.id === id)){ toast("این ویدیو قبلاً اضافه شده."); return; }
+  const v = {id, title:"در حال دریافت… " + id, dur:60, pend:true};
+  list.push(v); queue.push(v);
+  $("videoUrl").value = ""; save(); renderAll(); pump();
+  toast("برنامه اضافه شد؛ مدت و عنوان خودکار گرفته می‌شود.");
+}
+function move(i, d){ [list[i], list[i + d]] = [list[i + d], list[i]]; save(); renderAll(); }
+function removeVideo(i){ list.splice(i, 1); save(); renderAll(); if(!list.length && cfg.on){ loaded = ""; if(ready) P.stopVideo(); } }
 
-$("crtBtn").onclick = () => {
-  crt = !crt;
-  $("screen").classList.toggle("crt", crt);
-  $("crtBtn").textContent = "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
-  saveSettings();
-};
+/* ---------- auto duration (hidden probe player) ---------- */
+function pump(){
+  if(busy || !qReady || !queue.length) return;
+  busy = true;
+  const v = queue.shift(); let n = 0;
+  Q.mute(); Q.loadVideoById(v.id);
+  const iv = setInterval(() => {
+    n++;
+    const d = Q.getDuration ? Q.getDuration() : 0;
+    if(d > 0 || n > 24){
+      clearInterval(iv);
+      let t = ""; try{ t = Q.getVideoData().title; Q.stopVideo(); }catch(e){}
+      v.pend = false;
+      if(d > 0) v.dur = Math.round(d); else { v.dur = 60; toast("مدت یک ویدیو نامشخص بود؛ ۶۰ ثانیه گذاشته شد."); }
+      if(t) v.title = t;
+      save(); renderAll(); busy = false; pump();
+    }
+  }, 500);
+}
 
-$("customizeBtn").onclick = () => {
-  const p = $("customizePanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
-};
-
-["brightness", "contrast", "saturation"].forEach(id => {
-  $(id).addEventListener("input", applyPictureSettings);
-});
-
-$("saveNameBtn").onclick = () => {
-  applyStationName($("stationName").value);
-  toast("تنظیمات ذخیره شد ✓");
-};
-
-$("clearBtn").onclick = () => {
-  if (!confirm("همهٔ برنامه‌های پلی‌لیست حذف بشن؟")) return;
-  playlist = [];
-  current = -1;
-  if (playerReady) player.stopVideo();
-  savePlaylist();
-  renderAll();
-  updateNowTitle();
-  $("playBtn").textContent = "▶ پخش";
-};
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("player", {
-    width:"100%",
-    height:"100%",
-    playerVars: {
-      autoplay:0,
-      controls:1,
-      playsinline:1,
-      rel:0,
-      enablejsapi:1,
-      origin:window.location.origin
-    },
-    events: {
-      onReady: () => {
-        playerReady = true;
-        $("playerStatus").textContent = "پلیر آماده است. برنامه‌ای را انتخاب کن.";
+/* ---------- YouTube API ---------- */
+function onYouTubeIframeAPIReady(){
+  P = new YT.Player("player", {
+    width:"100%", height:"100%",
+    playerVars:{autoplay:1, controls:1, playsinline:1, rel:0},
+    events:{
+      onReady:() => { ready = true; P.setVolume(cfg.vol); $("status").textContent = "پلیر آماده است. تلویزیون را روشن کن."; },
+      onStateChange:e => {
+        const S = YT.PlayerState;
+        if(e.data === S.PLAYING){
+          $("playBtn").textContent = "⏸ توقف"; noise(false);
+          const v = list[curIdx];
+          try{
+            const d = P.getVideoData();
+            if(v && d.video_id === v.id && d.title && d.title !== v.title){ v.title = d.title; save(); renderAll(); }
+          }catch(err){}
+        }
+        else if(e.data === S.PAUSED) $("playBtn").textContent = "▶ پخش زنده";
+        else if(e.data === S.ENDED) noise(true, 2500);
       },
-      onStateChange: event => {
-        if (event.data === YT.PlayerState.PLAYING) {
-          $("playBtn").textContent = "⏸ توقف";
-          const video = playlist[current];
-          if (video && player.getVideoData) {
-            const data = player.getVideoData();
-            if (data.title && data.title !== video.title) {
-              video.title = data.title;
-              savePlaylist();
-              renderAll();
-              updateNowTitle();
-            }
-          }
-        }
-
-        if (event.data === YT.PlayerState.PAUSED) {
-          $("playBtn").textContent = "▶ ادامه";
-        }
-
-        if (event.data === YT.PlayerState.ENDED) {
-          nextVideo();
-        }
-
-        if (event.data === YT.PlayerState.BUFFERING) {
-          $("playerStatus").textContent = "در حال بارگذاری برنامه…";
-        }
-      },
-      onError: event => {
-        const messages = {
-          2:"شناسهٔ ویدیو معتبر نیست.",
-          5:"این ویدیو در پلیر HTML5 پخش نمی‌شود.",
-          100:"ویدیو حذف شده یا خصوصی است.",
-          101:"مالک ویدیو اجازهٔ پخش در سایت‌های دیگر را نداده.",
-          150:"مالک ویدیو اجازهٔ پخش در سایت‌های دیگر را نداده.",
-          153:"یوتیوب اطلاعات شناسایی درخواست را دریافت نکرده. صفحه را از آدرس HTTPS سایت باز کن."
-        };
-        const msg = messages[event.data] || ("خطای پخش YouTube: " + event.data);
-        $("playerStatus").textContent = msg;
-        toast(msg);
-      }
+      onError:e => { $("status").textContent = "این ویدیو قابل پخش نیست (کد " + e.data + ")؛ شاید Embed ممنوع است."; noise(true, 3000); }
     }
   });
+  Q = new YT.Player("probe", {width:"200", height:"200", playerVars:{controls:0}, events:{onReady:() => { qReady = true; pump(); }}});
 }
 
-loadPlaylist();
-loadSettings();
+/* ---------- events ---------- */
+$("addBtn").onclick = addVideo;
+$("videoUrl").addEventListener("keydown", e => { if(e.key === "Enter") addVideo(); });
+$("pbtn").onclick = () => setPower(true);
+$("pwrBtn").onclick = () => setPower(!cfg.on);
+$("playBtn").onclick = () => {
+  if(!cfg.on) return setPower(true);
+  if(!ready) return;
+  if(P.getPlayerState() === 1) P.pauseVideo(); else { loaded = ""; tick(); }
+};
+$("syncBtn").onclick = () => { if(!cfg.on) return setPower(true); loaded = ""; tick(); toast("همگام با «الان» 🎯"); };
+$("fullBtn").onclick = async () => {
+  try{ document.fullscreenElement ? await document.exitFullscreen() : await $("screen").requestFullscreen(); }
+  catch(e){ toast("تمام‌صفحه پشتیبانی نمی‌شود."); }
+};
+$("vol").oninput = e => { cfg.vol = +e.target.value; if(ready) P.setVolume(cfg.vol); save(); };
+$("radioBtn").onclick = () => { cfg.radio = !cfg.radio; applyCfg(); save(); };
+$("crtBtn").onclick = () => { cfg.crt = !cfg.crt; applyCfg(); save(); };
+$("customizeBtn").onclick = () => { const p = $("customizePanel"); p.style.display = p.style.display === "block" ? "none" : "block"; };
+$("stationName").oninput = e => { cfg.name = e.target.value.trim().slice(0, 32) || "WALKO TV"; identKey = ""; applyCfg(); save(); };
+$("accent").oninput = e => { cfg.accent = e.target.value; applyCfg(); save(); };
+[["br","br"],["co","co"],["sa","sa"]].forEach(([id, k]) => $(id).oninput = e => { cfg[k] = +e.target.value; applyCfg(); save(); });
+$("resetBtn").onclick = () => { cfg.br = cfg.co = cfg.sa = 100; syncInputs(); applyCfg(); save(); };
+$("clearBtn").onclick = () => {
+  if(!confirm("همهٔ برنامه‌های پلی‌لیست حذف بشن؟")) return;
+  list = []; queue = []; loaded = ""; if(ready) P.stopVideo();
+  save(); renderAll(); toast("پلی‌لیست پاک شد.");
+};
+document.addEventListener("keydown", e => {
+  if(e.target.tagName === "INPUT") return;
+  if(e.code === "Space"){ e.preventDefault(); $("playBtn").onclick(); }
+  else if(e.key === "f" || e.key === "F") $("fullBtn").onclick();
+  else if(e.key === "l" || e.key === "L") $("syncBtn").onclick();
+});
 
-const savedName = localStorage.getItem("walkotv_name") || "WALKO TV";
-applyStationName(savedName);
-$("stationName").value = savedName;
+function syncInputs(){
+  $("stationName").value = cfg.name; $("accent").value = cfg.accent;
+  $("br").value = cfg.br; $("co").value = cfg.co; $("sa").value = cfg.sa; $("vol").value = cfg.vol;
+}
 
-renderAll();
-updateNowTitle();
-updateClock();
-setInterval(updateClock, 1000);
+/* ---------- init ---------- */
+load();
+list.forEach(v => { if(v.pend) queue.push(v); });
+syncInputs(); applyCfg(); renderAll(); tick();
+setInterval(tick, 500);
 
-// API را پس از آماده شدن صفحه بارگذاری کن.
 const api = document.createElement("script");
 api.src = "https://www.youtube.com/iframe_api";
-api.onerror = () => {
-  $("playerStatus").textContent =
-    "بارگذاری پلیر یوتیوب ناموفق بود؛ اتصال اینترنت یا مسدودشدن API را بررسی کن.";
-};
+api.onerror = () => { $("status").textContent = "بارگذاری API یوتیوب ناموفق بود؛ اینترنت را بررسی کن."; };
 document.head.appendChild(api);
 </script>
 </body>
-</html>
+      </html>
