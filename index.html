@@ -1,227 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#101b16">
 <title>AM TV 24/7</title>
 
 <style>
-:root {
-  --bg:#101b16;
-  --panel:#192820;
-  --cream:#f4edda;
-  --muted:#aab7a9;
-  --line:#3b5140;
-  --accent:#e8b85b;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--cream);
-  font-family:Tahoma,Arial,sans-serif;
-}
-button,input,select { font:inherit; }
-button {
-  cursor:pointer;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:#21362a;
-  color:var(--cream);
-  padding:9px;
-}
-button:hover { border-color:var(--accent); }
-button:disabled { opacity:.4; cursor:not-allowed; }
-.primary { background:var(--accent); color:#101b16; font-weight:bold; }
-input,select {
-  min-width:0;
-  padding:10px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--bg);
-  color:var(--cream);
-}
-input[type=color] { padding:2px; height:40px; }
-header {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  border-bottom:1px solid var(--line);
-  background:#121f18;
-}
-.logo {
-  width:52px;height:52px;
-  display:grid;place-items:center;
-  border:2px solid var(--accent);
-  border-radius:9px;
-  color:var(--accent);
-  font-weight:900;
-  text-align:center;
-}
-.brand h1 {
-  margin:0;
-  color:var(--accent);
-  font-size:22px;
-  letter-spacing:2px;
-}
-.brand p { margin:5px 0 0; font-size:10px; color:var(--muted); }
-.clockbox { margin-right:auto; text-align:left; }
-#clock { color:var(--accent); font-weight:bold; font-size:18px; }
-#date { color:var(--muted); font-size:10px; margin-top:4px; }
-
-main { max-width:1050px; margin:auto; padding:14px; }
-.panel {
-  background:var(--panel);
-  border:1px solid #293c30;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:14px;
-}
-.head,.nowbar {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-bottom:12px;
-  flex-wrap:wrap;
-}
-h2 { font-size:15px; margin:0; }
-.badge {
-  border:1px solid var(--accent);
-  color:var(--accent);
-  border-radius:5px;
-  padding:5px 8px;
-  font-size:10px;
-}
-.addrow,.controls,.settings {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin:10px 0;
-}
-.addrow>* { flex:1; }
-.controls button { flex:1; min-width:75px; }
-.controls input { flex:1; min-width:80px; }
-
-#screen {
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  overflow:hidden;
-  background:#000;
-  border:2px solid var(--accent);
-  border-radius:12px;
-}
-#screen:fullscreen {
-  width:100vw;height:100vh;
-  aspect-ratio:auto;border:0;border-radius:0;
-}
-#playerWrap { position:absolute; inset:0; }
-#player,#localPlayer { width:100%; height:100%; border:0; background:#000; }
-#localPlayer { display:none; object-fit:contain; }
-#screen.crt:after {
-  content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
-  background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,#00000020 4px);
-  box-shadow:inset 0 0 70px #000a;
-}
-.watermark {
-  position:absolute;z-index:6;top:10px;left:10px;
-  padding:5px 8px;border:1px solid var(--accent);
-  border-radius:6px;background:#101b16cc;color:var(--accent);
-  font-size:11px;font-weight:bold;pointer-events:none;
-}
-#meta {
-  position:absolute;z-index:6;bottom:10px;left:10px;
-  padding:5px 8px;background:#101b16cc;
-  border:1px solid var(--line);border-radius:5px;
-  font-size:10px;pointer-events:none;
-}
-#radioVisual {
-  display:none;position:absolute;inset:0;z-index:4;
-  place-items:center;
-  background:radial-gradient(ellipse,#293b2a,#050806 75%);
-  color:var(--accent);font-size:clamp(22px,6vw,48px);
-  letter-spacing:5px;font-weight:bold;
-}
-#screen.radio #radioVisual { display:grid; }
-#screen.radio #playerWrap { opacity:0; }
-.live { color:#ffb1a9; font-size:11px; font-weight:bold; }
-.dot {
-  display:inline-block;width:7px;height:7px;
-  border-radius:50%;background:#e85d52;margin-left:5px;
-}
-#nowTitle { flex:1; font-size:13px; overflow-wrap:anywhere; }
-.status,.hint { font-size:11px;color:var(--muted);line-height:1.9;margin-top:9px; }
-.list { display:flex;flex-direction:column;gap:8px; }
-.track,.program {
-  display:flex;align-items:center;gap:8px;
-  padding:10px;background:#142119;
-  border:1px solid var(--line);border-radius:8px;
-}
-.track.active,.program.live { border-color:var(--accent); }
-.track-title,.program-title { flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere; }
-.track button,.program button { padding:7px;font-size:11px; }
-.small { font-size:10px;color:var(--muted); }
-.program.live .small { color:#ffb1a9; }
-.progress { height:4px;background:#314437;border-radius:8px;overflow:hidden;margin-top:6px; }
-.progress span { display:block;height:100%;background:var(--accent);width:0; }
-label { display:block;color:var(--muted);font-size:12px;margin:8px 0 6px; }
-#customize,#sleepPanel { display:none; }
-#toast {
-  position:fixed;z-index:200;bottom:16px;left:50%;
-  transform:translateX(-50%);display:none;max-width:90%;
-  padding:11px 15px;border:1px solid var(--accent);
-  border-radius:9px;background:#25382a;font-size:12px;text-align:center;
-}
-#watchExit { display:none;position:absolute;z-index:15;top:10px;right:10px; }
-#screen.watch {
-  position:fixed;inset:0;z-index:100;
-  width:100vw;height:100vh;aspect-ratio:auto;border:0;border-radius:0;
-}
-#screen.watch #watchExit { display:block; }
-
-.admin-login {
-  padding:12px;
-  text-align:center;
-  border-bottom:1px solid var(--line);
-}
-.admin-panel {
-  display:none;
-  max-width:1050px;
-  margin:12px auto;
-  padding:14px;
-  border:1px solid var(--accent);
-  border-radius:12px;
-  background:var(--panel);
-}
-body.admin-mode .admin-panel { display:block; }
-.admin-label { color:var(--accent);font-weight:bold;margin-bottom:12px; }
-.admin-only { display:none !important; }
-body.admin-mode .admin-only { display:flex !important; }
-.admin-only-block { display:none !important; }
-body.admin-mode .admin-only-block { display:block !important; }
-#adminLogout { display:none; }
-body.admin-mode #adminLogout { display:inline-block; }
-#adminStatus { font-size:11px;color:var(--accent);margin-right:8px; }
-.admin-hint { color:var(--muted);font-size:11px;line-height:1.9; }
-
-footer {
-  text-align:center;padding:18px;color:#718276;
-  font-size:10px;line-height:2;
-}
-@media(max-width:650px) {
-  header { padding:10px; }
-  .brand h1 { font-size:17px; }
-  .logo { width:45px;height:45px; }
-  main { padding:9px; }
-  .panel { padding:11px; }
-  .addrow>* { flex:1; }
-}
+:root{--bg:#101b16;--panel:#192820;--cream:#f4edda;--muted:#aab7a9;--line:#3b5140;--accent:#e8b85b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:Tahoma,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:1px solid var(--line);border-radius:8px;background:#21362a;color:var(--cream);padding:9px}
+button:hover{border-color:var(--accent)}
+input,select{min-width:0;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--cream)}
+input[type=color]{padding:2px;height:40px}
+.primary{background:var(--accent);color:#101b16;font-weight:bold}
+header{display:flex;align-items:center;gap:12px;padding:14px;border-bottom:1px solid var(--line);background:#121f18}
+.logo{width:52px;height:52px;display:grid;place-items:center;border:2px solid var(--accent);border-radius:9px;color:var(--accent);font-weight:900;text-align:center}
+.brand h1{margin:0;color:var(--accent);font-size:22px;letter-spacing:2px}
+.brand p{margin:5px 0 0;font-size:10px;color:var(--muted)}
+.clockbox{margin-right:auto;text-align:left}
+#clock{color:var(--accent);font-weight:bold;font-size:18px}
+#date{color:var(--muted);font-size:10px;margin-top:4px}
+main{max-width:1050px;margin:auto;padding:14px}
+.panel{background:var(--panel);border:1px solid #293c30;border-radius:12px;padding:14px;margin-bottom:14px}
+.head,.nowbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+h2{font-size:15px;margin:0}
+.badge{border:1px solid var(--accent);color:var(--accent);border-radius:5px;padding:5px 8px;font-size:10px}
+.addrow,.controls,.settings{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.addrow>*{flex:1}
+.controls button{flex:1;min-width:75px}
+.controls input{flex:1;min-width:80px}
+#screen{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;border:2px solid var(--accent);border-radius:12px}
+#screen:fullscreen{width:100vw;height:100vh;aspect-ratio:auto;border:0;border-radius:0}
+#playerWrap{position:absolute;inset:0}
+#player,#localPlayer{width:100%;height:100%;border:0;background:#000}
+#localPlayer{display:none;object-fit:contain}
+#screen.crt:after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,#00000020 4px);box-shadow:inset 0 0 70px #000a}
+.watermark{position:absolute;z-index:6;top:10px;left:10px;padding:5px 8px;border:1px solid var(--accent);border-radius:6px;background:#101b16cc;color:var(--accent);font-size:11px;font-weight:bold;pointer-events:none}
+#meta{position:absolute;z-index:6;bottom:10px;left:10px;padding:5px 8px;background:#101b16cc;border:1px solid var(--line);border-radius:5px;font-size:10px;pointer-events:none}
+#radioVisual{display:none;position:absolute;inset:0;z-index:4;place-items:center;background:radial-gradient(ellipse,#293b2a,#050806 75%);color:var(--accent);font-size:clamp(22px,6vw,48px);letter-spacing:5px;font-weight:bold}
+#screen.radio #radioVisual{display:grid}
+#screen.radio #playerWrap{opacity:0}
+.live{color:#ffb1a9;font-size:11px;font-weight:bold}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e85d52;margin-left:5px}
+#nowTitle{flex:1;font-size:13px;overflow-wrap:anywhere}
+.status,.hint{font-size:11px;color:var(--muted);line-height:1.9;margin-top:9px}
+.list{display:flex;flex-direction:column;gap:8px}
+.track,.program{display:flex;align-items:center;gap:8px;padding:10px;background:#142119;border:1px solid var(--line);border-radius:8px}
+.track.active,.program.live{border-color:var(--accent)}
+.track-title,.program-title{flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere}
+.track button,.program button{padding:7px;font-size:11px}
+.small{font-size:10px;color:var(--muted)}
+.progress{height:4px;background:#314437;border-radius:8px;overflow:hidden;margin-top:6px}
+.progress span{display:block;height:100%;background:var(--accent);width:0}
+label{display:block;color:var(--muted);font-size:12px;margin:8px 0 6px}
+#customize,#sleepPanel{display:none}
+#toast{position:fixed;z-index:200;bottom:16px;left:50%;transform:translateX(-50%);display:none;max-width:90%;padding:11px 15px;border:1px solid var(--accent);border-radius:9px;background:#25382a;font-size:12px;text-align:center}
+.admin-login{text-align:center;padding:12px;border-bottom:1px solid var(--line)}
+#adminPanel{display:none;max-width:1050px;margin:12px auto;padding:14px;border:1px solid var(--accent);border-radius:12px;background:var(--panel)}
+.admin-label{color:var(--accent);font-weight:bold;margin-bottom:12px}
+.admin-hint{color:var(--muted);font-size:11px;line-height:1.9}
+#adminLogout{display:none}
+#adminStatus{font-size:11px;color:var(--accent);margin-right:8px}
+.admin-only{display:none!important}
+body.admin-mode .admin-only{display:flex!important}
+body.admin-mode .admin-only-block{display:block!important}
+body.admin-mode #adminPanel{display:block}
+body.admin-mode #adminLogin{display:none}
+body.admin-mode #adminLogout{display:inline-block}
+.admin-seek{display:none;margin-top:10px}
+body.admin-mode .admin-seek{display:block}
+.admin-seek input{width:100%;padding:0;accent-color:var(--accent)}
+.admin-time{display:flex;justify-content:space-between;color:var(--accent);font-size:11px}
+#watchExit{display:none;position:absolute;z-index:15;top:10px;right:10px}
+#screen.watch{position:fixed;inset:0;z-index:100;width:100vw;height:100vh;aspect-ratio:auto;border:0;border-radius:0}
+#screen.watch #watchExit{display:block}
+footer{text-align:center;padding:18px;color:#718276;font-size:10px;line-height:2}
+@media(max-width:650px){header{padding:10px}.brand h1{font-size:17px}.logo{width:45px;height:45px}main{padding:9px}.panel{padding:11px}.addrow>*{flex:1}}
 </style>
 </head>
 
@@ -240,11 +98,11 @@ footer {
 
 <div class="admin-login">
   <button id="adminLogin">🔐 ورود مدیر</button>
-  <button id="adminLogout" class="admin-exit">خروج از مدیریت</button>
+  <button id="adminLogout">خروج از مدیریت</button>
   <span id="adminStatus">حالت بیننده</span>
 </div>
 
-<section id="adminPanel" class="admin-panel">
+<section id="adminPanel">
   <div class="admin-label">👑 پنل مدیریت AM TV</div>
 
   <label for="adminStationName">نام شبکه</label>
@@ -255,23 +113,23 @@ footer {
 
   <label for="adminChannelName">ساخت کانال</label>
   <div class="addrow">
-    <input id="adminChannelName" maxlength="32" placeholder="نام کانال جدید">
-    <input id="adminChannelColor" type="color" value="#e8b85b" aria-label="رنگ کانال">
+    <input id="adminChannelName" maxlength="32" placeholder="نام کانال">
+    <input id="adminChannelColor" type="color" value="#e8b85b">
     <button id="adminAddChannel">＋ ساخت کانال</button>
   </div>
 
-  <label for="adminVideoUrl">افزودن لینک YouTube به کانال فعال</label>
+  <label for="adminVideoUrl">افزودن لینک YouTube</label>
   <div class="addrow">
     <input id="adminVideoUrl" placeholder="لینک ویدیو">
     <button id="adminAddVideo" class="primary">＋ افزودن برنامه</button>
   </div>
 
-  <label for="adminLocalFiles">افزودن فایل ویدیویی از گوشی</label>
+  <label for="adminLocalFiles">افزودن فایل از گوشی</label>
   <input id="adminLocalFiles" type="file" accept="video/*" multiple>
 
   <p class="admin-hint">
-    این پنل در این نسخه با رمز مرورگری محافظت می‌شود.
-    برای امنیت واقعی باید ورود مدیر سمت سرور پیاده‌سازی شود.
+    مدیر می‌تواند فایل اضافه کند و کنترل‌های پخش را ببیند.
+    رمز داخل HTML امنیت واقعی ایجاد نمی‌کند.
   </p>
 </section>
 
@@ -286,12 +144,25 @@ footer {
   <div id="screen" class="crt">
     <div id="playerWrap">
       <div id="player"></div>
-      <video id="localPlayer" controls playsinline></video>
+      <video id="localPlayer" playsinline></video>
     </div>
     <div id="radioVisual">AM RADIO</div>
     <div class="watermark" id="watermark">AM TV 24/7</div>
     <div id="meta">CH 01 · 00:00</div>
     <button id="watchExit">✕ خروج</button>
+  </div>
+
+  <!-- نوار پیشرفت و زمان فقط برای مدیر -->
+  <div class="admin-seek">
+    <div class="admin-time">
+      <span id="adminCurrentTime">00:00</span>
+      <span id="adminDuration">00:00</span>
+    </div>
+    <input id="adminSeek" type="range" min="0" max="1000" value="0" aria-label="جابه‌جایی در ویدیو">
+    <div class="controls">
+      <button id="adminBack">↶ ۱۰ ثانیه</button>
+      <button id="adminForward">۱۰ ثانیه ↷</button>
+    </div>
   </div>
 
   <div class="controls">
@@ -304,7 +175,7 @@ footer {
     <input id="volume" type="range" min="0" max="100" value="80" title="صدا">
   </div>
 
-  <div class="status" id="status">برای شروع، مدیر باید برنامه اضافه کند.</div>
+  <div class="status" id="status">برنامه‌ای اضافه نشده است.</div>
 
   <div class="settings">
     <button id="autoBtn">▶ خودکار: روشن</button>
@@ -333,16 +204,12 @@ footer {
   <div id="customize">
     <label for="stationName">نام شبکه</label>
     <input id="stationName" maxlength="40" value="AM TV 24/7">
-
     <label for="accentColor">رنگ شبکه</label>
     <input id="accentColor" type="color" value="#e8b85b">
-
     <label for="brightness">روشنایی</label>
     <input id="brightness" type="range" min="50" max="150" value="100">
-
     <label for="contrast">کنتراست</label>
     <input id="contrast" type="range" min="50" max="150" value="100">
-
     <label for="saturation">اشباع رنگ</label>
     <input id="saturation" type="range" min="0" max="200" value="100">
   </div>
@@ -368,7 +235,7 @@ footer {
   </div>
 
   <div class="addrow">
-    <input id="search" type="search" placeholder="🔎 جست‌وجو در پلی‌لیست">
+    <input id="search" type="search" placeholder="🔎 جست‌وجو در برنامه‌ها">
   </div>
 
   <div class="addrow admin-only">
@@ -381,7 +248,6 @@ footer {
   </div>
 
   <div id="playlist" class="list"></div>
-  <div class="hint">ویدیوهایی که اجازهٔ پخش در سایت را نمی‌دهند، ممکن است در پلیر نمایش داده نشوند.</div>
 </section>
 
 <section class="panel">
@@ -394,11 +260,7 @@ footer {
 </section>
 </main>
 
-<footer>
-  AM TV 24/7 · YOUR WORLD · YOUR CHANNEL<br>
-  پخش YouTube تابع محدودیت‌های رسمی این سرویس است.
-</footer>
-
+<footer>AM TV 24/7 · YOUR WORLD · YOUR CHANNEL</footer>
 <div id="toast"></div>
 
 <script>
@@ -406,19 +268,14 @@ footer {
 "use strict";
 
 const $ = id => document.getElementById(id);
-const STORE = "amtv247_state_v2";
+const STORE = "amtv247_state_v3";
 const DB_NAME = "AMTV247_Media";
 
-/*
-  هشدار امنیتی:
-  این رمز داخل سورس قابل مشاهده است.
-  برای سایت عمومی از احراز هویت واقعی سمت سرور استفاده کن.
-*/
+/* فقط برای آزمایش؛ رمز داخل کد امن نیست. */
 const ADMIN_PASSWORD = "CHANGE-ME-123";
 
 let player = null;
 let playerReady = false;
-let apiReady = false;
 let adminMode = false;
 let power = false;
 let channels = [];
@@ -434,969 +291,715 @@ let sleepUntil = 0;
 let localObjectUrl = "";
 let db = null;
 let toastTimer = null;
+let pendingSeek = null;
 
 function toast(message) {
   $("toast").textContent = message;
   $("toast").style.display = "block";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    $("toast").style.display = "none";
-  }, 2800);
+  toastTimer = setTimeout(() => $("toast").style.display = "none", 2600);
 }
-
-function pad(n) {
-  return String(n).padStart(2, "0");
-}
-
+function pad(n) { return String(n).padStart(2, "0"); }
 function fmt(value) {
-  const seconds = Math.max(0, Math.floor(Number(value) || 0));
-  return Math.floor(seconds / 3600) + ":" +
-    pad(Math.floor(seconds % 3600 / 60)) + ":" +
-    pad(seconds % 60);
+  value = Math.max(0, Math.floor(Number(value) || 0));
+  return Math.floor(value / 3600) + ":" +
+    pad(Math.floor(value % 3600 / 60)) + ":" + pad(value % 60);
 }
-
-function save() {
-  try {
-    if (channels[channelIndex]) channels[channelIndex].list = list;
-    localStorage.setItem(STORE, JSON.stringify({
-      channels, channelIndex, autoplay, repeat, shuffle, crt, radio,
-      stationName: $("stationName").value,
-      accent: $("accentColor").value
-    }));
-  } catch (e) {
-    toast("ذخیره‌سازی مرورگر ممکن نشد.");
-  }
-}
-
-function load() {
-  try {
-    const data = JSON.parse(localStorage.getItem(STORE) || "null");
-    if (data) {
-      channels = Array.isArray(data.channels) ? data.channels : [];
-      channelIndex = Math.max(
-        0, Math.min(channels.length - 1, Number(data.channelIndex) || 0)
-      );
-      autoplay = data.autoplay !== false;
-      repeat = data.repeat !== false;
-      shuffle = !!data.shuffle;
-      crt = data.crt !== false;
-      radio = !!data.radio;
-      if (data.stationName) $("stationName").value = data.stationName;
-      if (data.accent) $("accentColor").value = data.accent;
-    }
-  } catch (e) {}
-
-  if (!channels.length) {
-    channels = [{ name: "AM TV 24/7", color: "#e8b85b", list: [] }];
-  }
-
-  channels = channels.map(channel => ({
-    name: String(channel.name || "شبکه"),
-    color: channel.color || "#e8b85b",
-    list: Array.isArray(channel.list) ? channel.list : []
-  }));
-
-  channelIndex = Math.min(channelIndex, channels.length - 1);
-  list = channels[channelIndex].list;
-  $("stationName").value = channels[channelIndex].name;
-  $("accentColor").value = channels[channelIndex].color;
-}
-
-function setAdmin(enabled) {
-  adminMode = enabled;
-  document.body.classList.toggle("admin-mode", enabled);
-  $("adminLogin").style.display = enabled ? "none" : "inline-block";
-  $("adminLogout").style.display = enabled ? "inline-block" : "none";
-  $("adminStatus").textContent = enabled
-    ? "حالت مدیر فعال است"
-    : "حالت بیننده";
-  $("adminPanel").style.display = enabled ? "block" : "none";
-  $("adminStationName").value = $("stationName").value;
-}
-
-$("adminLogin").addEventListener("click", () => {
-  const password = prompt("رمز مدیریت AM TV:");
-  if (password === null) return;
-
-  if (password === ADMIN_PASSWORD) {
-    setAdmin(true);
-    toast("حالت مدیریت فعال شد.");
-  } else {
-    alert("رمز اشتباه است.");
-  }
-});
-
-$("adminLogout").addEventListener("click", () => {
-  setAdmin(false);
-  toast("از حالت مدیریت خارج شدی.");
-});
-
 function requireAdmin() {
   if (!adminMode) {
-    toast("برای این کار باید مدیر وارد شود.");
+    toast("این قابلیت فقط برای مدیر است.");
     return false;
   }
   return true;
 }
+function setAdmin(enabled) {
+  adminMode = enabled;
+  document.body.classList.toggle("admin-mode", enabled);
+  $("adminStatus").textContent = enabled ? "حالت مدیر" : "حالت بیننده";
+  $("adminStationName").value = $("stationName").value;
 
-function getYoutubeId(url) {
+  /* کنترل‌های فایل محلی در حالت بیننده خاموش‌اند. */
+  $("localPlayer").controls = enabled;
+
+  if (playerReady && player) {
+    try {
+      const state = player.getPlayerState();
+      const current = player.getCurrentTime();
+      const duration = player.getDuration();
+      const videoId = player.getVideoData()?.video_id;
+
+      /* پلیر دوباره ساخته می‌شود تا کنترل‌های داخلی YouTube
+         در حالت بیننده خاموش باشند. */
+      const container = $("playerWrap");
+      const old = $("player");
+      old.remove();
+      const replacement = document.createElement("div");
+      replacement.id = "player";
+      container.insertBefore(replacement, $("localPlayer"));
+
+      player = new YT.Player("player", {
+        width:"100%",
+        height:"100%",
+        videoId:videoId || "",
+        playerVars:{
+          autoplay:0,
+          controls:enabled ? 1 : 0,
+          disablekb:enabled ? 0 : 1,
+          playsinline:1,
+          rel:0,
+          enablejsapi:1,
+          origin:location.origin
+        },
+        events:{
+          onReady:e=>{
+            playerReady=true;
+            e.target.setVolume(Number($("volume").value));
+            if(videoId && duration > 0 && state === YT.PlayerState.PLAYING) {
+              e.target.seekTo(current, true);
+              e.target.playVideo();
+            }
+          },
+          onStateChange:onPlayerState,
+          onError:onPlayerError
+        }
+      });
+    } catch (e) {}
+  }
+
+  renderAll();
+  updateSeek();
+}
+function save() {
   try {
-    const parsed = new URL(url);
-    if (parsed.hostname === "youtu.be") {
-      return parsed.pathname.split("/").filter(Boolean)[0] || null;
-    }
-    if (!/(^|\.)youtube\.com$|(^|\.)youtube-nocookie\.com$/.test(parsed.hostname)) {
-      return null;
-    }
-    if (parsed.searchParams.get("v")) return parsed.searchParams.get("v");
-    const parts = parsed.pathname.split("/").filter(Boolean);
-    if (["shorts", "embed", "live", "v"].includes(parts[0])) {
-      return parts[1] || null;
+    if (channels[channelIndex]) channels[channelIndex].list = list;
+    localStorage.setItem(STORE, JSON.stringify({
+      channels,channelIndex,autoplay,repeat,shuffle,crt,radio,
+      stationName:$("stationName").value,
+      accent:$("accentColor").value
+    }));
+  } catch (e) {}
+}
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(STORE) || "null");
+    if (d) {
+      channels = Array.isArray(d.channels) ? d.channels : [];
+      channelIndex = Math.max(0, Math.min(channels.length - 1, Number(d.channelIndex) || 0));
+      autoplay = d.autoplay !== false;
+      repeat = d.repeat !== false;
+      shuffle = !!d.shuffle;
+      crt = d.crt !== false;
+      radio = !!d.radio;
+      if (d.stationName) $("stationName").value = d.stationName;
+      if (d.accent) $("accentColor").value = d.accent;
     }
   } catch (e) {}
+
+  if (!channels.length) channels = [{name:"AM TV 24/7",color:"#e8b85b",list:[]}];
+  channels = channels.map(c=>({
+    name:String(c.name||"شبکه"),
+    color:c.color||"#e8b85b",
+    list:Array.isArray(c.list)?c.list:[]
+  }));
+  channelIndex = Math.min(channelIndex, channels.length-1);
+  list = channels[channelIndex].list;
+  $("stationName").value = channels[channelIndex].name;
+  $("accentColor").value = channels[channelIndex].color;
+}
+function getYoutubeId(url) {
+  try {
+    const u = new URL(url);
+    if (u.hostname === "youtu.be") return u.pathname.split("/").filter(Boolean)[0] || null;
+    if (!/(^|\.)youtube\.com$|(^|\.)youtube-nocookie\.com$/.test(u.hostname)) return null;
+    if (u.searchParams.get("v")) return u.searchParams.get("v");
+    const p = u.pathname.split("/").filter(Boolean);
+    if (["shorts","embed","live","v"].includes(p[0])) return p[1] || null;
+  } catch(e) {}
   return null;
 }
-
-function renderChannels() {
-  const root = $("channels");
-  root.replaceChildren();
-  $("channelCount").textContent = channels.length + " کانال";
-  $("channelBadge").textContent = "CH " + pad(channelIndex + 1);
-
-  channels.forEach((channel, index) => {
-    const row = document.createElement("div");
-    row.className = "track" + (index === channelIndex ? " active" : "");
-
-    const title = document.createElement("div");
-    title.className = "track-title";
-    title.textContent = "CH " + pad(index + 1) + " · " +
-      channel.name + " (" + channel.list.length + " برنامه)";
-
-    const select = document.createElement("button");
-    select.textContent = index === channelIndex ? "✓ فعال" : "تعویض";
-    select.onclick = () => switchChannel(index);
-    row.append(title, select);
-
-    if (adminMode && channels.length > 1) {
-      const remove = document.createElement("button");
-      remove.textContent = "✕ حذف";
-      remove.className = "admin-only";
-      remove.onclick = () => {
-        if (!requireAdmin()) return;
-        if (!confirm("این کانال حذف شود؟")) return;
-        channels.splice(index, 1);
-        channelIndex = Math.min(channelIndex, channels.length - 1);
-        list = channels[channelIndex].list;
-        currentIndex = -1;
-        save();
-        renderAll();
-      };
-      row.append(remove);
-    }
-    root.append(row);
-  });
-}
-
-function switchChannel(index) {
-  if (index < 0 || index >= channels.length || index === channelIndex) return;
-  channels[channelIndex].list = list;
-  channelIndex = index;
-  list = channels[index].list;
-  currentIndex = -1;
-  $("stationName").value = channels[index].name;
-  $("accentColor").value = channels[index].color;
-  save();
-  renderAll();
-  if (power) syncNow();
-}
-
-function addChannel() {
-  if (!requireAdmin()) return;
-  const name = $("adminChannelName").value.trim() ||
-    "شبکه " + pad(channels.length + 1);
-
-  channels[channelIndex].list = list;
-  channels.push({
-    name,
-    color: $("adminChannelColor").value,
-    list: []
-  });
-
-  $("adminChannelName").value = "";
-  channelIndex = channels.length - 1;
-  list = channels[channelIndex].list;
-  $("stationName").value = name;
-  $("accentColor").value = channels[channelIndex].color;
-  save();
-  renderAll();
-}
-
-function renderPlaylist() {
-  const root = $("playlist");
-  root.replaceChildren();
-  const query = $("search").value.trim().toLocaleLowerCase();
-  $("videoCount").textContent = list.length + " برنامه";
-
-  if (!list.length) {
-    const empty = document.createElement("div");
-    empty.className = "status";
-    empty.textContent = "هنوز برنامه‌ای در این کانال وجود ندارد.";
-    root.append(empty);
-    return;
-  }
-
-  list.forEach((video, index) => {
-    if (query && !video.title.toLocaleLowerCase().includes(query)) return;
-
-    const row = document.createElement("div");
-    row.className = "track" + (index === currentIndex ? " active" : "");
-
-    const number = document.createElement("span");
-    number.className = "small";
-    number.textContent = pad(index + 1);
-
-    const title = document.createElement("div");
-    title.className = "track-title";
-    title.textContent = video.title || "ویدیو";
-
-    const duration = document.createElement("span");
-    duration.className = "small";
-    duration.textContent = fmt(video.dur || 60);
-
-    const play = document.createElement("button");
-    play.textContent = "▶";
-    play.title = "پخش از ابتدا";
-    play.onclick = () => playIndex(index);
-
-    row.append(number, title, duration, play);
-
-    if (adminMode) {
-      const up = document.createElement("button");
-      up.textContent = "↑";
-      up.disabled = index === 0;
-      up.onclick = () => moveVideo(index, -1);
-
-      const down = document.createElement("button");
-      down.textContent = "↓";
-      down.disabled = index === list.length - 1;
-      down.onclick = () => moveVideo(index, 1);
-
-      const remove = document.createElement("button");
-      remove.textContent = "✕";
-      remove.onclick = () => removeVideo(index);
-
-      row.append(up, down, remove);
-    }
-
-    root.append(row);
-  });
-}
-
-function moveVideo(index, delta) {
-  if (!requireAdmin()) return;
-  const target = index + delta;
-  if (target < 0 || target >= list.length) return;
-
-  [list[index], list[target]] = [list[target], list[index]];
-
-  if (currentIndex === index) currentIndex = target;
-  else if (currentIndex === target) currentIndex = index;
-
-  save();
-  renderAll();
-}
-
-async function removeVideo(index) {
-  if (!requireAdmin()) return;
-  const video = list[index];
-  list.splice(index, 1);
-
-  if (video.localKey) await deleteLocal(video.localKey);
-
-  if (currentIndex === index) currentIndex = -1;
-  else if (currentIndex > index) currentIndex--;
-
-  save();
-  renderAll();
-  if (power) syncNow();
-}
-
-async function clearList() {
-  if (!requireAdmin()) return;
-  if (!confirm("تمام برنامه‌های این کانال حذف شوند؟")) return;
-
-  for (const video of list) {
-    if (video.localKey) await deleteLocal(video.localKey);
-  }
-
-  list = [];
-  currentIndex = -1;
-  save();
-  renderAll();
-  if (power) syncNow();
-}
-
-function addVideoFromInput(inputId) {
+function addVideo(inputId) {
   if (!requireAdmin()) return;
   const input = $(inputId);
   const id = getYoutubeId(input.value.trim());
-
-  if (!id) {
-    toast("لینک معتبر YouTube وارد کن.");
-    return;
-  }
-  if (list.some(video => video.id === id)) {
-    toast("این ویدیو قبلاً اضافه شده است.");
-    return;
-  }
-
-  list.push({ id, title: "YouTube · " + id, dur: 60 });
-  input.value = "";
+  if (!id) return toast("لینک معتبر YouTube وارد کن.");
+  if (list.some(v=>v.id===id)) return toast("این ویدیو قبلاً اضافه شده است.");
+  list.push({id,title:"YouTube · "+id,dur:60});
+  input.value="";
   save();
   renderAll();
   toast("برنامه اضافه شد.");
 }
+function renderChannels() {
+  const root=$("channels");root.replaceChildren();
+  $("channelCount").textContent=channels.length+" کانال";
+  $("channelBadge").textContent="CH "+pad(channelIndex+1);
 
-function cycleInfo() {
-  const now = new Date();
-  const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return { now, elapsed: (now - midnight) / 1000 };
-}
+  channels.forEach((c,i)=>{
+    const row=document.createElement("div");
+    row.className="track"+(i===channelIndex?" active":"");
+    const title=document.createElement("div");
+    title.className="track-title";
+    title.textContent="CH "+pad(i+1)+" · "+c.name+" ("+c.list.length+" برنامه)";
+    const choose=document.createElement("button");
+    choose.textContent=i===channelIndex?"✓ فعال":"تعویض";
+    choose.onclick=()=>switchChannel(i);
+    row.append(title,choose);
 
-function getSlot() {
-  if (!list.length) return null;
-
-  const { elapsed } = cycleInfo();
-  const durations = list.map(video => Math.max(1, Number(video.dur) || 60));
-  const total = durations.reduce((a, b) => a + b, 0);
-
-  let time = repeat ? ((elapsed % total) + total) % total : elapsed;
-  if (time >= total) return { ended: true, total };
-
-  let start = 0;
-  for (let index = 0; index < list.length; index++) {
-    const duration = durations[index];
-    if (time < start + duration) {
-      return {
-        index,
-        offset: time - start,
-        duration,
-        start,
-        total
+    if(adminMode && channels.length>1) {
+      const del=document.createElement("button");
+      del.textContent="✕ حذف";
+      del.onclick=()=>{
+        if(!requireAdmin()||!confirm("کانال حذف شود؟"))return;
+        channels.splice(i,1);
+        channelIndex=Math.min(channelIndex,channels.length-1);
+        list=channels[channelIndex].list;
+        currentIndex=-1;
+        save();renderAll();
       };
+      row.append(del);
     }
-    start += duration;
+    root.append(row);
+  });
+}
+function switchChannel(i) {
+  if(i<0||i>=channels.length||i===channelIndex)return;
+  channels[channelIndex].list=list;
+  channelIndex=i;
+  list=channels[i].list;
+  currentIndex=-1;
+  $("stationName").value=channels[i].name;
+  $("accentColor").value=channels[i].color;
+  save();renderAll();
+  if(power)syncNow();
+}
+function renderPlaylist() {
+  const root=$("playlist");root.replaceChildren();
+  const q=$("search").value.trim().toLocaleLowerCase();
+  $("videoCount").textContent=list.length+" برنامه";
+
+  if(!list.length) {
+    const empty=document.createElement("div");
+    empty.className="status";
+    empty.textContent="هنوز برنامه‌ای وجود ندارد.";
+    root.append(empty);return;
+  }
+
+  list.forEach((v,i)=>{
+    if(q&&!v.title.toLocaleLowerCase().includes(q))return;
+    const row=document.createElement("div");
+    row.className="track"+(i===currentIndex?" active":"");
+
+    const title=document.createElement("div");
+    title.className="track-title";
+    title.textContent=v.title;
+
+    const play=document.createElement("button");
+    play.textContent="▶";
+    play.onclick=()=>playIndex(i);
+    row.append(title,play);
+
+    /* مدت زمان فقط در پنل مدیر نمایش داده می‌شود. */
+    if(adminMode) {
+      const duration=document.createElement("span");
+      duration.className="small";
+      duration.textContent=fmt(v.dur||60);
+      const up=document.createElement("button");
+      up.textContent="↑";up.disabled=i===0;
+      up.onclick=()=>moveVideo(i,-1);
+      const down=document.createElement("button");
+      down.textContent="↓";down.disabled=i===list.length-1;
+      down.onclick=()=>moveVideo(i,1);
+      const del=document.createElement("button");
+      del.textContent="✕";del.onclick=()=>removeVideo(i);
+      row.append(duration,up,down,del);
+    }
+    root.append(row);
+  });
+}
+function moveVideo(i,delta) {
+  if(!requireAdmin())return;
+  const j=i+delta;
+  if(j<0||j>=list.length)return;
+  [list[i],list[j]]=[list[j],list[i]];
+  if(currentIndex===i)currentIndex=j;
+  else if(currentIndex===j)currentIndex=i;
+  save();renderAll();
+}
+async function removeVideo(i) {
+  if(!requireAdmin())return;
+  const v=list[i];
+  list.splice(i,1);
+  if(v.localKey)await deleteLocal(v.localKey);
+  if(currentIndex===i)currentIndex=-1;
+  else if(currentIndex>i)currentIndex--;
+  save();renderAll();
+}
+async function clearList() {
+  if(!requireAdmin()||!confirm("تمام برنامه‌های این کانال حذف شوند؟"))return;
+  for(const v of list)if(v.localKey)await deleteLocal(v.localKey);
+  list=[];currentIndex=-1;save();renderAll();
+}
+function cycleInfo() {
+  const now=new Date();
+  const midnight=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  return {elapsed:(now-midnight)/1000};
+}
+function getSlot() {
+  if(!list.length)return null;
+  const elapsed=cycleInfo().elapsed;
+  const durations=list.map(v=>Math.max(1,Number(v.dur)||60));
+  const total=durations.reduce((a,b)=>a+b,0);
+  let t=repeat?((elapsed%total)+total)%total:elapsed;
+  if(t>=total)return {ended:true,total};
+  let start=0;
+  for(let i=0;i<list.length;i++) {
+    if(t<start+durations[i])return {index:i,offset:t-start,duration:durations[i],total};
+    start+=durations[i];
   }
   return null;
 }
-
 function renderGuide() {
-  const root = $("guide");
-  root.replaceChildren();
-
-  if (!list.length) {
-    const empty = document.createElement("div");
-    empty.className = "status";
-    empty.textContent = "جدول پخش بعد از افزودن برنامه‌ها نمایش داده می‌شود.";
-    root.append(empty);
-    $("cycleDuration").textContent = "";
-    return;
+  const root=$("guide");root.replaceChildren();
+  if(!list.length) {
+    const empty=document.createElement("div");
+    empty.className="status";empty.textContent="جدول پخش خالی است.";
+    root.append(empty);$("cycleDuration").textContent="";return;
   }
 
-  const slot = getSlot();
-  const total = list.reduce(
-    (sum, video) => sum + Math.max(1, Number(video.dur) || 60), 0
-  );
-  $("cycleDuration").textContent = "طول چرخه: " + fmt(total);
+  const slot=getSlot();
+  const total=list.reduce((s,v)=>s+Math.max(1,Number(v.dur)||60),0);
+  $("cycleDuration").textContent=adminMode?"طول چرخه: "+fmt(total):"برنامه‌های شبکه";
 
-  let start = 0;
-  list.forEach((video, index) => {
-    const duration = Math.max(1, Number(video.dur) || 60);
-    const row = document.createElement("div");
-    const isLive = slot && !slot.ended && slot.index === index;
-    row.className = "program" + (isLive ? " live" : "");
+  let start=0;
+  list.forEach((v,i)=>{
+    const duration=Math.max(1,Number(v.dur)||60);
+    const live=slot&&!slot.ended&&slot.index===i;
+    const row=document.createElement("div");
+    row.className="program"+(live?" live":"");
+    const info=document.createElement("div");
+    info.className="program-title";
+    const name=document.createElement("div");name.textContent=v.title;
+    const status=document.createElement("div");
+    status.className="small";status.textContent=live?"● LIVE":"برنامه";
+    info.append(name,status);
 
-    const times = document.createElement("span");
-    times.className = "small";
-    times.textContent = fmt(start) + "–" + fmt(start + duration);
-
-    const info = document.createElement("div");
-    info.className = "program-title";
-
-    const name = document.createElement("div");
-    name.textContent = video.title;
-
-    const status = document.createElement("div");
-    status.className = "small";
-    status.textContent = isLive ? "● LIVE" : "برنامه";
-
-    info.append(name, status);
-
-    if (isLive) {
-      const bar = document.createElement("div");
-      bar.className = "progress";
-      const fill = document.createElement("span");
-      fill.style.width = Math.min(100, slot.offset / duration * 100) + "%";
-      bar.append(fill);
-      info.append(bar);
+    if(adminMode) {
+      const time=document.createElement("span");
+      time.className="small";time.textContent=fmt(start)+"–"+fmt(start+duration);
+      row.append(time);
+      if(live) {
+        const bar=document.createElement("div");bar.className="progress";
+        const fill=document.createElement("span");
+        fill.style.width=Math.min(100,slot.offset/duration*100)+"%";
+        bar.append(fill);info.append(bar);
+      }
     }
 
-    const play = document.createElement("button");
-    play.textContent = "▶";
-    play.onclick = () => playIndex(index);
-
-    row.append(times, info, play);
+    row.append(info);
+    if(adminMode) {
+      const play=document.createElement("button");
+      play.textContent="▶";play.onclick=()=>playIndex(i);
+      row.append(play);
+    }
     root.append(row);
-    start += duration;
+    start+=duration;
   });
 }
-
 function renderAll() {
-  renderChannels();
-  renderPlaylist();
-  renderGuide();
-  syncButtons();
+  renderChannels();renderPlaylist();renderGuide();syncButtons();
 }
-
 function syncButtons() {
-  $("autoBtn").textContent = "▶ خودکار: " + (autoplay ? "روشن" : "خاموش");
-  $("repeatBtn").textContent = "🔁 چرخه: " + (repeat ? "روشن" : "خاموش");
-  $("shuffleBtn").textContent = "🔀 تصادفی: " + (shuffle ? "روشن" : "خاموش");
-  $("crtBtn").textContent = "📺 CRT: " + (crt ? "روشن" : "خاموش");
-  $("crtBtn").classList.toggle("primary", crt);
-  $("screen").classList.toggle("crt", crt);
-  $("screen").classList.toggle("radio", radio);
-  $("brandName").textContent = $("stationName").value || "AM TV 24/7";
-  $("watermark").textContent = $("stationName").value || "AM TV 24/7";
-  document.documentElement.style.setProperty("--accent", $("accentColor").value || "#e8b85b");
-  $("screen").style.filter =
+  $("autoBtn").textContent="▶ خودکار: "+(autoplay?"روشن":"خاموش");
+  $("repeatBtn").textContent="🔁 چرخه: "+(repeat?"روشن":"خاموش");
+  $("shuffleBtn").textContent="🔀 تصادفی: "+(shuffle?"روشن":"خاموش");
+  $("crtBtn").textContent="📺 CRT: "+(crt?"روشن":"خاموش");
+  $("screen").classList.toggle("crt",crt);
+  $("screen").classList.toggle("radio",radio);
+  $("brandName").textContent=$("stationName").value||"AM TV 24/7";
+  $("watermark").textContent=$("stationName").value||"AM TV 24/7";
+  document.documentElement.style.setProperty("--accent",$("accentColor").value||"#e8b85b");
+  $("screen").style.filter=
     `brightness(${$("brightness").value}%) contrast(${$("contrast").value}%) saturate(${$("saturation").value}%)`;
 }
-
-function playIndex(index) {
-  if (index < 0 || index >= list.length) return;
-  currentIndex = index;
-  power = true;
-  const video = list[index];
-
-  $("nowTitle").textContent = video.title;
-  $("status").textContent = "در حال پخش: " + video.title;
-  $("playBtn").textContent = "Ⅱ توقف";
-
-  if (video.localKey) {
-    playLocal(video, 0);
-  } else if (playerReady && player) {
+function playIndex(i) {
+  if(i<0||i>=list.length)return;
+  currentIndex=i;power=true;
+  const v=list[i];
+  $("nowTitle").textContent=v.title;
+  $("playBtn").textContent="Ⅱ توقف";
+  if(v.localKey)playLocal(v,0);
+  else if(playerReady&&player) {
     $("localPlayer").pause();
-    $("localPlayer").style.display = "none";
-    $("player").style.display = "block";
-    player.loadVideoById({ videoId: video.id, startSeconds: 0 });
-  } else {
-    toast("پلیر YouTube هنوز آماده نیست.");
-  }
+    $("localPlayer").style.display="none";
+    $("player").style.display="block";
+    player.loadVideoById({videoId:v.id,startSeconds:0});
+  } else toast("پلیر هنوز آماده نیست.");
   renderAll();
 }
-
-function nextVideo(direction = 1) {
-  if (!list.length) return;
-  let index = currentIndex < 0 ? 0 : currentIndex + direction;
-
-  if (shuffle && list.length > 1) {
-    do {
-      index = Math.floor(Math.random() * list.length);
-    } while (index === currentIndex);
+function nextVideo(direction=1) {
+  if(!list.length)return;
+  let i=currentIndex<0?0:currentIndex+direction;
+  if(shuffle&&list.length>1) {
+    do{i=Math.floor(Math.random()*list.length);}while(i===currentIndex);
   }
-
-  if (repeat) index = (index + list.length) % list.length;
-  else index = Math.max(0, Math.min(list.length - 1, index));
-
-  playIndex(index);
+  if(repeat)i=(i+list.length)%list.length;
+  else i=Math.max(0,Math.min(list.length-1,i));
+  playIndex(i);
 }
-
 function syncNow() {
-  if (!list.length) {
-    toast("هنوز برنامه‌ای اضافه نشده است.");
-    return;
-  }
-
-  const slot = getSlot();
-  if (!slot || slot.ended) {
-    $("nowTitle").textContent = "پایان جدول پخش";
-    return;
-  }
-
-  currentIndex = slot.index;
-  const video = list[slot.index];
-
-  $("nowTitle").textContent = video.title;
-  $("status").textContent =
-    "هماهنگی با ساعت · " + fmt(slot.offset) + " سپری شده";
-
-  if (video.localKey) {
-    playLocal(video, slot.offset);
-  } else if (playerReady && player) {
+  if(!list.length)return toast("برنامه‌ای اضافه نشده است.");
+  const s=getSlot();
+  if(!s||s.ended)return;
+  currentIndex=s.index;
+  const v=list[s.index];
+  $("nowTitle").textContent=v.title;
+  if(v.localKey)playLocal(v,s.offset);
+  else if(playerReady&&player) {
     $("localPlayer").pause();
-    $("localPlayer").style.display = "none";
-    $("player").style.display = "block";
-    player.loadVideoById({
-      videoId: video.id,
-      startSeconds: Math.floor(slot.offset)
-    });
+    $("localPlayer").style.display="none";
+    $("player").style.display="block";
+    player.loadVideoById({videoId:v.id,startSeconds:Math.floor(s.offset)});
   }
   renderAll();
 }
-
-function setPower(on) {
-  power = on;
-  if (!on) {
-    if (playerReady && player) player.pauseVideo();
-    $("localPlayer").pause();
-    $("status").textContent = "تلویزیون خاموش است.";
-    $("playBtn").textContent = "▶ پخش زنده";
+function onPlayerError(event) {
+  const messages={
+    2:"شناسه ویدیو نامعتبر است.",
+    5:"خطای پلیر HTML5.",
+    100:"ویدیو پیدا نشد.",
+    101:"اجازه پخش این ویدیو در سایت داده نشده.",
+    150:"اجازه پخش این ویدیو در سایت داده نشده.",
+    153:"خطای شناسایی درخواست پلیر YouTube."
+  };
+  $("status").textContent=messages[event.data]||"خطای YouTube: "+event.data;
+}
+function onPlayerState(event) {
+  if(event.data===YT.PlayerState.PLAYING) {
+    const data=player.getVideoData();
+    const duration=player.getDuration();
+    const index=list.findIndex(v=>v.id===data.video_id);
+    if(index>=0) {
+      currentIndex=index;
+      if(duration>0)list[index].dur=duration;
+      save();renderAll();
+    }
+    $("nowTitle").textContent=data.title||"YouTube";
+    $("status").textContent="در حال پخش";
+  }
+  if(event.data===YT.PlayerState.ENDED&&autoplay)nextVideo(1);
+  updateSeek();
+}
+function updateSeek() {
+  if(!adminMode)return;
+  let duration=0,current=0;
+  if(playerReady&&player) {
+    try {
+      duration=player.getDuration()||0;
+      current=player.getCurrentTime()||0;
+    } catch(e) {}
   } else {
-    $("playBtn").textContent = "Ⅱ توقف";
+    duration=$("localPlayer").duration||0;
+    current=$("localPlayer").currentTime||0;
+  }
+  $("adminSeek").value=duration?Math.round(current/duration*1000):0;
+  $("adminCurrentTime").textContent=fmt(current);
+  $("adminDuration").textContent=fmt(duration);
+}
+function seekTo(seconds) {
+  if(!requireAdmin())return;
+  if(playerReady&&player) {
+    try{player.seekTo(Math.max(0,seconds),true);}catch(e){}
+  } else {
+    const video=$("localPlayer");
+    if(Number.isFinite(video.duration))video.currentTime=Math.max(0,Math.min(seconds,video.duration));
+  }
+  updateSeek();
+}
+function setPower(on) {
+  power=on;
+  if(!on) {
+    if(playerReady&&player)player.pauseVideo();
+    $("localPlayer").pause();
+    $("status").textContent="تلویزیون خاموش است.";
+    $("playBtn").textContent="▶ پخش زنده";
+  } else {
+    $("playBtn").textContent="Ⅱ توقف";
     syncNow();
   }
 }
-
 function toggleWatch() {
-  const screen = $("screen");
+  const screen=$("screen");
   screen.classList.toggle("watch");
-  if (screen.classList.contains("watch")) {
-    screen.requestFullscreen?.().catch(() => {});
-  } else if (document.fullscreenElement) {
-    document.exitFullscreen?.().catch(() => {});
-  }
+  if(screen.classList.contains("watch"))screen.requestFullscreen?.().catch(()=>{});
+  else if(document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});
 }
-
 function updateClock() {
-  const date = new Date();
-  $("clock").textContent =
-    pad(date.getHours()) + ":" + pad(date.getMinutes()) + ":" + pad(date.getSeconds());
-  $("date").textContent = date.toLocaleDateString("fa-IR", {
-    year: "numeric", month: "long", day: "numeric"
-  });
-  $("meta").textContent = "CH " + pad(channelIndex + 1) + " · " + $("clock").textContent;
-
-  if (sleepUntil) {
-    const remaining = Math.ceil((sleepUntil - Date.now()) / 1000);
-    $("sleepStatus").textContent = "خاموشی تا " + fmt(remaining);
-    if (remaining <= 0) {
-      sleepUntil = 0;
-      setPower(false);
-      toast("تایمر خواب تلویزیون را خاموش کرد.");
-    }
+  const d=new Date();
+  $("clock").textContent=pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds());
+  $("date").textContent=d.toLocaleDateString("fa-IR",{year:"numeric",month:"long",day:"numeric"});
+  $("meta").textContent="CH "+pad(channelIndex+1)+" · "+$("clock").textContent;
+  if(sleepUntil&&Date.now()>=sleepUntil) {
+    sleepUntil=0;setPower(false);toast("تایمر خواب تلویزیون را خاموش کرد.");
   }
+  if(sleepUntil)$("sleepStatus").textContent="خاموشی تا "+fmt((sleepUntil-Date.now())/1000);
 }
-
-function onPlayerState(event) {
-  if (!player) return;
-
-  if (event.data === YT.PlayerState.PLAYING) {
-    const data = player.getVideoData();
-    const duration = player.getDuration();
-    const index = list.findIndex(video => video.id === data.video_id);
-
-    if (index >= 0) {
-      currentIndex = index;
-      if (duration > 0) {
-        list[index].dur = duration;
-        save();
-        renderAll();
-      }
-    }
-    $("nowTitle").textContent = data.title || "YouTube";
-    $("status").textContent = "در حال پخش: " + (data.title || "YouTube");
-  }
-
-  if (event.data === YT.PlayerState.ENDED && autoplay) {
-    nextVideo(1);
-  }
-}
-
-window.onYouTubeIframeAPIReady = function() {
-  apiReady = true;
-  player = new YT.Player("player", {
-    width:"100%",
-    height:"100%",
-    playerVars: {
+window.onYouTubeIframeAPIReady=()=>{
+  player=new YT.Player("player",{
+    width:"100%",height:"100%",
+    playerVars:{
+      autoplay:0,
+      controls:0,
+      disablekb:1,
       playsinline:1,
-      controls:1,
       rel:0,
       enablejsapi:1,
       origin:location.origin
     },
-    events: {
-      onReady: event => {
-        playerReady = true;
-        event.target.setVolume(Number($("volume").value));
+    events:{
+      onReady:e=>{
+        playerReady=true;
+        e.target.setVolume(Number($("volume").value));
+        updateSeek();
       },
-      onStateChange: onPlayerState,
-      onError: event => {
-        const messages = {
-          2:"شناسهٔ ویدیو نامعتبر است.",
-          5:"خطای پلیر HTML5.",
-          100:"ویدیو پیدا نشد یا حذف شده است.",
-          101:"این ویدیو اجازهٔ پخش در سایت را نمی‌دهد.",
-          150:"این ویدیو اجازهٔ پخش در سایت را نمی‌دهد.",
-          153:"YouTube اطلاعات شناسایی درخواست پلیر را دریافت نکرده است."
-        };
-        $("status").textContent = messages[event.data] || "خطای YouTube: " + event.data;
-      }
+      onStateChange:onPlayerState,
+      onError:onPlayerError
     }
   });
 };
-
-const api = document.createElement("script");
-api.src = "https://www.youtube.com/iframe_api";
+const api=document.createElement("script");
+api.src="https://www.youtube.com/iframe_api";
 document.head.appendChild(api);
 
 function openDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
-    request.onupgradeneeded = () => {
-      if (!request.result.objectStoreNames.contains("videos")) {
-        request.result.createObjectStore("videos", { keyPath:"key" });
-      }
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(DB_NAME,1);
+    req.onupgradeneeded=()=>{
+      if(!req.result.objectStoreNames.contains("videos"))
+        req.result.createObjectStore("videos",{keyPath:"key"});
     };
-    request.onsuccess = () => { db = request.result; resolve(db); };
-    request.onerror = () => reject(request.error);
+    req.onsuccess=()=>{db=req.result;resolve(db);};
+    req.onerror=()=>reject(req.error);
   });
 }
-
 async function addLocalFiles(files) {
-  if (!requireAdmin()) return;
-
+  if(!requireAdmin())return;
   try {
     await openDB();
-
-    for (const file of files) {
-      const key = "local:" + Date.now() + ":" + Math.random().toString(36).slice(2);
-      const duration = await new Promise(resolve => {
-        const url = URL.createObjectURL(file);
-        const video = document.createElement("video");
-        video.preload = "metadata";
-        video.onloadedmetadata = () => {
-          const value = Number.isFinite(video.duration) ? video.duration : 60;
-          URL.revokeObjectURL(url);
-          resolve(value || 60);
+    for(const file of files) {
+      const key="local:"+Date.now()+":"+Math.random().toString(36).slice(2);
+      const duration=await new Promise(resolve=>{
+        const url=URL.createObjectURL(file);
+        const video=document.createElement("video");
+        video.preload="metadata";
+        video.onloadedmetadata=()=>{
+          const d=Number.isFinite(video.duration)?video.duration:60;
+          URL.revokeObjectURL(url);resolve(d||60);
         };
-        video.onerror = () => {
-          URL.revokeObjectURL(url);
-          resolve(60);
-        };
-        video.src = url;
+        video.onerror=()=>{URL.revokeObjectURL(url);resolve(60);};
+        video.src=url;
       });
-
-      await new Promise((resolve, reject) => {
-        const transaction = db.transaction("videos", "readwrite");
-        transaction.objectStore("videos").put({ key, blob:file, name:file.name, dur:duration });
-        transaction.oncomplete = resolve;
-        transaction.onerror = () => reject(transaction.error);
+      await new Promise((resolve,reject)=>{
+        const tx=db.transaction("videos","readwrite");
+        tx.objectStore("videos").put({key,blob:file,name:file.name,dur:duration});
+        tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
       });
-
-      list.push({ id:key, title:file.name, dur:duration, localKey:key });
+      list.push({id:key,title:file.name,dur:duration,localKey:key});
     }
-
-    save();
-    renderAll();
-    toast("فایل‌های محلی اضافه شدند.");
-  } catch (error) {
-    toast("ذخیرهٔ فایل ممکن نشد.");
+    save();renderAll();toast("فایل‌ها اضافه شدند.");
+  } catch(e) {
+    toast("ذخیره فایل ممکن نشد.");
   }
 }
-
 async function deleteLocal(key) {
   try {
     await openDB();
-    await new Promise(resolve => {
-      const transaction = db.transaction("videos", "readwrite");
-      transaction.objectStore("videos").delete(key);
-      transaction.oncomplete = resolve;
-      transaction.onerror = resolve;
+    await new Promise(resolve=>{
+      const tx=db.transaction("videos","readwrite");
+      tx.objectStore("videos").delete(key);
+      tx.oncomplete=resolve;tx.onerror=resolve;
     });
-  } catch (error) {}
+  } catch(e) {}
 }
-
-async function playLocal(video, offset = 0) {
+async function playLocal(video,offset=0) {
   try {
     await openDB();
-    const data = await new Promise((resolve, reject) => {
-      const transaction = db.transaction("videos", "readonly");
-      const request = transaction.objectStore("videos").get(video.localKey);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
+    const data=await new Promise((resolve,reject)=>{
+      const tx=db.transaction("videos","readonly");
+      const req=tx.objectStore("videos").get(video.localKey);
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error);
     });
-
-    if (!data) throw new Error("missing");
-
-    if (localObjectUrl) URL.revokeObjectURL(localObjectUrl);
-    localObjectUrl = URL.createObjectURL(data.blob);
-
-    const element = $("localPlayer");
-    element.src = localObjectUrl;
-    element.style.display = "block";
-    $("player").style.display = "none";
-    element.currentTime = Math.min(offset, Math.max(0, (video.dur || 1) - 1));
-    await element.play();
-  } catch (error) {
-    toast("فایل محلی پیدا نشد یا پخش نشد.");
+    if(!data)throw Error("missing");
+    if(localObjectUrl)URL.revokeObjectURL(localObjectUrl);
+    localObjectUrl=URL.createObjectURL(data.blob);
+    const el=$("localPlayer");
+    el.src=localObjectUrl;
+    el.controls=adminMode;
+    el.style.display="block";
+    $("player").style.display="none";
+    el.currentTime=Math.min(offset,Math.max(0,(video.dur||1)-1));
+    await el.play();
+  } catch(e) {
+    toast("فایل پیدا نشد یا پخش نشد.");
   }
 }
-
 function exportBackup() {
-  if (!requireAdmin()) return;
+  if(!requireAdmin())return;
   save();
-  const data = {
-    format:"AM-TV-24-7-v1",
-    channels,channelIndex,autoplay,repeat,shuffle,crt,radio,
-    stationName:$("stationName").value,
-    accent:$("accentColor").value
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
-    type:"application/json"
-  });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = "am-tv-backup.json";
-  anchor.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  const data={format:"AM-TV-24-7-v1",channels,channelIndex,autoplay,repeat,shuffle,crt,radio,stationName:$("stationName").value,accent:$("accentColor").value};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="am-tv-backup.json";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-
 function importBackup(file) {
-  if (!requireAdmin()) return;
-  const reader = new FileReader();
-
-  reader.onload = () => {
+  if(!requireAdmin())return;
+  const reader=new FileReader();
+  reader.onload=()=>{
     try {
-      const data = JSON.parse(reader.result);
-      if (data.format !== "AM-TV-24-7-v1" ||
-          !Array.isArray(data.channels) || !data.channels.length) {
-        throw new Error("invalid");
-      }
-
-      channels = data.channels.map(channel => ({
-        name:String(channel.name || "شبکه"),
-        color:channel.color || "#e8b85b",
-        list:Array.isArray(channel.list) ? channel.list : []
-      }));
-      channelIndex = Math.max(0, Math.min(channels.length - 1, Number(data.channelIndex) || 0));
-      list = channels[channelIndex].list;
-      autoplay = data.autoplay !== false;
-      repeat = data.repeat !== false;
-      shuffle = !!data.shuffle;
-      crt = data.crt !== false;
-      radio = !!data.radio;
-      $("stationName").value = data.stationName || channels[channelIndex].name;
-      $("accentColor").value = data.accent || "#e8b85b";
-      save();
-      renderAll();
-      syncButtons();
-      toast("بکاپ بازیابی شد.");
-    } catch (error) {
-      toast("فایل بکاپ معتبر نیست.");
-    }
+      const d=JSON.parse(reader.result);
+      if(d.format!=="AM-TV-24-7-v1"||!Array.isArray(d.channels)||!d.channels.length)throw Error();
+      channels=d.channels.map(c=>({name:String(c.name||"شبکه"),color:c.color||"#e8b85b",list:Array.isArray(c.list)?c.list:[]}));
+      channelIndex=Math.max(0,Math.min(channels.length-1,Number(d.channelIndex)||0));
+      list=channels[channelIndex].list;
+      autoplay=d.autoplay!==false;repeat=d.repeat!==false;shuffle=!!d.shuffle;crt=d.crt!==false;radio=!!d.radio;
+      $("stationName").value=d.stationName||channels[channelIndex].name;
+      $("accentColor").value=d.accent||"#e8b85b";
+      save();renderAll();syncButtons();toast("بکاپ بازیابی شد.");
+    } catch(e) {toast("فایل بکاپ معتبر نیست.");}
   };
-
   reader.readAsText(file);
 }
 
-/* رویدادها */
-$("adminSaveName").onclick = () => {
-  if (!requireAdmin()) return;
-  const name = $("adminStationName").value.trim();
-  if (!name) return toast("نام شبکه را وارد کن.");
-
-  $("stationName").value = name;
-  channels[channelIndex].name = name;
-  save();
-  renderAll();
-  toast("نام شبکه ذخیره شد.");
+/* اتصال رویدادها */
+$("adminSaveName").onclick=()=>{
+  if(!requireAdmin())return;
+  const name=$("adminStationName").value.trim();
+  if(!name)return toast("نام شبکه را وارد کن.");
+  $("stationName").value=name;
+  channels[channelIndex].name=name;
+  save();renderAll();toast("نام شبکه ذخیره شد.");
 };
-
-$("adminStationName").addEventListener("input", () => {
-  if (adminMode) $("stationName").value = $("adminStationName").value;
-});
-
-$("adminAddChannel").onclick = addChannel;
-
-$("adminAddVideo").onclick = () => addVideoFromInput("adminVideoUrl");
-$("addVideo").onclick = () => addVideoFromInput("videoUrl");
-
-$("adminVideoUrl").addEventListener("keydown", event => {
-  if (event.key === "Enter") addVideoFromInput("adminVideoUrl");
-});
-$("videoUrl").addEventListener("keydown", event => {
-  if (event.key === "Enter") addVideoFromInput("videoUrl");
-});
-
-$("localFileBtn").onclick = () => {
-  if (requireAdmin()) $("localFiles").click();
+$("adminAddChannel").onclick=()=>{
+  if(!requireAdmin())return;
+  channels[channelIndex].list=list;
+  channels.push({name:$("adminChannelName").value.trim()||"شبکه "+(channels.length+1),color:$("adminChannelColor").value,list:[]});
+  channelIndex=channels.length-1;list=channels[channelIndex].list;
+  $("stationName").value=channels[channelIndex].name;
+  $("accentColor").value=channels[channelIndex].color;
+  $("adminChannelName").value="";
+  save();renderAll();
 };
-$("adminLocalFiles").addEventListener("change", event => {
-  if (event.target.files.length) addLocalFiles([...event.target.files]);
-  event.target.value = "";
-});
-$("localFiles").addEventListener("change", event => {
-  if (event.target.files.length) addLocalFiles([...event.target.files]);
-  event.target.value = "";
-});
-
-$("search").addEventListener("input", renderPlaylist);
-$("clearList").onclick = clearList;
-$("exportJson").onclick = exportBackup;
-$("importJsonBtn").onclick = () => {
-  if (requireAdmin()) $("importJson").click();
-};
-$("importJson").onchange = event => {
-  if (event.target.files[0]) importBackup(event.target.files[0]);
-  event.target.value = "";
-};
-
-$("powerBtn").onclick = () => setPower(!power);
-
-$("playBtn").onclick = () => {
-  if (!power) {
-    setPower(true);
-    return;
-  }
-
-  if (playerReady && player) {
-    const state = player.getPlayerState();
-    if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+$("adminAddVideo").onclick=()=>addVideo("adminVideoUrl");
+$("addVideo").onclick=()=>addVideo("videoUrl");
+$("localFileBtn").onclick=()=>{if(requireAdmin())$("localFiles").click();};
+$("localFiles").onchange=e=>{if(e.target.files.length)addLocalFiles([...e.target.files]);e.target.value="";};
+$("adminLocalFiles").onchange=e=>{if(e.target.files.length)addLocalFiles([...e.target.files]);e.target.value="";};
+$("clearList").onclick=clearList;
+$("exportJson").onclick=exportBackup;
+$("importJsonBtn").onclick=()=>{if(requireAdmin())$("importJson").click();};
+$("importJson").onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value="";};
+$("search").oninput=renderPlaylist;
+$("powerBtn").onclick=()=>setPower(!power);
+$("playBtn").onclick=()=>{
+  if(!power){setPower(true);return;}
+  if(playerReady&&player) {
+    if(player.getPlayerState()===YT.PlayerState.PLAYING)player.pauseVideo();
     else player.playVideo();
   } else {
-    const video = $("localPlayer");
-    if (video.src) video.paused ? video.play() : video.pause();
+    const v=$("localPlayer");
+    if(v.src)v.paused?v.play():v.pause();
   }
 };
+$("prevBtn").onclick=()=>nextVideo(-1);
+$("nextBtn").onclick=()=>nextVideo(1);
+$("syncBtn").onclick=syncNow;
+$("fullBtn").onclick=()=>{
+  if(!document.fullscreenElement)$("screen").requestFullscreen?.().catch(()=>{});
+  else document.exitFullscreen?.().catch(()=>{});
+};
+$("volume").oninput=e=>{
+  if(playerReady&&player)player.setVolume(Number(e.target.value));
+  $("localPlayer").volume=Number(e.target.value)/100;
+};
+$("autoBtn").onclick=()=>{autoplay=!autoplay;syncButtons();save();};
+$("repeatBtn").onclick=()=>{repeat=!repeat;syncButtons();save();renderGuide();};
+$("shuffleBtn").onclick=()=>{shuffle=!shuffle;syncButtons();save();};
+$("crtBtn").onclick=()=>{crt=!crt;syncButtons();save();};
+$("radioBtn").onclick=()=>{radio=!radio;syncButtons();save();};
+$("customBtn").onclick=()=>{
+  if(!requireAdmin())return;
+  $("customize").style.display=$("customize").style.display==="block"?"none":"block";
+};
+$("stationName").oninput=()=>{
+  if(!requireAdmin())return;
+  channels[channelIndex].name=$("stationName").value;
+  $("adminStationName").value=$("stationName").value;
+  syncButtons();save();renderChannels();
+};
+$("accentColor").oninput=()=>{
+  if(!requireAdmin())return;
+  channels[channelIndex].color=$("accentColor").value;
+  syncButtons();save();
+};
+["brightness","contrast","saturation"].forEach(id=>$(id).oninput=syncButtons);
+$("sleepBtn").onclick=()=>{$("sleepPanel").style.display=$("sleepPanel").style.display==="block"?"none":"block";};
+$("startSleep").onclick=()=>{sleepUntil=Date.now()+Number($("sleepMinutes").value)*60000;toast("تایمر خواب فعال شد.");};
+$("cancelSleep").onclick=()=>{sleepUntil=0;$("sleepStatus").textContent="تایمر لغو شد.";};
+$("watchBtn").onclick=toggleWatch;
+$("watchExit").onclick=toggleWatch;
 
-$("prevBtn").onclick = () => nextVideo(-1);
-$("nextBtn").onclick = () => nextVideo(1);
-$("syncBtn").onclick = syncNow;
-
-$("fullBtn").onclick = () => {
-  const screen = $("screen");
-  if (!document.fullscreenElement) screen.requestFullscreen?.().catch(() => {});
-  else document.exitFullscreen?.().catch(() => {});
+/* فقط مدیر اجازه تغییر موقعیت پخش را دارد. */
+$("adminSeek").oninput=()=>{
+  if(!requireAdmin())return;
+  pendingSeek=Number($("adminSeek").value);
+  const duration=playerReady&&player?player.getDuration():$("localPlayer").duration;
+  $("adminCurrentTime").textContent=fmt(duration*pendingSeek/1000);
+};
+$("adminSeek").onchange=()=>{
+  if(!requireAdmin())return;
+  const duration=playerReady&&player?player.getDuration():$("localPlayer").duration;
+  seekTo(duration*Number($("adminSeek").value)/1000);
+};
+$("adminBack").onclick=()=>{
+  if(playerReady&&player)seekTo(player.getCurrentTime()-10);
+  else seekTo($("localPlayer").currentTime-10);
+};
+$("adminForward").onclick=()=>{
+  if(playerReady&&player)seekTo(player.getCurrentTime()+10);
+  else seekTo($("localPlayer").currentTime+10);
 };
 
-$("volume").oninput = event => {
-  if (playerReady && player) player.setVolume(Number(event.target.value));
-  $("localPlayer").volume = Number(event.target.value) / 100;
-};
-
-$("autoBtn").onclick = () => {
-  autoplay = !autoplay;
-  syncButtons();
-  save();
-};
-$("repeatBtn").onclick = () => {
-  repeat = !repeat;
-  syncButtons();
-  save();
-  renderGuide();
-};
-$("shuffleBtn").onclick = () => {
-  shuffle = !shuffle;
-  syncButtons();
-  save();
-};
-$("crtBtn").onclick = () => {
-  crt = !crt;
-  syncButtons();
-  save();
-};
-$("radioBtn").onclick = () => {
-  radio = !radio;
-  syncButtons();
-  save();
-};
-$("customBtn").onclick = () => {
-  if (!requireAdmin()) return;
-  $("customize").style.display =
-    $("customize").style.display === "block" ? "none" : "block";
-};
-$("stationName").oninput = () => {
-  if (!requireAdmin()) return;
-  channels[channelIndex].name = $("stationName").value;
-  $("adminStationName").value = $("stationName").value;
-  syncButtons();
-  save();
-  renderChannels();
-};
-$("accentColor").oninput = () => {
-  if (!requireAdmin()) return;
-  channels[channelIndex].color = $("accentColor").value;
-  syncButtons();
-  save();
-  renderChannels();
-};
-["brightness","contrast","saturation"].forEach(id => {
-  $(id).oninput = syncButtons;
+$("localPlayer").addEventListener("ended",()=>{if(autoplay)nextVideo(1);});
+document.addEventListener("keydown",e=>{
+  if(["INPUT","TEXTAREA","SELECT"].includes(e.target.tagName))return;
+  if(e.code==="Space"){e.preventDefault();$("playBtn").click();}
+  else if(e.key==="ArrowRight"&&e.shiftKey)switchChannel((channelIndex+1)%channels.length);
+  else if(e.key==="ArrowLeft"&&e.shiftKey)switchChannel((channelIndex+channels.length-1)%channels.length);
+  else if(adminMode&&e.key==="ArrowRight")seekTo((player?.getCurrentTime?.()||0)+10);
+  else if(adminMode&&e.key==="ArrowLeft")seekTo((player?.getCurrentTime?.()||0)-10);
+  else if(e.key.toLowerCase()==="f")$("fullBtn").click();
+  else if(e.key.toLowerCase()==="l")$("syncBtn").click();
 });
-
-$("sleepBtn").onclick = () => {
-  $("sleepPanel").style.display =
-    $("sleepPanel").style.display === "block" ? "none" : "block";
-};
-$("startSleep").onclick = () => {
-  sleepUntil = Date.now() + Number($("sleepMinutes").value) * 60000;
-  toast("تایمر خواب فعال شد.");
-};
-$("cancelSleep").onclick = () => {
-  sleepUntil = 0;
-  $("sleepStatus").textContent = "تایمر لغو شد.";
-};
-$("watchBtn").onclick = toggleWatch;
-$("watchExit").onclick = toggleWatch;
-
-$("localPlayer").addEventListener("ended", () => {
-  if (autoplay) nextVideo(1);
-});
-
-document.addEventListener("keydown", event => {
-  if (["INPUT","TEXTAREA","SELECT"].includes(event.target.tagName)) return;
-  if (event.code === "Space") {
-    event.preventDefault();
-    $("playBtn").click();
-  } else if (event.key === "ArrowRight" && event.shiftKey) {
-    switchChannel((channelIndex + 1) % channels.length);
-  } else if (event.key === "ArrowLeft" && event.shiftKey) {
-    switchChannel((channelIndex + channels.length - 1) % channels.length);
-  } else if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-    nextVideo(1);
-  } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-    nextVideo(-1);
-  } else if (event.key.toLowerCase() === "f") {
-    $("fullBtn").click();
-  } else if (event.key.toLowerCase() === "l") {
-    $("syncBtn").click();
-  } else if (event.key === "Escape" && $("screen").classList.contains("watch")) {
-    toggleWatch();
-  }
-});
-
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && power) syncNow();
-});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&power)syncNow();});
 
 load();
 renderAll();
 syncButtons();
 setAdmin(false);
 updateClock();
-
-setInterval(updateClock, 1000);
-setInterval(() => {
+setInterval(updateClock,1000);
+setInterval(updateSeek,1000);
+setInterval(()=>{
   renderGuide();
-  if (power) {
-    const slot = getSlot();
-    if (slot && !slot.ended && slot.index !== currentIndex) syncNow();
+  if(power) {
+    const slot=getSlot();
+    if(slot&&!slot.ended&&slot.index!==currentIndex)syncNow();
   }
-}, 30000);
+},30000);
 
 })();
 </script>
 </body>
-</html>
+  </html>
