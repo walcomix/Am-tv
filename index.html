@@ -1,296 +1,475 @@
 
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101a16">
-<title>AM TV | تلویزیون شخصی من</title>
+<meta name="theme-color" content="#101b16">
+<title>AM TV — تلویزیون شخصی من</title>
 <style>
 :root {
-  --bg:#101a16; --panel:#1c2a21;
-  --gold:#e8bd68; --text:#f5edda;
-  --muted:#b7c2ae; --line:#455b47;
+  --bg: #101b16;
+  --panel: #192820;
+  --gold: #f4b942;
+  --cream: #f5edda;
+  --muted: #a7b6a6;
+  --line: #3b5142;
 }
-* { box-sizing:border-box }
+* { box-sizing: border-box; }
 body {
-  margin:0; background:var(--bg); color:var(--text);
-  font-family:Tahoma,Arial,sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--cream);
+  font-family: Tahoma, Arial, sans-serif;
 }
 header {
-  padding:18px; border-bottom:1px solid var(--line);
-  background:#152119; display:flex; align-items:center; gap:12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px;
+  border-bottom: 2px solid var(--gold);
+  background: #0b130f;
 }
+.brand { display: flex; align-items: center; gap: 12px; }
 .logo {
-  width:54px;height:54px;border:2px solid var(--gold);
-  border-radius:9px;display:grid;place-items:center;
-  color:var(--gold);font-size:17px;font-weight:bold;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 46px;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  box-shadow: 3px 3px 0 #684c20;
 }
-h1 {font-size:23px;margin:0}
-header p {font-size:11px;color:var(--muted);margin:6px 0 0}
-main {max-width:900px;margin:20px auto;padding:0 12px}
-.panel {
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:12px;padding:14px;margin-bottom:14px;
+h1 { margin: 0; font-size: 23px; letter-spacing: 2px; }
+.subtitle { color: var(--muted); font-size: 11px; margin-top: 5px; }
+.live {
+  color: var(--gold);
+  font-size: 11px;
+  border: 1px solid var(--gold);
+  padding: 7px 9px;
 }
-.label {color:var(--gold);font-size:14px;margin:0 0 12px}
-.screen {
-  background:#070b08;border:2px solid #50634d;
-  padding:7px;border-radius:13px;
+main { max-width: 1050px; margin: auto; padding: 16px; }
+.section-title {
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin: 8px 0 12px;
 }
-.screenbar {
-  display:flex;justify-content:space-between;
-  color:var(--gold);font-size:11px;padding:7px;
+.player-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 10px;
+}
+.player-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.station { display: flex; align-items: center; gap: 9px; }
+.mini-logo {
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  padding: 5px 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
+#nowTitle { font-size: 13px; overflow-wrap: anywhere; }
+#playerWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
 }
 #player {
-  width:100%;aspect-ratio:16/9;border:0;
-  display:block;background:#0b120d;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
-.welcome {
-  aspect-ratio:16/9;display:grid;place-content:center;
-  text-align:center;padding:15px;
+#playerWrap:fullscreen {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  background: #000;
 }
-.welcome strong {font-size:clamp(35px,10vw,70px);color:var(--gold)}
-.welcome p {font-size:12px;line-height:2;color:var(--muted)}
-input[type=url],input[type=text] {
-  width:100%;padding:12px;border-radius:8px;
-  border:1px solid var(--line);background:#101a16;
-  color:white;font-size:14px;margin-bottom:9px;
+#playerWrap:fullscreen #player {
+  width: 100%;
+  height: 100%;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+button, input {
+  font: inherit;
+  border-radius: 0;
 }
 button {
-  background:#2b4030;color:var(--text);
-  border:1px solid var(--line);border-radius:8px;
-  padding:10px 12px;font-size:12px;cursor:pointer;
+  background: #263b2e;
+  color: var(--cream);
+  border: 1px solid #526c56;
+  padding: 10px 13px;
+  cursor: pointer;
 }
-button.primary {background:var(--gold);color:#192018;font-weight:bold}
-.buttons {display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.item {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;padding:10px;margin-top:8px;border-radius:8px;
-  border:1px solid var(--line);background:#121e16;
+button:hover { border-color: var(--gold); color: var(--gold); }
+button.primary { background: var(--gold); color: #172016; font-weight: bold; }
+button.active { border-color: var(--gold); color: var(--gold); }
+.add-panel, .playlist-panel {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 14px;
 }
-.item.active {border-color:var(--gold)}
-.item-title {font-size:12px;overflow-wrap:anywhere}
-.item-actions {display:flex;gap:4px;flex-wrap:wrap}
-.item-actions button {padding:7px}
-.hint,.status {font-size:11px;line-height:1.9;color:var(--muted)}
-.status {color:var(--gold)}
-.check {font-size:12px;color:var(--muted);display:block;margin-top:12px}
-.check input {accent-color:var(--gold)}
-footer {text-align:center;color:var(--muted);font-size:11px;padding:20px;line-height:2}
-@media(min-width:650px) {
-  .columns {display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.add-row { display: flex; gap: 8px; }
+input {
+  min-width: 0;
+  flex: 1;
+  background: #0d1711;
+  border: 1px solid var(--line);
+  color: var(--cream);
+  padding: 12px;
+}
+input::placeholder { color: #8d9b8d; }
+#playlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+.track:last-child { border-bottom: 0; }
+.track.selected { color: var(--gold); }
+.track-main {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.track-number { color: var(--muted); font-size: 11px; }
+.track-actions { display: flex; gap: 4px; }
+.track-actions button { padding: 6px 8px; font-size: 12px; }
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 25px 10px;
+}
+@media (max-width: 480px) {
+  header { padding: 13px 10px; }
+  h1 { font-size: 19px; }
+  main { padding: 10px; }
+  .player-card { padding: 7px; }
+  .track { flex-wrap: wrap; }
+  .track-actions { margin-right: auto; }
+  .add-row { flex-direction: column; }
+  .add-row button { width: 100%; }
 }
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">AM<br>TV</div>
-  <div>
-    <h1>AM TV</h1>
-    <p>تلویزیون شخصی تو · کانال نوستالژی</p>
+  <div class="brand">
+    <div class="logo">AM</div>
+    <div>
+      <h1>AM TV</h1>
+      <div class="subtitle">YOUR PERSONAL TELEVISION</div>
+    </div>
   </div>
+  <div class="live">● ON AIR</div>
 </header>
 
 <main>
-  <section class="screen">
-    <div class="screenbar">
-      <span>AM TV · CHANNEL 01</span>
-      <span>● ON AIR</span>
-    </div>
-    <div id="player">
-      <div class="welcome">
-        <strong>AM TV</strong>
-        <p>تلویزیون خودت رو روشن کن!<br>اولین ویدیوت رو به فهرست اضافه کن.</p>
+  <div class="section-title">NOW PLAYING / پخش زنده</div>
+  <section class="player-card">
+    <div class="player-top">
+      <div class="station">
+        <div class="mini-logo">AM TV</div>
+        <div id="nowTitle">هنوز برنامه‌ای انتخاب نشده</div>
       </div>
+      <span style="color:var(--gold);font-size:11px">CH 01</span>
+    </div>
+
+    <div id="playerWrap">
+      <iframe id="player"
+        src="about:blank"
+        title="AM TV Video Player"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        allowfullscreen
+        referrerpolicy="strict-origin-when-cross-origin">
+      </iframe>
+    </div>
+
+    <div class="controls">
+      <button id="prevBtn">⏮ قبلی</button>
+      <button id="playBtn" class="primary">▶ پخش</button>
+      <button id="nextBtn">بعدی ⏭</button>
+      <button id="fullBtn">⛶ تمام‌صفحه</button>
+    </div>
+    <div class="options">
+      <button id="repeatBtn">🔁 تکرار: خاموش</button>
+      <button id="autoBtn" class="active">▶ پخش خودکار: روشن</button>
     </div>
   </section>
 
-  <div class="buttons" style="margin:12px 0 18px">
-    <button id="prev">⏮ قبلی</button>
-    <button class="primary" id="play">▶ پخش</button>
-    <button id="next">بعدی ⏭</button>
-    <button id="stop">■ توقف</button>
-  </div>
+  <section class="add-panel">
+    <div class="section-title">ADD TO YOUR CHANNEL / افزودن برنامه</div>
+    <div class="add-row">
+      <input id="videoUrl" type="url"
+        placeholder="لینک ویدیوی یوتیوب را وارد کن...">
+      <button id="addBtn" class="primary">＋ افزودن</button>
+    </div>
+    <div style="color:var(--muted);font-size:11px;margin-top:9px">
+      لینک ویدیوهای عمومی یوتیوب را وارد کن.
+    </div>
+  </section>
 
-  <div class="columns">
-    <section class="panel">
-      <h2 class="label">＋ افزودن برنامه</h2>
-      <input id="url" type="url" placeholder="لینک ویدیوی YouTube">
-      <button class="primary" id="add">افزودن به فهرست</button>
-      <label class="check">
-        <input type="checkbox" id="repeat" checked>
-        تکرار فهرست از ابتدا
-      </label>
-      <label class="check">
-        <input type="checkbox" id="auto" checked>
-        پخش خودکار برنامه بعدی
-      </label>
-      <p class="hint">فهرست پخش روی همین دستگاه ذخیره می‌شود.
-      بعضی ویدیوها اجازه پخش در سایت‌های دیگر را نمی‌دهند.</p>
-      <div class="status" id="status">آماده پخش</div>
-    </section>
-
-    <section class="panel">
-      <h2 class="label">▤ برنامه‌های من</h2>
-      <div id="list"></div>
-    </section>
-  </div>
+  <section class="playlist-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px">
+      <div class="section-title" style="margin:0">MY PLAYLIST / لیست برنامه‌ها</div>
+      <span id="count" style="color:var(--muted);font-size:11px">۰ برنامه</span>
+    </div>
+    <ul id="playlist"></ul>
+    <div id="empty" style="color:var(--muted);font-size:13px;padding:15px 0">
+      هنوز برنامه‌ای اضافه نشده.
+    </div>
+    <div class="options">
+      <button id="clearBtn">حذف همه برنامه‌ها</button>
+    </div>
+  </section>
 </main>
 
-<footer>
-  AM TV · تلویزیون شخصی من<br>
-  برای پخش واقعی ۲۴/۷ حتی وقتی دستگاه خاموش است، سرور همیشه‌روشن لازم است.
-</footer>
+<footer>AM TV © YOUR OWN LITTLE TV STATION</footer>
 
 <script>
 const $ = id => document.getElementById(id);
-let videos = [];
+const STORAGE = 'amtv_playlist_v2';
+const SETTINGS = 'amtv_settings_v2';
+
+let tracks = [];
 let current = -1;
-let timer = null;
+let repeat = false;
+let autoplay = true;
+let playerReady = false;
+let player = null;
 
 try {
-  videos = JSON.parse(localStorage.getItem('amtv-list') || '[]');
-} catch(e) { videos = []; }
+  tracks = JSON.parse(localStorage.getItem(STORAGE) || '[]');
+  if (!Array.isArray(tracks)) tracks = [];
+} catch (_) { tracks = []; }
+
+try {
+  const s = JSON.parse(localStorage.getItem(SETTINGS) || '{}');
+  repeat = !!s.repeat;
+  autoplay = s.autoplay !== false;
+} catch (_) {}
 
 function save() {
-  localStorage.setItem('amtv-list', JSON.stringify(videos));
+  localStorage.setItem(STORAGE, JSON.stringify(tracks));
+  localStorage.setItem(SETTINGS, JSON.stringify({repeat, autoplay}));
 }
 
-function videoId(url) {
+function getId(raw) {
   try {
-    const u = new URL(url);
-    if (u.hostname === 'youtu.be')
-      return u.pathname.split('/').filter(Boolean)[0] || null;
-    if (u.hostname.endsWith('youtube.com') ||
-        u.hostname === 'youtube-nocookie.com') {
+    const u = new URL(raw.trim());
+    const host = u.hostname.replace(/^www\./, '').toLowerCase();
+    if (host === 'youtu.be') return u.pathname.split('/').filter(Boolean)[0] || null;
+    if (['youtube.com','m.youtube.com','music.youtube.com','youtube-nocookie.com'].includes(host)) {
       if (u.pathname === '/watch') return u.searchParams.get('v');
-      if (u.pathname.startsWith('/embed/')) return u.pathname.split('/')[2];
-      if (u.pathname.startsWith('/shorts/')) return u.pathname.split('/')[2];
+      const m = u.pathname.match(/^\/(?:embed|shorts|live)\/([^/?]+)/);
+      return m ? m[1] : null;
     }
-  } catch(e) {}
+  } catch (_) {}
   return null;
 }
 
-function say(text) { $('status').textContent = text; }
-
 function render() {
-  const list = $('list');
-  list.replaceChildren();
+  $('playlist').innerHTML = '';
+  $('count').textContent = tracks.length + ' برنامه';
+  $('empty').style.display = tracks.length ? 'none' : 'block';
 
-  if (!videos.length) {
-    list.textContent = 'هنوز برنامه‌ای اضافه نکردی 📺';
-    list.className = 'hint';
-    return;
-  }
+  tracks.forEach((t, i) => {
+    const li = document.createElement('li');
+    li.className = 'track' + (i === current ? ' selected' : '');
 
-  list.className = '';
-  videos.forEach((v,i) => {
-    const item = document.createElement('div');
-    item.className = 'item' + (i === current ? ' active' : '');
+    const num = document.createElement('span');
+    num.className = 'track-number';
+    num.textContent = String(i + 1).padStart(2, '0');
 
-    const info = document.createElement('div');
-    const title = document.createElement('div');
-    title.className = 'item-title';
-    title.textContent = 'AM TV · برنامه ' + (i+1);
-    const id = document.createElement('div');
-    id.className = 'hint';
-    id.textContent = v.id;
-    info.append(title,id);
+    const name = document.createElement('div');
+    name.className = 'track-main';
+    name.textContent = t.title || ('YouTube ' + t.id);
+    name.title = 'برای پخش انتخاب کن';
+    name.onclick = () => playAt(i);
 
     const actions = document.createElement('div');
-    actions.className = 'item-actions';
+    actions.className = 'track-actions';
 
-    [['▶',()=>playAt(i)],['↑',()=>move(i,-1)],
-     ['↓',()=>move(i,1)],['×',()=>remove(i)]].forEach(([label,fn]) => {
-       const b = document.createElement('button');
-       b.textContent = label;
-       b.onclick = fn;
-       actions.append(b);
-    });
+    function action(label, title, fn) {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.title = title;
+      b.onclick = fn;
+      actions.appendChild(b);
+    }
+    action('↑', 'انتقال به بالا', () => move(i, -1));
+    action('↓', 'انتقال به پایین', () => move(i, 1));
+    action('×', 'حذف برنامه', () => remove(i));
 
-    item.append(info,actions);
-    list.append(item);
+    li.append(num, name, actions);
+    $('playlist').appendChild(li);
   });
+
+  $('repeatBtn').textContent = '🔁 تکرار: ' + (repeat ? 'روشن' : 'خاموش');
+  $('autoBtn').textContent = '▶ پخش خودکار: ' + (autoplay ? 'روشن' : 'خاموش');
+  $('autoBtn').classList.toggle('active', autoplay);
 }
 
-function playAt(i) {
-  if (i < 0 || i >= videos.length) return;
-  current = i;
-  clearTimeout(timer);
-
-  const frame = document.createElement('iframe');
-  frame.id = 'yt-player';
-  frame.title = 'AM TV YouTube player';
-  frame.src = 'https://www.youtube-nocookie.com/embed/' +
-    encodeURIComponent(videos[i].id) +
-    '?autoplay=1&enablejsapi=1&rel=0';
-  frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-  frame.allowFullscreen = true;
-  frame.referrerPolicy = 'strict-origin-when-cross-origin';
-  frame.style.cssText = 'width:100%;aspect-ratio:16/9;border:0;display:block';
-  $('player').replaceChildren(frame);
+function addTrack() {
+  const url = $('videoUrl').value.trim();
+  const id = getId(url);
+  if (!id || !/^[\w-]{11}$/.test(id)) {
+    alert('لینک یوتیوب معتبر نیست. دوباره بررسی کن.');
+    return;
+  }
+  if (tracks.some(t => t.id === id)) {
+    alert('این ویدیو قبلاً در پلی‌لیست هست.');
+    return;
+  }
+  tracks.push({id, title: 'YouTube · ' + id});
+  save();
   render();
-  say('در حال بارگذاری برنامه ' + (i+1));
+  $('videoUrl').value = '';
+  if (current === -1) playAt(0);
+}
+
+function playAt(index) {
+  if (!tracks.length) return;
+  current = (index + tracks.length) % tracks.length;
+  const t = tracks[current];
+  $('nowTitle').textContent = t.title || 'AM TV';
+  $('player').src = 'https://www.youtube-nocookie.com/embed/' +
+    encodeURIComponent(t.id) +
+    '?autoplay=1&enablejsapi=1&playsinline=1&rel=0';
+  render();
 }
 
 function next() {
-  if (!videos.length) return;
-  if (current < videos.length-1) playAt(current+1);
-  else if ($('repeat').checked) playAt(0);
-  else say('فهرست به پایان رسید');
+  if (!tracks.length) return;
+  if (current < 0) return playAt(0);
+  if (current + 1 < tracks.length) return playAt(current + 1);
+  if (repeat) return playAt(0);
+  if (autoplay) {
+    $('nowTitle').textContent = 'پایان پلی‌لیست';
+  }
 }
 
-function move(i,d) {
-  const j = i+d;
-  if (j < 0 || j >= videos.length) return;
-  [videos[i],videos[j]] = [videos[j],videos[i]];
-  if (current === i) current = j;
-  else if (current === j) current = i;
-  save(); render();
+function previous() {
+  if (!tracks.length) return;
+  playAt(current <= 0 ? tracks.length - 1 : current - 1);
 }
 
-function remove(i) {
-  videos.splice(i,1);
-  if (current === i) stop();
-  else if (current > i) current--;
-  save(); render();
-}
-
-function stop() {
-  current = -1;
-  clearTimeout(timer);
-  const welcome = document.createElement('div');
-  welcome.className = 'welcome';
-  welcome.innerHTML = '<strong>AM TV</strong><p>یک برنامه انتخاب کن.</p>';
-  $('player').replaceChildren(welcome);
+function move(index, direction) {
+  const target = index + direction;
+  if (target < 0 || target >= tracks.length) return;
+  [tracks[index], tracks[target]] = [tracks[target], tracks[index]];
+  if (current === index) current = target;
+  else if (current === target) current = index;
+  save();
   render();
 }
 
-$('add').onclick = () => {
-  const id = videoId($('url').value.trim());
-  if (!id) return say('لطفاً لینک معتبر YouTube وارد کن.');
-  if (videos.some(v => v.id === id)) return say('این ویدیو از قبل اضافه شده.');
-  videos.push({id});
+function remove(index) {
+  tracks.splice(index, 1);
+  if (!tracks.length) {
+    current = -1;
+    $('player').src = 'about:blank';
+    $('nowTitle').textContent = 'هنوز برنامه‌ای انتخاب نشده';
+  } else if (current === index) {
+    current = Math.min(index, tracks.length - 1);
+    playAt(current);
+  } else if (current > index) {
+    current--;
+  }
+  save();
+  render();
+}
+
+$('addBtn').onclick = addTrack;
+$('videoUrl').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTrack();
+});
+$('prevBtn').onclick = previous;
+$('nextBtn').onclick = next;
+$('playBtn').onclick = () => {
+  if (current < 0 && tracks.length) return playAt(0);
+  try {
+    if (player && playerReady) player.playVideo();
+    else if (current >= 0) playAt(current);
+  } catch (_) {
+    if (current >= 0) playAt(current);
+  }
+};
+$('repeatBtn').onclick = () => {
+  repeat = !repeat; save(); render();
+};
+$('autoBtn').onclick = () => {
+  autoplay = !autoplay; save(); render();
+};
+$('clearBtn').onclick = () => {
+  if (!tracks.length || !confirm('همه برنامه‌ها حذف شوند؟')) return;
+  tracks = [];
+  current = -1;
+  $('player').src = 'about:blank';
+  $('nowTitle').textContent = 'هنوز برنامه‌ای انتخاب نشده';
   save(); render();
-  $('url').value = '';
-  say('برنامه اضافه شد!');
-  if (current === -1) playAt(0);
+};
+$('fullBtn').onclick = async () => {
+  const frame = $('player');
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if (frame.requestFullscreen) {
+      await frame.requestFullscreen();
+    } else if (frame.webkitRequestFullscreen) {
+      frame.webkitRequestFullscreen();
+    } else {
+      alert('این مرورگر تمام‌صفحه را برای این پلیر پشتیبانی نمی‌کند. از دکمه تمام‌صفحه خود ویدیو استفاده کن.');
+    }
+  } catch (_) {
+    alert('تمام‌صفحه توسط مرورگر یا پلیر محدود شده است. دکمه تمام‌صفحه داخل ویدیو را امتحان کن.');
+  }
 };
 
-$('url').addEventListener('keydown',e => {
-  if (e.key === 'Enter') $('add').click();
-});
-$('play').onclick = () => playAt(current < 0 ? 0 : current);
-$('next').onclick = next;
-$('prev').onclick = () => {
-  if (videos.length) playAt(current > 0 ? current-1 :
-    ($('repeat').checked ? videos.length-1 : 0));
-};
-$('stop').onclick = stop;
-$('clear')?.addEventListener('click', () => {});
 render();
+if (tracks.length) {
+  current = 0;
+  $('nowTitle').textContent = tracks[0].title || 'AM TV';
+  // برای جلوگیری از پخش ناخواسته هنگام بازکردن سایت،
+  // ویدیو پس از انتخاب کاربر اجرا می‌شود.
+}
 </script>
 </body>
 </html>
