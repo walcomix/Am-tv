@@ -1,338 +1,338 @@
 
-<!DOCTYPE html>
+<!نوع سند html>
 <html lang="fa" dir="rtl">
-<head>
+<سر>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#101b16">
-<title>WALKO TV — Your Personal Television</title>
+<title>تلویزیون والکو — تلویزیون شخصی شما</title>
 
-<style>
-:root {
+<سبک>
+:ریشه {
   --bg:#101b16;
-  --panel:#192820;
-  --panel2:#21362a;
-  --cream:#f4edda;
-  --muted:#aab7a9;
-  --line:#3b5140;
-  --accent:#e8b85b;
-  --brightness:1;
-  --contrast:1;
-  --saturation:1;
+  --پنل:#192820;
+  --پنل۲:#۲۱۳۶۲a;
+  --خامه:#f4edda;
+  --بی‌صدا:#aab7a9;
+  --خط:#3b5140;
+  --لهجه:#e8b85b;
+  --روشنایی: ۱؛
+  --کنتراست: ۱؛
+  --اشباع: ۱؛
 }
-* { box-sizing:border-box }
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--cream);
-  font-family:Tahoma,Arial,sans-serif;
+* {اندازه کادر: کادر حاشیه}
+بدن {
+  حاشیه: 0؛
+  پس‌زمینه:متغیر(--bg);
+  رنگ: متغیر(--کرم)؛
+  خانواده فونت: Tahoma، Arial، sans-serif؛
 }
-button,input { font:inherit }
-button {
-  cursor:pointer;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--panel2);
-  color:var(--cream);
-  padding:10px 12px;
+دکمه، ورودی {فونت:ارثی}
+دکمه {
+  مکان نما: اشاره گر؛
+  حاشیه: 1 پیکسل، ثابت، متغیر(--line)؛
+  شعاع حاشیه: ۸ پیکسل؛
+  پس‌زمینه: متغیر(--panel2)؛
+  رنگ: متغیر(--کرم)؛
+  فاصله‌گذاری: ۱۰ پیکسل ۱۲ پیکسل؛
 }
-button:hover { border-color:var(--accent) }
-button.primary {
-  background:var(--accent);
-  color:#101b16;
-  font-weight:bold;
+دکمه: شناور { border-color:var(--accent) }
+دکمه.اولیه {
+  پس‌زمینه:متغیر(--لهجه)؛
+  رنگ: #101b16;
+  وزن فونت: پررنگ؛
 }
-input {
-  width:100%;
-  min-width:0;
-  padding:11px;
-  border:1px solid var(--line);
-  border-radius:8px;
-  background:var(--bg);
-  color:var(--cream);
+ورودی {
+  عرض: ۱۰۰٪؛
+  حداقل عرض: 0؛
+  فاصله‌گذاری: ۱۱ پیکسل؛
+  حاشیه: 1 پیکسل، ثابت، متغیر(--line)؛
+  شعاع حاشیه: ۸ پیکسل؛
+  پس‌زمینه:متغیر(--bg);
+  رنگ: متغیر(--کرم)؛
 }
-header {
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  border-bottom:1px solid var(--line);
-  background:#121f18;
+سربرگ {
+  نمایش: فلکس؛
+  ترازبندی-آیتم‌ها: مرکز؛
+  فاصله: ۱۲ پیکسل؛
+  بالشتک: 14px؛
+  border-bottom: 1px solid var(--line);
+  پس‌زمینه: #121f18;
 }
 .logo {
-  width:52px;
-  height:52px;
-  display:grid;
-  place-items:center;
-  border:2px solid var(--accent);
-  border-radius:9px;
-  color:var(--accent);
-  font-weight:900;
-  font-size:13px;
-  text-align:center;
-  line-height:1.15;
+  عرض: ۵۲ پیکسل؛
+  ارتفاع: ۵۲ پیکسل؛
+  نمایش: شبکه‌ای؛
+  قرار دادن اقلام: مرکز؛
+  حاشیه: 2 پیکسل، رنگ ثابت، متغیر(--accent);
+  شعاع حاشیه: ۹ پیکسل؛
+  رنگ:متغیر(--لهجه)؛
+  وزن فونت: ۹۰۰؛
+  اندازه فونت: ۱۳ پیکسل؛
+  ترازبندی متن: وسط؛
+  ارتفاع خط: ۱.۱۵؛
 }
 .brand h1 {
-  margin:0;
-  color:var(--accent);
-  letter-spacing:2px;
-  font-size:22px;
+  حاشیه: 0؛
+  رنگ:متغیر(--لهجه)؛
+  فاصله حروف: ۲ پیکسل؛
+  اندازه فونت: ۲۲ پیکسل؛
 }
-.brand p {
-  margin:5px 0 0;
-  font-size:10px;
-  color:var(--muted);
+.برند پی {
+  حاشیه: ۵ پیکسل ۰ ۰;
+  اندازه فونت: 10 پیکسل؛
+  رنگ:متغیر(--خاموش)؛
 }
 .header-right {
-  margin-right:auto;
-  text-align:left;
+  حاشیه سمت راست: خودکار؛
+  تراز متن: چپ؛
 }
 #clock { color:var(--accent);font-weight:bold;font-size:18px }
 #date { color:var(--muted);font-size:10px;margin-top:4px }
-main { max-width:1000px;margin:auto;padding:14px }
-.panel {
-  background:var(--panel);
-  border:1px solid #293c30;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:14px;
+اصلی {حداکثر عرض: ۱۰۰۰ پیکسل؛حاشیه: خودکار؛پدینگ: ۱۴ پیکسل}
+.پنل {
+  پس‌زمینه:متغیر(--panel);
+  حاشیه: ۱ پیکسل، توپر #۲۹۳c۳۰;
+  شعاع حاشیه: ۱۲ پیکسل؛
+  بالشتک: 14px؛
+  حاشیه پایین: ۱۴ پیکسل؛
 }
-.eyebrow {
-  font-size:10px;
-  letter-spacing:2px;
-  color:var(--accent);
+.ابرو {
+  اندازه فونت: 10 پیکسل؛
+  فاصله حروف: ۲ پیکسل؛
+  رنگ:متغیر(--لهجه)؛
 }
 .nowbar {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin:12px 0;
+  نمایش: فلکس؛
+  ترازبندی-آیتم‌ها: مرکز؛
+  فاصله: ۸ پیکسل؛
+  بسته بندی انعطاف پذیر: بسته بندی؛
+  حاشیه: ۱۲ پیکسل ۰؛
 }
-.live { color:#ffb1a9;font-size:11px;font-weight:bold }
-.dot {
-  display:inline-block;
-  width:7px;height:7px;
-  border-radius:50%;
-  background:#e85d52;
-  margin-left:5px;
-  animation:pulse 1.5s infinite;
+.live {رنگ:#ffb1a9;اندازه-فونت:۱۱px;وزن-فونت:پررنگ}
+نقطه {
+  نمایش: بلوک درون خطی؛
+  عرض: ۷ پیکسل؛ ارتفاع: ۷ پیکسل؛
+  شعاع مرزی: ۵۰٪؛
+  پس‌زمینه: #e85d52;
+  حاشیه سمت چپ: ۵ پیکسل؛
+  انیمیشن: پالس ۱.۵ ثانیه بی‌نهایت؛
 }
 @keyframes pulse { 50%{opacity:.35} }
 #nowTitle { flex:1;font-size:13px;overflow-wrap:anywhere }
 .badge {
-  border:1px solid var(--accent);
-  color:var(--accent);
-  border-radius:5px;
-  padding:5px 8px;
-  font-size:10px;
+  حاشیه: 1px solid var(--accent);
+  رنگ:متغیر(--لهجه)؛
+  شعاع مرزی: ۵ پیکسل؛
+  فاصله گذاری: ۵ پیکسل ۸ پیکسل؛
+  اندازه فونت: 10 پیکسل؛
 }
-#screen {
-  position:relative;
-  width:100%;
-  aspect-ratio:16/9;
-  overflow:hidden;
-  background:#050806;
-  border:1px solid var(--accent);
-  border-radius:10px;
-  isolation:isolate;
+#صفحه نمایش {
+  موقعیت:نسبی؛
+  عرض: ۱۰۰٪؛
+  نسبت تصویر: ۱۶/۹؛
+  سرریز: پنهان؛
+  پس‌زمینه: #050806;
+  حاشیه: 1px solid var(--accent);
+  شعاع مرزی: ۱۰ پیکسل؛
+  انزوا: ایزوله کردن؛ جدا کردن
 }
-#player {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+#بازیکن {
+  موقعیت:مطلق؛
+  درج: 0؛
+  عرض: ۱۰۰٪؛
+  ارتفاع: ۱۰۰٪؛
 }
-#player iframe {
-  width:100%;
-  height:100%;
-  border:0;
-  filter:brightness(var(--brightness))
-    contrast(var(--contrast))
-    saturate(var(--saturation));
+#پخش‌کننده iframe {
+  عرض: ۱۰۰٪؛
+  ارتفاع: ۱۰۰٪؛
+  حاشیه: 0؛
+  فیلتر: روشنایی (متغیر (--روشنایی))
+    کنتراست(متغیر(--کنتراست))
+    اشباع(متغیر(--اشباع));
 }
-#screen:fullscreen {
-  width:100vw;height:100vh;
-  aspect-ratio:auto;
-  border:0;border-radius:0;
+#صفحه:تمام‌صفحه {
+  عرض: ۱۰۰vw; ارتفاع: ۱۰۰vh;
+  نسبت ابعاد: خودکار؛
+  مرز: 0;شعاع مرز: 0;
 }
-.watermark {
-  position:absolute;
-  z-index:5;
-  top:12px;left:12px;
-  display:flex;align-items:center;gap:7px;
-  padding:7px 9px;
-  border:1px solid var(--accent);
-  border-radius:6px;
-  background:#101b16dc;
-  color:var(--accent);
-  font-size:12px;
-  font-weight:bold;
-  pointer-events:none;
+واترمارک
+  موقعیت:مطلق؛
+  شاخص z: 5؛
+  بالا: ۱۲ پیکسل؛ چپ: ۱۲ پیکسل؛
+  نمایش: فلکس؛ ترازبندی-آیتم‌ها: مرکز؛ فاصله: ۷ پیکسل؛
+  فاصله بین خطوط: ۷ پیکسل ۹ پیکسل؛
+  حاشیه: 1px solid var(--accent);
+  شعاع حاشیه: ۶ پیکسل؛
+  پس‌زمینه: #101b16dc;
+  رنگ:متغیر(--لهجه)؛
+  اندازه فونت: ۱۲ پیکسل؛
+  وزن فونت: پررنگ؛
+  رویدادهای اشاره‌گر: هیچ‌کدام؛
 }
 .wm-icon { border:1px solid var(--accent);padding:3px;border-radius:3px }
 .screen-meta {
-  position:absolute;z-index:5;
-  top:12px;right:12px;
-  padding:6px 8px;
-  background:#101b16dc;
-  border:1px solid var(--line);
-  border-radius:5px;
-  font-size:10px;
-  pointer-events:none;
+  موقعیت: مطلق؛ شاخص z: 5؛
+  بالا: ۱۲ پیکسل؛ راست: ۱۲ پیکسل؛
+  فاصله بین خطوط: ۶ پیکسل ۸ پیکسل؛
+  پس‌زمینه: #101b16dc;
+  حاشیه: 1 پیکسل، ثابت، متغیر(--line)؛
+  شعاع مرزی: ۵ پیکسل؛
+  اندازه فونت: 10 پیکسل؛
+  رویدادهای اشاره‌گر: هیچ‌کدام؛
 }
-#ident {
-  position:absolute;z-index:10;
-  inset:0;
-  display:none;
-  place-items:center;
-  background:#101b16;
-  color:var(--accent);
-  text-align:center;
+#شناسایی {
+  موقعیت: مطلق؛ شاخص z: 10؛
+  درج: 0؛
+  نمایش: هیچکدام؛
+  قرار دادن اقلام: مرکز؛
+  پس‌زمینه: #101b16;
+  رنگ:متغیر(--لهجه)؛
+  ترازبندی متن: وسط؛
 }
-#ident.show { display:grid;animation:fadein .4s }
-#ident strong {
-  display:block;
-  font-size:clamp(30px,8vw,65px);
-  letter-spacing:5px;
+#ident.show { نمایش: شبکه؛ انیمیشن: محو شدن در عرض .4 ثانیه }
+#شناسایی قوی {
+  نمایش: بلوک؛
+  اندازه فونت:clamp(30px,8vw,65px);
+  فاصله حروف: ۵ پیکسل؛
 }
-#ident small {
-  display:block;margin-top:12px;
+#شناسایی کوچک {
+  نمایش: بلوک؛ حاشیه بالا: ۱۲ پیکسل؛
   color:var(--cream);letter-spacing:2px;
 }
-@keyframes fadein { from{opacity:0}to{opacity:1} }
-#radioVisual {
-  display:none;
-  position:absolute;z-index:3;
-  inset:0;place-items:center;
-  background:radial-gradient(ellipse,#293b2a,#050806 75%);
-  color:var(--accent);
-  font-size:clamp(22px,6vw,48px);
-  letter-spacing:5px;font-weight:bold;
-  text-shadow:0 0 22px var(--accent);
-  pointer-events:none;
+@keyframes محو می‌شود { from{opacity:0}to{opacity:1} }
+#رادیو_تصویری {
+  نمایش: هیچکدام؛
+  موقعیت: مطلق؛ شاخص z: 3؛
+  inset:0;قرار دادن آیتم‌ها:مرکز;
+  پس‌زمینه:شیب-شعاعی(بیضی،#۲۹۳b۲a،#۰۵۰۸۰۶ ۷۵%)؛
+  رنگ:متغیر(--لهجه)؛
+  اندازه فونت:clamp(22px,6vw,48px);
+  فاصله حروف: ۵ پیکسل؛ وزن فونت: پررنگ؛
+  سایه متن:0 0 22px var(--accent);
+  رویدادهای اشاره‌گر: هیچ‌کدام؛
 }
 #screen.radio #radioVisual { display:grid }
 #screen.radio #player iframe { opacity:0 }
-.crt:after {
-  content:"";
-  position:absolute;z-index:4;
-  inset:0;pointer-events:none;
-  background:repeating-linear-gradient(
-    to bottom,transparent 0,transparent 3px,#00000015 4px
-  );
+.crt:بعد از {
+  محتوا: "";
+  موقعیت: مطلق؛ شاخص z: 4؛
+  inset:0;pointer-event:none; (رویدادهای اشاره‌گر:هیچکدام)
+  پس‌زمینه: گرادیان خطی تکرارشونده(
+    به پایین، شفاف ۰، شفاف ۳ پیکسل، #۰۰۰۰۰۰۱۵ ۴ پیکسل
+  )؛
 }
-.controls {
-  display:flex;justify-content:center;align-items:center;
-  gap:7px;flex-wrap:wrap;margin-top:12px;
+.کنترل‌ها {
+  نمایش: فلکس؛ توجیه-محتوا: مرکز؛ ترازبندی-موارد: مرکز؛
+  فاصله: ۷ پیکسل؛ flex-wrap:wrap؛ margin-top: ۱۲ پیکسل؛
 }
-.controls button { flex:1;min-width:65px }
-.status {
-  font-size:11px;color:var(--muted);
-  line-height:1.9;margin-top:9px;
+دکمه .controls { flex:1;min-width:65px }
+وضعیت (.status)
+  اندازه فونت: ۱۱ پیکسل؛ رنگ: متغیر (--خاموش)؛
+  ارتفاع خط: ۱.۹؛ حاشیه بالا: ۹ پیکسل؛
 }
-.sectionhead {
-  display:flex;justify-content:space-between;
-  align-items:center;gap:8px;margin-bottom:12px;
+.سربخش {
+  نمایش:خم شدن؛ توجیه-محتوا:فاصله بین؛
+  ترازبندی آیتم‌ها: مرکز؛ فاصله: ۸ پیکسل؛ حاشیه پایین: ۱۲ پیکسل؛
 }
-.sectionhead h2 { font-size:15px;margin:0 }
-.addrow { display:flex;gap:8px;margin-top:8px }
-.addrow button { white-space:nowrap }
-.settings { display:flex;gap:8px;flex-wrap:wrap }
-.settings button { font-size:11px }
-.list { display:flex;flex-direction:column;gap:8px }
+.sectionhead h2 {اندازه فونت: ۱۵ پیکسل؛حاشیه: ۰}
+تابع addrow { نمایش:flex;gap:8px;margin-top:8px }
+دکمه addrow { فاصله خالی: nowrap }
+.settings { نمایش: فلکس؛ فاصله: ۸ پیکسل؛ فلکس-بسته بندی: بسته بندی }
+دکمه تنظیمات { اندازه فونت: ۱۱ پیکسل }
+.list { نمایش: فلکس؛ فلکس-جهت: ستون؛ فاصله: ۸ پیکسل }
 .track {
-  display:flex;align-items:center;gap:8px;
+  نمایش: فلکس؛ ترازبندی-آیتم‌ها: مرکز؛ فاصله: ۸ پیکسل؛
   padding:10px;background:#142119;
   border:1px solid var(--line);border-radius:8px;
 }
-.track.active { border-color:var(--accent) }
+.track.active {رنگ حاشیه:متغیر(--accent) }
 .track-title {
   flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere;
 }
-.track button { padding:7px;font-size:11px }
+دکمه .track { padding:7px;font-size:11px }
 .track-num { color:var(--accent);font-size:11px }
-.empty {
+.خالی {
   padding:20px 8px;text-align:center;
-  color:var(--muted);font-size:12px;line-height:2;
+  رنگ:متغیر(--خاموش)؛اندازه-فونت:۱۲px؛ارتفاع-خط:۲;
 }
 .guide-item {
-  display:flex;align-items:center;gap:10px;
+  نمایش: فلکس؛ ترازبندی-آیتم‌ها: مرکز؛ فاصله: ۱۰ پیکسل؛
   padding:10px;background:#142119;
   border:1px solid var(--line);border-radius:8px;cursor:pointer;
 }
 .guide-time {
-  color:var(--accent);font-family:monospace;
-  font-size:12px;min-width:65px;
+  رنگ:متغیر(--accent);خانواده-فونت:تک‌فاصله;
+  اندازه-فونت: ۱۲ پیکسل؛ حداقل عرض: ۶۵ پیکسل؛
 }
 .guide-title { flex:1;font-size:12px;overflow-wrap:anywhere }
 .guide-state { font-size:10px;color:var(--muted) }
-label {
-  display:block;color:var(--muted);
-  font-size:12px;margin:10px 0 6px;
+برچسب {
+  نمایش: بلوک؛ رنگ: متغیر (--خاموش)؛
+  اندازه فونت: ۱۲ پیکسل؛ حاشیه: ۱۰ پیکسل ۰ ۶ پیکسل؛
 }
-input[type=range] { padding:0;accent-color:var(--accent) }
-#customizePanel { display:none }
+ورودی[نوع=دامنه] { padding:0;accent-color:var(--accent) }
+#customizePanel { نمایش:هیچکدام }
 .hint { color:var(--muted);font-size:11px;line-height:1.9 }
-footer {
-  text-align:center;padding:20px;
-  color:#718276;font-size:10px;line-height:2;
+پاورقی {
+  ترازبندی متن: مرکز؛ حاشیه: 20 پیکسل؛
+  رنگ: #۷۱۸۲۷۶;اندازه-فونت: ۱۰ پیکسل;ارتفاع-خط: ۲;
 }
-#toast {
-  position:fixed;z-index:30;bottom:16px;left:50%;
-  transform:translateX(-50%);display:none;
-  max-width:90%;padding:11px 15px;
+#تُست {
+  موقعیت:ثابت;z-index:30;پایین:16px;چپ:50%;
+  تبدیل:translateX(-50%);نمایش:هیچکدام;
+  حداکثر عرض: ۹۰٪؛ حاشیه: ۱۱ پیکسل ۱۵ پیکسل؛
   border:1px solid var(--accent);border-radius:9px;
-  background:#25382a;color:var(--cream);
-  font-size:12px;text-align:center;
+  پس‌زمینه: #۲۵۳۸۲a;رنگ:متغیر(--کرم);
+  اندازه فونت: ۱۲ پیکسل؛ تراز متن: مرکز؛
 }
-@media(max-width:650px) {
-  header { padding:10px }
-  .brand h1 { font-size:18px }
-  .logo { width:45px;height:45px }
-  main { padding:9px }
+@media(حداکثر عرض: ۶۵۰ پیکسل) {
+  هدر { padding:10px }
+  .brand h1 {اندازه فونت: ۱۸ پیکسل}
+  .logo { عرض: ۴۵ پیکسل؛ ارتفاع: ۴۵ پیکسل }
+  اصلی { padding: 9px }
   .panel { padding:11px }
-  .screen-meta { font-size:9px }
-  .watermark { top:7px;left:7px;font-size:10px }
+  .screen-meta {اندازه فونت: ۹ پیکسل}
+  .watermark {بالا: ۷ پیکسل؛چپ: ۷ پیکسل؛اندازه فونت: ۱۰ پیکسل}
 }
 </style>
 </head>
 
-<body>
-<header>
-  <div class="logo">WAL<br>KO</div>
+<بدنه>
+<هدر>
+  <div class="logo">وال<br>کو</div>
   <div class="brand">
-    <h1 id="brandName">WALKO TV</h1>
-    <p>YOUR WORLD · YOUR CHANNEL</p>
+    <h1 id="brandName">تلویزیون والکو</h1>
+    <p>دنیای شما · کانال شما</p>
   </div>
   <div class="header-right">
-    <div id="clock">00:00:00</div>
-    <div id="date">WALKO BROADCAST</div>
+    <div id="clock">۰۰:۰۰:۰۰</div>
+    <div id="date">پخش والکو</div>
   </div>
-</header>
+</هدر>
 
-<main>
+<اصلی>
   <section class="panel">
-    <div class="eyebrow">WALKO TELEVISION · PERSONAL BROADCAST</div>
+    <div class="eyebrow">تلویزیون والکو · پخش شخصی</div>
     <div class="nowbar">
-      <span class="live"><span class="dot"></span>ON AIR</span>
+      <span class="live"><span class="dot"></span>روی آنتن</span>
       <span id="nowTitle">به WALKO TV خوش آمدی!</span>
       <span class="badge">CH 01</span>
     </div>
 
     <div id="screen" class="crt">
-      <div id="player"></div>
-      <div id="radioVisual">WALKO RADIO</div>
+      <div id="بازیکن"></div>
+      <div id="radioVisual">رادیوی والکو</div>
       <div class="watermark">
-        <span class="wm-icon">WK</span>
-        <span id="watermarkName">WALKO TV</span>
+        <span class="wm-icon">هفته‌نامه</span>
+        <span id="watermarkName">تلویزیون والکو</span>
       </div>
-      <div class="screen-meta">CH 01 · BROADCAST</div>
+      <div class="screen-meta">CH 01 · پخش</div>
       <div id="ident">
         <div>
-          <strong id="identName">WALKO TV</strong>
-          <small id="identCaption">UP NEXT · PLEASE STAY TUNED</small>
+          <strong id="identName">تلویزیون WALKO</strong>
+          <small id="identCaption">بعدی · لطفا منتظر بمانید</small>
         </div>
       </div>
     </div>
@@ -346,16 +346,16 @@ footer {
     <div class="status" id="playerStatus">
       برای شروع، یک ویدیو به پلی‌لیست اضافه کن.
     </div>
-  </section>
+  </بخش>
 
   <section class="panel">
     <div class="sectionhead">
       <h2>📡 جدول پخش WALKO</h2>
-      <span class="badge">ONE CHANNEL</span>
+      <span class="badge">یک کانال</span>
     </div>
     <div id="guide" class="list"></div>
     <p class="hint">برنامه‌ها به ترتیب پلی‌لیست پخش می‌شن.</p>
-  </section>
+  </بخش>
 
   <section class="panel">
     <div class="sectionhead">
@@ -369,7 +369,7 @@ footer {
       <button id="clearBtn">پاک‌کردن لیست</button>
     </div>
     <div id="playlist" class="list" style="margin-top:12px"></div>
-  </section>
+  </بخش>
 
   <section class="panel">
     <div class="sectionhead"><h2>⚙ کنترل تلویزیون</h2></div>
@@ -389,534 +389,534 @@ footer {
       <label for="saturation">اشباع رنگ</label>
       <input id="saturation" type="range" min="0" max="200" value="100">
       <button id="saveNameBtn" class="primary" style="margin-top:12px">
-        ذخیرهٔ تنظیمات
-      </button>
+        ذخیره
+      دکمه
     </div>
-  </section>
-</main>
+  </بخش>
+</اصلی>
 
-<footer>
-  <strong id="footerName">WALKO TV</strong><br>
-  YOUR WORLD · YOUR CHANNEL<br>
-  PERSONAL BROADCAST SYSTEM
-</footer>
+<پاورقی>
+  <strong id="footerName">تلویزیون والکو</strong><br>
+  دنیای شما · کانال شما<br>
+  سیستم پخش شخصی
+</پاورقی>
 <div id="toast"></div>
 
-<script>
-"use strict";
+<اسکریپت>
+"از سختگیری استفاده کنید"؛
 
 const $ = id => document.getElementById(id);
-const STORE_KEY = "walkotv_beta1_playlist";
-const SETTINGS_KEY = "walkotv_beta1_settings";
+const STORE_KEY = "لیست پخش walkotv_beta1";
+const SETTINGS_KEY = "تنظیمات walkotv_beta1";
 
-let playlist = [];
-let current = -1;
-let player = null;
-let playerReady = false;
-let repeat = true;
-let crt = true;
-let radio = false;
-let identTimer = null;
-let nextAfterIdent = null;
-let toastTimer = null;
+بگذارید لیست پخش = []؛
+بگذارید جریان = -1 باشد؛
+بگذارید بازیکن = تهی؛
+بگذارید بازیکن آماده = نادرست؛
+بگذارید تکرار شود = درست؛
+بگذارید crt = درست باشد؛
+بگذارید رادیو = نادرست؛
+بگذارید identTimer = تهی باشد.
+بگذارید nextAfterIdent = null باشد؛
+بگذارید toastTimer = تهی باشد؛
 
-function toast(message) {
-  const el = $("toast");
-  el.textContent = message;
-  el.style.display = "block";
-  clearTimeout(toastTimer);
+تابع تست (پیام) {
+  const el = $("نان تست");
+  el.textContent = پیام؛
+  el.style.display = "بلوک";
+  clearTimeout(زمان‌سنج تست)؛
   toastTimer = setTimeout(() => el.style.display = "none", 3500);
 }
 
-function savePlaylist() {
-  try {
+تابع savePlaylist() {
+  امتحان کنید {
     localStorage.setItem(STORE_KEY, JSON.stringify(playlist));
-  } catch {
-    toast("حافظهٔ مرورگر در دسترس نیست.");
+  } گرفتن {
+    toast("حافظه مرورگر در دسترس نیست.");
   }
 }
 
-function loadPlaylist() {
-  try {
+تابع بارگذاری لیست پخش () {
+  امتحان کنید {
     const data = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
-    if (Array.isArray(data)) {
-      playlist = data.filter(v =>
-        v && typeof v.id === "string" &&
+    اگر (Array.isArray(data)) {
+      لیست پخش = data.filter(v =>
+        v && نوع v.id === "رشته" &&
         /^[\w-]{11}$/.test(v.id) &&
-        typeof v.title === "string"
-      );
+        typeof v.title === "رشته"
+      )؛
     }
-  } catch {
-    playlist = [];
+  } گرفتن {
+    لیست پخش = [];
   }
 }
 
-function getVideoId(input) {
-  try {
-    const url = new URL(input);
+تابع getVideoId(ورودی) {
+  امتحان کنید {
+    const url = آدرس اینترنتی جدید (ورودی)؛
     const host = url.hostname.toLowerCase();
 
-    if (host === "youtu.be") {
-      return url.pathname.split("/").filter(Boolean)[0] || null;
+    اگر (میزبان === "youtu.be") {
+      تابع ()return url.pathname.split("/").filter(Boolean)[0] || null; را برمی‌گرداند.
     }
 
-    if (
-      host === "youtube.com" ||
-      host.endsWith(".youtube.com") ||
-      host === "youtube-nocookie.com" ||
+    اگر (
+      میزبان === "youtube.com" ||
+      ‎host.endWith(".youtube.com") ||‎
+      میزبان === "youtube-nocookie.com" ||
       host.endsWith(".youtube-nocookie.com")
     ) {
       const v = url.searchParams.get("v");
-      if (v) return v;
+      اگر (v) مقدار v را برگرداند؛
 
       const parts = url.pathname.split("/").filter(Boolean);
       const i = parts.findIndex(x =>
-        ["embed", "shorts", "live"].includes(x)
-      );
-      if (i >= 0) return parts[i + 1] || null;
+        ‎["جاسازی"، "شورت"، "زنده"].شامل(x)‎
+      )؛
+      اگر (i >= 0) بخش‌هایی از [i + 1] را برگرداند || null;
     }
-  } catch {}
+  } گرفتن {}
 
-  const text = input.trim();
-  return /^[\w-]{11}$/.test(text) ? text : null;
+  متن ثابت = ورودی.تریم();
+  return /^[\w-]{11}$/.test(text) ? text: null; /^[\w-]{11}$/.test(text) را برمی‌گرداند؟
 }
 
-function addVideo() {
+تابع addVideo() {
   const id = getVideoId($("videoUrl").value.trim());
 
-  if (!id || !/^[\w-]{11}$/.test(id)) {
-    toast("لینک معتبر YouTube وارد کن.");
-    return;
+  اگر (!id || !/^[\w-]{11}$/.test(id)) {
+    toast("لینک معتبر یوتیوب وارد کن.");
+    بازگشت؛
   }
-  if (playlist.some(v => v.id === id)) {
+  اگر (playlist.some(v => v.id === id)) {
     toast("این ویدیو قبلاً اضافه شده.");
-    return;
+    بازگشت؛
   }
 
-  playlist.push({id, title:"YouTube · " + id});
-  savePlaylist();
-  renderAll();
-  $("videoUrl").value = "";
-  toast("برنامه اضافه شد. برای دریافت عنوان، ویدیو را پخش کن.");
+  playlist.push({id, title:"یوتیوب · " + id});
+  ذخیره لیست پخش();
+  رندر کردن همه();
+  ‎$("videoUrl").value = "";‎
+  toast("برنامه اضافه شد. برای دریافت عنوان، ویدئو را پخش کن.");
 }
 
-function renderPlaylist() {
-  const root = $("playlist");
-  root.replaceChildren();
-  $("trackCount").textContent = playlist.length + " برنامه";
+تابع رندر لیست پخش () {
+  const root = $("لیست پخش");
+  ریشه.جایگزینیکودکان();
+  $("trackCount").textContent = playlist.length + "برنامه";
 
-  if (!playlist.length) {
-    root.innerHTML = '<div class="empty">هنوز برنامه‌ای نداری.<br>لینک YouTube را بالا وارد کن.</div>';
-    return;
+  اگر (!playlist.length) {
+    root.innerHTML = '<div class="empty">هنوز برنامه‌های نداری.<br>لینک YouTube را بالا وارد کن.</div>';
+    بازگشت؛
   }
 
   playlist.forEach((video, index) => {
     const row = document.createElement("div");
-    row.className = "track" + (index === current ? " active" : "");
+    row.className = "track" + (index === current ? "active" : ""); // نام ردیف = "track" + (index === current ? "active" : "");
 
     const num = document.createElement("span");
-    num.className = "track-num";
+    num.className = "شماره آهنگ";
     num.textContent = String(index + 1).padStart(2, "0");
 
     const title = document.createElement("div");
-    title.className = "track-title";
+    title.className = "عنوان آهنگ";
     title.textContent = video.title;
 
-    const play = document.createElement("button");
+    const play = document.createElement("دکمه");
     play.textContent = "▶";
     play.title = "پخش برنامه";
     play.onclick = () => playIndex(index, true);
 
-    const up = document.createElement("button");
+    const up = document.createElement("دکمه");
     up.textContent = "↑";
-    up.disabled = index === 0;
+    غیرفعال شده = اندیس === 0;
     up.onclick = () => moveVideo(index, -1);
 
-    const down = document.createElement("button");
+    const down = document.createElement("دکمه");
     down.textContent = "↓";
     down.disabled = index === playlist.length - 1;
     down.onclick = () => moveVideo(index, 1);
 
-    const remove = document.createElement("button");
+    const remove = document.createElement("دکمه");
     remove.textContent = "✕";
     remove.onclick = () => removeVideo(index);
 
     row.append(num, title, play, up, down, remove);
-    root.append(row);
+    ریشه.اضافه کردن(ردیف)؛
   });
 }
 
-function renderGuide() {
-  const root = $("guide");
-  root.replaceChildren();
+تابع رندرگاید() {
+  const root = $("راهنما");
+  ریشه.جایگزینیکودکان();
 
-  if (!playlist.length) {
+  اگر (!playlist.length) {
     root.innerHTML = '<div class="empty">جدول پخش خالی است.</div>';
-    return;
+    بازگشت؛
   }
 
   playlist.forEach((video, index) => {
     const row = document.createElement("div");
-    row.className = "guide-item";
+    row.className = "راهنما-مورد";
 
     const time = document.createElement("span");
-    time.className = "guide-time";
-    time.textContent = String(index + 1).padStart(2, "0");
+    time.className = "زمان راهنما";
+    time.textContent = رشته (شاخص + 1).padStart(2، "0");
 
     const title = document.createElement("span");
-    title.className = "guide-title";
+    title.className = "عنوان راهنما";
     title.textContent = video.title;
 
     const state = document.createElement("span");
-    state.className = "guide-state";
-    state.textContent = index === current ? "● LIVE" :
-      index === current + 1 ? "بعدی" : "در لیست";
+    state.className = "راهنما-وضعیت";
+    state.textContent = index === current ? "● زنده" :
+      شاخص === فعلی + 1 ? "بعدی" : "در لیست";
 
-    row.append(time, title, state);
+    row.append(زمان، عنوان، حالت)؛
     row.onclick = () => playIndex(index, true);
-    root.append(row);
+    ریشه.اضافه کردن(ردیف)؛
   });
 }
 
-function renderAll() {
-  renderPlaylist();
-  renderGuide();
+تابع رندرهمه() {
+  رندر لیست پخش();
+  رندر گاید();
 }
 
-function updateNowTitle() {
-  const video = playlist[current];
-  $("nowTitle").textContent = video ? video.title : "به WALKO TV خوش آمدی!";
-  $("playerStatus").textContent = video
-    ? "برنامهٔ انتخاب‌شده: " + video.title
+تابع updateNowTitle() {
+  const video = لیست پخش[فعلی];
+  $("nowTitle").textContent = ویدئو ? video.title : "به WALKO TV خوش آمدی!";
+  $("playerStatus").textContent = ویدئو
+    ? "برنامه انتخاب شده: " + video.title
     : "برای شروع، یک ویدیو به پلی‌لیست اضافه کن.";
 }
 
-function showIdent(caption, callback) {
-  clearTimeout(identTimer);
-  nextAfterIdent = callback;
-  $("identName").textContent = localStorage.getItem("walkotv_name") || "WALKO TV";
-  $("identCaption").textContent = caption;
-  $("ident").classList.add("show");
+تابع showIdent(عنوان، فراخوانی) {
+  clearTimeout(زمان‌سنج شناسایی)
+  nextAfterIdent = فراخوانی مجدد؛
+  $("identName").textContent = localStorage.getItem("walkotv_name") || "WALKO TV"؛
+  $("identCaption").textContent = عنوان;
+  ‎$("ident").classList.add("show");‎
 
   identTimer = setTimeout(() => {
-    $("ident").classList.remove("show");
+    ‎$("ident").classList.remove("show");‎‏
     const action = nextAfterIdent;
-    nextAfterIdent = null;
-    if (action) action();
-  }, 1200);
+    nextAfterIdent = تهی؛
+    اگر (عمل) action();
+  }، ۱۲۰۰)؛
 }
 
-function playIndex(index, withIdent = false) {
-  if (!playlist.length) {
+تابع playIndex(ایندکس، با شناسه = نادرست) {
+  اگر (!playlist.length) {
     toast("اول یک برنامه اضافه کن.");
-    return;
+    بازگشت؛
   }
 
-  index = (index + playlist.length) % playlist.length;
-  current = index;
-  updateNowTitle();
-  renderAll();
+  index = (فهرست + playlist.length) % playlist.length;
+  فعلی = شاخص؛
+  به‌روزرسانی‌اکنون‌عنوان()؛
+  رندر کردن همه();
 
-  if (withIdent) {
-    showIdent("UP NEXT · " + playlist[index].title, loadCurrentVideo);
-  } else {
-    loadCurrentVideo();
+  اگر (با شناسه) {
+    showIdent("بعدی · " + playlist[index].title, loadCurrentVideo);
+  } در غیر این صورت {
+    بارگذاری ویدیوی فعلی();
   }
 }
 
-function loadCurrentVideo() {
-  const video = playlist[current];
-  if (!video) return;
+تابع loadCurrentVideo() {
+  const video = لیست پخش[فعلی];
+  اگر (!video) برگردد؛
 
-  updateNowTitle();
-  renderAll();
+  به‌روزرسانی‌اکنون‌عنوان()؛
+  رندر کردن همه();
 
-  if (!playerReady || !player) {
-    toast("پلیر هنوز آماده نیست؛ چند ثانیه صبر کن.");
-    return;
+  اگر (!playerReady || !player) {
+    toast("پلیر هنوز آماده نیست؛ چند صبر کن.");
+    بازگشت؛
   }
 
-  try {
-    player.loadVideoById(video.id);
-  } catch {
+  امتحان کنید {
+    پخش کننده.بارگذاری ویدیو با شناسه(video.id);
+  } گرفتن {
     toast("پخش ویدیو شروع نشد. دوباره امتحان کن.");
   }
 }
 
-function nextVideo() {
-  if (!playlist.length) return;
-  if (current + 1 < playlist.length) {
-    playIndex(current + 1, true);
-  } else if (repeat) {
-    playIndex(0, true);
-  } else {
+تابع nextVideo() {
+  اگر (!playlist.length) برگردد؛
+  اگر (فعلی + ۱ < playlist.length) {
+    playIndex(فعلی + ۱، درست)؛
+  } در غیر این صورت اگر (تکرار) {
+    playIndex(0، درست)؛
+  } در غیر این صورت {
     toast("پلی‌لیست به پایان رسید.");
   }
 }
 
-function previousVideo() {
-  if (!playlist.length) return;
-  playIndex(current <= 0 ? playlist.length - 1 : current - 1, true);
+تابع ()previousVideo {
+  اگر (!playlist.length) برگردد؛
+  playIndex(فعلی <= 0 ? playlist.length - 1 : فعلی - 1, true);
 }
 
-function moveVideo(index, direction) {
-  const target = index + direction;
-  if (target < 0 || target >= playlist.length) return;
+تابع moveVideo(index, direction) {
+  const target = شاخص + جهت؛
+  اگر (هدف < 0 || هدف >= لیست پخش.طول) را برگرداند؛
 
-  [playlist[index], playlist[target]] = [playlist[target], playlist[index]];
+  ‎[playlist[index], playlist[target]] = [playlist[target], playlist[index]];‎
 
-  if (current === index) current = target;
-  else if (current === target) current = index;
+  اگر (شاخص فعلی ===) فعلی = هدف؛
+  در غیر این صورت اگر (فعلی === هدف) فعلی = شاخص؛
 
-  savePlaylist();
-  renderAll();
+  ذخیره لیست پخش();
+  رندر کردن همه();
 }
 
-function removeVideo(index) {
-  const removedCurrent = index === current;
+تابع removeVideo(index) {
+  const removeCurrent = index === فعلی؛
   playlist.splice(index, 1);
 
-  if (!playlist.length) {
-    current = -1;
-    if (playerReady) player.stopVideo();
-  } else if (index < current) {
-    current--;
-  } else if (removedCurrent) {
-    current = Math.min(index, playlist.length - 1);
-    loadCurrentVideo();
+  اگر (!playlist.length) {
+    جریان = -1;
+    اگر (playerReady) player.stopVideo();
+  } در غیر این صورت اگر (اندیس < جاری) {
+    جریان--؛
+  } در غیر این صورت اگر (حذف فعلی) {
+    متغیر current = Math.min(index, playlist.length - 1);
+    بارگذاری ویدیوی فعلی();
   }
 
-  savePlaylist();
-  renderAll();
-  updateNowTitle();
+  ذخیره لیست پخش();
+  رندر کردن همه();
+  به‌روزرسانی‌اکنون‌عنوان()؛
 }
 
-function togglePlay() {
-  if (!playlist.length) {
+تابع togglePlay() {
+  اگر (!playlist.length) {
     toast("اول یک برنامه اضافه کن.");
-    return;
+    بازگشت؛
   }
-  if (current < 0) {
-    playIndex(0, false);
-    return;
+  اگر (فعلی < 0) {
+    playIndex(0، نادرست)؛
+    بازگشت؛
   }
-  if (!playerReady) {
+  اگر (!playerReady) {
     toast("پلیر هنوز آماده نیست.");
-    return;
+    بازگشت؛
   }
 
   const state = player.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) player.pauseVideo();
-  else player.playVideo();
+  اگر (حالت === YT.PlayerState.PLAYING) player.pauseVideo();
+  در غیر این صورت player.playVideo();
 }
 
-function toggleRadio() {
-  radio = !radio;
-  $("screen").classList.toggle("radio", radio);
-  $("radioBtn").textContent = radio
+تابع toggleRadio() {
+  رادیو = !radio;
+  ‎$("screen").classList.toggle("رادیو", رادیو);‎
+  $("radioBtn").textContent = رادیو
     ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
-  saveSettings();
+  تنظیمات را ذخیره کنید();
 }
 
-function applyPictureSettings() {
+تابع applyPictureSettings() {
   document.documentElement.style.setProperty("--brightness", Number($("brightness").value) / 100);
   document.documentElement.style.setProperty("--contrast", Number($("contrast").value) / 100);
   document.documentElement.style.setProperty("--saturation", Number($("saturation").value) / 100);
-  saveSettings();
+  تنظیمات را ذخیره کنید();
 }
 
-function saveSettings() {
-  const settings = {
-    repeat, crt, radio,
-    brightness:$("brightness").value,
-    contrast:$("contrast").value,
-    saturation:$("saturation").value
+تابع saveSettings() {
+  تنظیمات ثابت = {
+    تکرار، crt، رادیو،
+    روشنایی:$("روشنایی").value,
+    کنتراست:$("کنتراست").value,
+    اشباع:$("اشباع").value
   };
-  try {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  } catch {}
+  امتحان کنید {
+    ‎localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));‎
+  } گرفتن {}
 }
 
-function loadSettings() {
-  let s = {};
-  try { s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch {}
+تابع loadSettings() {
+  فرض کنید s = {};
+  سعی کنید { s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch {}
 
-  repeat = s.repeat !== false;
+  تکرار = s.repeat !== false;
   crt = s.crt !== false;
-  radio = s.radio === true;
+  رادیو = s.radio === درست؛
 
-  $("brightness").value = s.brightness || 100;
-  $("contrast").value = s.contrast || 100;
-  $("saturation").value = s.saturation || 100;
+  ‎$("روشنایی").value = s.brightness || 100;‎
+  ‎$("کنتراست").value = s.contrast || 100;‎
+  ‎$("اشباع").value = s.saturation || 100;‎
 
   $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
   $("crtBtn").textContent = "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
-  $("radioBtn").textContent = radio ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
+  $("radioBtn").textContent = رادیو ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
 
-  $("screen").classList.toggle("crt", crt);
-  $("screen").classList.toggle("radio", radio);
-  applyPictureSettings();
+  ‎$("screen").classList.toggle("crt", crt);‎
+  ‎$("screen").classList.toggle("رادیو", رادیو);‎
+  تنظیمات تصویر را اعمال کنید();
 }
 
-function applyStationName(name) {
-  name = name.trim().slice(0, 32) || "WALKO TV";
-  try { localStorage.setItem("walkotv_name", name); } catch {}
+تابع applyStationName(name) {
+  name = name.trim().slice(0, 32) || "تلویزیون والکو";
+  سعی کنید {localStorage.setItem("walkotv_name", name); } catch {}
 
-  $("brandName").textContent = name;
-  $("watermarkName").textContent = name;
-  $("identName").textContent = name;
-  $("footerName").textContent = name;
-  document.title = name + " — Your Personal Television";
+  ‎$("brandName").textContent = نام;‎
+  ‎$("نام واترمارک").textContent = نام;‎
+  ‎$("identName").textContent = نام;‎
+  ‎$("footerName").textContent = نام؛‎
+  document.title = name + " — تلویزیون شخصی شما";
 }
 
-function updateClock() {
+تابع updateClock() {
   const now = new Date();
-  $("clock").textContent = now.toLocaleTimeString([], {
-    hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
+  ‎$("clock").textContent = now.toLocaleTimeString([], {‎
+    ساعت: "دو رقمی", دقیقه: "دو رقمی", ثانیه: "دو رقمی", hour12:false
   });
-  $("date").textContent = now.toLocaleDateString([], {
-    weekday:"short", day:"numeric", month:"short"
+  ‎$("date").textContent = now.toLocaleDateString([], {‎
+    روز هفته:"کوتاه"، روز:"عددی"، ماه:"کوتاه"
   });
 }
 
-$("addBtn").onclick = addVideo;
-$("videoUrl").addEventListener("keydown", e => {
-  if (e.key === "Enter") addVideo();
+‎$("addBtn").onclick = addVideo;‎‏ ...
+‎$("videoUrl").addEventListener("keydown", e => {‎
+  اگر (e.key === "Enter") addVideo();
 });
-$("playBtn").onclick = togglePlay;
-$("nextBtn").onclick = nextVideo;
-$("prevBtn").onclick = previousVideo;
+‎$("playBtn").onclick = togglePlay;‎‏ ...
+‎$("nextBtn").onclick = nextVideo;‎
+‎$("prevBtn").onclick = ویدیوی قبلی;‎
 
-$("fullBtn").onclick = async () => {
-  try {
-    if (!document.fullscreenElement) await $("screen").requestFullscreen();
-    else await document.exitFullscreen();
-  } catch {
+‎$("fullBtn").onclick = async() => {‎
+  امتحان کنید {
+    اگر (!document.fullscreenElement) منتظر $("screen").requestFullscreen(); باشی
+    در غیر این صورت منتظر document.exitFullscreen();
+  } گرفتن {
     toast("تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود.");
   }
 };
 
-$("radioBtn").onclick = toggleRadio;
+‎$("radioBtn").onclick = toggleRadio;‎‏ ...
 
-$("repeatBtn").onclick = () => {
-  repeat = !repeat;
+‎$("repeatBtn").onclick = () => {‎
+  تکرار = !repeat;
   $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
-  saveSettings();
+  تنظیمات را ذخیره کنید();
 };
 
-$("crtBtn").onclick = () => {
+‎$("crtBtn").onclick = () => {‎
   crt = !crt;
-  $("screen").classList.toggle("crt", crt);
+  ‎$("screen").classList.toggle("crt", crt);‎
   $("crtBtn").textContent = "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
-  saveSettings();
+  تنظیمات را ذخیره کنید();
 };
 
-$("customizeBtn").onclick = () => {
+‎$("customizeBtn").onclick = () => {‎
   const p = $("customizePanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
+  p.style.display = p.style.display === "مسدود کردن" ? "هیچکدام" : "مسدود کردن";
 };
 
-["brightness", "contrast", "saturation"].forEach(id => {
-  $(id).addEventListener("input", applyPictureSettings);
+["روشنایی"، "کنتراست"، "اشباع"].forEach(id => {
+  ‎$(id).addEventListener("ورودی", applyPictureSettings);‎
 });
 
 $("saveNameBtn").onclick = () => {
-  applyStationName($("stationName").value);
-  toast("تنظیمات ذخیره شد ✓");
+  مقدار ` ...
+  toast("تنظیمات ذخیره شده ✓");
 };
 
-$("clearBtn").onclick = () => {
-  if (!confirm("همهٔ برنامه‌های پلی‌لیست حذف بشن؟")) return;
-  playlist = [];
-  current = -1;
-  if (playerReady) player.stopVideo();
-  savePlaylist();
-  renderAll();
-  updateNowTitle();
+‎$("clearBtn").onclick = () => {‎
+  if (!confirm("همه‌ی برنامه‌های پلی‌لیست حذف بشن؟")) بازگشت;
+  لیست پخش = [];
+  جریان = -1؛
+  اگر (playerReady) player.stopVideo();
+  ذخیره لیست پخش();
+  رندر کردن همه();
+  به‌روزرسانی‌اکنون‌عنوان()؛
   $("playBtn").textContent = "▶ پخش";
 };
 
-function onYouTubeIframeAPIReady() {
+تابع onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
-    width:"100%",
-    height:"100%",
-    playerVars: {
-      autoplay:0,
-      controls:1,
-      playsinline:1,
-      rel:0,
-      enablejsapi:1,
-      origin:window.location.origin
-    },
-    events: {
-      onReady: () => {
-        playerReady = true;
-        $("playerStatus").textContent = "پلیر آماده است. برنامه‌ای را انتخاب کن.";
-      },
-      onStateChange: event => {
-        if (event.data === YT.PlayerState.PLAYING) {
+    عرض: "100٪"
+    ارتفاع: "100٪"
+    بازیکن‌ها: {
+      پخش خودکار:0،
+      کنترل‌ها: ۱،
+      پخش در خط: ۱،
+      نسخه: 0،
+      enablejsapi:1،
+      مبدا:پنجره.مکان.مبدا
+    }،
+    رویدادها: {
+      آماده به کار: () => {
+        بازیکن آماده = درست؛
+        $("playerStatus").textContent = "پلیر آماده است. برنامه‌های را انتخاب کن.";
+      }،
+      onStateChange: رویداد => {
+        اگر (event.data === YT.PlayerState.PLAYING) {
           $("playBtn").textContent = "⏸ توقف";
-          const video = playlist[current];
-          if (video && player.getVideoData) {
+          const video = لیست پخش[فعلی];
+          اگر (video && player.getVideoData) {
             const data = player.getVideoData();
-            if (data.title && data.title !== video.title) {
-              video.title = data.title;
-              savePlaylist();
-              renderAll();
-              updateNowTitle();
+            اگر (data.title && data.title !== video.title) {
+              video.title = عنوان داده؛
+              ذخیره لیست پخش();
+              رندر کردن همه();
+              به‌روزرسانی‌اکنون‌عنوان()؛
             }
           }
         }
 
-        if (event.data === YT.PlayerState.PAUSED) {
+        اگر (event.data === YT.PlayerState.PAUSED) {
           $("playBtn").textContent = "▶ ادامه";
         }
 
-        if (event.data === YT.PlayerState.ENDED) {
-          nextVideo();
+        اگر (event.data === YT.PlayerState.ENDED) {
+          ویدیوی بعدی();
         }
 
-        if (event.data === YT.PlayerState.BUFFERING) {
+        اگر (event.data === YT.PlayerState.BUFFERING) {
           $("playerStatus").textContent = "در حال بارگذاری برنامه…";
         }
-      },
-      onError: event => {
-        const messages = {
-          2:"شناسهٔ ویدیو معتبر نیست.",
-          5:"این ویدیو در پلیر HTML5 پخش نمی‌شود.",
+      }،
+      onError: رویداد => {
+        پیام‌های ثابت = {
+          2:"شناسه ویدیو معتبر نیست.",
+          5:"این ویدیو در پلیر HTML5 پخش نمیشود.",
           100:"ویدیو حذف شده یا خصوصی است.",
-          101:"مالک ویدیو اجازهٔ پخش در سایت‌های دیگر را نداده.",
-          150:"مالک ویدیو اجازهٔ پخش در سایت‌های دیگر را نداده.",
-          153:"یوتیوب اطلاعات شناسایی درخواست را دریافت نکرده. صفحه را از آدرس HTTPS سایت باز کن."
+          101:"مالک ویدیو اجازه پخش در سایت های دیگر را ندارد.",
+          150:"مالک ویدیو اجازه پخش در سایت های دیگر را ندارد.",
+          153:"یوتیوب اطلاعات شناسایی درخواست را دریافت نکرده است. صفحه را از آدرس سایت HTTPS باز کن."
         };
-        const msg = messages[event.data] || ("خطای پخش YouTube: " + event.data);
+        const msg = messages[event.data] || ("خطای پخش یوتیوب: " + event.data);
         $("playerStatus").textContent = msg;
-        toast(msg);
+        نان تست (پیام)؛
       }
     }
   });
 }
 
-loadPlaylist();
-loadSettings();
+بارگذاری لیست پخش();
+تنظیمات بارگذاری();
 
-const savedName = localStorage.getItem("walkotv_name") || "WALKO TV";
-applyStationName(savedName);
-$("stationName").value = savedName;
+const savedName = localStorage.getItem("walkotv_name") || "تلویزیون والکو";
+نام ایستگاه را اعمال کن(نام ذخیره شده);
+‎$("stationName").value = savedName;‎‏ ...
 
-renderAll();
-updateNowTitle();
-updateClock();
-setInterval(updateClock, 1000);
+رندر کردن همه();
+به‌روزرسانی‌اکنون‌عنوان()؛
+به‌روزرسانی ساعت();
+setInterval(ساعت به‌روزرسانی، ۱۰۰۰)؛
 
 // API را پس از آماده شدن صفحه بارگذاری کن.
-const api = document.createElement("script");
+const api = document.createElement("اسکریپت");
 api.src = "https://www.youtube.com/iframe_api";
 api.onerror = () => {
   $("playerStatus").textContent =
     "بارگذاری پلیر یوتیوب ناموفق بود؛ اتصال اینترنت یا مسدودشدن API را بررسی کن.";
 };
-document.head.appendChild(api);
+سند.سر.افزودن به فرزند(api)؛
 </script>
 </body>
-</html>
+  </html>
