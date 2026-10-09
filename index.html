@@ -706,16 +706,17 @@ body.admin-mode #adminPanel {display:block}
     }
   }
 
-  $("adminEntryBtn").addEventListener("click", () => {
-    $("loginBox").classList.toggle("open");
-    if ($("loginBox").classList.contains("open")) {
-      $("email").focus();
-    }
-  });
+<div class="admin-entry">
+  <button
+    class="secondary"
+    id="adminEntryBtn"
+    type="button"
+    onclick="(function(){var box=document.getElementById('loginBox');if(box){box.classList.toggle('open');if(box.classList.contains('open')){var email=document.getElementById('email');if(email)email.focus();}}})()"
+  >ورود مدیر</button>
+</div>
 
-  $("cancelLogin").addEventListener("click", () => {
-    $("loginBox").classList.remove("open");
-  });
+
+  
 
   $("loginForm").addEventListener("submit", async event => {
     event.preventDefault();
