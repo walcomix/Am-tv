@@ -5,142 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101710">
 <title>AM TV 24/7</title>
-
 <style>
 :root {
-  --bg:#101710;
-  --panel:#1a241b;
-  --panel2:#202d21;
-  --gold:#e8b85b;
-  --cream:#f1e8d1;
-  --muted:#a7b09e;
-  --border:#394536;
-  --red:#d96b57;
+  --bg:#101710;--panel:#1a241b;--panel2:#202d21;
+  --gold:#e8b85b;--cream:#f1e8d1;--muted:#a7b09e;
+  --border:#394536;--red:#d96b57;
 }
-* {box-sizing:border-box}
-body {
-  margin:0;background:var(--bg);color:var(--cream);
-  font-family:Tahoma,Arial,sans-serif;
-}
-button,input,select {
-  font:inherit;border-radius:8px;padding:10px;
-}
-button {
-  background:var(--gold);color:#182017;border:0;
-  font-weight:bold;cursor:pointer;
-}
-button.secondary {
-  background:var(--panel2);color:var(--cream);
-  border:1px solid var(--border);
-}
-button.danger {background:var(--red);color:#fff}
-button:disabled {opacity:.4;cursor:not-allowed}
-input,select {
-  background:#0f160f;color:var(--cream);
-  border:1px solid var(--border);width:100%;min-width:0;
-}
-header {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;padding:16px 4%;border-bottom:1px solid var(--border);
-}
-.brand {display:flex;align-items:center;gap:12px}
-.logo {
-  width:48px;height:48px;border:2px solid var(--gold);
-  color:var(--gold);display:grid;place-items:center;
-  font-weight:900;font-size:20px;border-radius:9px;
-}
-.brand h1 {font-size:20px;margin:0;color:var(--gold)}
-.brand p {font-size:10px;letter-spacing:2px;margin:5px 0 0;color:var(--muted)}
-#clock {font-size:12px;color:var(--muted);text-align:left}
-main {max-width:1050px;margin:auto;padding:20px}
-.screen {
-  background:#080d09;border:1px solid var(--border);
-  border-radius:14px;overflow:hidden;
-}
-.screen-top {
-  padding:12px 15px;background:var(--panel);
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-}
-.onair {color:#e77762;font-size:12px;font-weight:bold}
-.onair::before {
-  content:"";display:inline-block;width:8px;height:8px;
-  border-radius:50%;background:#e77762;margin-left:7px;
-}
-#player {
-  position:relative;width:100%;aspect-ratio:16/9;background:#000;
-}
-#player iframe,#player video {
-  position:absolute;inset:0;width:100%;height:100%;border:0;
-}
-#empty {
-  position:absolute;inset:0;display:grid;place-content:center;
-  text-align:center;padding:20px;color:var(--muted);
-}
-#empty strong {font-size:28px;color:var(--gold);margin-bottom:10px}
-.now {
-  display:flex;justify-content:space-between;align-items:center;
-  gap:15px;padding:16px;background:var(--panel);
-}
-.now h2 {font-size:17px;margin:5px 0}
-.small {font-size:12px;color:var(--muted)}
-.controls {
-  display:flex;justify-content:center;flex-wrap:wrap;
-  gap:8px;padding:12px;background:#111a12;
-}
-.status {font-size:12px;color:var(--muted);padding:12px 2px}
-#message {color:var(--gold);overflow-wrap:anywhere}
-footer {
-  text-align:center;padding:25px;color:var(--muted);
-  font-size:11px;letter-spacing:1px;
-}
-.admin-entry {text-align:center;padding:10px}
-.admin-entry button {font-size:11px}
-#adminPanel {
-  display:none;margin:20px 0;background:var(--panel);
-  border:1px solid var(--gold);border-radius:12px;padding:16px;
-}
-body.admin-mode #adminPanel {display:block}
-.admin-heading {
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;margin-bottom:15px;
-}
-.admin-heading h2 {font-size:18px;color:var(--gold)}
-.admin-grid {
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
-}
-.field {display:flex;flex-direction:column;gap:7px;min-width:0}
-.field label {font-size:12px;color:var(--muted)}
-.wide {grid-column:1/-1}
-.actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-#adminPlaylist {margin-top:15px}
-.admin-item {
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  padding:10px 0;border-bottom:1px solid var(--border);
-}
-.admin-item .item-name {flex:1;min-width:130px;font-size:12px}
-.admin-item button {padding:7px;font-size:11px}
-#loginBox {
-  display:none;margin:15px auto;max-width:420px;
-  padding:16px;background:var(--panel);
-  border:1px solid var(--border);border-radius:12px;
-}
-#loginBox.open {display:block}
-#loginBox input {margin:5px 0 10px}
-.notice {
-  color:var(--muted);font-size:11px;line-height:1.8;margin-top:10px;
-}
-.error {color:#ff9d8a}
-.success {color:#a8d69c}
-[hidden] {display:none!important}
-@media(max-width:600px) {
-  header {padding:12px}
-  main {padding:12px}
-  .brand h1 {font-size:17px}
-  .brand p {font-size:8px}
-  .logo {width:42px;height:42px}
-  .admin-grid {grid-template-columns:1fr}
-  .wide {grid-column:auto}
-  .now {align-items:flex-start}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:Tahoma,Arial,sans-serif}
+button,input,select{font:inherit;border-radius:8px;padding:10px}
+button{background:var(--gold);color:#182017;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:var(--panel2);color:var(--cream);border:1px solid var(--border)}
+button.danger{background:var(--red);color:white}
+button:disabled{opacity:.4;cursor:not-allowed}
+input,select{background:#0f160f;color:var(--cream);border:1px solid var(--border);width:100%;min-width:0}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 4%;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border:2px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-weight:900;font-size:20px;border-radius:9px}
+.brand h1{font-size:20px;margin:0;color:var(--gold)}
+.brand p{font-size:10px;letter-spacing:2px;margin:5px 0 0;color:var(--muted)}
+#clock{font-size:12px;color:var(--muted);text-align:left}
+main{max-width:1050px;margin:auto;padding:20px}
+.screen{background:#080d09;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.screen-top{padding:12px 15px;background:var(--panel);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.onair{color:#e77762;font-size:12px;font-weight:bold}
+.onair::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#e77762;margin-left:7px}
+#player{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+#ytPlayer{position:absolute;inset:0;width:100%;height:100%;border:0}
+#empty{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:20px;color:var(--muted);pointer-events:none;z-index:2}
+#empty strong{font-size:28px;color:var(--gold);margin-bottom:10px}
+.now{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:16px;background:var(--panel)}
+.now h2{font-size:17px;margin:5px 0}
+.small{font-size:12px;color:var(--muted)}
+.controls{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;padding:12px;background:#111a12}
+.status{font-size:12px;color:var(--muted);padding:12px 2px}
+#message{color:var(--gold);overflow-wrap:anywhere}
+footer{text-align:center;padding:25px;color:var(--muted);font-size:11px;letter-spacing:1px}
+.admin-entry{text-align:center;padding:10px}
+.admin-entry button{font-size:11px}
+#adminPanel{display:none;margin:20px 0;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:16px}
+body.admin-mode #adminPanel{display:block}
+.admin-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.admin-heading h2{font-size:18px;color:var(--gold)}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field label{font-size:12px;color:var(--muted)}
+.wide{grid-column:1/-1}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+#adminPlaylist{margin-top:15px}
+.admin-item{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--border)}
+.admin-item .item-name{flex:1;min-width:130px;font-size:12px}
+.admin-item button{padding:7px;font-size:11px}
+#loginBox{display:none;margin:15px auto;max-width:420px;padding:16px;background:var(--panel);border:1px solid var(--border);border-radius:12px}
+#loginBox.open{display:block}
+#loginBox input{margin:5px 0 10px}
+.notice{color:var(--muted);font-size:11px;line-height:1.8;margin-top:10px}
+.error{color:#ff9d8a}
+.success{color:#a8d69c}
+[hidden]{display:none!important}
+body:not(.admin-mode) #adminPanel{display:none!important}
+@media(max-width:600px){
+  header{padding:12px}
+  main{padding:12px}
+  .brand h1{font-size:17px}
+  .brand p{font-size:8px}
+  .logo{width:42px;height:42px}
+  .admin-grid{grid-template-columns:1fr}
+  .wide{grid-column:auto}
+  .now{align-items:flex-start}
 }
 </style>
 </head>
@@ -165,6 +97,7 @@ body.admin-mode #adminPanel {display:block}
     </div>
 
     <div id="player">
+      <div id="ytPlayer"></div>
       <div id="empty">
         <strong>AM TV</strong>
         <span>YOUR WORLD · YOUR CHANNEL</span>
@@ -182,8 +115,8 @@ body.admin-mode #adminPanel {display:block}
     </div>
 
     <div class="controls">
-      <button class="secondary" id="soundBtn">روشن‌کردن صدا</button>
-      <button class="secondary" id="syncBtn">همگام‌سازی</button>
+      <button class="secondary" id="soundBtn" type="button">روشن‌کردن صدا</button>
+      <button class="secondary" id="syncBtn" type="button">همگام‌سازی</button>
     </div>
   </section>
 
@@ -194,14 +127,14 @@ body.admin-mode #adminPanel {display:block}
   <section id="adminPanel">
     <div class="admin-heading">
       <h2>پنل مدیریت AM TV</h2>
-      <button class="secondary" id="logoutBtn">خروج</button>
+      <button class="secondary" id="logoutBtn" type="button">خروج</button>
     </div>
 
     <div class="admin-grid">
       <div class="field wide">
         <label for="stationInput">نام تلویزیون</label>
         <input id="stationInput" maxlength="50" value="AM TV 24/7">
-        <button id="saveNameBtn">ذخیرهٔ نام تلویزیون</button>
+        <button id="saveNameBtn" type="button">ذخیرهٔ نام تلویزیون</button>
       </div>
 
       <div class="field wide">
@@ -215,7 +148,7 @@ body.admin-mode #adminPanel {display:block}
       </div>
       <div class="field">
         <label>&nbsp;</label>
-        <button id="addChannelBtn">ساخت شبکه</button>
+        <button id="addChannelBtn" type="button">ساخت شبکه</button>
       </div>
 
       <div class="field wide">
@@ -226,42 +159,41 @@ body.admin-mode #adminPanel {display:block}
       <div class="field wide">
         <label for="videoTitle">نام برنامه</label>
         <input id="videoTitle" maxlength="120" placeholder="نام برنامه">
-        <button id="addVideoBtn">افزودن به پلی‌لیست</button>
+        <button id="addVideoBtn" type="button">افزودن به پلی‌لیست</button>
       </div>
 
       <div class="field wide">
         <label for="startIndex">شمارهٔ برنامه برای شروع پخش</label>
         <input id="startIndex" type="number" min="1" value="1">
-        <button id="startBtn">پخش برای همهٔ بیننده‌ها</button>
+        <button id="startBtn" type="button">پخش برای همهٔ بیننده‌ها</button>
       </div>
 
       <div class="field wide">
         <label for="localFiles">انتخاب فایل ویدیویی محلی</label>
         <input id="localFiles" type="file" accept="video/*" multiple>
         <p class="notice">
-          فایل محلی فقط روی همین دستگاه است و به بیننده‌های دیگر منتقل نمی‌شود.
-          برای پخش مشترک از لینک یوتیوب استفاده کن.
+          انتخاب فایل محلی به‌تنهایی آن را برای سایر بیننده‌ها پخش نمی‌کند.
+          برای پخش مشترک، از منبع آنلاین استفاده کن.
         </p>
       </div>
 
       <div class="field wide">
         <div class="actions">
-          <button class="secondary" id="exportBtn">پشتیبان JSON</button>
-          <button class="secondary" id="importBtn">واردکردن JSON</button>
+          <button class="secondary" id="exportBtn" type="button">پشتیبان JSON</button>
+          <button class="secondary" id="importBtn" type="button">واردکردن JSON</button>
           <input id="importFile" type="file" accept=".json,application/json" hidden>
         </div>
       </div>
     </div>
 
     <h3>پلی‌لیست مدیر</h3>
-    <div class="notice">
-      این بخش برای بیننده‌ها نمایش داده نمی‌شود.
-    </div>
+    <div class="notice">این بخش فقط برای مدیر نمایش داده می‌شود.</div>
     <div id="adminPlaylist"></div>
   </section>
 
   <div class="admin-entry">
-    <button class="secondary" id="adminEntryBtn">ورود مدیر</button>
+    <!-- مهم: این دکمه onclick ندارد؛ فقط یک شنوندهٔ کلیک در جاوااسکریپت دارد. -->
+    <button class="secondary" id="adminEntryBtn" type="button">ورود مدیر</button>
   </div>
 
   <section id="loginBox">
@@ -281,8 +213,7 @@ body.admin-mode #adminPanel {display:block}
       </div>
     </form>
     <p class="notice">
-      از ایمیل و رمز عبور حساب Supabase استفاده کن.
-      رمز جداگانه‌ای در این صفحه تعریف نشده است.
+      با ایمیل و رمز حساب Supabase وارد شو.
     </p>
   </section>
 </main>
@@ -296,11 +227,6 @@ body.admin-mode #adminPanel {display:block}
 (() => {
   "use strict";
 
-  /*
-    این دو مقدار را از Supabase Dashboard بگیر:
-    Project Settings > API
-    از Publishable key یا anon key استفاده کن؛ هرگز service_role را نگذار.
-  */
   const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
   const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
@@ -332,7 +258,8 @@ body.admin-mode #adminPanel {display:block}
   const configured = () =>
     window.supabase &&
     /^https:\/\/[a-zA-Z0-9.-]+$/.test(SUPABASE_URL) &&
-    SUPABASE_PUBLISHABLE_KEY !== "YOUR_SUPABASE_PUBLISHABLE_KEY";
+    SUPABASE_PUBLISHABLE_KEY !== "YOUR_SUPABASE_PUBLISHABLE_KEY" &&
+    SUPABASE_URL !== "YOUR_SUPABASE_PROJECT_URL";
 
   function say(message, error = false) {
     $("message").textContent = message;
@@ -340,8 +267,7 @@ body.admin-mode #adminPanel {display:block}
   }
 
   function isAdmin() {
-    return !!session &&
-      session.user?.app_metadata?.role === "admin";
+    return !!session && session.user?.app_metadata?.role === "admin";
   }
 
   function channel() {
@@ -363,17 +289,17 @@ body.admin-mode #adminPanel {display:block}
 
     let channels = Array.isArray(raw.channels)
       ? raw.channels.filter(c => c && Array.isArray(c.list)).map((c, i) => ({
-          id: String(c.id || "channel-" + i),
-          name: String(c.name || "شبکه " + (i + 1)).slice(0, 50),
-          color: String(c.color || "#e8b85b"),
-          list: c.list.filter(v =>
+          id:String(c.id || "channel-" + i),
+          name:String(c.name || "شبکه " + (i + 1)).slice(0,50),
+          color:String(c.color || "#e8b85b"),
+          list:c.list.filter(v =>
             v && typeof v === "object" &&
             typeof v.id === "string" &&
-            (v.type === "youtube" || v.type === "local")
+            v.type === "youtube"
           ).map(v => ({
-            id: v.id,
-            type: v.type,
-            title: String(v.title || "برنامه").slice(0, 120)
+            id:v.id,
+            type:"youtube",
+            title:String(v.title || "برنامه").slice(0,120)
           }))
         }))
       : [];
@@ -386,13 +312,13 @@ body.admin-mode #adminPanel {display:block}
     const pb = raw.playback || {};
 
     return {
-      stationName: String(raw.stationName || "AM TV 24/7").slice(0, 50),
+      stationName:String(raw.stationName || "AM TV 24/7").slice(0,50),
       channels,
-      channelIndex: Math.max(0, Math.min(ci, channels.length - 1)),
-      playback: {
-        index: Number.isInteger(pb.index) ? Math.max(0, pb.index) : 0,
-        startedAt: Number(pb.startedAt) || 0,
-        nonce: Number(pb.nonce) || 0
+      channelIndex:Math.max(0,Math.min(ci,channels.length-1)),
+      playback:{
+        index:Number.isInteger(pb.index) ? Math.max(0,pb.index) : 0,
+        startedAt:Number(pb.startedAt) || 0,
+        nonce:Number(pb.nonce) || 0
       }
     };
   }
@@ -400,15 +326,15 @@ body.admin-mode #adminPanel {display:block}
   function parseYoutubeId(input) {
     try {
       const u = new URL(input.trim());
-      const host = u.hostname.replace(/^www\./, "").toLowerCase();
+      const host = u.hostname.replace(/^www\./,"").toLowerCase();
 
       if (host === "youtu.be") {
         return u.pathname.split("/").filter(Boolean)[0] || null;
       }
 
-      if (![
-        "youtube.com","m.youtube.com","music.youtube.com"
-      ].includes(host)) return null;
+      if (!["youtube.com","m.youtube.com","music.youtube.com"].includes(host)) {
+        return null;
+      }
 
       if (u.pathname === "/watch") return u.searchParams.get("v");
 
@@ -431,20 +357,18 @@ body.admin-mode #adminPanel {display:block}
 
     const response = await fetch(SUPABASE_URL + path, {
       ...options,
-      headers: {
-        "apikey": SUPABASE_PUBLISHABLE_KEY,
-        "Authorization": "Bearer " + token,
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+      headers:{
+        apikey:SUPABASE_PUBLISHABLE_KEY,
+        Authorization:"Bearer " + token,
+        "Content-Type":"application/json",
+        Accept:"application/json",
         ...(options.headers || {})
       }
     });
 
     if (!response.ok) {
       const detail = await response.text();
-      throw new Error(
-        "خطای دیتابیس " + response.status + ": " + detail.slice(0, 180)
-      );
+      throw new Error("خطای دیتابیس " + response.status + ": " + detail.slice(0,180));
     }
 
     if (response.status === 204) return null;
@@ -457,9 +381,7 @@ body.admin-mode #adminPanel {display:block}
     );
 
     if (!Array.isArray(rows) || !rows.length) {
-      throw new Error(
-        "ردیف AM TV پیدا نشد؛ کد SQL را در Supabase اجرا کن."
-      );
+      throw new Error("ردیف AM TV پیدا نشد؛ کد SQL را در Supabase اجرا کن.");
     }
 
     const normalized = normalizeState(rows[0].data);
@@ -467,21 +389,13 @@ body.admin-mode #adminPanel {display:block}
   }
 
   async function saveState() {
-    if (!isAdmin()) {
-      throw new Error("فقط مدیر اجازهٔ تغییر اطلاعات را دارد.");
-    }
+    if (!isAdmin()) throw new Error("فقط مدیر اجازهٔ تغییر اطلاعات را دارد.");
 
-    await request(
-      "/rest/v1/" + TABLE + "?id=eq." + ROW_ID,
-      {
-        method:"PATCH",
-        headers:{"Prefer":"return=minimal"},
-        body:JSON.stringify({
-          data:state,
-          updated_at:new Date().toISOString()
-        })
-      }
-    );
+    await request("/rest/v1/" + TABLE + "?id=eq." + ROW_ID, {
+      method:"PATCH",
+      headers:{Prefer:"return=minimal"},
+      body:JSON.stringify({data:state,updated_at:new Date().toISOString()})
+    });
 
     say("تغییرات با موفقیت ذخیره شد.");
   }
@@ -489,7 +403,7 @@ body.admin-mode #adminPanel {display:block}
   function currentVideo() {
     const videos = list();
     if (!videos.length) return null;
-    return videos[Math.min(state.playback.index, videos.length - 1)] || null;
+    return videos[Math.min(state.playback.index,videos.length-1)] || null;
   }
 
   function keyFor(video) {
@@ -516,17 +430,15 @@ body.admin-mode #adminPanel {display:block}
     if (!isAdmin()) return;
 
     $("stationInput").value = state.stationName;
-
-    $("channelSelect").innerHTML = state.channels.map((c, i) =>
+    $("channelSelect").innerHTML = state.channels.map((c,i) =>
       `<option value="${i}">${escapeHtml(c.name)}</option>`
     ).join("");
-
     $("channelSelect").value = String(state.channelIndex);
 
     $("adminPlaylist").innerHTML = list().length
-      ? list().map((v, i) => `
+      ? list().map((v,i) => `
         <div class="admin-item">
-          <span class="item-name">${i + 1}. ${escapeHtml(v.title)}</span>
+          <span class="item-name">${i+1}. ${escapeHtml(v.title)}</span>
           <button class="secondary" data-up="${i}" ${i===0?"disabled":""}>↑</button>
           <button class="secondary" data-down="${i}" ${i===list().length-1?"disabled":""}>↓</button>
           <button class="secondary" data-play="${i}">پخش</button>
@@ -537,15 +449,12 @@ body.admin-mode #adminPanel {display:block}
   }
 
   function setAdminView(enabled) {
-    document.body.classList.toggle("admin-mode", enabled);
+    document.body.classList.toggle("admin-mode",enabled);
     $("adminEntryBtn").hidden = enabled;
     $("loginBox").classList.remove("open");
 
-    if (enabled) {
-      renderAdmin();
-    } else {
-      $("adminPlaylist").innerHTML = "";
-    }
+    if (enabled) renderAdmin();
+    else $("adminPlaylist").innerHTML = "";
   }
 
   function playerError(event) {
@@ -557,7 +466,7 @@ body.admin-mode #adminPanel {display:block}
       150:"این ویدیو اجازهٔ پخش تعبیه‌شده ندارد.",
       153:"خطای ۱۵۳ یوتیوب؛ درخواست پخش شناسایی نشد."
     };
-    say(errors[event.data] || "خطای پخش: " + event.data, true);
+    say(errors[event.data] || "خطای پخش: " + event.data,true);
   }
 
   window.onYouTubeIframeAPIReady = createPlayer;
@@ -565,7 +474,7 @@ body.admin-mode #adminPanel {display:block}
   function createPlayer() {
     if (!window.YT?.Player || player) return;
 
-    player = new YT.Player("player", {
+    player = new YT.Player("ytPlayer",{
       width:"100%",
       height:"100%",
       videoId:"",
@@ -585,6 +494,8 @@ body.admin-mode #adminPanel {display:block}
         onStateChange:event => {
           if (event.data === YT.PlayerState.PLAYING) {
             $("empty").style.display = "none";
+          } else if (event.data === YT.PlayerState.ENDED) {
+            nextVideo();
           }
         }
       }
@@ -593,25 +504,13 @@ body.admin-mode #adminPanel {display:block}
 
   function applyPlayback(force = false) {
     renderPublic();
-
     const video = currentVideo();
 
     if (!video) {
       $("empty").style.display = "grid";
-      $("empty").innerHTML =
-        "<strong>AM TV</strong><span>YOUR WORLD · YOUR CHANNEL</span><p>در انتظار برنامهٔ پخش...</p>";
-
-      if (playerReady) player.stopVideo();
-
+      if (playerReady && player) player.stopVideo();
       currentVideoId = "";
       currentPlaybackKey = "";
-      return;
-    }
-
-    if (video.type !== "youtube") {
-      $("empty").style.display = "grid";
-      $("empty").innerHTML =
-        "<strong>AM TV</strong><span>این فایل محلی روی دستگاه مدیر قرار دارد.</span>";
       return;
     }
 
@@ -623,8 +522,7 @@ body.admin-mode #adminPanel {display:block}
       return;
     }
 
-    if (!force && currentVideoId === video.id &&
-        currentPlaybackKey === nextKey) {
+    if (!force && currentVideoId === video.id && currentPlaybackKey === nextKey) {
       correctTime();
       return;
     }
@@ -633,38 +531,30 @@ body.admin-mode #adminPanel {display:block}
     currentPlaybackKey = nextKey;
 
     const seconds = state.playback.startedAt
-      ? Math.max(0, (Date.now() - state.playback.startedAt) / 1000)
+      ? Math.max(0,(Date.now()-state.playback.startedAt)/1000)
       : 0;
 
     try {
-      player.loadVideoById({
-        videoId:video.id,
-        startSeconds:seconds
-      });
+      player.loadVideoById({videoId:video.id,startSeconds:seconds});
       player.mute();
       muted = true;
       $("soundBtn").textContent = "روشن‌کردن صدا";
       $("empty").style.display = "grid";
     } catch (error) {
-      say("پخش شروع نشد: " + error.message, true);
+      say("پخش شروع نشد: " + error.message,true);
     }
   }
 
   function correctTime() {
     if (!playerReady || !player || !currentVideoId) return;
-    if (Date.now() - lastSeekCheck < 15000) return;
+    if (Date.now()-lastSeekCheck < 15000) return;
 
     lastSeekCheck = Date.now();
 
     try {
-      const desired = Math.max(
-        0, (Date.now() - state.playback.startedAt) / 1000
-      );
+      const desired = Math.max(0,(Date.now()-state.playback.startedAt)/1000);
       const actual = player.getCurrentTime();
-
-      if (Math.abs(desired - actual) > 5) {
-        player.seekTo(desired, true);
-      }
+      if (Math.abs(desired-actual)>5) player.seekTo(desired,true);
     } catch {}
   }
 
@@ -678,14 +568,13 @@ body.admin-mode #adminPanel {display:block}
       const after = keyFor(currentVideo());
 
       renderPublic();
-
       if (before !== after) applyPlayback(true);
       else applyPlayback();
 
       $("liveStatus").textContent = "اتصال برقرار است";
     } catch (error) {
       $("liveStatus").textContent = "اتصال ناموفق";
-      say(error.message, true);
+      say(error.message,true);
     } finally {
       busy = false;
     }
@@ -693,7 +582,7 @@ body.admin-mode #adminPanel {display:block}
 
   async function adminAction(callback) {
     if (!isAdmin()) {
-      say("ابتدا با حساب مدیر وارد شو.", true);
+      say("ابتدا با حساب مدیر وارد شو.",true);
       return;
     }
 
@@ -702,27 +591,33 @@ body.admin-mode #adminPanel {display:block}
       renderPublic();
       renderAdmin();
     } catch (error) {
-      say(error.message || "عملیات ناموفق بود.", true);
+      say(error.message || "عملیات ناموفق بود.",true);
     }
   }
 
-<div class="admin-entry">
-  <button
-    class="secondary"
-    id="adminEntryBtn"
-    type="button"
-    onclick="(function(){var box=document.getElementById('loginBox');if(box){box.classList.toggle('open');if(box.classList.contains('open')){var email=document.getElementById('email');if(email)email.focus();}}})()"
-  >ورود مدیر</button>
-</div>
+  /*
+    رفع مشکل دکمه:
+    فقط همین listener پنجره را باز و بسته می‌کند.
+    روی خود دکمه onclick جداگانه نگذار.
+  */
+  $("adminEntryBtn").addEventListener("click",() => {
+    const box = $("loginBox");
+    box.classList.toggle("open");
 
+    if (box.classList.contains("open")) {
+      $("email").focus();
+    }
+  });
 
-  
+  $("cancelLogin").addEventListener("click",() => {
+    $("loginBox").classList.remove("open");
+  });
 
-  $("loginForm").addEventListener("submit", async event => {
+  $("loginForm").addEventListener("submit",async event => {
     event.preventDefault();
 
     if (!db) {
-      say("اتصال Supabase تنظیم نشده است.", true);
+      say("اتصال Supabase تنظیم نشده است.",true);
       return;
     }
 
@@ -731,7 +626,7 @@ body.admin-mode #adminPanel {display:block}
     button.textContent = "در حال ورود...";
 
     try {
-      const {data, error} = await db.auth.signInWithPassword({
+      const {data,error} = await db.auth.signInWithPassword({
         email:$("email").value.trim(),
         password:$("password").value
       });
@@ -743,30 +638,29 @@ body.admin-mode #adminPanel {display:block}
       if (!isAdmin()) {
         await db.auth.signOut();
         session = null;
-        throw new Error(
-          "این حساب نقش admin ندارد. نقش را در App Metadata حساب مدیر تنظیم کن."
-        );
+        throw new Error("این حساب نقش admin ندارد. نقش را در App Metadata تنظیم کن.");
       }
 
       setAdminView(true);
       say("با موفقیت وارد پنل مدیریت شدی.");
     } catch (error) {
       setAdminView(false);
-      say("ورود ناموفق: " + error.message, true);
+      $("loginBox").classList.add("open");
+      say("ورود ناموفق: " + error.message,true);
     } finally {
       button.disabled = false;
       button.textContent = "ورود";
     }
   });
 
-  $("logoutBtn").addEventListener("click", async () => {
+  $("logoutBtn").addEventListener("click",async () => {
     try {
       if (db) {
         const {error} = await db.auth.signOut();
         if (error) throw error;
       }
     } catch (error) {
-      say("خروج ناموفق: " + error.message, true);
+      say("خروج ناموفق: " + error.message,true);
       return;
     }
 
@@ -775,43 +669,35 @@ body.admin-mode #adminPanel {display:block}
     say("از پنل مدیریت خارج شدی.");
   });
 
-  $("channelSelect").addEventListener("change", event => {
+  $("channelSelect").addEventListener("change",event => {
     adminAction(async () => {
       state.channelIndex = Number(event.target.value) || 0;
-      state.playback = {
-        index:0,
-        startedAt:Date.now(),
-        nonce:Date.now()
-      };
+      state.playback = {index:0,startedAt:Date.now(),nonce:Date.now()};
       await saveState();
       applyPlayback(true);
     });
   });
 
-  $("addChannelBtn").addEventListener("click", () => adminAction(async () => {
+  $("addChannelBtn").addEventListener("click",() => adminAction(async () => {
     const name = $("newChannel").value.trim();
     if (!name) throw new Error("نام شبکه را وارد کن.");
 
     state.channels.push({
-      id:"ch-" + crypto.randomUUID(),
+      id:"ch-" + (crypto.randomUUID ? crypto.randomUUID() : Date.now()),
       name,
       color:"#e8b85b",
       list:[]
     });
 
-    state.channelIndex = state.channels.length - 1;
-    state.playback = {
-      index:0,
-      startedAt:Date.now(),
-      nonce:Date.now()
-    };
+    state.channelIndex = state.channels.length-1;
+    state.playback = {index:0,startedAt:Date.now(),nonce:Date.now()};
 
     await saveState();
     $("newChannel").value = "";
     applyPlayback(true);
   }));
 
-  $("addVideoBtn").addEventListener("click", () => adminAction(async () => {
+  $("addVideoBtn").addEventListener("click",() => adminAction(async () => {
     const id = parseYoutubeId($("videoUrl").value);
     if (!id) throw new Error("لینک معتبر یوتیوب وارد کن.");
 
@@ -822,11 +708,7 @@ body.admin-mode #adminPanel {display:block}
     });
 
     if (list().length === 1) {
-      state.playback = {
-        index:0,
-        startedAt:Date.now(),
-        nonce:Date.now()
-      };
+      state.playback = {index:0,startedAt:Date.now(),nonce:Date.now()};
     }
 
     await saveState();
@@ -836,7 +718,7 @@ body.admin-mode #adminPanel {display:block}
     applyPlayback(true);
   }));
 
-  $("saveNameBtn").addEventListener("click", () => adminAction(async () => {
+  $("saveNameBtn").addEventListener("click",() => adminAction(async () => {
     const name = $("stationInput").value.trim();
     if (!name) throw new Error("نام تلویزیون را وارد کن.");
 
@@ -845,24 +727,19 @@ body.admin-mode #adminPanel {display:block}
     renderPublic();
   }));
 
-  $("startBtn").addEventListener("click", () => adminAction(async () => {
-    const index = Number($("startIndex").value) - 1;
+  $("startBtn").addEventListener("click",() => adminAction(async () => {
+    const index = Number($("startIndex").value)-1;
 
-    if (!Number.isInteger(index) || index < 0 || index >= list().length) {
+    if (!Number.isInteger(index) || index<0 || index>=list().length) {
       throw new Error("شمارهٔ برنامه در پلی‌لیست وجود ندارد.");
     }
 
-    state.playback = {
-      index,
-      startedAt:Date.now(),
-      nonce:Date.now()
-    };
-
+    state.playback = {index,startedAt:Date.now(),nonce:Date.now()};
     await saveState();
     applyPlayback(true);
   }));
 
-  $("adminPlaylist").addEventListener("click", event => {
+  $("adminPlaylist").addEventListener("click",event => {
     const button = event.target.closest("button");
     if (!button) return;
 
@@ -871,10 +748,10 @@ body.admin-mode #adminPanel {display:block}
 
       if (button.dataset.delete !== undefined) {
         const i = Number(button.dataset.delete);
-        videos.splice(i, 1);
+        videos.splice(i,1);
         state.playback.index = Math.min(
           state.playback.index,
-          Math.max(0, videos.length - 1)
+          Math.max(0,videos.length-1)
         );
         state.playback.startedAt = Date.now();
         state.playback.nonce = Date.now();
@@ -882,16 +759,12 @@ body.admin-mode #adminPanel {display:block}
 
       if (button.dataset.up !== undefined) {
         const i = Number(button.dataset.up);
-        if (i > 0) {
-          [videos[i - 1], videos[i]] = [videos[i], videos[i - 1]];
-        }
+        if (i>0) [videos[i-1],videos[i]] = [videos[i],videos[i-1]];
       }
 
       if (button.dataset.down !== undefined) {
         const i = Number(button.dataset.down);
-        if (i < videos.length - 1) {
-          [videos[i], videos[i + 1]] = [videos[i + 1], videos[i]];
-        }
+        if (i<videos.length-1) [videos[i],videos[i+1]] = [videos[i+1],videos[i]];
       }
 
       if (button.dataset.play !== undefined) {
@@ -907,7 +780,20 @@ body.admin-mode #adminPanel {display:block}
     });
   });
 
-  $("soundBtn").addEventListener("click", () => {
+  async function nextVideo() {
+    if (!isAdmin()) return;
+
+    await adminAction(async () => {
+      if (!list().length) return;
+      state.playback.index = (state.playback.index+1)%list().length;
+      state.playback.startedAt = Date.now();
+      state.playback.nonce = Date.now();
+      await saveState();
+      applyPlayback(true);
+    });
+  }
+
+  $("soundBtn").addEventListener("click",() => {
     if (!playerReady || !player) {
       say("هنوز برنامه‌ای برای پخش آماده نیست.");
       return;
@@ -925,15 +811,15 @@ body.admin-mode #adminPanel {display:block}
     }
   });
 
-  $("syncBtn").addEventListener("click", async () => {
+  $("syncBtn").addEventListener("click",async () => {
     await refresh();
     applyPlayback(true);
   });
 
-  $("localFiles").addEventListener("change", event => {
+  $("localFiles").addEventListener("change",event => {
     if (!isAdmin()) {
       event.target.value = "";
-      say("فقط مدیر می‌تواند فایل محلی انتخاب کند.", true);
+      say("فقط مدیر می‌تواند فایل محلی انتخاب کند.",true);
       return;
     }
 
@@ -943,25 +829,27 @@ body.admin-mode #adminPanel {display:block}
       : "فایلی انتخاب نشده است.");
   });
 
-  $("exportBtn").addEventListener("click", () => {
-    if (!isAdmin()) return say("دسترسی مدیر لازم است.", true);
+  $("exportBtn").addEventListener("click",() => {
+    if (!isAdmin()) {
+      say("دسترسی مدیر لازم است.",true);
+      return;
+    }
 
-    const blob = new Blob([JSON.stringify(state, null, 2)], {
-      type:"application/json"
-    });
+    const blob = new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = "am-tv-backup.json";
     a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setTimeout(() => URL.revokeObjectURL(url),1000);
   });
 
-  $("importBtn").addEventListener("click", () => {
+  $("importBtn").addEventListener("click",() => {
     if (isAdmin()) $("importFile").click();
+    else say("ابتدا با حساب مدیر وارد شو.",true);
   });
 
-  $("importFile").addEventListener("change", event => {
+  $("importFile").addEventListener("change",event => {
     if (!isAdmin()) return;
 
     const file = event.target.files?.[0];
@@ -985,7 +873,7 @@ body.admin-mode #adminPanel {display:block}
   });
 
   function updateClock() {
-    $("clock").textContent = new Intl.DateTimeFormat("fa-IR", {
+    $("clock").textContent = new Intl.DateTimeFormat("fa-IR",{
       hour:"2-digit",
       minute:"2-digit",
       second:"2-digit"
@@ -993,7 +881,7 @@ body.admin-mode #adminPanel {display:block}
   }
 
   updateClock();
-  setInterval(updateClock, 1000);
+  setInterval(updateClock,1000);
 
   if (configured()) {
     db = window.supabase.createClient(
@@ -1001,26 +889,27 @@ body.admin-mode #adminPanel {display:block}
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    db.auth.onAuthStateChange((_event, activeSession) => {
+    db.auth.onAuthStateChange((_event,activeSession) => {
       session = activeSession;
       setAdminView(isAdmin());
     });
 
     (async () => {
-      const {data, error} = await db.auth.getSession();
-      if (error) say(error.message, true);
+      try {
+        const {data,error} = await db.auth.getSession();
+        if (error) throw error;
 
-      session = data?.session || null;
-      setAdminView(isAdmin());
-
-      await refresh();
+        session = data?.session || null;
+        setAdminView(isAdmin());
+        await refresh();
+      } catch (error) {
+        say("خطای راه‌اندازی: " + error.message,true);
+      }
     })();
 
-    setInterval(refresh, POLL_MS);
+    setInterval(refresh,POLL_MS);
   } else {
-    say(
-      "برای فعال‌شدن AM TV، آدرس پروژه و کلید عمومی Supabase را در کد وارد کن."
-    );
+    say("آدرس پروژه و کلید عمومی Supabase را در کد وارد کن.");
   }
 })();
 </script>
