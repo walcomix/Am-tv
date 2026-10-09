@@ -4,8 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#101b16">
 <title>WALKO TV — Your Personal Television</title>
+
 <style>
 :root {
   --bg:#101b16;
@@ -26,7 +28,7 @@ body {
   color:var(--cream);
   font-family:Tahoma,Arial,sans-serif;
 }
-button,input,select { font:inherit }
+button,input { font:inherit }
 button {
   cursor:pointer;
   border:1px solid var(--line);
@@ -108,15 +110,10 @@ main { max-width:1000px;margin:auto;padding:14px }
   flex-wrap:wrap;
   margin:12px 0;
 }
-.live {
-  color:#ffb1a9;
-  font-size:11px;
-  font-weight:bold;
-}
+.live { color:#ffb1a9;font-size:11px;font-weight:bold }
 .dot {
   display:inline-block;
-  width:7px;
-  height:7px;
+  width:7px;height:7px;
   border-radius:50%;
   background:#e85d52;
   margin-left:5px;
@@ -151,26 +148,20 @@ main { max-width:1000px;margin:auto;padding:14px }
   width:100%;
   height:100%;
   border:0;
-  filter:
-    brightness(var(--brightness))
+  filter:brightness(var(--brightness))
     contrast(var(--contrast))
     saturate(var(--saturation));
 }
 #screen:fullscreen {
-  width:100vw;
-  height:100vh;
+  width:100vw;height:100vh;
   aspect-ratio:auto;
-  border:0;
-  border-radius:0;
+  border:0;border-radius:0;
 }
 .watermark {
   position:absolute;
   z-index:5;
-  top:12px;
-  left:12px;
-  display:flex;
-  align-items:center;
-  gap:7px;
+  top:12px;left:12px;
+  display:flex;align-items:center;gap:7px;
   padding:7px 9px;
   border:1px solid var(--accent);
   border-radius:6px;
@@ -180,16 +171,10 @@ main { max-width:1000px;margin:auto;padding:14px }
   font-weight:bold;
   pointer-events:none;
 }
-.wm-icon {
-  border:1px solid var(--accent);
-  padding:3px;
-  border-radius:3px;
-}
+.wm-icon { border:1px solid var(--accent);padding:3px;border-radius:3px }
 .screen-meta {
-  position:absolute;
-  z-index:5;
-  top:12px;
-  right:12px;
+  position:absolute;z-index:5;
+  top:12px;right:12px;
   padding:6px 8px;
   background:#101b16dc;
   border:1px solid var(--line);
@@ -198,8 +183,7 @@ main { max-width:1000px;margin:auto;padding:14px }
   pointer-events:none;
 }
 #ident {
-  position:absolute;
-  z-index:10;
+  position:absolute;z-index:10;
   inset:0;
   display:none;
   place-items:center;
@@ -214,23 +198,18 @@ main { max-width:1000px;margin:auto;padding:14px }
   letter-spacing:5px;
 }
 #ident small {
-  display:block;
-  margin-top:12px;
-  color:var(--cream);
-  letter-spacing:2px;
+  display:block;margin-top:12px;
+  color:var(--cream);letter-spacing:2px;
 }
 @keyframes fadein { from{opacity:0}to{opacity:1} }
 #radioVisual {
   display:none;
-  position:absolute;
-  z-index:3;
-  inset:0;
-  place-items:center;
+  position:absolute;z-index:3;
+  inset:0;place-items:center;
   background:radial-gradient(ellipse,#293b2a,#050806 75%);
   color:var(--accent);
   font-size:clamp(22px,6vw,48px);
-  letter-spacing:5px;
-  font-weight:bold;
+  letter-spacing:5px;font-weight:bold;
   text-shadow:0 0 22px var(--accent);
   pointer-events:none;
 }
@@ -238,35 +217,24 @@ main { max-width:1000px;margin:auto;padding:14px }
 #screen.radio #player iframe { opacity:0 }
 .crt:after {
   content:"";
-  position:absolute;
-  z-index:4;
-  inset:0;
-  pointer-events:none;
+  position:absolute;z-index:4;
+  inset:0;pointer-events:none;
   background:repeating-linear-gradient(
     to bottom,transparent 0,transparent 3px,#00000015 4px
   );
 }
 .controls {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:7px;
-  flex-wrap:wrap;
-  margin-top:12px;
+  display:flex;justify-content:center;align-items:center;
+  gap:7px;flex-wrap:wrap;margin-top:12px;
 }
 .controls button { flex:1;min-width:65px }
 .status {
-  font-size:11px;
-  color:var(--muted);
-  line-height:1.9;
-  margin-top:9px;
+  font-size:11px;color:var(--muted);
+  line-height:1.9;margin-top:9px;
 }
 .sectionhead {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  margin-bottom:12px;
+  display:flex;justify-content:space-between;
+  align-items:center;gap:8px;margin-bottom:12px;
 }
 .sectionhead h2 { font-size:15px;margin:0 }
 .addrow { display:flex;gap:8px;margin-top:8px }
@@ -275,91 +243,51 @@ main { max-width:1000px;margin:auto;padding:14px }
 .settings button { font-size:11px }
 .list { display:flex;flex-direction:column;gap:8px }
 .track {
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:10px;
-  background:#142119;
-  border:1px solid var(--line);
-  border-radius:8px;
+  display:flex;align-items:center;gap:8px;
+  padding:10px;background:#142119;
+  border:1px solid var(--line);border-radius:8px;
 }
 .track.active { border-color:var(--accent) }
 .track-title {
-  flex:1;
-  min-width:0;
-  font-size:12px;
-  overflow-wrap:anywhere;
+  flex:1;min-width:0;font-size:12px;overflow-wrap:anywhere;
 }
 .track button { padding:7px;font-size:11px }
 .track-num { color:var(--accent);font-size:11px }
 .empty {
-  padding:20px 8px;
-  text-align:center;
-  color:var(--muted);
-  font-size:12px;
-  line-height:2;
+  padding:20px 8px;text-align:center;
+  color:var(--muted);font-size:12px;line-height:2;
 }
 .guide-item {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px;
-  background:#142119;
-  border:1px solid var(--line);
-  border-radius:8px;
-  cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  padding:10px;background:#142119;
+  border:1px solid var(--line);border-radius:8px;cursor:pointer;
 }
 .guide-time {
-  color:var(--accent);
-  font-family:monospace;
-  font-size:12px;
-  min-width:65px;
+  color:var(--accent);font-family:monospace;
+  font-size:12px;min-width:65px;
 }
 .guide-title { flex:1;font-size:12px;overflow-wrap:anywhere }
 .guide-state { font-size:10px;color:var(--muted) }
-.two-col {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
 label {
-  display:block;
-  color:var(--muted);
-  font-size:12px;
-  margin:10px 0 6px;
+  display:block;color:var(--muted);
+  font-size:12px;margin:10px 0 6px;
 }
 input[type=range] { padding:0;accent-color:var(--accent) }
 #customizePanel { display:none }
-.hint {
-  color:var(--muted);
-  font-size:11px;
-  line-height:1.9;
-}
+.hint { color:var(--muted);font-size:11px;line-height:1.9 }
 footer {
-  text-align:center;
-  padding:20px;
-  color:#718276;
-  font-size:10px;
-  line-height:2;
+  text-align:center;padding:20px;
+  color:#718276;font-size:10px;line-height:2;
 }
 #toast {
-  position:fixed;
-  z-index:30;
-  bottom:16px;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  max-width:90%;
-  padding:11px 15px;
-  border:1px solid var(--accent);
-  border-radius:9px;
-  background:#25382a;
-  color:var(--cream);
-  font-size:12px;
-  text-align:center;
+  position:fixed;z-index:30;bottom:16px;left:50%;
+  transform:translateX(-50%);display:none;
+  max-width:90%;padding:11px 15px;
+  border:1px solid var(--accent);border-radius:9px;
+  background:#25382a;color:var(--cream);
+  font-size:12px;text-align:center;
 }
 @media(max-width:650px) {
-  .two-col { grid-template-columns:1fr }
   header { padding:10px }
   .brand h1 { font-size:18px }
   .logo { width:45px;height:45px }
@@ -396,14 +324,11 @@ footer {
     <div id="screen" class="crt">
       <div id="player"></div>
       <div id="radioVisual">WALKO RADIO</div>
-
       <div class="watermark">
         <span class="wm-icon">WK</span>
         <span id="watermarkName">WALKO TV</span>
       </div>
-
       <div class="screen-meta">CH 01 · BROADCAST</div>
-
       <div id="ident">
         <div>
           <strong id="identName">WALKO TV</strong>
@@ -418,7 +343,6 @@ footer {
       <button id="nextBtn">بعدی ⏭</button>
       <button id="fullBtn">⛶ تمام‌صفحه</button>
     </div>
-
     <div class="status" id="playerStatus">
       برای شروع، یک ویدیو به پلی‌لیست اضافه کن.
     </div>
@@ -430,10 +354,7 @@ footer {
       <span class="badge">ONE CHANNEL</span>
     </div>
     <div id="guide" class="list"></div>
-    <p class="hint">
-      برنامه‌ها به ترتیب پلی‌لیست پخش می‌شن. برای پخش پیوسته،
-      تکرار پلی‌لیست رو روشن نگه دار.
-    </p>
+    <p class="hint">برنامه‌ها به ترتیب پلی‌لیست پخش می‌شن.</p>
   </section>
 
   <section class="panel">
@@ -441,41 +362,32 @@ footer {
       <h2>📼 برنامه‌های من</h2>
       <span class="badge" id="trackCount">۰ برنامه</span>
     </div>
-
     <input id="videoUrl" type="url"
       placeholder="لینک ویدیوی YouTube را وارد کن">
-
     <div class="addrow">
       <button id="addBtn" class="primary">＋ افزودن برنامه</button>
       <button id="clearBtn">پاک‌کردن لیست</button>
     </div>
-
     <div id="playlist" class="list" style="margin-top:12px"></div>
   </section>
 
   <section class="panel">
     <div class="sectionhead"><h2>⚙ کنترل تلویزیون</h2></div>
-
     <div class="settings">
       <button id="radioBtn">📻 حالت رادیو: خاموش</button>
-      <button id="repeatBtn" class="on">🔁 تکرار: روشن</button>
-      <button id="crtBtn" class="on">📺 افکت CRT: روشن</button>
+      <button id="repeatBtn">🔁 تکرار: روشن</button>
+      <button id="crtBtn">📺 افکت CRT: روشن</button>
       <button id="customizeBtn">🎨 شخصی‌سازی</button>
     </div>
-
     <div id="customizePanel">
       <label for="stationName">نام شبکه</label>
       <input id="stationName" maxlength="32" value="WALKO TV">
-
       <label for="brightness">روشنایی تصویر</label>
       <input id="brightness" type="range" min="50" max="150" value="100">
-
       <label for="contrast">کنتراست تصویر</label>
       <input id="contrast" type="range" min="50" max="180" value="100">
-
       <label for="saturation">اشباع رنگ</label>
       <input id="saturation" type="range" min="0" max="200" value="100">
-
       <button id="saveNameBtn" class="primary" style="margin-top:12px">
         ذخیرهٔ تنظیمات
       </button>
@@ -488,12 +400,12 @@ footer {
   YOUR WORLD · YOUR CHANNEL<br>
   PERSONAL BROADCAST SYSTEM
 </footer>
-
 <div id="toast"></div>
 
 <script>
-const $ = id => document.getElementById(id);
+"use strict";
 
+const $ = id => document.getElementById(id);
 const STORE_KEY = "walkotv_beta1_playlist";
 const SETTINGS_KEY = "walkotv_beta1_settings";
 
@@ -501,7 +413,6 @@ let playlist = [];
 let current = -1;
 let player = null;
 let playerReady = false;
-let isPlaying = false;
 let repeat = true;
 let crt = true;
 let radio = false;
@@ -514,15 +425,13 @@ function toast(message) {
   el.textContent = message;
   el.style.display = "block";
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    el.style.display = "none";
-  }, 2800);
+  toastTimer = setTimeout(() => el.style.display = "none", 3500);
 }
 
 function savePlaylist() {
   try {
     localStorage.setItem(STORE_KEY, JSON.stringify(playlist));
-  } catch (e) {
+  } catch {
     toast("حافظهٔ مرورگر در دسترس نیست.");
   }
 }
@@ -532,13 +441,12 @@ function loadPlaylist() {
     const data = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
     if (Array.isArray(data)) {
       playlist = data.filter(v =>
-        v &&
-        typeof v.id === "string" &&
+        v && typeof v.id === "string" &&
         /^[\w-]{11}$/.test(v.id) &&
         typeof v.title === "string"
       );
     }
-  } catch (e) {
+  } catch {
     playlist = [];
   }
 }
@@ -546,72 +454,59 @@ function loadPlaylist() {
 function getVideoId(input) {
   try {
     const url = new URL(input);
-    if (url.hostname === "youtu.be") {
-      return url.pathname.slice(1).split("/")[0];
+    const host = url.hostname.toLowerCase();
+
+    if (host === "youtu.be") {
+      return url.pathname.split("/").filter(Boolean)[0] || null;
     }
+
     if (
-      url.hostname.includes("youtube.com") ||
-      url.hostname.includes("youtube-nocookie.com")
+      host === "youtube.com" ||
+      host.endsWith(".youtube.com") ||
+      host === "youtube-nocookie.com" ||
+      host.endsWith(".youtube-nocookie.com")
     ) {
-      if (url.searchParams.get("v")) {
-        return url.searchParams.get("v");
-      }
+      const v = url.searchParams.get("v");
+      if (v) return v;
+
       const parts = url.pathname.split("/").filter(Boolean);
-      const key = parts.findIndex(x =>
+      const i = parts.findIndex(x =>
         ["embed", "shorts", "live"].includes(x)
       );
-      if (key >= 0) return parts[key + 1];
+      if (i >= 0) return parts[i + 1] || null;
     }
-  } catch (e) {}
+  } catch {}
 
-  if (/^[\w-]{11}$/.test(input.trim())) return input.trim();
-  return null;
-}
-
-function formatDuration(seconds) {
-  if (!Number.isFinite(seconds) || seconds <= 0) return "--:--";
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return String(m).padStart(2, "0") + ":" +
-         String(s).padStart(2, "0");
+  const text = input.trim();
+  return /^[\w-]{11}$/.test(text) ? text : null;
 }
 
 function addVideo() {
-  const input = $("videoUrl").value.trim();
-  const id = getVideoId(input);
+  const id = getVideoId($("videoUrl").value.trim());
 
-  if (!id) {
+  if (!id || !/^[\w-]{11}$/.test(id)) {
     toast("لینک معتبر YouTube وارد کن.");
     return;
   }
-
   if (playlist.some(v => v.id === id)) {
     toast("این ویدیو قبلاً اضافه شده.");
     return;
   }
 
-  playlist.push({
-    id,
-    title: "برنامهٔ جدید " + (playlist.length + 1)
-  });
-
+  playlist.push({id, title:"YouTube · " + id});
   savePlaylist();
   renderAll();
-
   $("videoUrl").value = "";
-  toast("برنامه به WALKO TV اضافه شد.");
+  toast("برنامه اضافه شد. برای دریافت عنوان، ویدیو را پخش کن.");
 }
 
 function renderPlaylist() {
   const root = $("playlist");
   root.replaceChildren();
-
   $("trackCount").textContent = playlist.length + " برنامه";
 
   if (!playlist.length) {
-    root.innerHTML =
-      '<div class="empty">هنوز برنامه‌ای نداری.<br>' +
-      "لینک YouTube را بالا وارد کن.</div>";
+    root.innerHTML = '<div class="empty">هنوز برنامه‌ای نداری.<br>لینک YouTube را بالا وارد کن.</div>';
     return;
   }
 
@@ -634,19 +529,16 @@ function renderPlaylist() {
 
     const up = document.createElement("button");
     up.textContent = "↑";
-    up.title = "انتقال به بالا";
     up.disabled = index === 0;
     up.onclick = () => moveVideo(index, -1);
 
     const down = document.createElement("button");
     down.textContent = "↓";
-    down.title = "انتقال به پایین";
     down.disabled = index === playlist.length - 1;
     down.onclick = () => moveVideo(index, 1);
 
     const remove = document.createElement("button");
     remove.textContent = "✕";
-    remove.title = "حذف برنامه";
     remove.onclick = () => removeVideo(index);
 
     row.append(num, title, play, up, down, remove);
@@ -659,12 +551,9 @@ function renderGuide() {
   root.replaceChildren();
 
   if (!playlist.length) {
-    root.innerHTML =
-      '<div class="empty">جدول پخش خالی است.</div>';
+    root.innerHTML = '<div class="empty">جدول پخش خالی است.</div>';
     return;
   }
-
-  const now = new Date();
 
   playlist.forEach((video, index) => {
     const row = document.createElement("div");
@@ -672,13 +561,7 @@ function renderGuide() {
 
     const time = document.createElement("span");
     time.className = "guide-time";
-
-    const programTime = new Date(now.getTime() + index * 30 * 60000);
-    time.textContent = programTime.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    });
+    time.textContent = String(index + 1).padStart(2, "0");
 
     const title = document.createElement("span");
     title.className = "guide-title";
@@ -687,7 +570,7 @@ function renderGuide() {
     const state = document.createElement("span");
     state.className = "guide-state";
     state.textContent = index === current ? "● LIVE" :
-                        index > current ? "بعدی" : "در لیست";
+      index === current + 1 ? "بعدی" : "در لیست";
 
     row.append(time, title, state);
     row.onclick = () => playIndex(index, true);
@@ -711,9 +594,7 @@ function updateNowTitle() {
 function showIdent(caption, callback) {
   clearTimeout(identTimer);
   nextAfterIdent = callback;
-
-  $("identName").textContent =
-    localStorage.getItem("walkotv_name") || "WALKO TV";
+  $("identName").textContent = localStorage.getItem("walkotv_name") || "WALKO TV";
   $("identCaption").textContent = caption;
   $("ident").classList.add("show");
 
@@ -722,7 +603,7 @@ function showIdent(caption, callback) {
     const action = nextAfterIdent;
     nextAfterIdent = null;
     if (action) action();
-  }, 2300);
+  }, 1200);
 }
 
 function playIndex(index, withIdent = false) {
@@ -732,19 +613,15 @@ function playIndex(index, withIdent = false) {
   }
 
   index = (index + playlist.length) % playlist.length;
+  current = index;
+  updateNowTitle();
+  renderAll();
 
   if (withIdent) {
-    current = index;
-    updateNowTitle();
-    renderAll();
-    showIdent("UP NEXT · " + playlist[index].title, () => {
-      loadCurrentVideo();
-    });
-    return;
+    showIdent("UP NEXT · " + playlist[index].title, loadCurrentVideo);
+  } else {
+    loadCurrentVideo();
   }
-
-  current = index;
-  loadCurrentVideo();
 }
 
 function loadCurrentVideo() {
@@ -761,20 +638,13 @@ function loadCurrentVideo() {
 
   try {
     player.loadVideoById(video.id);
-    player.playVideo();
-    isPlaying = true;
-    $("playBtn").textContent = "⏸ توقف";
-  } catch (e) {
-    toast("این ویدیو در پلیر قابل پخش نیست.");
+  } catch {
+    toast("پخش ویدیو شروع نشد. دوباره امتحان کن.");
   }
 }
 
 function nextVideo() {
   if (!playlist.length) return;
-  if (current < 0) {
-    playIndex(0, true);
-    return;
-  }
   if (current + 1 < playlist.length) {
     playIndex(current + 1, true);
   } else if (repeat) {
@@ -786,19 +656,14 @@ function nextVideo() {
 
 function previousVideo() {
   if (!playlist.length) return;
-  if (current <= 0) {
-    playIndex(playlist.length - 1, true);
-  } else {
-    playIndex(current - 1, true);
-  }
+  playIndex(current <= 0 ? playlist.length - 1 : current - 1, true);
 }
 
 function moveVideo(index, direction) {
   const target = index + direction;
   if (target < 0 || target >= playlist.length) return;
 
-  [playlist[index], playlist[target]] =
-    [playlist[target], playlist[index]];
+  [playlist[index], playlist[target]] = [playlist[target], playlist[index]];
 
   if (current === index) current = target;
   else if (current === target) current = index;
@@ -813,14 +678,12 @@ function removeVideo(index) {
 
   if (!playlist.length) {
     current = -1;
-    if (playerReady && player) player.stopVideo();
-    isPlaying = false;
-    $("playBtn").textContent = "▶ پخش";
+    if (playerReady) player.stopVideo();
   } else if (index < current) {
     current--;
   } else if (removedCurrent) {
     current = Math.min(index, playlist.length - 1);
-    playIndex(current, true);
+    loadCurrentVideo();
   }
 
   savePlaylist();
@@ -833,94 +696,72 @@ function togglePlay() {
     toast("اول یک برنامه اضافه کن.");
     return;
   }
-
   if (current < 0) {
-    playIndex(0, true);
+    playIndex(0, false);
+    return;
+  }
+  if (!playerReady) {
+    toast("پلیر هنوز آماده نیست.");
     return;
   }
 
-  if (!playerReady || !player) return;
-
   const state = player.getPlayerState();
-
-  if (state === YT.PlayerState.PLAYING) {
-    player.pauseVideo();
-  } else {
-    player.playVideo();
-  }
+  if (state === YT.PlayerState.PLAYING) player.pauseVideo();
+  else player.playVideo();
 }
 
 function toggleRadio() {
   radio = !radio;
   $("screen").classList.toggle("radio", radio);
-  $("radioBtn").textContent =
-    radio ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
-  $("radioBtn").classList.toggle("on", radio);
-
-  localStorage.setItem("walkotv_radio", radio ? "1" : "0");
+  $("radioBtn").textContent = radio
+    ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
+  saveSettings();
 }
 
 function applyPictureSettings() {
-  const b = Number($("brightness").value) / 100;
-  const c = Number($("contrast").value) / 100;
-  const s = Number($("saturation").value) / 100;
-
-  document.documentElement.style.setProperty("--brightness", b);
-  document.documentElement.style.setProperty("--contrast", c);
-  document.documentElement.style.setProperty("--saturation", s);
-
+  document.documentElement.style.setProperty("--brightness", Number($("brightness").value) / 100);
+  document.documentElement.style.setProperty("--contrast", Number($("contrast").value) / 100);
+  document.documentElement.style.setProperty("--saturation", Number($("saturation").value) / 100);
   saveSettings();
 }
 
 function saveSettings() {
   const settings = {
-    repeat,
-    crt,
-    radio,
-    brightness: $("brightness").value,
-    contrast: $("contrast").value,
-    saturation: $("saturation").value
+    repeat, crt, radio,
+    brightness:$("brightness").value,
+    contrast:$("contrast").value,
+    saturation:$("saturation").value
   };
-
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } catch {}
 }
 
 function loadSettings() {
-  let settings = {};
-  try {
-    settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
-  } catch (e) {}
+  let s = {};
+  try { s = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"); } catch {}
 
-  repeat = settings.repeat !== false;
-  crt = settings.crt !== false;
-  radio = settings.radio === true ||
-          localStorage.getItem("walkotv_radio") === "1";
+  repeat = s.repeat !== false;
+  crt = s.crt !== false;
+  radio = s.radio === true;
 
-  $("brightness").value = settings.brightness || 100;
-  $("contrast").value = settings.contrast || 100;
-  $("saturation").value = settings.saturation || 100;
+  $("brightness").value = s.brightness || 100;
+  $("contrast").value = s.contrast || 100;
+  $("saturation").value = s.saturation || 100;
 
-  $("repeatBtn").textContent =
-    "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
-  $("repeatBtn").classList.toggle("on", repeat);
+  $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
+  $("crtBtn").textContent = "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
+  $("radioBtn").textContent = radio ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
 
-  $("crtBtn").textContent =
-    "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
-  $("crtBtn").classList.toggle("on", crt);
   $("screen").classList.toggle("crt", crt);
-
   $("screen").classList.toggle("radio", radio);
-  $("radioBtn").textContent =
-    radio ? "📺 حالت تلویزیون: روشن" : "📻 حالت رادیو: خاموش";
-  $("radioBtn").classList.toggle("on", radio);
-
   applyPictureSettings();
 }
 
 function applyStationName(name) {
   name = name.trim().slice(0, 32) || "WALKO TV";
+  try { localStorage.setItem("walkotv_name", name); } catch {}
 
-  localStorage.setItem("walkotv_name", name);
   $("brandName").textContent = name;
   $("watermarkName").textContent = name;
   $("identName").textContent = name;
@@ -931,16 +772,10 @@ function applyStationName(name) {
 function updateClock() {
   const now = new Date();
   $("clock").textContent = now.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false
+    hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false
   });
-
   $("date").textContent = now.toLocaleDateString([], {
-    weekday: "short",
-    day: "numeric",
-    month: "short"
+    weekday:"short", day:"numeric", month:"short"
   });
 }
 
@@ -948,20 +783,15 @@ $("addBtn").onclick = addVideo;
 $("videoUrl").addEventListener("keydown", e => {
   if (e.key === "Enter") addVideo();
 });
-
 $("playBtn").onclick = togglePlay;
 $("nextBtn").onclick = nextVideo;
 $("prevBtn").onclick = previousVideo;
 
 $("fullBtn").onclick = async () => {
-  const screen = $("screen");
   try {
-    if (!document.fullscreenElement) {
-      await screen.requestFullscreen();
-    } else {
-      await document.exitFullscreen();
-    }
-  } catch (e) {
+    if (!document.fullscreenElement) await $("screen").requestFullscreen();
+    else await document.exitFullscreen();
+  } catch {
     toast("تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود.");
   }
 };
@@ -970,25 +800,20 @@ $("radioBtn").onclick = toggleRadio;
 
 $("repeatBtn").onclick = () => {
   repeat = !repeat;
-  $("repeatBtn").textContent =
-    "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
-  $("repeatBtn").classList.toggle("on", repeat);
+  $("repeatBtn").textContent = "🔁 تکرار: " + (repeat ? "روشن" : "خاموش");
   saveSettings();
 };
 
 $("crtBtn").onclick = () => {
   crt = !crt;
   $("screen").classList.toggle("crt", crt);
-  $("crtBtn").textContent =
-    "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
-  $("crtBtn").classList.toggle("on", crt);
+  $("crtBtn").textContent = "📺 افکت CRT: " + (crt ? "روشن" : "خاموش");
   saveSettings();
 };
 
 $("customizeBtn").onclick = () => {
-  const panel = $("customizePanel");
-  panel.style.display =
-    panel.style.display === "block" ? "none" : "block";
+  const p = $("customizePanel");
+  p.style.display = p.style.display === "block" ? "none" : "block";
 };
 
 ["brightness", "contrast", "saturation"].forEach(id => {
@@ -997,65 +822,58 @@ $("customizeBtn").onclick = () => {
 
 $("saveNameBtn").onclick = () => {
   applyStationName($("stationName").value);
-  saveSettings();
   toast("تنظیمات ذخیره شد ✓");
 };
 
 $("clearBtn").onclick = () => {
   if (!confirm("همهٔ برنامه‌های پلی‌لیست حذف بشن؟")) return;
-
   playlist = [];
   current = -1;
-  isPlaying = false;
-
-  if (playerReady && player) player.stopVideo();
-
+  if (playerReady) player.stopVideo();
   savePlaylist();
   renderAll();
   updateNowTitle();
   $("playBtn").textContent = "▶ پخش";
-  toast("پلی‌لیست پاک شد.");
 };
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
-    width: "100%",
-    height: "100%",
+    width:"100%",
+    height:"100%",
     playerVars: {
-      autoplay: 0,
-      controls: 1,
-      playsinline: 1,
-      rel: 0,
-      enablejsapi: 1
+      autoplay:0,
+      controls:1,
+      playsinline:1,
+      rel:0,
+      enablejsapi:1,
+      origin:window.location.origin
     },
     events: {
       onReady: () => {
         playerReady = true;
-        $("playerStatus").textContent =
-          "پلیر آماده است. برنامه‌ای را انتخاب کن.";
+        $("playerStatus").textContent = "پلیر آماده است. برنامه‌ای را انتخاب کن.";
       },
       onStateChange: event => {
         if (event.data === YT.PlayerState.PLAYING) {
-          isPlaying = true;
           $("playBtn").textContent = "⏸ توقف";
+          const video = playlist[current];
+          if (video && player.getVideoData) {
+            const data = player.getVideoData();
+            if (data.title && data.title !== video.title) {
+              video.title = data.title;
+              savePlaylist();
+              renderAll();
+              updateNowTitle();
+            }
+          }
         }
 
         if (event.data === YT.PlayerState.PAUSED) {
-          isPlaying = false;
           $("playBtn").textContent = "▶ ادامه";
         }
 
         if (event.data === YT.PlayerState.ENDED) {
-          isPlaying = false;
-          if (current >= 0 && playlist[current + 1]) {
-            showIdent("UP NEXT · " + playlist[current + 1].title,
-              nextVideo);
-          } else if (repeat && playlist.length) {
-            showIdent("WALKO TV · COMING UP NEXT", nextVideo);
-          } else {
-            $("playBtn").textContent = "▶ پخش";
-            toast("برنامه به پایان رسید.");
-          }
+          nextVideo();
         }
 
         if (event.data === YT.PlayerState.BUFFERING) {
@@ -1063,9 +881,17 @@ function onYouTubeIframeAPIReady() {
         }
       },
       onError: event => {
-        $("playerStatus").textContent =
-          "این ویدیو قابل پخش نیست؛ ممکن است سازنده اجازهٔ Embed نداده باشد.";
-        toast("خطای پخش YouTube: " + event.data);
+        const messages = {
+          2:"شناسهٔ ویدیو معتبر نیست.",
+          5:"این ویدیو در پلیر HTML5 پخش نمی‌شود.",
+          100:"ویدیو حذف شده یا خصوصی است.",
+          101:"مالک ویدیو اجازهٔ پخش در سایت‌های دیگر را نداده.",
+          150:"مالک ویدیو اجازهٔ پخش در سایت‌های دیگر را نداده.",
+          153:"یوتیوب اطلاعات شناسایی درخواست را دریافت نکرده. صفحه را از آدرس HTTPS سایت باز کن."
+        };
+        const msg = messages[event.data] || ("خطای پخش YouTube: " + event.data);
+        $("playerStatus").textContent = msg;
+        toast(msg);
       }
     }
   });
@@ -1074,17 +900,22 @@ function onYouTubeIframeAPIReady() {
 loadPlaylist();
 loadSettings();
 
-applyStationName(localStorage.getItem("walkotv_name") || "WALKO TV");
-$("stationName").value =
-  localStorage.getItem("walkotv_name") || "WALKO TV";
+const savedName = localStorage.getItem("walkotv_name") || "WALKO TV";
+applyStationName(savedName);
+$("stationName").value = savedName;
 
 renderAll();
 updateNowTitle();
 updateClock();
 setInterval(updateClock, 1000);
 
+// API را پس از آماده شدن صفحه بارگذاری کن.
 const api = document.createElement("script");
 api.src = "https://www.youtube.com/iframe_api";
+api.onerror = () => {
+  $("playerStatus").textContent =
+    "بارگذاری پلیر یوتیوب ناموفق بود؛ اتصال اینترنت یا مسدودشدن API را بررسی کن.";
+};
 document.head.appendChild(api);
 </script>
 </body>
