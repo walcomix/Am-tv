@@ -289,6 +289,28 @@ body.viewerMode #videoElement{controls:none!important}
           </div>
           <div id="adminChannelList" class="itemlist"></div>
         </div>
+        <div class="section" id="youtubeManager" style="grid-column:1/-1">
+          <h3>📡 همگام‌سازی خودکار YouTube</h3>
+
+          <p class="viewerhint">
+            ویدیوهای جدید کانال‌هایی که با حساب یوتیوب دنبال می‌کنی
+            شناسایی می‌شوند و می‌توانند به پلی‌لیست AM TV اضافه شوند.
+          </p>
+
+          <div class="actions">
+            <button id="youtubeConnectButton" class="primary">
+              اتصال حساب YouTube
+            </button>
+
+            <button id="youtubeSyncButton">
+              همگام‌سازی ویدیوهای ۲۴ ساعت اخیر
+            </button>
+          </div>
+
+          <div class="statusbox" id="youtubeSyncStatus" style="margin-top:12px">
+            وضعیت اتصال: هنوز بررسی نشده
+          </div>
+        </div>
         <div class="section" style="grid-column:1/-1">
           <h3>پلی‌لیست کانال فعلی</h3>
           <div class="actions">
@@ -1274,6 +1296,139 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   apply();
   setInterval(apply,1000);
 })();
+
+/* =========================================
+   AM TV — YouTube Sync UI
+   فقط برای مدیر
+   ========================================= */
+
+const YOUTUBE_FUNCTION_URL =
+  SUPABASE_URL + "/functions/v1/youtube-sync";
+
+function renderYouTubeManager() {
+  const panel = $("youtubeManager");
+  if (!panel) return;
+
+  panel.classList.toggle("hidden", !isAdmin);
+}
+
+async function callYouTubeSync(action) {
+  if (!isAdmin || !sbClient) {
+    notify("فقط مدیر واردشده می‌تواند این کار را انجام دهد.");
+    return;
+  }
+
+  const status = $("youtubeSyncStatus");
+  const connectButton = $("youtubeConnectButton");
+  const syncButton = $("youtubeSyncButton");
+
+  connectButton.disabled = true;
+  syncButton.disabled = true;
+  status.textContent = "در حال ارتباط با سرویس همگام‌سازی...";
+
+  try {
+    const { data: sessionData, error: sessionError } =
+      await sbClient.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
+    const token = sessionData?.session?.access_token;
+
+    if (!token) {
+      throw new Error("نشست مدیر معتبر نیست؛ دوباره وارد شو.");
+    }
+
+    const response = await fetch(YOUTUBE_FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token,
+        "apikey": SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ action })
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        "سرویس همگام‌سازی آماده نیست. تنظیمات سرور را بررسی کن."
+      );
+    }
+
+    if (action === "connect") {
+      if (!result.url) {
+        throw new Error("آدرس اتصال گوگل از سرور دریافت نشد.");
+      }
+
+      // اتصال یوتیوب باید در جریان OAuth جداگانه انجام شود.
+      window.location.assign(result.url);
+      return;
+    }
+
+    status.textContent =
+      result.message || "درخواست همگام‌سازی با موفقیت انجام شد.";
+
+    notify("پاسخ سرویس همگام‌سازی دریافت شد.");
+
+    if (Array.isArray(result.videos) && result.videos.length) {
+      let added = 0;
+      const list = currentChannel().list;
+      const existingIds = new Set(
+        list.map(item => item.youtubeId).filter(Boolean)
+      );
+
+      for (const video of result.videos) {
+        if (!video.id || existingIds.has(video.id)) continue;
+
+        list.push({
+          id: makeId(),
+          youtubeId: video.id,
+          title: video.title || "ویدیوی جدید YouTube",
+          url: "https://www.youtube.com/watch?v=" + video.id,
+          addedAt: Date.now()
+        });
+
+        existingIds.add(video.id);
+        added++;
+      }
+
+      if (added) {
+        scheduleSave();
+        renderPlayer();
+        notify(added + " ویدیوی جدید به پلی‌لیست اضافه شد.");
+      } else {
+        notify("ویدیوی جدیدی برای اضافه‌کردن پیدا نشد.");
+      }
+    }
+  } catch (error) {
+    console.error("YouTube sync error:", error);
+    status.textContent = "خطا: " + error.message;
+    notify("همگام‌سازی انجام نشد.");
+  } finally {
+    connectButton.disabled = false;
+    syncButton.disabled = false;
+  }
+}
+
+$("youtubeConnectButton")?.addEventListener("click", () => {
+  callYouTubeSync("connect");
+});
+
+$("youtubeSyncButton")?.addEventListener("click", () => {
+  callYouTubeSync("sync");
+});
+
+// وضعیت دسترسی با ورود و خروج مدیر به‌روز می‌شود.
+const originalApplySession = applySession;
+
+applySession = async function(session) {
+  await originalApplySession(session);
+  renderYouTubeManager();
+};
+
+renderYouTubeManager();
 </script>
 </body>
 </html>
