@@ -114,6 +114,10 @@ border:1px solid var(--line);border-radius:9px;padding:9px;min-width:0}
 .channelbutton{flex:1;text-align:right;min-width:0;overflow-wrap:anywhere}
 .channelbutton.selected{border-color:var(--accent);color:var(--accent)}
 .hidden{display:none!important}
+#viewerStart{position:absolute;z-index:6;bottom:12px;left:50%;transform:translateX(-50%);width:auto;height:auto;border:0;border-radius:999px;background:rgba(0,0,0,.72);color:#fff;font-size:14px;font-weight:bold;padding:10px 18px;white-space:nowrap}
+#coverExit{display:none;position:absolute;top:10px;right:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
+#playerShell.pagecover{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;aspect-ratio:auto;z-index:1000;border-radius:0}
+#playerShell.pagecover #coverExit{display:block}
 #loginBox{max-width:420px;margin:22px auto}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
 z-index:100;background:var(--accent);color:#17160e;border-radius:10px;
@@ -129,7 +133,6 @@ body.viewerMode #adminPanel,
 body.viewerMode #channelSelector,body.viewerMode #adminControls,
 body.viewerMode #adminPlayerControls{display:none!important}
 body.viewerMode .playercontrols.admin-only{display:none!important}
-body.viewerMode #viewerFullscreen{display:none!important}
 body.viewerMode #youtubePlayer,body.viewerMode #videoElement{pointer-events:none!important}
 body.viewerMode #videoElement{controls:none!important}
 @media(max-width:850px){
@@ -189,6 +192,8 @@ body.viewerMode #videoElement{controls:none!important}
           <div class="radiofrequency">24 / 7 · LIVE SOUND</div>
           <audio id="audioElement" preload="metadata"></audio>
         </div>
+        <button id="coverExit">✕ خروج از تمام‌صفحه</button>
+        <button id="viewerStart" class="hidden">🔊 برای فعال‌سازی صدا لمس کنید</button>
         <div id="watermark">
           <img id="watermarkImage" class="hidden" alt="Watermark">
           <div id="watermarkText"></div>
@@ -209,7 +214,7 @@ body.viewerMode #videoElement{controls:none!important}
           <button id="fullscreenButton" title="تمام صفحه">⛶</button>
         </div>
         <div class="playercontrols">
-          <button id="viewerFullscreen" title="تمام صفحه">⛶</button>
+          <button id="viewerFullscreen" title="تمام صفحه">⛶ تمام صفحه</button>
         </div>
       </div>
     </section>
@@ -329,10 +334,10 @@ body.viewerMode #videoElement{controls:none!important}
         <div class="section">
           <h3>افزودن صوت به رادیو</h3>
           <div class="field"><label for="radioTitle">نام آهنگ یا برنامه</label><input id="radioTitle" placeholder="نام برنامه صوتی"></div>
-          <div class="field"><label for="radioURL">لینک مستقیم صوت</label><input id="radioURL" type="url" placeholder="https://.../audio.mp3"></div>
+          <div class="field"><label for="radioURL">لینک مستقیم صوت یا لینک یوتیوب (آهنگ / پادکست)</label><input id="radioURL" type="url" placeholder="https://.../audio.mp3"></div>
           <div class="field"><label for="radioFiles">فایل‌های صوتی برای آپلود</label><input id="radioFiles" type="file" accept="audio/*" multiple></div>
           <button id="addRadioButton" class="primary">افزودن به پلی‌لیست رادیو</button>
-          <p class="viewerhint">لینک باید مستقیماً به فایل صوتی قابل پخش برسد؛ لینک صفحهٔ وب یا پلتفرم ممکن است کار نکند.</p>
+          <p class="viewerhint">لینک مستقیم فایل صوتی (mp3 و...) یا لینک یوتیوب قابل استفاده است. لینک یوتیوب در رادیو فقط به‌صورت صوتی و بدون تصویر پخش می‌شود.</p>
         </div>
         <div class="section">
           <h3>پلی‌لیست رادیو</h3>
@@ -470,6 +475,14 @@ let currentMediaKind = "";
 let currentMediaURL = "";
 let currentItemId = "";
 let localPlaying = false;
+let viewerSoundOn = false;
+function applyAudioState(){
+  const mute = !isAdmin && !viewerSoundOn;
+  try{ $("videoElement").muted = mute; $("audioElement").muted = mute; }catch(_){}
+  if(ytReady && ytPlayer){
+    try{ if(mute) ytPlayer.mute(); else ytPlayer.unMute(); }catch(_){}
+  }
+}
 
 function notify(message){
   const el=$("toast");
@@ -563,15 +576,17 @@ async function loadRemoteState(){
   }
 }
 async function saveRemoteState(){
-  if(!sbClient || !isAdmin || isApplyingRemote)return;
+  if(!sbClient || !isAdmin || isApplyingRemote)return false;
   const payload={id:1,data:clone(state),updated_at:new Date().toISOString()};
   const {error}=await sbClient.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
   if(error){
     $("supabaseStatus").value="ذخیره نشد: "+error.message;
     console.error(error);
     notify("ذخیره ناموفق بود؛ تنظیمات RLS را بررسی کن.");
+    return false;
   }else{
     $("supabaseStatus").value="ذخیره و همگام‌سازی شد";
+    return true;
   }
 }
 function scheduleSave(){
@@ -654,8 +669,9 @@ window.onYouTubeIframeAPIReady=function(){
       events:{
         onReady:function(){
           ytReady=true;
+          applyAudioState();
           try{ytPlayer.setVolume(Number($("volumeSlider").value)||80)}catch(_){}
-          renderPlayer();
+          renderPlayer(true);
         },
         onStateChange:function(e){
           if(e.data===YT.PlayerState.ENDED)handleEnded();
@@ -679,6 +695,7 @@ function hideAllMedia(){
   $("radioScreen").style.display="none";
   $("videoElement").pause();
   $("audioElement").pause();
+  try{if(ytReady&&ytPlayer&&ytPlayer.pauseVideo)ytPlayer.pauseVideo()}catch(_){}
 }
 function showEmpty(message){
   hideAllMedia();
@@ -688,6 +705,7 @@ function showEmpty(message){
   $("statusPlayback").textContent="آماده";
 }
 function renderPlayer(force=false){
+  applyAudioState();
   ensureState();
   const mode=activeMode();
   const item=activeItem();
@@ -714,6 +732,19 @@ function renderPlayer(force=false){
 
   if(mode==="radio"){
     $("radioScreen").style.display="flex";
+    if(isYouTube(url)){
+      const rid=youtubeId(url);
+      $("youtubePlayer").style.display="block";
+      if(rid && ytReady && ytPlayer){
+        try{
+          ytPlayer.loadVideoById({videoId:rid});
+          ytPlayer.setVolume(Number($("volumeSlider").value)||80);
+        }catch(e){console.error(e)}
+      }
+      $("emptyHint").textContent="";
+      $("statusPlayback").textContent="رادیو";
+      return;
+    }
     const audio=$("audioElement");
     if(audio.src!==url)audio.src=url;
     audio.volume=(Number($("volumeSlider").value)||80)/100;
@@ -754,6 +785,13 @@ function renderPlayer(force=false){
 function togglePlay(){
   if(!isAdmin)return;
   if(activeMode()==="radio"){
+    const ri=activeItem();
+    if(ri && isYouTube(mediaUrl(ri))){
+      if(!ytReady||!ytPlayer)return;
+      const rs=ytPlayer.getPlayerState();
+      if(rs===YT.PlayerState.PLAYING)ytPlayer.pauseVideo();else ytPlayer.playVideo();
+      return;
+    }
     const a=$("audioElement");
     if(a.paused)a.play().then(()=>{localPlaying=true;$("playButton").textContent="⏸"}).catch(()=>notify("پخش صوت ممکن نشد."));
     else{a.pause();localPlaying=false;$("playButton").textContent="▶"}
@@ -1038,12 +1076,23 @@ function applyTheme(name){
 /* Fullscreen */
 async function toggleFullscreen(){
   const el=$("playerShell");
+  if(el.classList.contains("pagecover")){
+    el.classList.remove("pagecover");
+    document.body.style.overflow="";
+    return;
+  }
+  if(document.fullscreenElement){
+    try{await document.exitFullscreen()}catch(_){}
+    return;
+  }
   try{
-    if(!document.fullscreenElement){
-      if(el.requestFullscreen)await el.requestFullscreen();
-      else notify("تمام‌صفحه در این مرورگر پشتیبانی نمی‌شود.");
-    }else await document.exitFullscreen();
-  }catch(e){notify("مرورگر اجازهٔ تمام‌صفحه نداد.")}
+    if(!el.requestFullscreen)throw new Error("no-fullscreen");
+    await el.requestFullscreen();
+  }catch(_){
+    // مرورگرهایی که تمام‌صفحه را پشتیبانی نمی‌کنند: پلیر کل صفحه را می‌پوشاند
+    el.classList.add("pagecover");
+    document.body.style.overflow="hidden";
+  }
 }
 
 /* Local mode switch for viewers; shared mode for admins */
@@ -1090,7 +1139,8 @@ $("prevButton").addEventListener("click",previousItem);
 $("nextButton").addEventListener("click",nextItem);
 $("playButton").addEventListener("click",togglePlay);
 $("fullscreenButton").addEventListener("click",toggleFullscreen);
-$("viewerFullscreen").addEventListener("click",()=>{if(isAdmin)toggleFullscreen()});
+$("viewerFullscreen").addEventListener("click",toggleFullscreen);
+$("coverExit").addEventListener("click",toggleFullscreen);
 $("repeatButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   state.repeat=!state.repeat;
@@ -1278,9 +1328,26 @@ document.body.classList.toggle("viewerMode",!isAdmin);
 
 /* قفل کنترل پخش برای بیننده */
 (function lockViewerPlayback(){
+  $("viewerStart").addEventListener("click",()=>{
+    viewerSoundOn=true;
+    applyAudioState();
+    $("viewerStart").classList.add("hidden");
+    const item=activeItem();
+    if(!item)return;
+    const url=mediaUrl(item);
+    if(isYouTube(url)){
+      if(ytReady&&ytPlayer)try{ytPlayer.playVideo()}catch(_){}
+    }else if(activeMode()==="radio"){
+      $("audioElement").play().catch(()=>{});
+    }else{
+      $("videoElement").play().catch(()=>{});
+    }
+  });
   const actions=["play","pause","stop","seekbackward","seekforward","seekto","previoustrack","nexttrack"];
   function apply(){
     const viewer=!isAdmin;
+    applyAudioState();
+    $("viewerStart").classList.toggle("hidden",isAdmin||viewerSoundOn||!activeItem());
     if("mediaSession" in navigator){
       actions.forEach(a=>{
         try{navigator.mediaSession.setActionHandler(a,viewer?()=>{}:null)}catch(_){}
@@ -1395,9 +1462,16 @@ async function callYouTubeSync(action) {
       }
 
       if (added) {
-        scheduleSave();
-        renderPlayer();
-        notify(added + " ویدیوی جدید به پلی‌لیست اضافه شد.");
+        clearTimeout(saveTimer);
+        renderAll();
+        const saved = await saveRemoteState();
+        if (saved) {
+          status.textContent = added + " ویدیوی جدید اضافه شد و در سایت ذخیره شد.";
+          notify(added + " ویدیوی جدید اضافه و ذخیره شد.");
+        } else {
+          status.textContent = "ویدیوها اضافه شدند ولی ذخیره نشدند. " + $("supabaseStatus").value;
+          notify("ذخیره ناموفق بود؛ متن کادر وضعیت را بخوان.");
+        }
       } else {
         notify("ویدیوی جدیدی برای اضافه‌کردن پیدا نشد.");
       }
