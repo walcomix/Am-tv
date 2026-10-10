@@ -468,7 +468,7 @@ let ytPlayer = null;
 let ytReady = false;
 let activeMediaKey = "";
 let lastPlaybackNonce = null;
-let localViewerMode = localStorage.getItem("amtv-viewer-mode") || "tv";
+let localViewerMode = "tv"; /* بیننده همیشه با TV شروع می‌کند */
 let isApplyingRemote = false;
 let toastTimer = null;
 let saveTimer = null;
@@ -525,7 +525,114 @@ function currentList(){
   return activeMode()==="radio" ? state.radioList : currentChannel().list;
 }
 function currentIndex(){
-  return activeMode()==="radio" ? Number(state.radioIndex)||0 : Number(state.playback.index)||0;
+  const mode=activeMode();
+  if(!isAdmin)return liveInfo(mode).index;
+  return mode==="radio" ? Number(state.radioIndex)||0 : Number(state.playback.index)||0;
+}
+
+/* ---------- پخش زنده و همگام ---------- */
+let serverOffset=0;
+let pendingSeek=0,pendingSeekAudio=0;
+let adminResumed=false;
+const localDur={};
+function serverNow(){return Date.now()+serverOffset}
+async function syncServerTime(){
+  if(!sbClient)return;
+  try{
+    const t0=Date.now();
+    const {data,error}=await sbClient.rpc("server_time");
+    const t1=Date.now();
+    if(error||!data)return;
+    const srv=new Date(data).getTime();
+    if(isNaN(srv))return;
+    serverOffset=srv-(t0+(t1-t0)/2);
+  }catch(_){}
+}
+function durOf(item){return item?(Number(item.duration)||localDur[item.id]||0):0}
+function recordDuration(item,secs){
+  secs=Math.round(Number(secs)||0);
+  if(!item||!isFinite(secs)||secs<2)return;
+  localDur[item.id]=secs;
+  if(isAdmin && Math.abs((Number(item.duration)||0)-secs)>1){
+    item.duration=secs;
+    scheduleSave();
+  }
+}
+function anchorFor(kind){
+  if(kind==="radio"){
+    const p=state.radioPlayback||{};
+    return {index:Number(state.radioIndex)||0,startedAt:Number(p.startedAt)||0};
+  }
+  const p=state.playback||{};
+  return {index:Number(p.index)||0,startedAt:Number(p.startedAt)||0};
+}
+function liveInfo(kind){
+  const list=kind==="radio"?state.radioList:currentChannel().list;
+  const n=list.length;
+  if(!n)return {index:0,offset:0,known:false};
+  const a=anchorFor(kind);
+  let idx=Math.max(0,Math.min(a.index,n-1));
+  if(!a.startedAt)return {index:idx,offset:0,known:false};
+  let elapsed=(serverNow()-a.startedAt)/1000;
+  if(!(elapsed>0))return {index:idx,offset:0,known:true};
+  let total=0,all=true;
+  for(let k=0;k<n;k++){
+    const d=durOf(list[k]);
+    if(!d){all=false;break}
+    total+=d;
+  }
+  if(all&&total>0)elapsed=elapsed%total;
+  let first=true;
+  for(let step=0;step<n+1;step++){
+    const d=durOf(list[idx]);
+    if(!d)return {index:idx,offset:first?elapsed:0,known:false};
+    if(elapsed<d)return {index:idx,offset:elapsed,known:true};
+    elapsed-=d;idx=(idx+1)%n;first=false;
+  }
+  return {index:idx,offset:0,known:false};
+}
+function startOffsetFor(mode,item){
+  const li=liveInfo(mode);
+  const idx=currentList().indexOf(item);
+  if(li.index!==idx)return 0;
+  return li.offset>1.5?li.offset:0;
+}
+function adminResumeLive(){
+  if(adminResumed||!isAdmin)return;
+  adminResumed=true;
+  ["tv","radio"].forEach(k=>{
+    const li=liveInfo(k);
+    if(!li.known)return;
+    const startedAt=Math.round(serverNow()-li.offset*1000);
+    if(k==="radio"){
+      state.radioIndex=li.index;
+      state.radioPlayback={index:li.index,startedAt,nonce:(state.radioPlayback?.nonce||0)+1};
+    }else{
+      state.playback={index:li.index,startedAt,nonce:(state.playback?.nonce||0)+1};
+    }
+  });
+  activeMediaKey="";
+}
+function driftCorrect(){
+  const mode=activeMode(),item=activeItem();
+  if(!item)return;
+  const li=liveInfo(mode);
+  if(!li.known)return;
+  const url=mediaUrl(item);
+  try{
+    if(isYouTube(url)){
+      if(!ytReady||!ytPlayer)return;
+      const st=ytPlayer.getPlayerState();
+      const cur=ytPlayer.getCurrentTime();
+      if(Math.abs(cur-li.offset)>5||st===YT.PlayerState.ENDED){
+        ytPlayer.seekTo(li.offset,true);ytPlayer.playVideo();
+      }else if(st===YT.PlayerState.PAUSED){ytPlayer.playVideo()}
+    }else{
+      const el=mode==="radio"?$("audioElement"):$("videoElement");
+      if(Math.abs(el.currentTime-li.offset)>5){try{el.currentTime=li.offset}catch(_){}}
+      if(el.paused||el.ended)el.play().catch(()=>{});
+    }
+  }catch(_){}
 }
 function activeItem(){
   const list=currentList();
@@ -616,6 +723,7 @@ async function initAuth(){
 async function applySession(session){
   currentUser=session?.user||null;
   isAdmin=!!(currentUser?.app_metadata?.role==="admin");
+  if(isAdmin)adminResumeLive();
   $("adminPanel").classList.toggle("hidden",!isAdmin);
   $("loginToggle").classList.toggle("hidden",isAdmin);
   $("logoutButton").classList.toggle("hidden",!isAdmin);
@@ -686,6 +794,7 @@ window.onYouTubeIframeAPIReady=function(){
         onStateChange:function(e){
           if(e.data===YT.PlayerState.ENDED)handleEnded();
           if(e.data===YT.PlayerState.PLAYING){
+            try{recordDuration(activeItem(),ytPlayer.getDuration())}catch(_){}
             localPlaying=true;$("playButton").textContent="⏸";
           }else if(e.data===YT.PlayerState.PAUSED){
             localPlaying=false;$("playButton").textContent="▶";
@@ -739,6 +848,7 @@ function renderPlayer(force=false){
   if(!force && key===activeMediaKey && currentMediaURL===url && currentMediaKind===mode)return;
   activeMediaKey=key;currentMediaURL=url;currentMediaKind=mode;currentItemId=item.id||url;
   hideAllMedia();
+  const off=Math.floor(startOffsetFor(mode,item));
 
   if(mode==="radio"){
     $("radioScreen").style.display="flex";
@@ -747,7 +857,7 @@ function renderPlayer(force=false){
       $("youtubePlayer").style.display="block";
       if(rid && ytReady && ytPlayer){
         try{
-          ytPlayer.loadVideoById({videoId:rid});
+          ytPlayer.loadVideoById({videoId:rid,startSeconds:off});
           ytPlayer.setVolume(Number($("volumeSlider").value)||80);
         }catch(e){console.error(e)}
       }
@@ -756,7 +866,7 @@ function renderPlayer(force=false){
       return;
     }
     const audio=$("audioElement");
-    if(audio.src!==url)audio.src=url;
+    pendingSeekAudio=off;if(audio.src!==url)audio.src=url;else if(off>0){try{audio.currentTime=off}catch(_){}}
     audio.volume=(Number($("volumeSlider").value)||80)/100;
     audio.loop=!!state.repeat;
     $("emptyHint").textContent="";
@@ -772,7 +882,7 @@ function renderPlayer(force=false){
     if(!id){showEmpty("شناسهٔ ویدیوی یوتیوب قابل تشخیص نیست");return}
     if(ytReady && ytPlayer){
       try{
-        ytPlayer.loadVideoById({videoId:id});
+        ytPlayer.loadVideoById({videoId:id,startSeconds:off});
         ytPlayer.setVolume(Number($("volumeSlider").value)||80);
       }catch(e){console.error(e)}
     }else{
@@ -784,7 +894,7 @@ function renderPlayer(force=false){
     const video=$("videoElement");
     video.style.display="block";
     video.controls=false;
-    video.src=url;
+    pendingSeek=off;video.src=url;
     video.volume=(Number($("volumeSlider").value)||80)/100;
     video.loop=!!state.repeat;
     video.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").textContent="⏸"})
@@ -825,9 +935,9 @@ function chooseIndex(index,kind=activeMode()){
   index=(index+list.length)%list.length;
   if(kind==="radio"){
     state.radioIndex=index;
-    state.radioPlayback={index,startedAt:Date.now(),nonce:(state.radioPlayback?.nonce||0)+1};
+    state.radioPlayback={index,startedAt:serverNow(),nonce:(state.radioPlayback?.nonce||0)+1};
   }else{
-    state.playback={index,startedAt:Date.now(),nonce:(state.playback?.nonce||0)+1};
+    state.playback={index,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};
   }
   scheduleSave();
   activeMediaKey="";
@@ -856,6 +966,15 @@ function previousItem(){
   chooseIndex(currentIndex()-1);
 }
 function handleEnded(){
+  try{
+    const it=activeItem();
+    if(it){
+      let d=0;
+      if(isYouTube(mediaUrl(it))&&ytReady&&ytPlayer)d=ytPlayer.getDuration();
+      else d=(activeMode()==="radio"?$("audioElement"):$("videoElement")).duration;
+      recordDuration(it,d);
+    }
+  }catch(_){}
   if(!isAdmin)return;
   const list=currentList();
   if(state.repeat && list.length===1){chooseIndex(0);return}
@@ -939,7 +1058,7 @@ function renderChannels(){
     b.className="channelbutton"+(i===state.channelIndex?" selected":"");
     b.textContent="📺 "+c.name;
     b.onclick=()=>{
-      if(isAdmin){state.channelIndex=i;state.playback={index:0,startedAt:Date.now(),nonce:(state.playback?.nonce||0)+1};scheduleSave();activeMediaKey="";renderPlayer(true)}
+      if(isAdmin){state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};scheduleSave();activeMediaKey="";renderPlayer(true)}
       else notify("تعویض کانال فقط توسط مدیر انجام می‌شود.");
     };
     list.appendChild(b);
@@ -949,7 +1068,7 @@ function renderChannels(){
     const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" برنامه";
     info.append(name,meta);
     const select=document.createElement("button");select.className="small";select.textContent="انتخاب";
-    select.onclick=()=>{state.channelIndex=i;state.playback.index=0;activeMediaKey="";scheduleSave();renderPlayer(true)};
+    select.onclick=()=>{state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};activeMediaKey="";scheduleSave();renderPlayer(true)};
     const del=document.createElement("button");del.className="small danger";del.textContent="حذف";
     del.disabled=state.channels.length<=1;
     del.onclick=()=>{
@@ -1034,7 +1153,7 @@ async function addVideos(){
     currentChannel().list.push(...additions);
     selectedVideoIndex=currentChannel().list.length-1;
     state.playback.index=Math.max(0,selectedVideoIndex);
-    state.playback.startedAt=Date.now();state.playback.nonce=(state.playback.nonce||0)+1;
+    state.playback.startedAt=serverNow();state.playback.nonce=(state.playback.nonce||0)+1;
     $("videoTitle").value="";$("videoURL").value="";$("videoFiles").value="";
     activeMediaKey="";
     scheduleSave();renderPlayer(true);
@@ -1179,7 +1298,7 @@ $("createChannelButton").addEventListener("click",()=>{
   const name=$("channelNameInput").value.trim();
   if(!name){notify("نام کانال را وارد کن.");return}
   state.channels.push({id:makeId(),name,color:$("channelColorInput").value||"#e8b85b",list:[]});
-  state.channelIndex=state.channels.length-1;state.playback={index:0,startedAt:Date.now(),nonce:1};
+  state.channelIndex=state.channels.length-1;state.playback={index:0,startedAt:serverNow(),nonce:1};
   $("channelNameInput").value="";
   activeMediaKey="";scheduleSave();renderPlayer(true);notify("کانال ساخته شد.");
 });
@@ -1330,6 +1449,7 @@ document.body.classList.toggle("viewerMode",!isAdmin);
     $("supabaseStatus").value="Supabase در دسترس نیست";
     return;
   }
+  await syncServerTime();
   await loadRemoteState();
   await initAuth();
   await setupRealtime();
@@ -1514,7 +1634,32 @@ applySession = async function(session) {
 
 renderYouTubeManager();
 
-/* عیب‌یابی: وضعیت واقعی را پایین صفحه نشان می‌دهد */
+/* پخش زنده: بیننده هر ثانیه با برنامهٔ زنده هماهنگ می‌شود */
+$("videoElement").addEventListener("loadedmetadata",()=>{
+  const v=$("videoElement");
+  recordDuration(activeItem(),v.duration);
+  if(pendingSeek>0&&isFinite(v.duration)&&pendingSeek<v.duration-1){try{v.currentTime=pendingSeek}catch(_){}}
+  pendingSeek=0;
+});
+$("audioElement").addEventListener("loadedmetadata",()=>{
+  const a=$("audioElement");
+  recordDuration(activeItem(),a.duration);
+  if(pendingSeekAudio>0&&isFinite(a.duration)&&pendingSeekAudio<a.duration-1){try{a.currentTime=pendingSeekAudio}catch(_){}}
+  pendingSeekAudio=0;
+});
+let driftTick=0;
+setInterval(()=>{
+  if(isAdmin)return;
+  try{
+    const item=activeItem();
+    if(!item||!mediaUrl(item))return;
+    if(effectiveItemKey(item)!==activeMediaKey){renderPlayer(true);return}
+    if(++driftTick%5===0)driftCorrect();
+  }catch(e){}
+},1000);
+setInterval(syncServerTime,300000);
+
+/* عیب‌یابی: فقط با ?debug در آدرس دیده می‌شود */
 let diagFetch="در حال تست...";
 async function diagTest(){
   try{
@@ -1529,9 +1674,10 @@ setInterval(()=>{
   try{
     const el=$("diag");if(!el)return;
     const list=currentList();
-    el.textContent="v3 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.style.display=location.search.includes("debug")?"block":"none";
+    el.textContent="v4 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | ch="+state.channelIndex+" | idx="+currentIndex()+" | items="+list.length+
-      " | lib="+(sbClient?"ok":"NO")+" | yt="+(ytReady?"ready":"not-ready")+
+      " | live="+(()=>{const l=liveInfo(activeMode());return l.index+"@"+Math.round(l.offset)+(l.known?"":"?")})()+" | srv="+Math.round(serverOffset/1000)+"s | lib="+(sbClient?"ok":"NO")+" | yt="+(ytReady?"ready":"not-ready")+
       " | net: "+diagFetch+" | "+$("supabaseStatus").value;
   }catch(e){}
 },1000);
