@@ -125,7 +125,7 @@ display:none}
 #viewerSettings .section{margin-top:10px}
 body.viewerMode .hero{grid-template-columns:minmax(0,1fr)}
 body.viewerMode .sidepanel{display:none!important}
-body.viewerMode #adminPanel,body.viewerMode #loginBox,
+body.viewerMode #adminPanel,
 body.viewerMode #channelSelector,body.viewerMode #adminControls,
 body.viewerMode #adminPlayerControls{display:none!important}
 body.viewerMode .playercontrols.admin-only{display:none!important}
@@ -227,7 +227,10 @@ body.viewerMode #videoElement{controls:none!important}
         <div class="sideheading">کانال‌ها</div>
         <div id="channelButtons" class="itemlist"></div>
       </div>
-      <div id="viewerSettings">
+    </aside>
+  </div>
+
+      <section id="viewerSettings" class="panel hidden">
         <div class="sideheading" style="margin-top:18px">شخصی‌سازی نمایش</div>
         <div class="section">
           <div class="field">
@@ -242,9 +245,7 @@ body.viewerMode #videoElement{controls:none!important}
           </div>
           <div class="viewerhint">این انتخاب فقط ظاهر همین مرورگر را تغییر می‌دهد.</div>
         </div>
-      </div>
-    </aside>
-  </div>
+      </section>
 
   <section id="loginBox" class="panel hidden">
     <div class="panelhead"><h2>ورود مدیر</h2><button id="closeLogin">بستن</button></div>
@@ -1239,7 +1240,6 @@ setInterval(tickClock,1000);
 tickClock();
 applyTheme(localStorage.getItem("amtv-theme")||"green");
 document.body.classList.toggle("viewerMode",!isAdmin);
-$("viewerSettings").classList.remove("hidden");
 
 (async function boot(){
   ensureState();
