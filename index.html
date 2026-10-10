@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -130,6 +129,9 @@ body.viewerMode #adminPanel,body.viewerMode #loginBox,
 body.viewerMode #channelSelector,body.viewerMode #adminControls,
 body.viewerMode #adminPlayerControls{display:none!important}
 body.viewerMode .playercontrols.admin-only{display:none!important}
+body.viewerMode #viewerFullscreen{display:none!important}
+body.viewerMode #youtubePlayer,body.viewerMode #videoElement{pointer-events:none!important}
+body.viewerMode #videoElement{controls:none!important}
 @media(max-width:850px){
  main{padding:10px}.hero{grid-template-columns:minmax(0,1fr)}
  .sidepanel{display:none}
@@ -694,10 +696,8 @@ function renderPlayer(force=false){
     audio.volume=(Number($("volumeSlider").value)||80)/100;
     audio.loop=!!state.repeat;
     $("emptyHint").textContent="";
-    if(isAdmin){
-      audio.play().then(()=>{localPlaying=true;$("playButton").textContent="⏸"})
-      .catch(()=>notify("برای شروع پخش رادیو دکمهٔ پخش را بزن."));
-    }
+    audio.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").textContent="⏸"})
+      .catch(()=>{$("statusPlayback").textContent="برای پخش، تعامل با صفحه لازم است";});
     $("statusPlayback").textContent="رادیو";
     return;
   }
@@ -723,10 +723,8 @@ function renderPlayer(force=false){
     video.src=url;
     video.volume=(Number($("volumeSlider").value)||80)/100;
     video.loop=!!state.repeat;
-    if(isAdmin){
-      video.play().then(()=>{localPlaying=true;$("playButton").textContent="⏸"})
-      .catch(()=>notify("اگر پخش خودکار مسدود شد، دکمهٔ پخش را بزن."));
-    }
+    video.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").textContent="⏸"})
+      .catch(()=>{$("statusPlayback").textContent="برای پخش، تعامل با صفحه لازم است";});
     video.onerror=()=>notify("این لینک ویدیو قابل پخش نیست یا دسترسی به آن محدود است.");
   }
 }
@@ -1069,7 +1067,7 @@ $("prevButton").addEventListener("click",previousItem);
 $("nextButton").addEventListener("click",nextItem);
 $("playButton").addEventListener("click",togglePlay);
 $("fullscreenButton").addEventListener("click",toggleFullscreen);
-$("viewerFullscreen").addEventListener("click",toggleFullscreen);
+$("viewerFullscreen").addEventListener("click",()=>{if(isAdmin)toggleFullscreen()});
 $("repeatButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   state.repeat=!state.repeat;
@@ -1257,4 +1255,4 @@ $("viewerSettings").classList.remove("hidden");
 })();
 </script>
 </body>
-</html>
+  </html>
