@@ -430,7 +430,7 @@ const DEFAULT_STATE = {
 };
 
 let state = clone(DEFAULT_STATE);
-let supabase = null;
+let sbClient = null;
 let currentUser = null;
 let isAdmin = false;
 let selectedVideoIndex = -1;
@@ -513,15 +513,15 @@ function effectiveItemKey(item){
 /* Supabase setup */
 try{
   if(window.supabase && window.supabase.createClient){
-    supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+    sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
       auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
     });
   }
 }catch(e){console.error(e)}
 
 async function loadRemoteState(){
-  if(!supabase){$("supabaseStatus").value="کتابخانه یا تنظیمات Supabase در دسترس نیست";return}
-  const {data,error}=await supabase.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
+  if(!sbClient){$("supabaseStatus").value="کتابخانه یا تنظیمات Supabase در دسترس نیست";return}
+  const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
   if(error){
     $("supabaseStatus").value="خطا: "+error.message;
     console.warn(error);
@@ -540,9 +540,9 @@ async function loadRemoteState(){
   }
 }
 async function saveRemoteState(){
-  if(!supabase || !isAdmin || isApplyingRemote)return;
+  if(!sbClient || !isAdmin || isApplyingRemote)return;
   const payload={id:1,data:clone(state),updated_at:new Date().toISOString()};
-  const {error}=await supabase.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
+  const {error}=await sbClient.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
   if(error){
     $("supabaseStatus").value="ذخیره نشد: "+error.message;
     console.error(error);
@@ -558,10 +558,10 @@ function scheduleSave(){
   saveTimer=setTimeout(()=>saveRemoteState(),400);
 }
 async function initAuth(){
-  if(!supabase)return;
-  const {data}=await supabase.auth.getSession();
+  if(!sbClient)return;
+  const {data}=await sbClient.auth.getSession();
   await applySession(data?.session||null);
-  supabase.auth.onAuthStateChange((_event,session)=>{
+  sbClient.auth.onAuthStateChange((_event,session)=>{
     setTimeout(()=>applySession(session),0);
   });
 }
@@ -577,17 +577,17 @@ async function applySession(session){
   if(isAdmin)notify("ورود انجام شد؛ دسترسی مدیر فعال است.");
 }
 async function signIn(){
-  if(!supabase){notify("اتصال Supabase برقرار نیست.");return}
+  if(!sbClient){notify("اتصال Supabase برقرار نیست.");return}
   const email=$("adminEmail").value.trim();
   const password=$("adminPassword").value;
   if(!email||!password){notify("ایمیل و رمز عبور را وارد کن.");return}
   $("signInButton").disabled=true;
-  const {data,error}=await supabase.auth.signInWithPassword({email,password});
+  const {data,error}=await sbClient.auth.signInWithPassword({email,password});
   $("signInButton").disabled=false;
   if(error){notify("ورود ناموفق: "+error.message);return}
   const role=data?.user?.app_metadata?.role;
   if(role!=="admin"){
-    await supabase.auth.signOut();
+    await sbClient.auth.signOut();
     notify("این حساب نقش مدیر ندارد. app_metadata.role باید admin باشد.");
     return;
   }
@@ -595,7 +595,7 @@ async function signIn(){
   await loadRemoteState();
 }
 async function signOut(){
-  if(supabase)await supabase.auth.signOut();
+  if(sbClient)await sbClient.auth.signOut();
   currentUser=null;isAdmin=false;
   $("adminPanel").classList.add("hidden");
   $("logoutButton").classList.add("hidden");
@@ -607,14 +607,14 @@ async function signOut(){
 
 /* Uploads: only authenticated admin can upload if Storage policies permit */
 async function uploadFile(file,folder){
-  if(!supabase||!isAdmin)throw new Error("برای آپلود باید مدیر وارد شده باشد.");
+  if(!sbClient||!isAdmin)throw new Error("برای آپلود باید مدیر وارد شده باشد.");
   const cleanName=file.name.replace(/[^\w.\-]+/g,"_").slice(-100);
   const path=folder+"/"+Date.now()+"_"+makeId()+"_"+cleanName;
-  const {error}=await supabase.storage.from(STORAGE_BUCKET).upload(path,file,{
+  const {error}=await sbClient.storage.from(STORAGE_BUCKET).upload(path,file,{
     cacheControl:"3600",upsert:false,contentType:file.type||undefined
   });
   if(error)throw error;
-  const {data}=supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+  const {data}=sbClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
   if(!data?.publicUrl)throw new Error("لینک عمومی فایل ساخته نشد.");
   return data.publicUrl;
 }
@@ -1209,8 +1209,8 @@ $("videoElement").addEventListener("pause",()=>{localPlaying=false;$("playButton
 
 /* Realtime updates for every connected viewer */
 async function setupRealtime(){
-  if(!supabase)return;
-  supabase.channel("amtv-state-live")
+  if(!sbClient)return;
+  sbClient.channel("amtv-state-live")
     .on("postgres_changes",{event:"UPDATE",schema:"public",table:STATE_TABLE,filter:"id=eq.1"},payload=>{
       if(isAdmin)return;
       const incoming=payload?.new?.data;
@@ -1244,7 +1244,7 @@ $("viewerSettings").classList.remove("hidden");
 (async function boot(){
   ensureState();
   renderAll();
-  if(!supabase){
+  if(!sbClient){
     $("supabaseStatus").value="Supabase در دسترس نیست";
     return;
   }
@@ -1253,6 +1253,27 @@ $("viewerSettings").classList.remove("hidden");
   await setupRealtime();
   renderAll();
 })();
+
+/* قفل کنترل پخش برای بیننده */
+(function lockViewerPlayback(){
+  const actions=["play","pause","stop","seekbackward","seekforward","seekto","previoustrack","nexttrack"];
+  function apply(){
+    const viewer=!isAdmin;
+    if("mediaSession" in navigator){
+      actions.forEach(a=>{
+        try{navigator.mediaSession.setActionHandler(a,viewer?()=>{}:null)}catch(_){}
+      });
+    }
+    $("adminPlayerControls").classList.toggle("hidden",viewer);
+    ["prevButton","playButton","nextButton"].forEach(id=>{$(id).disabled=viewer});
+    $("videoElement").disablePictureInPicture=viewer;
+    $("videoElement").setAttribute("controlslist","nodownload noplaybackrate nofullscreen noremoteplayback");
+  }
+  $("playerShell").addEventListener("contextmenu",e=>{if(!isAdmin)e.preventDefault()});
+  $("playerShell").addEventListener("keydown",e=>{if(!isAdmin)e.preventDefault()},true);
+  apply();
+  setInterval(apply,1000);
+})();
 </script>
 </body>
-  </html>
+</html>
