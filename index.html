@@ -416,6 +416,7 @@ body.viewerMode #videoElement{controls:none!important}
     </div>
   </section>
   <div class="footer">AM TV 24/7 · YOUR WORLD · YOUR CHANNEL</div>
+  <div id="diag" style="direction:ltr;text-align:center;font-size:11px;color:#a9b09f;padding:6px 12px 24px;overflow-wrap:anywhere"></div>
 </main>
 <div id="toast" role="status"></div>
 
@@ -1504,6 +1505,28 @@ applySession = async function(session) {
 };
 
 renderYouTubeManager();
+
+/* عیب‌یابی: وضعیت واقعی را پایین صفحه نشان می‌دهد */
+let diagFetch="در حال تست...";
+async function diagTest(){
+  try{
+    const r=await fetch(SUPABASE_URL+"/rest/v1/"+STATE_TABLE+"?id=eq.1&select=data&apikey="+SUPABASE_ANON_KEY);
+    const t=await r.text();
+    diagFetch="HTTP "+r.status+" · "+t.length+" bytes";
+  }catch(e){diagFetch="FETCH FAIL: "+e.message}
+}
+diagTest();
+setInterval(diagTest,15000);
+setInterval(()=>{
+  try{
+    const el=$("diag");if(!el)return;
+    const list=currentList();
+    el.textContent="v3 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+      " | ch="+state.channelIndex+" | idx="+currentIndex()+" | items="+list.length+
+      " | lib="+(sbClient?"ok":"NO")+" | yt="+(ytReady?"ready":"not-ready")+
+      " | net: "+diagFetch+" | "+$("supabaseStatus").value;
+  }catch(e){}
+},1000);
 
 /* بیننده هر ۸ ثانیه وضعیت را از دیتابیس می‌گیرد (پشتیبان Realtime) */
 let lastRemoteJson="";
