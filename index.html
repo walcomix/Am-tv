@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -6,11 +7,7 @@
 <meta name="theme-color" content="#101a16">
 <title>AM TV 24/7</title>
 <style>
-:root{
- --bg:#101a16;--panel:#19251f;--panel2:#223129;
- --gold:#e8b85b;--cream:#f4eedc;--muted:#a6b1a5;
- --red:#d86d58;--green:#79b98a;--border:#39493d
-}
+:root{--bg:#101a16;--panel:#19251f;--panel2:#223129;--gold:#e8b85b;--cream:#f4eedc;--muted:#a6b1a5;--green:#79b98a;--border:#39493d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--cream);font-family:Tahoma,Arial,sans-serif}
 button,input,select{font:inherit}
@@ -18,9 +15,10 @@ button{border:1px solid var(--border);background:var(--panel2);color:var(--cream
 button:hover{border-color:var(--gold);color:var(--gold)}
 button:disabled{opacity:.45;cursor:not-allowed}
 input,select{width:100%;background:#101813;color:var(--cream);border:1px solid var(--border);border-radius:7px;padding:11px;min-width:0}
+input[type=range]{padding:0}
 label{display:block;color:var(--muted);font-size:12px;margin:12px 0 6px}
 .hidden{display:none!important}
-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 4%;border-bottom:1px solid var(--border);background:#121d17;flex-wrap:wrap}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 4%;border-bottom:1px solid var(--border);background:var(--panel);flex-wrap:wrap}
 .brand,.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .logo{display:grid;place-items:center;width:48px;height:48px;border:2px solid var(--gold);border-radius:50%;color:var(--gold);font-weight:bold;font-size:18px}
 .brand h1{font-size:20px;margin:0;color:var(--gold)}
@@ -33,12 +31,13 @@ main{width:min(1100px,94%);margin:24px auto 60px}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:6px}
 .on-air{color:var(--red);font-size:12px;font-weight:bold}
 .player-shell{border:1px solid var(--border);background:#080d0a;border-radius:12px;overflow:hidden}
-.player-screen{position:relative;background:#000;width:100%;aspect-ratio:16/9;display:grid;place-items:center}
+.player-screen{position:relative;background:#000;width:100%;aspect-ratio:16/9;display:grid;place-items:center;overflow:hidden}
 #youtubePlayer,#nativeVideo{position:absolute;inset:0;width:100%;height:100%}
 #nativeVideo{object-fit:contain;background:#000}
-#radioScreen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse,#26392b 0%,#101a16 65%,#050806 100%)}
+#radioScreen,#emptyScreen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;background:radial-gradient(ellipse,#26392b 0%,#101a16 65%,#050806 100%)}
+#emptyScreen{background:#080d0a}
 .radio-symbol{font-size:64px;color:var(--gold)}
-.radio-title{font-size:clamp(18px,4vw,28px);text-align:center;padding:0 15px}
+.radio-title{font-size:clamp(18px,4vw,28px);padding:0 15px}
 .radio-subtitle{font-size:11px;color:var(--muted);letter-spacing:3px}
 .watermark{position:absolute;top:13px;left:14px;z-index:5;background:#101a16c9;border:1px solid #e8b85b55;color:var(--gold);padding:7px 10px;border-radius:5px;font-weight:bold;font-size:11px;pointer-events:none}
 .screen-mode{position:absolute;right:14px;top:14px;z-index:5;font-size:10px;color:#f4eedc;background:#101a16c9;border:1px solid #ffffff20;border-radius:5px;padding:6px 9px;pointer-events:none}
@@ -70,37 +69,18 @@ main{width:min(1100px,94%);margin:24px auto 60px}
 .active-item{border-color:var(--gold)}
 .badge{display:inline-block;font-size:10px;padding:4px 7px;border-radius:4px;background:#344637;color:var(--green)}
 .notice{padding:10px 12px;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:11px;line-height:1.8;margin-top:12px}
-.notice.warning{border-color:#8a6d36;color:#e8c778}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:92%;padding:12px 16px;border-radius:8px;background:#26382b;color:var(--cream);z-index:100;border:1px solid var(--gold);font-size:12px;box-shadow:0 8px 30px #0008}
 footer{text-align:center;color:#718174;font-size:10px;padding:20px}
 .theme-colors{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
 .theme-color{width:42px;height:42px;min-width:42px;padding:0;border-radius:50%;border:2px solid var(--cream)}
-body.viewer-mode #prevBtn,
-body.viewer-mode #nextBtn,
-body.viewer-mode #playBtn,
-body.viewer-mode #pauseBtn,
-body.viewer-mode #repeatBtn,
-body.viewer-mode #shuffleBtn,
-body.viewer-mode #volumeSlider,
-body.viewer-mode #fullscreenBtn{display:none!important}
-body.viewer-mode #nativeVideo::-webkit-media-controls{display:none!important}
-body.viewer-mode #radioAudio::-webkit-media-controls{display:none!important}
-@media(max-width:650px){
- header{padding:13px 4%}.brand h1{font-size:17px}
- main{margin-top:16px}.grid{grid-template-columns:1fr}
- .field.wide{grid-column:auto}.program-bar h2{font-size:15px}
- .controls{gap:6px;padding:10px}.controls button{padding:9px;min-width:38px}
- .item-actions{max-width:120px}
-}
+body.viewer-mode #prevBtn,body.viewer-mode #nextBtn,body.viewer-mode #playBtn,body.viewer-mode #pauseBtn,body.viewer-mode #repeatBtn,body.viewer-mode #shuffleBtn,body.viewer-mode #volumeWrap,body.viewer-mode #fullscreenBtn{display:none!important}
+body.viewer-mode #adminPanel,body.viewer-mode #loginOpenBtn,body.viewer-mode #logoutBtn{display:none!important}
+@media(max-width:650px){header{padding:13px 4%}.brand h1{font-size:17px}main{margin-top:16px}.grid{grid-template-columns:1fr}.field.wide{grid-column:auto}.program-bar h2{font-size:15px}.controls{gap:6px;padding:10px}.controls button{padding:9px;min-width:38px}.item-actions{max-width:140px}}
 </style>
 </head>
 <body>
-
 <header>
- <div class="brand">
-  <div class="logo">AM</div>
-  <div><h1 id="stationHeading">AM TV 24/7</h1><p>YOUR WORLD · YOUR CHANNEL</p></div>
- </div>
+ <div class="brand"><div class="logo">AM</div><div><h1 id="stationHeading">AM TV 24/7</h1><p>YOUR WORLD · YOUR CHANNEL</p></div></div>
  <div class="header-right">
   <span id="clock">--:--:--</span>
   <button id="customizeOpenBtn">🎨 شخصی‌سازی</button>
@@ -117,64 +97,41 @@ body.viewer-mode #radioAudio::-webkit-media-controls{display:none!important}
 
  <section class="player-shell">
   <div class="player-screen">
-   <div id="youtubePlayer"></div>
-   <video id="nativeVideo" class="hidden" playsinline></video>
-
+   <div id="youtubePlayer" class="hidden"></div>
+   <video id="nativeVideo" class="hidden" playsinline preload="metadata"></video>
    <div id="radioScreen" class="hidden">
-    <div class="radio-symbol">♫</div>
-    <div id="radioNowTitle" class="radio-title">AM Radio</div>
-    <div class="radio-subtitle">AM RADIO · ON AIR</div>
-    <audio id="radioAudio" preload="metadata"></audio>
+    <div class="radio-symbol">♫</div><div id="radioNowTitle" class="radio-title">AM Radio</div>
+    <div class="radio-subtitle">AM RADIO · ON AIR</div><audio id="radioAudio" preload="metadata"></audio>
    </div>
-
-   <div id="emptyScreen">
-    <strong style="color:var(--gold);font-size:23px">AM TV 24/7</strong>
-    <span>تلویزیون شخصی تو، همیشه روشن</span>
-    <span class="muted">در انتظار برنامه...</span>
-   </div>
-   <div class="watermark">AM TV</div>
-   <div id="screenMode" class="screen-mode">TV MODE</div>
+   <div id="emptyScreen"><strong style="color:var(--gold);font-size:23px">AM TV 24/7</strong><span>تلویزیون شخصی تو، همیشه روشن</span><span class="muted">در انتظار برنامه...</span></div>
+   <div class="watermark">AM TV</div><div id="screenMode" class="screen-mode">TV MODE</div>
   </div>
-
   <div class="program-bar">
    <div><h2 id="nowTitle">به AM TV خوش آمدی</h2><p id="nowSubtitle">YOUR WORLD · YOUR CHANNEL</p></div>
    <span id="modeBadge" class="program-badge">📺 تلویزیون</span>
   </div>
-
   <div class="controls">
    <button id="prevBtn" title="برنامه قبلی">⏮</button>
-   <button id="playBtn" class="primary">▶ پخش</button>
-   <button id="pauseBtn">⏸</button>
+   <button id="playBtn" class="primary">▶ پخش</button><button id="pauseBtn">⏸</button>
    <button id="nextBtn" title="برنامه بعدی">⏭</button>
-   <button id="radioModeBtn">📻 رادیو</button>
-   <button id="tvModeBtn">📺 تلویزیون</button>
-   <button id="repeatBtn">🔁 تکرار: خاموش</button>
-   <button id="shuffleBtn">🔀 تصادفی: خاموش</button>
-   <label style="margin:0;display:flex;align-items:center;gap:7px;font-size:11px">🔊
-    <input id="volumeSlider" style="width:90px" type="range" min="0" max="100" value="80">
-   </label>
+   <button id="radioModeBtn">📻 رادیو</button><button id="tvModeBtn">📺 تلویزیون</button>
+   <button id="repeatBtn">🔁 تکرار: خاموش</button><button id="shuffleBtn">🔀 تصادفی: خاموش</button>
+   <label id="volumeWrap" style="margin:0;display:flex;align-items:center;gap:7px;font-size:11px">🔊 <input id="volumeSlider" style="width:90px" type="range" min="0" max="100" value="80"></label>
    <button id="fullscreenBtn">⛶</button>
   </div>
-  <div class="info-strip">
-   <span id="channelNow">کانال: AM TV 24/7</span>
-   <span id="syncStatus">همگام‌سازی آنلاین</span>
-  </div>
+  <div class="info-strip"><span id="channelNow">کانال: AM TV 24/7</span><span id="syncStatus">همگام‌سازی آنلاین</span></div>
  </section>
 
  <section id="customizePanel" class="section hidden">
   <div class="section-head"><h2>🎨 شخصی‌سازی AM TV</h2><button id="customizeCloseBtn">بستن</button></div>
-  <p class="muted">رنگ دلخواهت رو انتخاب کن. این تغییر فقط در مرورگر خودت ذخیره می‌شه.</p>
+  <p class="muted">رنگ دلخواهت رو انتخاب کن. تنظیمات فقط در مرورگر خودت ذخیره می‌شود.</p>
   <label for="themeSelect">تم رنگی</label>
   <select id="themeSelect">
-   <option value="green">سبز رترو</option>
-   <option value="amber">کهربایی کلاسیک</option>
-   <option value="blue">آبی شبانه</option>
-   <option value="purple">بنفش دریم‌کور</option>
-   <option value="red">قرمز سینمایی</option>
+   <option value="green">سبز رترو</option><option value="amber">کهربایی کلاسیک</option><option value="blue">آبی شبانه</option><option value="purple">بنفش دریم‌کور</option><option value="red">قرمز سینمایی</option>
   </select>
   <div class="theme-colors">
    <button class="theme-color" data-theme="green" style="background:#79b98a" aria-label="سبز"></button>
-   <button class="theme-color" data-theme="amber" style="background:#e8b85b" aria-label="کهربایی"></button>
+   <button class="theme-color" data-theme="amber" style="background:#f0ad4e" aria-label="کهربایی"></button>
    <button class="theme-color" data-theme="blue" style="background:#6ca9d8" aria-label="آبی"></button>
    <button class="theme-color" data-theme="purple" style="background:#b49bdf" aria-label="بنفش"></button>
    <button class="theme-color" data-theme="red" style="background:#d86d58" aria-label="قرمز"></button>
@@ -189,87 +146,69 @@ body.viewer-mode #radioAudio::-webkit-media-controls{display:none!important}
    <label for="loginPassword">رمز عبور</label><input id="loginPassword" type="password" autocomplete="current-password" required>
    <button type="submit" class="primary">ورود به پنل</button>
   </form>
-  <p class="muted">حساب مدیر باید در Supabase به‌صورت امن نقش admin داشته باشد.</p>
+  <p class="muted">حساب مدیر باید در Supabase نقش امن admin داشته باشد.</p>
  </section>
 
  <section id="adminPanel" class="section hidden">
   <div class="section-head"><h2>⚙️ پنل مدیریت AM TV</h2><span class="badge">ADMIN</span></div>
   <div class="grid">
    <div class="field">
-    <h3>📺 تنظیمات ایستگاه</h3>
-    <label for="stationNameInput">نام ایستگاه</label><input id="stationNameInput" maxlength="80" placeholder="AM TV 24/7">
-    <button id="saveStationBtn">ذخیره نام ایستگاه</button>
+    <h3>📺 تنظیمات ایستگاه</h3><label for="stationNameInput">نام ایستگاه</label>
+    <input id="stationNameInput" maxlength="80" placeholder="AM TV 24/7"><button id="saveStationBtn">ذخیره نام ایستگاه</button>
    </div>
-
    <div class="field">
-    <h3>➕ ساخت کانال</h3>
-    <label for="channelNameInput">نام کانال جدید</label><input id="channelNameInput" maxlength="80" placeholder="AM Nostalgia">
-    <button id="createChannelBtn">ساخت کانال</button>
+    <h3>➕ ساخت کانال</h3><label for="channelNameInput">نام کانال جدید</label>
+    <input id="channelNameInput" maxlength="80" placeholder="AM Nostalgia"><button id="createChannelBtn">ساخت کانال</button>
    </div>
-
    <div class="field wide">
-    <h3>📼 مدیریت ویدیو</h3>
-    <p class="muted">فایل ویدیویی را آپلود کن یا لینک یوتیوب / لینک مستقیم ویدیویی بده.</p>
+    <h3>📼 مدیریت ویدیو</h3><p class="muted">لینک یوتیوب یا لینک مستقیم فایل ویدیو؛ فایل‌ها به Storage آپلود می‌شوند.</p>
     <label for="videoFileInput">آپلود فایل ویدیو</label><input id="videoFileInput" type="file" accept="video/*" multiple>
     <label for="videoUrlInput">لینک ویدیو</label><input id="videoUrlInput" type="url" placeholder="https://... یا لینک YouTube">
     <label for="videoTitleInput">نام برنامه</label><input id="videoTitleInput" maxlength="120" placeholder="نام ویدیو">
     <button id="addVideoBtn" class="primary">آپلود / افزودن ویدیو</button>
-    <div class="notice">فایل‌های محلی برای بیننده‌ها در دسترس نیستند تا زمانی که به فضای آنلاین آپلود شوند.</div>
+    <div class="notice">آپلود به فضای آنلاین نیاز دارد و سیاست‌های Storage باید درست تنظیم شده باشند.</div>
    </div>
-
    <div class="field wide">
-    <h3>📻 مدیریت مستقل AM Radio</h3>
-    <p class="muted">فهرست صوتی رادیو جدا از فهرست ویدیوهاست.</p>
+    <h3>📻 مدیریت مستقل AM Radio</h3><p class="muted">فهرست صوتی رادیو جدا از ویدیوهاست.</p>
     <label for="radioFileInput">آپلود فایل صوتی</label><input id="radioFileInput" type="file" accept="audio/*" multiple>
     <label for="radioUrlInput">لینک مستقیم فایل صوتی</label><input id="radioUrlInput" type="url" placeholder="https://example.com/music.mp3">
     <label for="radioTitleInput">نام برنامه / آهنگ</label><input id="radioTitleInput" maxlength="120" placeholder="AM Radio">
-    <button id="addRadioBtn" class="primary">آپلود / افزودن به رادیو</button>
-    <div id="radioPlaylist" class="list"></div>
+    <button id="addRadioBtn" class="primary">آپلود / افزودن به رادیو</button><div id="radioPlaylist" class="list"></div>
    </div>
-
    <div class="field wide">
     <div class="section-head"><h3>📡 کانال‌ها و فهرست ویدیوها</h3><span id="channelCount" class="badge">۰ کانال</span></div>
-    <label for="channelSelect">انتخاب کانال</label>
-    <div class="row"><select id="channelSelect"></select><button id="deleteChannelBtn">حذف کانال</button></div>
+    <label for="channelSelect">انتخاب کانال</label><div class="row"><select id="channelSelect"></select><button id="deleteChannelBtn">حذف کانال</button></div>
     <div id="videoPlaylist" class="list"></div>
    </div>
-
    <div class="field">
-    <h3>💾 پشتیبان‌گیری</h3>
-    <p class="muted">ذخیره یا بازیابی اطلاعات کانال‌ها در قالب JSON.</p>
-    <button id="exportBtn">خروجی JSON</button>
-    <label for="importFileInput">بازیابی فایل JSON</label><input id="importFileInput" type="file" accept="application/json,.json">
+    <h3>💾 پشتیبان‌گیری</h3><p class="muted">ذخیره یا بازیابی کانال‌ها با JSON.</p>
+    <button id="exportBtn">خروجی JSON</button><label for="importFileInput">بازیابی فایل JSON</label><input id="importFileInput" type="file" accept="application/json,.json">
     <button id="importBtn">وارد کردن پشتیبان</button>
    </div>
-
    <div class="field">
-    <h3>🔄 همگام‌سازی</h3>
-    <p id="adminSyncInfo" class="muted">در انتظار اتصال...</p>
-    <button id="refreshBtn">دریافت آخرین وضعیت</button>
+    <h3>🔄 همگام‌سازی</h3><p id="adminSyncInfo" class="muted">در انتظار اتصال...</p><button id="refreshBtn">دریافت آخرین وضعیت</button>
    </div>
   </div>
  </section>
-
  <footer>AM TV 24/7 · YOUR WORLD · YOUR CHANNEL</footer>
 </main>
-
 <div id="toast" class="hidden"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 "use strict";
 
+/* از کلید عمومی استفاده کن؛ کلید secret/service_role هرگز نباید در این فایل باشد. */
 const SUPABASE_URL="https://nxcttzqubdlpfqqdzhpp.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_HZ47UxckVEESAOSO1Muv1w_fsheHSYG";
 const STORAGE_BUCKET="amtv-media";
 const $=id=>document.getElementById(id);
 
 let db=null,session=null,admin=false,online=false;
-let applyingRemote=false,youtubeReady=false,yt=null;
-let lastAppliedToken="",toastTimer=null;
+let youtubeReady=false,yt=null,lastAppliedToken="",toastTimer=null;
 let viewerMode=localStorage.getItem("amtv-viewer-mode")||"tv";
-
-const DEFAULT_STATE={
+let state={
  stationName:"AM TV 24/7",
  channels:[{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}],
  channelIndex:0,mode:"tv",radioList:[],
@@ -277,8 +216,6 @@ const DEFAULT_STATE={
  radioPlayback:{index:0,startedAt:0,nonce:0,paused:false},
  repeat:false,shuffle:false
 };
-let state=JSON.parse(JSON.stringify(DEFAULT_STATE));
-
 const THEMES={
  green:{bg:"#101a16",panel:"#19251f",panel2:"#223129",gold:"#e8b85b",cream:"#f4eedc",muted:"#a6b1a5",border:"#39493d"},
  amber:{bg:"#21170e",panel:"#302116",panel2:"#49301b",gold:"#f0ad4e",cream:"#fff0d0",muted:"#c2a984",border:"#6b4829"},
@@ -286,54 +223,39 @@ const THEMES={
  purple:{bg:"#191323",panel:"#271d35",panel2:"#39294c",gold:"#b49bdf",cream:"#f2eaff",muted:"#b8a9c9",border:"#514064"},
  red:{bg:"#201313",panel:"#301b1b",panel2:"#472424",gold:"#d86d58",cream:"#ffeded",muted:"#c6a4a4",border:"#613838"}
 };
-
 function clone(v){return JSON.parse(JSON.stringify(v))}
 function makeId(){return crypto.randomUUID?crypto.randomUUID():"id-"+Date.now()+"-"+Math.random().toString(16).slice(2)}
 function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function notify(message){
- $("toast").textContent=message;$("toast").classList.remove("hidden");
- clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.add("hidden"),3500);
-}
-function isAdmin(){
- return !!(session&&session.user&&session.user.app_metadata&&session.user.app_metadata.role==="admin");
-}
+function notify(msg){$("toast").textContent=msg;$("toast").classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.add("hidden"),4000)}
+function isAdmin(){return !!(session?.user?.app_metadata?.role==="admin")}
 function effectiveMode(){return isAdmin()?state.mode:viewerMode}
-function applyViewerModeClass(){document.body.classList.toggle("viewer-mode",!isAdmin())}
+function currentChannel(){return state.channels[state.channelIndex]||state.channels[0]}
+function currentVideo(){return currentChannel()?.list[state.playback.index]||null}
+function currentRadio(){return state.radioList[state.radioPlayback.index]||null}
 function applyTheme(name){
  const t=THEMES[name]||THEMES.green;
  Object.entries(t).forEach(([k,v])=>document.documentElement.style.setProperty("--"+k,v));
- localStorage.setItem("amtv-theme",name);
- if($("themeSelect"))$("themeSelect").value=name;
+ localStorage.setItem("amtv-theme",name);if($("themeSelect"))$("themeSelect").value=name;
 }
-
-function normalizeItem(item,kind){
- if(!item||typeof item!=="object")return null;
- const title=String(item.title||item.name||"بدون عنوان").slice(0,120);
- const id=String(item.id||makeId());
- if(kind==="audio"){
-  if(item.type!=="audio"||typeof item.url!=="string"||!item.url)return null;
-  return{id,title,type:"audio",url:item.url};
- }
- if(item.type==="youtube"&&typeof item.videoId==="string"&&item.videoId)
-  return{id,title,type:"youtube",videoId:item.videoId};
- if(item.type==="video"&&typeof item.url==="string"&&item.url)
-  return{id,title,type:"video",url:item.url};
+function normalizeItem(x,kind){
+ if(!x||typeof x!=="object")return null;
+ const title=String(x.title||x.name||"بدون عنوان").slice(0,120),id=String(x.id||makeId());
+ if(kind==="audio")return x.type==="audio"&&typeof x.url==="string"&&x.url?{id,title,type:"audio",url:x.url}:null;
+ if(x.type==="youtube"&&x.videoId)return{id,title,type:"youtube",videoId:String(x.videoId)};
+ if(x.type==="video"&&x.url)return{id,title,type:"video",url:String(x.url)};
  return null;
 }
 function normalizeState(s){
  s=s&&typeof s==="object"?s:{};
- let channels=Array.isArray(s.channels)?s.channels:[];
- channels=channels.map((c,i)=>({
-  id:String(c.id||"channel-"+i),name:String(c.name||"Channel "+(i+1)).slice(0,80),
-  color:String(c.color||"#e8b85b"),
+ let channels=Array.isArray(s.channels)?s.channels.map((c,i)=>({
+  id:String(c.id||"channel-"+i),name:String(c.name||"Channel "+(i+1)).slice(0,80),color:String(c.color||"#e8b85b"),
   list:Array.isArray(c.list)?c.list.map(x=>normalizeItem(x,"video")).filter(Boolean):[]
- }));
- if(!channels.length)channels=clone(DEFAULT_STATE.channels);
- const ci=Number.isInteger(s.channelIndex)?s.channelIndex:0;
+ })): [];
+ if(!channels.length)channels=[{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}];
  const p=s.playback||{},r=s.radioPlayback||{};
  return{
-  stationName:String(s.stationName||"AM TV 24/7").slice(0,80),
-  channels,channelIndex:Math.min(Math.max(ci,0),channels.length-1),
+  stationName:String(s.stationName||"AM TV 24/7").slice(0,80),channels,
+  channelIndex:Math.min(Math.max(Number(s.channelIndex)||0,0),channels.length-1),
   mode:s.mode==="radio"?"radio":"tv",
   radioList:Array.isArray(s.radioList)?s.radioList.map(x=>normalizeItem(x,"audio")).filter(Boolean):[],
   playback:{index:Math.max(0,Number(p.index)||0),startedAt:Math.max(0,Number(p.startedAt)||0),nonce:Math.max(0,Number(p.nonce)||0),paused:!!p.paused},
@@ -341,32 +263,26 @@ function normalizeState(s){
   repeat:!!s.repeat,shuffle:!!s.shuffle
  };
 }
-function currentChannel(){return state.channels[state.channelIndex]||state.channels[0]}
-function currentVideo(){const c=currentChannel();return c?.list[state.playback.index]||null}
-function currentRadio(){return state.radioList[state.radioPlayback.index]||null}
-
 function playbackToken(s){
- const mode=isAdmin()?s.mode:viewerMode;
- const p=mode==="radio"?s.radioPlayback:s.playback;
- const item=mode==="radio"?s.radioList[p.index]||null:(s.channels[s.channelIndex]?.list||[])[p.index]||null;
- return[mode,s.channelIndex,p.index,p.nonce,p.startedAt,p.paused,item?.id||""].join("|");
+ const mode=effectiveMode(),p=mode==="radio"?s.radioPlayback:s.playback;
+ const item=mode==="radio"?s.radioList[p.index]:(s.channels[s.channelIndex]?.list||[])[p.index];
+ return [mode,s.channelIndex,p.index,p.nonce,p.startedAt,p.paused,item?.id||""].join("|");
 }
 
 async function initialize(){
  try{
+  if(!window.supabase)throw Error("کتابخانه Supabase بارگذاری نشد؛ اینترنت یا CDN را بررسی کن.");
   db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
   });
   const {data,error}=await db.auth.getSession();if(error)throw error;
   session=data.session;updateAuthUI();
-  db.auth.onAuthStateChange((_event,s)=>{
-   session=s;updateAuthUI();if(s)refreshState();
-  });
+  db.auth.onAuthStateChange((_event,s)=>{session=s;updateAuthUI();setTimeout(()=>refreshState(),0)});
   await refreshState();
-  setInterval(refreshState,5000);
+  setInterval(refreshState,7000);
  }catch(e){
   $("connectionText").textContent="خطا در اتصال";
-  notify("اتصال برقرار نشد: "+e.message);
+  $("adminSyncInfo").textContent=e.message;notify("اتصال Supabase: "+e.message);
  }
 }
 
@@ -375,48 +291,45 @@ async function refreshState(){
  try{
   const {data,error}=await db.from("amtv_state").select("data,updated_at").eq("id",1).maybeSingle();
   if(error)throw error;
-  if(!data){$("connectionText").textContent="رکورد وضعیت پیدا نشد";return}
-  online=true;$("connectionText").textContent="متصل به ایستگاه آنلاین";
+  if(!data){online=false;$("connectionText").textContent="رکورد id=1 پیدا نشد";$("adminSyncInfo").textContent="جدول باید ردیف id=1 داشته باشد.";return}
   const incoming=normalizeState(data.data);
-  const token=playbackToken(incoming);
-  if(!applyingRemote){
-   state=incoming;renderAll();
-   if(token!==lastAppliedToken){lastAppliedToken=token;applyPlayback(true)}
-  }
-  $("syncStatus").textContent="آخرین همگام‌سازی: "+new Date(data.updated_at||Date.now()).toLocaleTimeString();
+  state=incoming;online=true;
+  $("connectionText").textContent="متصل به ایستگاه آنلاین";
+  $("syncStatus").textContent="همگام‌سازی: "+new Date(data.updated_at||Date.now()).toLocaleTimeString();
   $("adminSyncInfo").textContent="اتصال فعال · "+new Date().toLocaleTimeString();
+  renderAll();
+  const token=playbackToken(state);
+  if(token!==lastAppliedToken){lastAppliedToken=token;applyPlayback(true)}
  }catch(e){
-  online=false;$("connectionText").textContent="اتصال ناپایدار";$("adminSyncInfo").textContent=e.message;
+  online=false;$("connectionText").textContent="اتصال ناموفق";
+  $("adminSyncInfo").textContent=e.message;
+  $("syncStatus").textContent="خطای اتصال";
  }
 }
-
 async function saveState(){
- if(!db)throw Error("اتصال Supabase برقرار نیست.");
- if(!isAdmin())throw Error("فقط مدیر مجاز به ذخیره تغییرات است.");
- applyingRemote=true;
- try{
-  const {error}=await db.from("amtv_state").update({data:state,updated_at:new Date().toISOString()}).eq("id",1);
-  if(error)throw error;
-  online=true;lastAppliedToken=playbackToken(state);renderAll();
-  $("syncStatus").textContent="تغییرات ذخیره شد";
- }finally{applyingRemote=false}
+ if(!db)throw Error("Supabase بارگذاری نشده است.");
+ if(!isAdmin())throw Error("فقط مدیر می‌تواند تغییرات را ذخیره کند.");
+ const {data,error}=await db.from("amtv_state").update({data:state,updated_at:new Date().toISOString()}).eq("id",1).select("id");
+ if(error)throw error;
+ if(!data?.length)throw Error("هیچ ردیفی به‌روزرسانی نشد؛ وجود ردیف id=1 و سیاست RLS را بررسی کن.");
+ lastAppliedToken=playbackToken(state);renderAll();
+ $("syncStatus").textContent="تغییرات ذخیره شد";
 }
 async function changeState(mutator){
- if(!isAdmin()){notify("این کار فقط برای مدیر فعال است.");return}
+ if(!isAdmin()){notify("این قابلیت فقط برای مدیر است.");return}
  const before=clone(state);
  try{mutator(state);state=normalizeState(state);await saveState();applyPlayback(true)}
  catch(e){state=before;renderAll();notify("ذخیره انجام نشد: "+e.message)}
 }
-
 function updateAuthUI(){
  admin=isAdmin();
+ document.body.classList.toggle("viewer-mode",!admin);
  $("adminPanel").classList.toggle("hidden",!admin);
  $("loginOpenBtn").classList.toggle("hidden",admin);
  $("logoutBtn").classList.toggle("hidden",!admin);
  if(!admin)$("loginPanel").classList.add("hidden");
- applyViewerModeClass();renderAll();applyPlayback(true);
+ renderAll();applyPlayback(true);
 }
-
 function renderAll(){
  const mode=effectiveMode();
  $("stationHeading").textContent=state.stationName;
@@ -428,252 +341,334 @@ function renderAll(){
  $("repeatBtn").textContent=state.repeat?"🔁 تکرار: روشن":"🔁 تکرار: خاموش";
  $("shuffleBtn").textContent=state.shuffle?"🔀 تصادفی: روشن":"🔀 تصادفی: خاموش";
  $("channelSelect").innerHTML=state.channels.map((c,i)=>`<option value="${i}" ${i===state.channelIndex?"selected":""}>${escapeHTML(c.name)}</option>`).join("");
+ const item=mode==="radio"?currentRadio():currentVideo();
+ $("nowTitle").textContent=item?item.title:(mode==="radio"?"AM Radio":state.stationName);
+ $("nowSubtitle").textContent=item?(mode==="radio"?"AM Radio · در حال پخش":item.type==="youtube"?"YouTube · AM TV":"ویدیوی آنلاین · AM TV"):"هنوز برنامه‌ای اضافه نشده است.";
+ $("radioNowTitle").textContent=currentRadio()?.title||"AM Radio";
+ $("radioModeBtn").disabled=mode==="radio";$("tvModeBtn").disabled=mode==="tv";
  renderVideoPlaylist();renderRadioPlaylist();
- if(mode==="radio"){
-  const item=currentRadio();
-  $("nowTitle").textContent=item?item.title:"AM Radio";
-  $("nowSubtitle").textContent=item?"در حال پخش رادیو":"هنوز برنامه صوتی اضافه نشده";
-  $("radioNowTitle").textContent=item?item.title:"AM Radio";
- }else{
-  const item=currentVideo();
-  $("nowTitle").textContent=item?item.title:state.stationName;
-  $("nowSubtitle").textContent=item?(item.type==="youtube"?"YouTube · AM TV":"ویدیوی آنلاین · AM TV"):"برای شروع، مدیر باید برنامه اضافه کند.";
- }
- $("radioModeBtn").disabled=mode==="radio";
- $("tvModeBtn").disabled=mode==="tv";
 }
-
 function renderVideoPlaylist(){
- const list=currentChannel()?.list||[];
  if(!admin){$("videoPlaylist").innerHTML="";return}
- $("videoPlaylist").innerHTML=list.length?list.map((x,i)=>`
- <div class="list-item ${state.mode==="tv"&&i===state.playback.index?"active-item":""}">
-  <div class="item-text"><strong>${escapeHTML(x.title)}</strong><small>${x.type==="youtube"?"YouTube":"ویدیوی مستقیم / آپلودشده"}</small></div>
-  <div class="item-actions">
-   <button data-play-video="${i}">▶ پخش</button>
-   <button data-up-video="${i}" ${i===0?"disabled":""}>↑</button>
-   <button data-down-video="${i}" ${i===list.length-1?"disabled":""}>↓</button>
-   <button data-delete-video="${i}">حذف</button>
-  </div>
- </div>`).join(""):"<p class='muted'>این کانال هنوز ویدیویی ندارد.</p>";
+ const list=currentChannel().list;
+ $("videoPlaylist").innerHTML=list.length?list.map((x,i)=>`<div class="list-item ${state.mode==="tv"&&i===state.playback.index?"active-item":""}">
+ <div class="item-text"><strong>${escapeHTML(x.title)}</strong><small>${x.type==="youtube"?"YouTube":"ویدیوی مستقیم / آپلودشده"}</small></div>
+ <div class="item-actions"><button data-play-video="${i}">▶</button><button data-up-video="${i}" ${i===0?"disabled":""}>↑</button><button data-down-video="${i}" ${i===list.length-1?"disabled":""}>↓</button><button data-delete-video="${i}">حذف</button></div></div>`).join(""):"<p class='muted'>این کانال ویدیویی ندارد.</p>";
 }
 function renderRadioPlaylist(){
- const list=state.radioList;
  if(!admin){$("radioPlaylist").innerHTML="";return}
- $("radioPlaylist").innerHTML=list.length?list.map((x,i)=>`
- <div class="list-item ${state.mode==="radio"&&i===state.radioPlayback.index?"active-item":""}">
-  <div class="item-text"><strong>${escapeHTML(x.title)}</strong><small>فایل صوتی / AM Radio</small></div>
-  <div class="item-actions">
-   <button data-play-radio="${i}">▶ پخش</button>
-   <button data-up-radio="${i}" ${i===0?"disabled":""}>↑</button>
-   <button data-down-radio="${i}" ${i===list.length-1?"disabled":""}>↓</button>
-   <button data-delete-radio="${i}">حذف</button>
-  </div>
- </div>`).join(""):"<p class='muted'>فهرست رادیو خالی است.</p>";
+ const list=state.radioList;
+ $("radioPlaylist").innerHTML=list.length?list.map((x,i)=>`<div class="list-item ${state.mode==="radio"&&i===state.radioPlayback.index?"active-item":""}">
+ <div class="item-text"><strong>${escapeHTML(x.title)}</strong><small>فایل صوتی / AM Radio</small></div>
+ <div class="item-actions"><button data-play-radio="${i}">▶</button><button data-up-radio="${i}" ${i===0?"disabled":""}>↑</button><button data-down-radio="${i}" ${i===list.length-1?"disabled":""}>↓</button><button data-delete-radio="${i}">حذف</button></div></div>`).join(""):"<p class='muted'>فهرست رادیو خالی است.</p>";
 }
-
 function parseYoutubeId(raw){
  try{
   const u=new URL(raw),host=u.hostname.replace(/^www\./,"").toLowerCase();
   if(host==="youtu.be")return u.pathname.split("/").filter(Boolean)[0]||null;
   if(["youtube.com","m.youtube.com","music.youtube.com","youtube-nocookie.com"].includes(host)){
    if(u.pathname==="/watch")return u.searchParams.get("v");
-   const p=u.pathname.split("/").filter(Boolean);
-   if(["embed","shorts","live","v"].includes(p[0]))return p[1]||null;
+   const p=u.pathname.split("/").filter(Boolean);if(["embed","shorts","live","v"].includes(p[0]))return p[1]||null;
   }
  }catch(_){}
  return null;
 }
-function validHttpUrl(raw){
- try{const u=new URL(raw);return u.protocol==="https:"||u.protocol==="http:"}catch(_){return false}
-}
+function validHttpUrl(raw){try{const u=new URL(raw);return u.protocol==="https:"||u.protocol==="http:"}catch(_){return false}}
 
-function onYouTubeIframeAPIReady(){
+window.onYouTubeIframeAPIReady=function(){
  youtubeReady=true;
  yt=new YT.Player("youtubePlayer",{
   width:"100%",height:"100%",videoId:"",
   playerVars:{autoplay:1,controls:0,disablekb:1,fs:0,playsinline:1,rel:0,modestbranding:1},
   events:{
-   onReady:()=>{try{yt.setVolume(Number($("volumeSlider").value)}catch(_){}},
+   onReady:()=>{try{yt.setVolume(Number($("volumeSlider").value))}catch(_){}},
    onStateChange:e=>{if(e.data===YT.PlayerState.ENDED&&isAdmin()&&state.mode==="tv")nextVideo()},
-   onError:e=>notify("یوتیوب این ویدیو را پخش نکرد. کد: "+e.data)
+   onError:e=>notify("یوتیوب ویدیو را پخش نکرد. کد: "+e.data)
   }
  });
-}
-
+};
 function hideAllPlayers(){
- $("youtubePlayer").classList.add("hidden");
- $("nativeVideo").classList.add("hidden");
- $("radioScreen").classList.add("hidden");
- $("emptyScreen").classList.add("hidden");
+ $("youtubePlayer").classList.add("hidden");$("nativeVideo").classList.add("hidden");
+ $("radioScreen").classList.add("hidden");$("emptyScreen").classList.add("hidden");
+ $("nativeVideo").pause();$("radioAudio").pause();
 }
-
 function applyPlayback(force=false){
  if(!state)return;
- const mode=effectiveMode(),token=playbackToken(state);
+ const token=playbackToken(state);
  if(!force&&token===lastAppliedToken)return;
  lastAppliedToken=token;hideAllPlayers();
-
+ const mode=effectiveMode();
  if(mode==="radio"){
   const item=currentRadio();
-  if(!item){
-   $("emptyScreen").classList.remove("hidden");
-   $("emptyScreen").innerHTML="<strong style='color:var(--gold)'>AM Radio</strong><span>هنوز برنامه صوتی وجود ندارد.</span>";
-   return;
-  }
+  if(!item){$("emptyScreen").classList.remove("hidden");$("emptyScreen").innerHTML="<strong style='color:var(--gold)'>AM Radio</strong><span>هنوز برنامه صوتی اضافه نشده.</span>";return}
   $("radioScreen").classList.remove("hidden");
-  $("radioNowTitle").textContent=item.title;
-  const audio=$("radioAudio");
-  if(audio.src!==item.url)audio.src=item.url;
-  audio.volume=Number($("volumeSlider").value)/100;
-  audio.onended=()=>{if(isAdmin())nextRadio()};
-  audio.onloadedmetadata=()=>{
+  const a=$("radioAudio");
+  if(a.src!==item.url)a.src=item.url;
+  a.volume=Number($("volumeSlider").value)/100;
+  a.onended=()=>{if(isAdmin())nextRadio()};
+  a.onloadedmetadata=()=>{
    if(effectiveMode()!=="radio"||currentRadio()?.id!==item.id)return;
    const p=state.radioPlayback;
-   if(p.startedAt&&!p.paused&&Number.isFinite(audio.duration)&&audio.duration>0){
-    try{audio.currentTime=((Date.now()-p.startedAt)/1000)%audio.duration}catch(_){}
-   }
+   if(p.startedAt&&!p.paused&&Number.isFinite(a.duration)&&a.duration>0){try{a.currentTime=((Date.now()-p.startedAt)/1000)%a.duration}catch(_){}}
   };
-  if(!state.radioPlayback.paused)audio.play().catch(()=>{$("syncStatus").textContent="برای شروع صدا، روی صفحه لمس کن"});
-  else audio.pause();
+  if(state.radioPlayback.paused)a.pause();else a.play().catch(()=>{$("syncStatus").textContent="برای پخش صدا، صفحه را لمس کن."});
   return;
  }
-
  const item=currentVideo();
- if(!item){
-  $("emptyScreen").classList.remove("hidden");
-  $("emptyScreen").innerHTML="<strong style='color:var(--gold)'>AM TV 24/7</strong><span>در انتظار برنامه...</span>";
-  return;
- }
-
+ if(!item){$("emptyScreen").classList.remove("hidden");$("emptyScreen").innerHTML="<strong style='color:var(--gold)'>AM TV 24/7</strong><span>در انتظار برنامه...</span>";return}
  if(item.type==="youtube"){
   $("youtubePlayer").classList.remove("hidden");
   if(!youtubeReady||!yt||!yt.loadVideoById)return;
   const elapsed=state.playback.startedAt?Math.max(0,Math.floor((Date.now()-state.playback.startedAt)/1000)):0;
   if(state.playback.paused)yt.cueVideoById({videoId:item.videoId,startSeconds:elapsed});
   else yt.loadVideoById({videoId:item.videoId,startSeconds:elapsed});
-  try{yt.setVolume(Number($("volumeSlider").value)}catch(_){}
+  try{yt.setVolume(Number($("volumeSlider").value))}catch(_){}
  }else{
-  const v=$("nativeVideo");
-  $("nativeVideo").classList.remove("hidden");
+  const v=$("nativeVideo");$("nativeVideo").classList.remove("hidden");
   if(v.src!==item.url)v.src=item.url;
   v.volume=Number($("volumeSlider").value)/100;
   v.onloadedmetadata=()=>{
    if(effectiveMode()!=="tv"||currentVideo()?.id!==item.id)return;
    const p=state.playback;
-   if(p.startedAt&&!p.paused&&Number.isFinite(v.duration)&&v.duration>0){
-    try{v.currentTime=((Date.now()-p.startedAt)/1000)%v.duration}catch(_){}
-   }
+   if(p.startedAt&&!p.paused&&Number.isFinite(v.duration)&&v.duration>0){try{v.currentTime=((Date.now()-p.startedAt)/1000)%v.duration}catch(_){}}
   };
   v.onended=()=>{if(isAdmin())nextVideo()};
-  if(state.playback.paused)v.pause();
-  else v.play().catch(()=>{$("syncStatus").textContent="برای شروع ویدیو، لمس صفحه ممکن است لازم باشد"});
+  if(state.playback.paused)v.pause();else v.play().catch(()=>{$("syncStatus").textContent="برای پخش ویدیو، صفحه را لمس کن."});
  }
 }
-
 async function playVideo(index){
- const list=currentChannel()?.list||[];
- if(!list.length){notify("اول یک ویدیو اضافه کن.");return}
+ const list=currentChannel()?.list||[];if(!list.length)return notify("اول یک ویدیو اضافه کن.");
  index=(index+list.length)%list.length;
- await changeState(s=>{
-  s.mode="tv";s.playback.index=index;s.playback.startedAt=Date.now();
-  s.playback.nonce++;s.playback.paused=false;
- });
+ await changeState(s=>{s.mode="tv";s.playback.index=index;s.playback.startedAt=Date.now();s.playback.nonce++;s.playback.paused=false});
 }
 async function nextVideo(){
- if(!isAdmin())return;
- const list=currentChannel()?.list||[];if(!list.length)return;
- let i;
+ if(!isAdmin())return;const list=currentChannel()?.list||[];if(!list.length)return;
+ let i=state.playback.index+1;
  if(state.shuffle&&list.length>1){do{i=Math.floor(Math.random()*list.length)}while(i===state.playback.index)}
- else{i=state.playback.index+1;if(i>=list.length){if(state.repeat)i=0;else{await changeState(s=>s.playback.paused=true);return}}}
+ else if(i>=list.length){if(state.repeat)i=0;else return changeState(s=>{s.playback.paused=true})}
  await playVideo(i);
 }
 async function prevVideo(){
- if(!isAdmin())return;
- const list=currentChannel()?.list||[];if(!list.length)return;
- let i=state.playback.index-1;if(i<0)i=state.repeat?list.length-1:0;
- await playVideo(i);
+ if(!isAdmin())return;const list=currentChannel()?.list||[];if(!list.length)return;
+ await playVideo(state.playback.index<=0?(state.repeat?list.length-1:0):state.playback.index-1);
 }
 async function playRadio(index){
- if(!isAdmin()){notify("انتخاب برنامه رادیو فقط برای مدیر است.");return}
- const list=state.radioList;if(!list.length){notify("اول یک فایل صوتی اضافه کن.");return}
+ if(!isAdmin())return notify("انتخاب آهنگ رادیو فقط برای مدیر فعال است.");
+ const list=state.radioList;if(!list.length)return notify("اول فایل صوتی اضافه کن.");
  index=(index+list.length)%list.length;
- await changeState(s=>{
-  s.mode="radio";s.radioPlayback.index=index;s.radioPlayback.startedAt=Date.now();
-  s.radioPlayback.nonce++;s.radioPlayback.paused=false;
- });
+ await changeState(s=>{s.mode="radio";s.radioPlayback.index=index;s.radioPlayback.startedAt=Date.now();s.radioPlayback.nonce++;s.radioPlayback.paused=false});
 }
 async function nextRadio(){
- if(!isAdmin())return;
- const list=state.radioList;if(!list.length)return;
- let i;
+ if(!isAdmin())return;const list=state.radioList;if(!list.length)return;
+ let i=state.radioPlayback.index+1;
  if(state.shuffle&&list.length>1){do{i=Math.floor(Math.random()*list.length)}while(i===state.radioPlayback.index)}
- else{i=state.radioPlayback.index+1;if(i>=list.length){if(state.repeat)i=0;else{await changeState(s=>s.radioPlayback.paused=true);return}}}
+ else if(i>=list.length){if(state.repeat)i=0;else return changeState(s=>{s.radioPlayback.paused=true})}
  await playRadio(i);
 }
 async function prevRadio(){
- if(!isAdmin())return;
- const list=state.radioList;if(!list.length)return;
- let i=state.radioPlayback.index-1;if(i<0)i=state.repeat?list.length-1:0;
- await playRadio(i);
+ if(!isAdmin())return;const list=state.radioList;if(!list.length)return;
+ await playRadio(state.radioPlayback.index<=0?(state.repeat?list.length-1:0):state.radioPlayback.index-1);
 }
 async function pausePlayback(){
  if(!isAdmin())return;
- await changeState(s=>{
-  if(s.mode==="radio")s.radioPlayback.paused=true;
-  else s.playback.paused=true;
- });
- try{yt?.pauseVideo()}catch(_){}
- $("nativeVideo").pause();$("radioAudio").pause();
+ await changeState(s=>{(s.mode==="radio"?s.radioPlayback:s.playback).paused=true});
+ try{yt?.pauseVideo()}catch(_){}$("nativeVideo").pause();$("radioAudio").pause();
 }
 async function resumePlayback(){
  if(!isAdmin())return;
- await changeState(s=>{
-  const p=s.mode==="radio"?s.radioPlayback:s.playback;
-  p.paused=false;if(!p.startedAt)p.startedAt=Date.now();
- });
+ await changeState(s=>{const p=s.mode==="radio"?s.radioPlayback:s.playback;p.paused=false;if(!p.startedAt)p.startedAt=Date.now()});
  applyPlayback(true);
 }
 async function switchMode(mode){
  if(mode!=="radio"&&mode!=="tv")return;
  if(!isAdmin()){
-  viewerMode=mode;localStorage.setItem("amtv-viewer-mode",mode);
-  renderAll();applyPlayback(true);return;
+  viewerMode=mode;localStorage.setItem("amtv-viewer-mode",mode);lastAppliedToken="";renderAll();applyPlayback(true);return;
  }
- await changeState(s=>{
-  s.mode=mode;
-  const p=mode==="radio"?s.radioPlayback:s.playback;
-  p.nonce++;p.paused=false;if(!p.startedAt)p.startedAt=Date.now();
- });
+ await changeState(s=>{s.mode=mode;const p=mode==="radio"?s.radioPlayback:s.playback;p.nonce++;p.paused=false;if(!p.startedAt)p.startedAt=Date.now()});
 }
-
 async function uploadFile(file,folder){
- if(!isAdmin())throw Error("فقط مدیر می‌تواند فایل آپلود کند.");
+ if(!isAdmin())throw Error("فقط مدیر می‌تواند آپلود کند.");
  if(!db)throw Error("Supabase متصل نیست.");
- if(!file)throw Error("فایلی انتخاب نشده است.");
  const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100);
  const path=folder+"/"+Date.now()+"-"+makeId()+"-"+safe;
- const {data,error}=await db.storage.from(STORAGE_BUCKET).upload(path,file,{
-  cacheControl:"3600",upsert:false,contentType:file.type||"application/octet-stream"
- });
+ const {data,error}=await db.storage.from(STORAGE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type||"application/octet-stream"});
  if(error)throw error;
  const result=db.storage.from(STORAGE_BUCKET).getPublicUrl(data.path);
  if(!result.data?.publicUrl)throw Error("لینک عمومی فایل ساخته نشد.");
  return result.data.publicUrl;
 }
-async function addVideoItem(item){
- await changeState(s=>{
-  const c=s.channels[s.channelIndex];c.list.push(item);
-  if(c.list.length===1)s.playback.index=0;
- });
-}
-async function addRadioItem(item){
- await changeState(s=>{
-  s.radioList.push(item);if(s.radioList.length===1)s.radioPlayback.index=0;
- });
-}
-
 async function handleAddVideos(){
  if(!isAdmin())return notify("ابتدا وارد حساب مدیر شو.");
  const files=Array.from($("videoFileInput").files||[]);
  const url=$("videoUrlInput").value.trim(),title=$("videoTitleInput").value.trim();
+ if(!files.length&&!url)return notify("یک فایل یا لینک ویدیو وارد کن.");
+ try{
+  const items=[];
+  if(url){
+   if(!validHttpUrl(url))throw Error("لینک معتبر نیست.");
+   const id=parseYoutubeId(url);
+   items.push(id?{id:makeId(),title:title||"YouTube Video",type:"youtube",videoId:id}:{id:makeId(),title:title||"ویدیوی آنلاین",type:"video",url});
+  }
+  for(const f of files){
+   if(!f.type.startsWith("video/"))throw Error("یکی از فایل‌ها ویدیو نیست.");
+   notify("در حال آپلود: "+f.name);
+   const uploaded=await uploadFile(f,"videos");
+   items.push({id:makeId(),title:title||f.name,type:"video",url:uploaded});
+  }
+  await changeState(s=>{
+   const c=s.channels[s.channelIndex];
+   for(const item of items)c.list.push(item);
+   if(c.list.length===items.length){s.playback.index=0;s.playback.startedAt=Date.now();s.playback.nonce++}
+  });
+  $("videoFileInput").value="";$("videoUrlInput").value="";$("videoTitleInput").value="";
+  notify("افزودن ویدیو انجام شد.");
+ }catch(e){notify("خطای ویدیو: "+e.message)}
+}
+async function handleAddRadio(){
+ if(!isAdmin())return notify("ابتدا وارد حساب مدیر شو.");
+ const files=Array.from($("radioFileInput").files||[]);
+ const url=$("radioUrlInput").value.trim(),title=$("radioTitleInput").value.trim();
+ if(!files.length&&!url)return notify("یک فایل یا لینک صوتی وارد کن.");
+ try{
+  const items=[];
+  if(url){
+   if(!validHttpUrl(url))throw Error("لینک صوتی معتبر نیست.");
+   items.push({id:makeId(),title:title||"AM Radio",type:"audio",url});
+  }
+  for(const f of files){
+   if(!f.type.startsWith("audio/"))throw Error("یکی از فایل‌ها صوتی نیست.");
+   notify("در حال آپلود صدا: "+f.name);
+   const uploaded=await uploadFile(f,"audio");
+   items.push({id:makeId(),title:title||f.name,type:"audio",url:uploaded});
+  }
+  await changeState(s=>{
+   const first=s.radioList.length===0;
+   s.radioList.push(...items);
+   if(first){s.radioPlayback.index=0;s.radioPlayback.startedAt=Date.now();s.radioPlayback.nonce++}
+  });
+  $("radioFileInput").value="";$("radioUrlInput").value="";$("radioTitleInput").value="";
+  notify("افزودن به رادیو انجام شد.");
+ }catch(e){notify("خطای رادیو: "+e.message)}
+}
+async function login(event){
+ event.preventDefault();
+ try{
+  const {data,error}=await db.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+  if(error)throw error;
+  session=data.session;
+  if(!isAdmin()){await db.auth.signOut();session=null;throw Error("این حساب نقش admin ندارد.")}
+  $("loginPanel").classList.add("hidden");updateAuthUI();await refreshState();notify("ورود مدیر موفق بود.");
+ }catch(e){notify("ورود ناموفق: "+e.message)}
+}
+async function logout(){
+ try{if(db)await db.auth.signOut()}catch(e){notify(e.message)}
+ session=null;updateAuthUI();notify("از حساب مدیر خارج شدی.");
+}
+function exportJSON(){
+ const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="amtv-backup.json";a.click();URL.revokeObjectURL(a.href);
+}
+async function importJSON(){
+ const file=$("importFileInput").files[0];if(!file)return notify("فایل JSON را انتخاب کن.");
+ try{
+  const parsed=JSON.parse(await file.text());const next=normalizeState(parsed);
+  await changeState(s=>Object.assign(s,next));$("importFileInput").value="";
+ }catch(e){notify("فایل JSON معتبر نیست: "+e.message)}
+}
+function bindEvents(){
+ $("customizeOpenBtn").onclick=()=>$("customizePanel").classList.toggle("hidden");
+ $("customizeCloseBtn").onclick=()=>$("customizePanel").classList.add("hidden");
+ $("loginOpenBtn").onclick=()=>$("loginPanel").classList.toggle("hidden");
+ $("loginCloseBtn").onclick=()=>$("loginPanel").classList.add("hidden");
+ $("loginForm").addEventListener("submit",login);
+ $("logoutBtn").onclick=logout;
+ $("themeSelect").onchange=e=>applyTheme(e.target.value);
+ document.querySelectorAll("[data-theme]").forEach(b=>b.onclick=()=>applyTheme(b.dataset.theme));
+ $("resetThemeBtn").onclick=()=>applyTheme("green");
+ $("radioModeBtn").onclick=()=>switchMode("radio");
+ $("tvModeBtn").onclick=()=>switchMode("tv");
+ $("prevBtn").onclick=()=>effectiveMode()==="radio"?prevRadio():prevVideo();
+ $("nextBtn").onclick=()=>effectiveMode()==="radio"?nextRadio():nextVideo();
+ $("playBtn").onclick=resumePlayback;
+ $("pauseBtn").onclick=pausePlayback;
+ $("repeatBtn").onclick=()=>changeState(s=>s.repeat=!s.repeat);
+ $("shuffleBtn").onclick=()=>changeState(s=>s.shuffle=!s.shuffle);
+ $("volumeSlider").oninput=()=>{
+  const vol=Number($("volumeSlider").value)/100;
+  try{yt?.setVolume(vol*100)}catch(_){}
+  $("nativeVideo").volume=vol;$("radioAudio").volume=vol;
+ };
+ $("fullscreenBtn").onclick=()=>{
+  const el=document.querySelector(".player-screen");
+  if(document.fullscreenElement)document.exitFullscreen?.();else el.requestFullscreen?.();
+ };
+ $("saveStationBtn").onclick=()=>changeState(s=>{s.stationName=$("stationNameInput").value.trim().slice(0,80)||"AM TV 24/7"});
+ $("createChannelBtn").onclick=async()=>{
+  const name=$("channelNameInput").value.trim();if(!name)return notify("نام کانال را وارد کن.");
+  await changeState(s=>{s.channels.push({id:makeId(),name:name.slice(0,80),color:"#e8b85b",list:[]});s.channelIndex=s.channels.length-1;s.playback.index=0});
+  $("channelNameInput").value="";
+ };
+ $("channelSelect").onchange=e=>changeState(s=>{s.channelIndex=Number(e.target.value);s.playback.index=0;s.playback.startedAt=Date.now();s.playback.nonce++});
+ $("deleteChannelBtn").onclick=()=>{
+  if(state.channels.length<=1)return notify("حداقل یک کانال باید باقی بماند.");
+  if(!confirm("این کانال و فهرست ویدیوهایش حذف شود؟"))return;
+  changeState(s=>{s.channels.splice(s.channelIndex,1);s.channelIndex=Math.max(0,s.channelIndex-1);s.playback.index=0;s.playback.nonce++});
+ };
+ $("addVideoBtn").onclick=handleAddVideos;$("addRadioBtn").onclick=handleAddRadio;
+ $("exportBtn").onclick=exportJSON;$("importBtn").onclick=importJSON;
+ $("refreshBtn").onclick=refreshState;
+ $("videoPlaylist").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.playVideo!==undefined)return playVideo(Number(b.dataset.playVideo));
+  if(b.dataset.upVideo!==undefined)return moveVideo(Number(b.dataset.upVideo),-1);
+  if(b.dataset.downVideo!==undefined)return moveVideo(Number(b.dataset.downVideo),1);
+  if(b.dataset.deleteVideo!==undefined)return deleteVideo(Number(b.dataset.deleteVideo));
+ });
+ $("radioPlaylist").addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.playRadio!==undefined)return playRadio(Number(b.dataset.playRadio));
+  if(b.dataset.upRadio!==undefined)return moveRadio(Number(b.dataset.upRadio),-1);
+  if(b.dataset.downRadio!==undefined)return moveRadio(Number(b.dataset.downRadio),1);
+  if(b.dataset.deleteRadio!==undefined)return deleteRadio(Number(b.dataset.deleteRadio));
+ });
+}
+async function moveVideo(i,delta){
+ await changeState(s=>{
+  const list=s.channels[s.channelIndex].list,j=i+delta;
+  if(j<0||j>=list.length)return;
+  [list[i],list[j]]=[list[j],list[i]];
+  if(s.playback.index===i)s.playback.index=j;else if(s.playback.index===j)s.playback.index=i;
+ });
+}
+async function deleteVideo(i){
+ if(!confirm("این ویدیو از فهرست حذف شود؟"))return;
+ await changeState(s=>{
+  const list=s.channels[s.channelIndex].list;list.splice(i,1);
+  if(s.playback.index>=list.length)s.playback.index=Math.max(0,list.length-1);
+  s.playback.nonce++;
+ });
+}
+async function moveRadio(i,delta){
+ await changeState(s=>{
+  const list=s.radioList,j=i+delta;if(j<0||j>=list.length)return;
+  [list[i],list[j]]=[list[j],list[i]];
+  if(s.radioPlayback.index===i)s.radioPlayback.index=j;else if(s.radioPlayback.index===j)s.radioPlayback.index=i;
+ });
+}
+async function deleteRadio(i){
+ if(!confirm("این فایل صوتی از فهرست حذف شود؟"))return;
+ await changeState(s=>{
+  s.radioList.splice(i,1);
+  if(s.radioPlayback.index>=s.radioList.length)s.radioPlayback.index=Math.max(0,s.radioList.length-1);
+  s.radioPlayback.nonce++;
+ });
+}
+function updateClock(){$("clock").textContent=new Date().toLocaleTimeString()}
+document.addEventListener("DOMContentLoaded",()=>{
+ applyTheme(localStorage.getItem("amtv-theme")||"green");
+ bindEvents();updateClock();setInterval(updateClock,1000);
+ initialize();
+});
+</script>
+</body>
+</html>
