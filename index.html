@@ -421,7 +421,7 @@ body.viewerMode #videoElement{controls:none!important}
 <div id="toast" role="status"></div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js&quot;><\/script>')"></script>
 <script>
 "use strict";
 
@@ -551,7 +551,15 @@ function effectiveItemKey(item){
 try{
   if(window.supabase && window.supabase.createClient){
     sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
-      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
+      global:{fetch:(input,init={})=>{
+        try{
+          if(init.headers && typeof init.headers.forEach==="function" && !Array.isArray(init.headers)){
+            const h={};init.headers.forEach((v,k)=>{h[k]=v});init={...init,headers:h};
+          }
+        }catch(_){}
+        return fetch(input,init);
+      }}
     });
   }
 }catch(e){console.error(e)}
