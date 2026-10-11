@@ -51,7 +51,7 @@ input:focus,select:focus{border-color:var(--accent)}
  .panel{padding:12px}
 }
 
-/* ===== icons (SVG mask, currentColor) ===== */
+/* ===== icons ===== */
 .ic{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;
   background-color:currentColor;flex-shrink:0;
   -webkit-mask-size:contain;mask-size:contain;
@@ -93,9 +93,18 @@ input:focus,select:focus{border-color:var(--accent)}
 .ic-pencil{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20h4l10-10-4-4-10 10z'/><path d='M14 6l4 4'/></svg>")}
 .ic-list{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M4 6h16M4 12h16M4 18h16'/></svg>")}
 .ic-cinema{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='7' width='18' height='13' rx='2'/><path d='M3 11h18M7 7l3 4M13 7l3 4M5 3l14 3'/></svg>")}
+.ic-cast{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-8'/><path d='M2 12a8 8 0 0 1 8 8'/><path d='M2 16a4 4 0 0 1 4 4'/><circle cx='2.5' cy='19.5' r='1' fill='black'/></svg>")}
 
 body.emoji-only button .lbl,body.emoji-only .btnlabel{display:none!important}
 body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px;min-width:38px}
+
+/* ===== Cast ===== */
+#castButton{position:relative}
+#castButton.casting{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+#castButton.casting::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:#52e879;box-shadow:0 0 6px #52e879;animation:castPulse 1.6s ease-in-out infinite}
+@keyframes castPulse{0%,100%{opacity:1}50%{opacity:.4}}
+body.casting-on .playerpanel{box-shadow:0 0 60px rgba(82,232,121,.35)}
+body.casting-on #castButton{background:#1e3a24}
 
 /* ===== event banner ===== */
 #eventBanner{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 14px;background:var(--accent);color:var(--onaccent);font-size:13px;font-weight:bold;text-align:center}
@@ -226,7 +235,7 @@ body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 au
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
 body.cinema .playerfoot:hover{opacity:1}
 
-/* ===== dreamcore / night ===== */
+/* ===== dream ===== */
 body.dream{background:linear-gradient(160deg,#140b2e 0%,#2a1650 45%,#0d1a3d 100%) fixed}
 body.dream::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 15% 20%,rgba(255,154,213,.16),transparent 40%),radial-gradient(circle at 85% 30%,rgba(140,170,255,.14),transparent 45%),radial-gradient(circle at 50% 90%,rgba(190,140,255,.14),transparent 50%);animation:dreamDrift 18s ease-in-out infinite alternate}
 @keyframes dreamDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(2%,-2%) scale(1.08)}}
@@ -236,7 +245,7 @@ body.dream .playerpanel{box-shadow:0 0 70px rgba(255,154,213,.22)}
 body.dream .topbar{background:rgba(20,11,46,.62)}
 body.dream .section,body.dream .listitem{background:rgba(255,255,255,.05)}
 
-/* ===== guide ===== */
+/* ===== guide / misc ===== */
 #guideList .guide-row{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:9px;background:var(--panel2);border:1px solid var(--line)}
 #guideList .guide-row.now{border-color:var(--accent);background:rgba(232,184,91,.08)}
 #guideList .guide-time{color:var(--accent);font-size:11px;min-width:90px;padding-top:2px;font-family:monospace;direction:ltr}
@@ -268,7 +277,7 @@ body.viewerMode #videoElement{controls:none!important}
  .rowfields{grid-template-columns:minmax(0,1fr)}
 }
 </style>
-</head><body class="booting">
+  </head><body class="booting">
 <header class="topbar">
   <div class="brand">
     <div class="logo" id="brandLogo">AM</div>
@@ -358,6 +367,7 @@ body.viewerMode #videoElement{controls:none!important}
           <button id="fullscreenButton" title="full"><i class="ic ic-full"></i></button>
         </div>
         <div class="playercontrols">
+          <button id="castButton" class="hidden" title="Cast"><i class="ic ic-cast"></i><span class="lbl" data-i18n="cast">Cast</span></button>
           <button id="cinemaButton"><i class="ic ic-cinema"></i><span class="lbl" data-i18n="cinema">سینمایی</span></button>
           <button id="ccButton"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
           <button id="viewerFullscreen"><i class="ic ic-full"></i><span class="lbl" data-i18n="fullscreen">تمام صفحه</span></button>
@@ -822,7 +832,10 @@ const I18N = {
   fbType:"نوع",fbNone:"هیچ",fbImage:"تصویر",fbVideo:"ویدیوی کوتاه (بی‌صدا، تکرارشونده)",fbUrl:"لینک مستقیم",fbFile:"یا آپلود تصویر / ویدیو",
   evTitle:"رویدادها و تم‌های مناسبتی",evHint:"در مناسبت‌های مهم سایت خودکار رنگ و پیام مخصوص می‌گیرد.",evEnabled:"تم رویدادها برای همه",
   evName:"نام / پیام رویداد",evDate:"تاریخ شروع",evDays:"تعداد روز",evEmoji:"ایموجی",evAccent:"رنگ اصلی",evBg:"رنگ پس‌زمینه",evYearly:"هر سال تکرار شود",evAdd:"افزودن رویداد",
-  msgFbSaved:"تصویر جایگزین ذخیره شد.",msgLogoRemoved:"لوگو حذف شد.",msgEvAdded:"رویداد اضافه شد.",msgEvInvalid:"نام و تاریخ را کامل وارد کن."
+  msgFbSaved:"تصویر جایگزین ذخیره شد.",msgLogoRemoved:"لوگو حذف شد.",msgEvAdded:"رویداد اضافه شد.",msgEvInvalid:"نام و تاریخ را کامل وارد کن.",
+  cast:"پخش به تلویزیون",castActive:"در حال پخش روی تلویزیون",castNotSupported:"دستگاه یا مرورگر شما از Cast پشتیبانی نمی‌کند.",
+  castStarted:"اتصال به تلویزیون برقرار شد.",castFailed:"اتصال یا پخش روی تلویزیون ممکن نشد.",castYT:"برای یوتیوب، از اپلیکیشن YouTube تلویزیون استفاده کن یا لینک را دستی بفرست.",
+  castDisconnected:"اتصال به تلویزیون قطع شد."
 },
 "en":{
   navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
@@ -888,7 +901,10 @@ const I18N = {
   fbType:"Type",fbNone:"None",fbImage:"Image",fbVideo:"Short video (muted, looping)",fbUrl:"Direct link",fbFile:"Or upload image / video",
   evTitle:"Events & seasonal themes",evHint:"On big days the site gets special colors and a message automatically.",evEnabled:"Event themes for everyone",
   evName:"Event name / message",evDate:"Start date",evDays:"Number of days",evEmoji:"Emoji",evAccent:"Accent color",evBg:"Background color",evYearly:"Repeat every year",evAdd:"Add event",
-  msgFbSaved:"Fallback saved.",msgLogoRemoved:"Logo removed.",msgEvAdded:"Event added.",msgEvInvalid:"Enter both a name and a date."
+  msgFbSaved:"Fallback saved.",msgLogoRemoved:"Logo removed.",msgEvAdded:"Event added.",msgEvInvalid:"Enter both a name and a date.",
+  cast:"Cast to TV",castActive:"Casting to TV",castNotSupported:"Your device or browser doesn't support Cast.",
+  castStarted:"Connected to TV.",castFailed:"Couldn't connect or cast to TV.",castYT:"For YouTube, use the TV's YouTube app or send the link manually.",
+  castDisconnected:"Disconnected from TV."
 },
 "ar":{
   navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
@@ -953,7 +969,10 @@ const I18N = {
   fbTitle:"صورة / فيديو بديل",fbHint:"يُعرض عندما لا يوجد بث أو يفشل الفيديو.",fbType:"النوع",fbNone:"لا شيء",fbImage:"صورة",fbVideo:"فيديو قصير (صامت)",fbUrl:"رابط",fbFile:"أو ارفع",
   evTitle:"المناسبات والسمات",evHint:"في المناسبات الكبرى يتغير المظهر تلقائيًا.",evEnabled:"سمات المناسبات للجميع",
   evName:"اسم المناسبة",evDate:"تاريخ البداية",evDays:"عدد الأيام",evEmoji:"رمز",evAccent:"اللون الرئيسي",evBg:"لون الخلفية",evYearly:"تكرار سنوي",evAdd:"إضافة مناسبة",
-  msgFbSaved:"تم حفظ الصورة البديلة.",msgLogoRemoved:"تم حذف الشعار.",msgEvAdded:"تمت إضافة المناسبة.",msgEvInvalid:"أدخل الاسم والتاريخ."
+  msgFbSaved:"تم حفظ الصورة البديلة.",msgLogoRemoved:"تم حذف الشعار.",msgEvAdded:"تمت إضافة المناسبة.",msgEvInvalid:"أدخل الاسم والتاريخ.",
+  cast:"عرض على التلفزيون",castActive:"قيد العرض على التلفزيون",castNotSupported:"جهازك أو متصفحك لا يدعم Cast.",
+  castStarted:"تم الاتصال بالتلفزيون.",castFailed:"تعذّر الاتصال بالتلفزيون.",castYT:"ليوتيوب، استخدم تطبيق YouTube على التلفزيون.",
+  castDisconnected:"تم قطع الاتصال."
 },
 "tr":{
   navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
@@ -1018,7 +1037,10 @@ const I18N = {
   fbTitle:"Yedek resim / video",fbHint:"Yayın yokken veya hata durumunda gösterilir.",fbType:"Tür",fbNone:"Yok",fbImage:"Resim",fbVideo:"Kısa video (sessiz)",fbUrl:"Bağlantı",fbFile:"Veya yükle",
   evTitle:"Etkinlikler ve temalar",evHint:"Önemli günlerde otomatik olarak tema değişir.",evEnabled:"Etkinlik temaları",
   evName:"Etkinlik adı",evDate:"Başlangıç",evDays:"Gün sayısı",evEmoji:"Emoji",evAccent:"Ana renk",evBg:"Arka plan",evYearly:"Her yıl",evAdd:"Etkinlik ekle",
-  msgFbSaved:"Yedek kaydedildi.",msgLogoRemoved:"Logo kaldırıldı.",msgEvAdded:"Etkinlik eklendi.",msgEvInvalid:"Ad ve tarih gerekli."
+  msgFbSaved:"Yedek kaydedildi.",msgLogoRemoved:"Logo kaldırıldı.",msgEvAdded:"Etkinlik eklendi.",msgEvInvalid:"Ad ve tarih gerekli.",
+  cast:"TV'ye yayınla",castActive:"TV'ye yayınlanıyor",castNotSupported:"Cihazınız veya tarayıcınız Cast'i desteklemiyor.",
+  castStarted:"TV'ye bağlandı.",castFailed:"TV'ye bağlanılamadı.",castYT:"YouTube için TV'nin YouTube uygulamasını kullanın.",
+  castDisconnected:"TV bağlantısı kesildi."
 }
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
@@ -1114,6 +1136,16 @@ let fallbackKey = "";
 let presenceChannel = null;
 let presenceOnline = 0;
 let presenceBreakdown = { tv:0, radio:0, admin:0, viewers:0 };
+
+/* Cast state */
+let castSDKReady = false;
+let castCtx = null;
+let castRemotePlayer = null;
+let castRemoteController = null;
+let isCasting = false;
+let airplayAvailable = false;
+let remotePlaybackAvailable = false;
+let lastCastItemId = null;
 
 /* ============ Utils ============ */
 function applyAudioState(){
@@ -1270,7 +1302,7 @@ function hideBumper(){
   bumperOn=false;
 }
 
-/* ============ Pin (fixed schedule) ============ */
+/* ============ Pin ============ */
 function parsePin(str){
   const m=/^(\d{1,2}):(\d{2})$/.exec(String(str||"").trim());
   if(!m)return null;
@@ -1870,6 +1902,172 @@ function watchTotalViewsRealtime(){
     .subscribe();
 }
 
+/* ============ Cast SDK ============ */
+function hasRemotePlaybackAPI(){
+  const v = $("videoElement");
+  return !!(v && v.remote && typeof v.remote.prompt === "function");
+}
+function loadCastSDK(){
+  if(window.cast && window.cast.framework) { initCast(); return; }
+  if(document.getElementById("cast-sdk")) return;
+  const s = document.createElement("script");
+  s.id = "cast-sdk";
+  s.src = "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
+  s.async = true;
+  document.head.appendChild(s);
+  window.__onGCastApiAvailable = function(isAvailable){
+    if(isAvailable) initCast();
+  };
+}
+function initCast(){
+  if(castSDKReady) return;
+  try{
+    const castFramework = window.cast.framework;
+    castCtx = castFramework.CastContext.getInstance();
+    castCtx.setOptions({
+      receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+      autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+    });
+    castRemotePlayer = new castFramework.RemotePlayer();
+    castRemoteController = new castFramework.RemotePlayerController(castRemotePlayer);
+    castCtx.addEventListener(
+      castFramework.CastContextEventType.SESSION_STATE_CHANGED,
+      function(e){ handleCastSession(e.sessionState); }
+    );
+    castRemoteController.addEventListener(
+      castFramework.RemotePlayerEventType.IS_CONNECTED_CHANGED,
+      function(){ updateCastUI(); }
+    );
+    castSDKReady = true;
+    updateCastUI();
+  }catch(e){ console.warn("Cast init failed", e); }
+}
+function handleCastSession(state){
+  const S = window.cast.framework.SessionState;
+  if(state === S.SESSION_STARTED || state === S.SESSION_RESUMED){
+    isCasting = true;
+    document.body.classList.add("casting-on");
+    notify(t("castStarted"));
+    castCurrentMedia();
+  }else if(state === S.SESSION_ENDED){
+    isCasting = false;
+    document.body.classList.remove("casting-on");
+    notify(t("castDisconnected"));
+    lastCastItemId = null;
+  }
+  updateCastUI();
+}
+function buildCastMediaInfo(item){
+  const url = mediaUrl(item);
+  if(!url) return null;
+  if(isYouTube(url)){
+    const vid = item.ytId || youtubeId(url);
+    const ytUrl = "https://www.youtube.com/watch?v=" + vid;
+    const mi = new window.chrome.cast.media.MediaInfo(ytUrl, "video/mp4");
+    mi.metadata = new window.chrome.cast.media.GenericMediaMetadata();
+    mi.metadata.title = item.title || "AM TV";
+    mi.metadata.subtitle = state.stationName || "AM TV";
+    mi.metadata.images = [{ url: "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg" }];
+    return mi;
+  }
+  const ext = url.split("?")[0].split(".").pop().toLowerCase();
+  const mimeMap = { mp4:"video/mp4", webm:"video/webm", ogv:"video/ogg", m4v:"video/mp4",
+                    mp3:"audio/mpeg", ogg:"audio/ogg", wav:"audio/wav", m4a:"audio/mp4", aac:"audio/aac" };
+  const ct = mimeMap[ext] || (activeMode()==="radio" ? "audio/mpeg" : "video/mp4");
+  const mi = new window.chrome.cast.media.MediaInfo(url, ct);
+  mi.metadata = new window.chrome.cast.media.GenericMediaMetadata();
+  mi.metadata.title = item.title || "AM TV";
+  mi.metadata.subtitle = state.stationName || "AM TV";
+  if(state.stationLogo) mi.metadata.images = [{ url: state.stationLogo }];
+  return mi;
+}
+function castCurrentMedia(){
+  if(!isCasting || !castSDKReady) return;
+  const item = activeItem();
+  if(!item) return;
+  const url = mediaUrl(item);
+  if(!url) return;
+  const key = (item.id || url);
+  if(lastCastItemId === key) return;
+  lastCastItemId = key;
+  if(isYouTube(url)){ notify(t("castYT")); }
+  const mediaInfo = buildCastMediaInfo(item);
+  if(!mediaInfo) return;
+  const session = castCtx.getCurrentSession();
+  if(!session) return;
+  const request = new window.chrome.cast.media.LoadRequest(mediaInfo);
+  request.autoplay = true;
+  session.loadMedia(request).then(
+    function(){ /* OK */ },
+    function(err){ console.warn("Cast load failed", err); }
+  );
+}
+function updateCastUI(){
+  const btn = $("castButton");
+  if(!btn) return;
+  const canCast = castSDKReady || airplayAvailable || hasRemotePlaybackAPI();
+  btn.classList.toggle("hidden", !canCast);
+  btn.classList.toggle("casting", isCasting);
+  btn.title = isCasting ? t("castActive") : t("cast");
+}
+async function handleCastClick(){
+  if(castSDKReady && castCtx){
+    try{
+      const state = castCtx.getSessionState();
+      const S = window.cast.framework.SessionState;
+      if(state === S.SESSION_STARTED || state === S.SESSION_RESUMED){
+        castCtx.endCurrentSession(true);
+        return;
+      }
+      await castCtx.requestSession();
+      return;
+    }catch(e){ console.warn(e); }
+  }
+  const v = $("videoElement");
+  if(v && typeof v.webkitShowPlaybackTargetPicker === "function" && airplayAvailable){
+    try{ v.webkitShowPlaybackTargetPicker(); return; }catch(_){}
+  }
+  if(hasRemotePlaybackAPI()){
+    try{ await v.remote.prompt(); return; }catch(e){ console.warn(e); }
+  }
+  notify(t("castNotSupported"));
+}
+function setupAirPlay(){
+  const v = $("videoElement");
+  if(!v) return;
+  v.setAttribute("x-webkit-airplay", "allow");
+  v.setAttribute("airplay", "allow");
+  if("onwebkitplaybacktargetavailabilitychanged" in v){
+    v.addEventListener("webkitplaybacktargetavailabilitychanged", function(e){
+      airplayAvailable = (e.availability === "available");
+      updateCastUI();
+    });
+  }else if(typeof v.webkitShowPlaybackTargetPicker === "function"){
+    airplayAvailable = true;
+    updateCastUI();
+  }
+}
+function setupRemotePlayback(){
+  const v = $("videoElement");
+  if(!v || !v.remote) return;
+  remotePlaybackAvailable = true;
+  v.remote.addEventListener("connect", function(){
+    isCasting = true;
+    document.body.classList.add("casting-on");
+    updateCastUI();
+  });
+  v.remote.addEventListener("disconnect", function(){
+    isCasting = false;
+    document.body.classList.remove("casting-on");
+    updateCastUI();
+  });
+  updateCastUI();
+}
+function isCastingActive(){
+  return isCasting || (castCtx && castSDKReady && castCtx.getSessionState &&
+    castCtx.getSessionState() === window.cast.framework.SessionState.SESSION_STARTED);
+}
+
 /* ============ YouTube player ============ */
 window.onYouTubeIframeAPIReady=function(){
   try{
@@ -1994,6 +2192,7 @@ function renderPlayer(force=false){
   activeMediaKey=key;currentMediaURL=url;currentMediaKind=mode;currentItemId=item.id||url;
   hideAllMedia();
   const off=Math.floor(startOffsetFor(mode,item));
+  if(isCastingActive()){ setTimeout(function(){ castCurrentMedia(); }, 200); }
 
   if(mode==="radio"){
     $("radioScreen").style.display="flex";
@@ -2096,6 +2295,7 @@ function chooseIndex(index,kind=activeMode()){
   scheduleSave();
   activeMediaKey="";
   renderPlayer(true);
+  setTimeout(function(){ if(isCastingActive()) castCurrentMedia(); }, 300);
 }
 function nextItem(){
   if(!isAdmin)return;
@@ -2124,6 +2324,7 @@ function handleEnded(){
     }
   }catch(_){}
   if(!isAdmin)return;
+  setTimeout(function(){ if(isCastingActive()) castCurrentMedia(); }, 400);
   const list=currentList();
   const go=()=>{
     if(state.repeat && list.length===1){chooseIndex(0);return}
@@ -2241,7 +2442,7 @@ function loadLogoFields(){
   if(fu&&document.activeElement!==fu)fu.value=f.url||"";
 }
 
-/* ============ Events (seasonal themes) ============ */
+/* ============ Events ============ */
 const BUILTIN_EVENTS=[
  {id:"newyear",start:"12-30",days:4,emoji:"🎆",accent:"#ffd54a",bg:"#0b1030",msg:{fa:"سال نو مبارک!",en:"Happy New Year!",ar:"كل عام وأنتم بخير!",tr:"Mutlu yıllar!"}},
  {id:"valentine",start:"02-13",days:3,emoji:"💝",accent:"#ff6b8b",bg:"#1d0d16",msg:{fa:"روز عشق مبارک",en:"Happy Valentine's Day",ar:"عيد حب سعيد",tr:"Sevgililer Günü kutlu olsun"}},
@@ -2669,7 +2870,7 @@ function applyPrefs(){
 function applyTheme(name){const p=getPrefs();p.preset=THEMES[name]?name:"green";delete p.accent;delete p.bg;savePrefs(p);applyPrefs()}
 function initPrefs(){const p=getPrefs();if(!p.preset){p.preset="green";p.mode="dark";savePrefs(p)}applyPrefs()}
 
-/* ============ Subtitles (fixed) ============ */
+/* ============ Subtitles ============ */
 let subTimer=null, subNotified="", pendingSubLang=null;
 function applySubtitles(){
   clearTimeout(subTimer);
@@ -2723,7 +2924,7 @@ function syncSubUI(){const lang=getPrefs().subLang||"off";try{$("subSelect").val
 function setSubLang(lang){const p=getPrefs();p.subLang=lang;if(lang!=="off")p.subLast=lang;savePrefs(p);syncSubUI();applySubtitles()}
 function toggleSubs(){const p=getPrefs();if((p.subLang||"off")!=="off")setSubLang("off");else setSubLang(p.subLast||(SUPPORTED_LANGS.includes(curLang)?curLang:"en"))}
 
-/* ============ Orientation / Fullscreen ============ */
+/* ============ Fullscreen / Orientation ============ */
 async function toggleOrientation(){
   const shell=$("playerShell");
   const type=(screen.orientation&&screen.orientation.type)||(innerWidth>innerHeight?"landscape-primary":"portrait-primary");
@@ -3037,6 +3238,15 @@ $("audioElement").addEventListener("loadedmetadata",()=>{
   pendingSeekAudio=0;
 });
 
+/* ============ Cast init ============ */
+loadCastSDK();
+setupAirPlay();
+setupRemotePlayback();
+if($("castButton")) $("castButton").addEventListener("click", handleCastClick);
+setTimeout(updateCastUI, 1500);
+setTimeout(setupAirPlay, 800);
+setTimeout(updateCastUI, 3000);
+
 /* ============ Realtime ============ */
 async function setupRealtime(){
   if(!sbClient)return;
@@ -3155,6 +3365,21 @@ setInterval(()=>{
   const d=new Date();
   $("vhsTime").textContent=d.toLocaleTimeString("en-GB")+"  "+d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}).toUpperCase();
 },1000);
+setInterval(()=>{
+  try{
+    if(isCastingActive() && castRemotePlayer){
+      const rp = castRemotePlayer;
+      const item = activeItem();
+      if(item && rp.currentTime != null){
+        const want = (activeMode()==="radio" ? $("audioElement").currentTime :
+                     (isYouTube(mediaUrl(item)) && ytReady && ytPlayer ? (function(){try{return ytPlayer.getCurrentTime()}catch(_){return 0}})() : $("videoElement").currentTime)) || 0;
+        if(Math.abs(rp.currentTime - want) > 10 && castRemoteController && castRemoteController.seek){
+          castRemoteController.seek();
+        }
+      }
+    }
+  }catch(_){}
+},5000);
 
 /* ============ Fallback polling ============ */
 let lastRemoteJson="";
@@ -3180,10 +3405,11 @@ setInterval(()=>{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.0.0 The Next Era | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.textContent="v1.0.0 The Next Era + Cast | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | ch="+state.channelIndex+"/"+state.radioChannelIndex+
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ok":"no")+
+      " | cast="+(isCastingActive()?"ON":"off")+
       " | online="+presenceOnline+" | "+$("supabaseStatus").value;
   }catch(e){}
 },1000);
