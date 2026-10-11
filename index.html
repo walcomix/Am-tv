@@ -1894,6 +1894,11 @@ function checkPin(){
   }
 }
 function setupSleepAndKids(){
+    
+/* ============ Supabase ============ */
+try{
+  if(window.supabase && window.supabase.createClient){
+  ...
   setupSleepTimer();
   setupMediaSession();
   $("kidsToggle")?.addEventListener("click",()=>{
@@ -1910,7 +1915,7 @@ function setupSleepAndKids(){
     }
   });
 }
-
+    
 /* ============ Supabase ============ */
 try{
   if(window.supabase && window.supabase.createClient){
@@ -3662,4 +3667,4 @@ setInterval(()=>{
 
 </script>
 </body>
-  </html>
+                   </html>
