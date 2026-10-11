@@ -277,7 +277,7 @@ body.viewerMode #videoElement{controls:none!important}
  .rowfields{grid-template-columns:minmax(0,1fr)}
 }
 </style>
-  </head><body class="booting">
+</head><body class="booting">
 <header class="topbar">
   <div class="brand">
     <div class="logo" id="brandLogo">AM</div>
@@ -373,7 +373,7 @@ body.viewerMode #videoElement{controls:none!important}
           <button id="viewerFullscreen"><i class="ic ic-full"></i><span class="lbl" data-i18n="fullscreen">تمام صفحه</span></button>
         </div>
       </div>
-    </section>    <aside class="sidepanel">
+            </section>    <aside class="sidepanel">
       <div class="sideheading" data-i18n="stationStatus">وضعیت ایستگاه</div>
       <div class="statusbox">
         <div><span data-i18n="stationLbl">ایستگاه:</span> <strong id="statusStation">AM TV 24/7</strong></div>
@@ -1907,18 +1907,32 @@ function hasRemotePlaybackAPI(){
   const v = $("videoElement");
   return !!(v && v.remote && typeof v.remote.prompt === "function");
 }
+
+/* ✅ اصلاح: callback قبل از اضافه‌کردن اسکریپت */
 function loadCastSDK(){
-  if(window.cast && window.cast.framework) { initCast(); return; }
+  if(window.cast && window.cast.framework){ initCast(); return; }
   if(document.getElementById("cast-sdk")) return;
+  window.__onGCastApiAvailable = function(isAvailable){
+    if(isAvailable){
+      try{ initCast(); }
+      catch(e){ console.warn("[AMTV Cast] initCast failed", e); }
+    }
+  };
+  setTimeout(function(){
+    if(!castSDKReady && window.cast && window.cast.framework){
+      try{ initCast(); }catch(_){}
+    }
+  }, 8000);
   const s = document.createElement("script");
   s.id = "cast-sdk";
   s.src = "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
   s.async = true;
-  document.head.appendChild(s);
-  window.__onGCastApiAvailable = function(isAvailable){
-    if(isAvailable) initCast();
+  s.onerror = function(){
+    console.warn("[AMTV Cast] SDK script failed to load (blocked by adblock/firewall?)");
   };
+  document.head.appendChild(s);
 }
+
 function initCast(){
   if(castSDKReady) return;
   try{
@@ -2002,15 +2016,22 @@ function castCurrentMedia(){
     function(err){ console.warn("Cast load failed", err); }
   );
 }
+
+/* ✅ اصلاح: بررسی secure context */
 function updateCastUI(){
   const btn = $("castButton");
   if(!btn) return;
-  const canCast = castSDKReady || airplayAvailable || hasRemotePlaybackAPI();
+  const secure = window.isSecureContext !== false;
+  const canCast = secure && (castSDKReady || airplayAvailable || hasRemotePlaybackAPI());
   btn.classList.toggle("hidden", !canCast);
   btn.classList.toggle("casting", isCasting);
   btn.title = isCasting ? t("castActive") : t("cast");
 }
+
+/* ✅ اصلاح: پیام‌های دقیق + تشخیص خطا */
 async function handleCastClick(){
+  const v = $("videoElement");
+  const errors = [];
   if(castSDKReady && castCtx){
     try{
       const state = castCtx.getSessionState();
@@ -2021,16 +2042,35 @@ async function handleCastClick(){
       }
       await castCtx.requestSession();
       return;
-    }catch(e){ console.warn(e); }
+    }catch(e){
+      const msg = String((e && e.message) || e);
+      errors.push("chromecast:" + msg);
+      if(/cancel|no.*device|not.*available|user.*denied/i.test(msg)){
+        notify("دستگاه Chromecast نزدیک پیدا نشد. تلویزیون رو روشن کن و مطمئن شو روی همون Wi-Fi هست.");
+        return;
+      }
+    }
+  } else {
+    errors.push("castSDK=" + (castSDKReady ? "ready" : "not-loaded"));
   }
-  const v = $("videoElement");
-  if(v && typeof v.webkitShowPlaybackTargetPicker === "function" && airplayAvailable){
-    try{ v.webkitShowPlaybackTargetPicker(); return; }catch(_){}
+  if(v && typeof v.webkitShowPlaybackTargetPicker === "function"){
+    if(airplayAvailable){
+      try{ v.webkitShowPlaybackTargetPicker(); return; }
+      catch(e){ errors.push("airplay:" + e.message); }
+    } else {
+      errors.push("airplay: no device");
+    }
   }
   if(hasRemotePlaybackAPI()){
-    try{ await v.remote.prompt(); return; }catch(e){ console.warn(e); }
+    try{ await v.remote.prompt(); return; }
+    catch(e){ errors.push("remote:" + e.message); }
   }
-  notify(t("castNotSupported"));
+  console.warn("[AMTV Cast]", errors);
+  if(window.isSecureContext === false){
+    notify("برای Cast، سایت باید روی HTTPS باز شود.");
+  } else {
+    notify("دستگاه Cast نزدیک پیدا نشد. تلویزیون/Chromecast باید روی همون Wi-Fi باشه.");
+  }
 }
 function setupAirPlay(){
   const v = $("videoElement");
