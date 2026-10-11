@@ -13,11 +13,58 @@
   --screen1:#263026;--screen2:#090b09;--screenaccent:#e8b85b;--screenmuted:#a9b09f;--topbar:#141a14;--section:#171d17;--input:#0f140f;--onaccent:#15150e;--danger:#ffb7ac;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;min-height:100vh}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;min-height:100vh;opacity:1;transition:opacity .18s ease}
+body.booting{opacity:0}
 button,input,select{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.4;cursor:not-allowed}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* آیکون‌های سفارشی سایت — SVG mask با currentColor */
+.ic{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;
+  background-color:currentColor;flex-shrink:0;
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  -webkit-mask-image:var(--ic);mask-image:var(--ic)}
+.ic-tv{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='6' width='18' height='13' rx='2'/><path d='M8 21h8M12 19v2'/></svg>")}
+.ic-radio{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='14' r='5'/><circle cx='12' cy='14' r='1.4' fill='black'/><path d='M5 8h14l-2-3H7z' fill='black'/><circle cx='18' cy='10.5' r='.9' fill='black'/></svg>")}
+.ic-guide{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='16' rx='2'/><path d='M3 9h18M8 3v4M16 3v4'/><circle cx='8' cy='13' r='1.1' fill='black'/><circle cx='12' cy='13' r='1.1' fill='black'/><circle cx='16' cy='13' r='1.1' fill='black'/></svg>")}
+.ic-appear{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><circle cx='12' cy='12' r='3.5'/><path d='M12 2v3M12 19v3M2 12h3M19 12h3M5.5 5.5l2 2M16.5 16.5l2 2M18.5 5.5l-2 2M7.5 16.5l-2 2'/></svg>")}
+.ic-admin{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='10' width='16' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3'/><circle cx='12' cy='15' r='1.5' fill='black'/></svg>")}
+.ic-eye{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12c3-6 8-8 10-8s7 2 10 8c-3 6-8 8-10 8S5 18 2 12z'/><circle cx='12' cy='12' r='2.6' fill='black'/></svg>")}
+.ic-people{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='8' r='3.5'/><path d='M2 20c0-4 3-6 7-6s7 2 7 6'/><circle cx='17' cy='9' r='2.5'/><path d='M16 14c3 0 6 1.5 6 5'/></svg>")}
+.ic-video{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='6' width='14' height='12' rx='2'/><path d='M16 10l6-3v10l-6-3z' fill='black'/></svg>")}
+.ic-mic{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='3' width='6' height='11' rx='3'/><path d='M5 11a7 7 0 0 0 14 0M12 18v3'/></svg>")}
+.ic-plus{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'><path d='M12 5v14M5 12h14'/></svg>")}
+.ic-play{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 4l13 8-13 8z' fill='black'/></svg>")}
+.ic-pause{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='6' y='4' width='4' height='16' fill='black'/><rect x='14' y='4' width='4' height='16' fill='black'/></svg>")}
+.ic-prev{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 5h2v14H6zM20 5v14l-11-7z' fill='black'/></svg>")}
+.ic-next{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M16 5h2v14h-2zM4 5l11 7-11 7z' fill='black'/></svg>")}
+.ic-repeat{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 2l4 4-4 4'/><path d='M3 12V10a4 4 0 0 1 4-4h14'/><path d='M7 22l-4-4 4-4'/><path d='M21 12v2a4 4 0 0 1-4 4H3'/></svg>")}
+.ic-shuffle{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 3l4 4-4 4'/><path d='M4 7h4l10 10h4'/><path d='M16 21l4-4-4-4'/><path d='M4 17h4'/><path d='M14 7h4'/></svg>")}
+.ic-full{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'/></svg>")}
+.ic-cc{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M8 11c-1 0-2 .8-2 2s1 2 2 2M16 11c-1 0-2 .8-2 2s1 2 2 2'/></svg>")}
+.ic-vol{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 10v4h4l4 4V6L8 10z' fill='black'/><path d='M16 9c1 1 1 5 0 6M18 7c2 2 2 8 0 10'/></svg>")}
+.ic-trash{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 6h16M9 6V4h6v2M6 6l1 14h10l1-14'/></svg>")}
+.ic-up{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'><path d='M12 5v14M6 11l6-6 6 6'/></svg>")}
+.ic-down{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'><path d='M12 19V5M6 13l6 6 6-6'/></svg>")}
+.ic-clock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><circle cx='12' cy='12' r='9'/><path d='M12 7v5l3 2'/></svg>")}
+.ic-close{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'><path d='M6 6l12 12M18 6L6 18'/></svg>")}
+.ic-save{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M5 3h12l3 3v15H4V4a1 1 0 0 1 1-1z'/><path d='M8 3v6h8V3M8 21v-6h8v6'/></svg>")}
+.ic-sync{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 12a9 9 0 0 1 15-6.7L21 8'/><path d='M21 3v5h-5'/><path d='M21 12a9 9 0 0 1-15 6.7L3 16'/><path d='M3 21v-5h5'/></svg>")}
+.ic-yt{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='2' y='6' width='20' height='12' rx='3' fill='black'/><path d='M10 9l5 3-5 3z' fill='white'/></svg>")}
+.ic-wm{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='16' rx='2'/><circle cx='8' cy='10' r='2'/><path d='M3 18l6-5 4 4 3-3 5 5'/></svg>")}
+.ic-export{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v12M7 10l5 5 5-5M5 21h14'/></svg>")}
+.ic-import{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 21V9M7 14l5-5 5 5M5 3h14'/></svg>")}
+.ic-signin{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5M10 17l5-5-5-5M15 12H3'/></svg>")}
+.ic-star{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z' fill='black'/></svg>")}
+.ic-pencil{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20h4l10-10-4-4-10 10z'/><path d='M14 6l4 4'/></svg>")}
+.ic-list{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M4 6h16M4 12h16M4 18h16'/></svg>")}
+
+body.emoji-only button .lbl,body.emoji-only .btnlabel{display:none!important}
+body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px;min-width:38px}
+
 .topbar{min-height:68px;display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--topbar);flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:11px;min-width:0}
 .logo{width:45px;height:45px;object-fit:contain;border-radius:9px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900;font-size:18px;overflow:hidden}
@@ -25,7 +72,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .tagline{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:1px}
 .topright{margin-inline-start:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .clock{font-size:12px;color:var(--muted);direction:ltr}
-button,.button{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 12px}
+button,.button{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:9px;padding:9px 12px;display:inline-flex;align-items:center;gap:7px;justify-content:center}
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--onaccent);font-weight:bold}
 button.danger{border-color:#814949;color:var(--danger)}
 button.small{padding:6px 9px;font-size:12px}
@@ -43,7 +90,8 @@ main{max-width:1450px;margin:auto;padding:18px}
 #videoElement{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;display:none}
 #youtubePlayer{position:absolute;inset:0;width:100%;height:100%;border:0;display:none}
 #radioScreen{position:absolute;inset:0;background:radial-gradient(ellipse at center,var(--screen1) 0,var(--screen2) 72%);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
-.radioicon{font-size:clamp(42px,9vw,100px);color:var(--screenaccent)}
+.radioicon{color:var(--screenaccent)}
+.radioicon .ic{width:clamp(48px,10vw,110px);height:clamp(48px,10vw,110px)}
 .radiofrequency{font-size:12px;letter-spacing:5px;color:var(--screenmuted)}
 #emptyScreen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:20px;background:radial-gradient(ellipse at center,var(--screen1) 0,var(--screen2) 85%)}
 .emptylogo{font-size:clamp(30px,6vw,65px);font-weight:900;color:var(--screenaccent);letter-spacing:4px}
@@ -58,28 +106,31 @@ main{max-width:1450px;margin:auto;padding:18px}
 .playercontrols button{min-width:38px}
 .playercontrols input[type=range]{width:90px;accent-color:var(--accent)}
 .sidepanel{padding:14px}
-.sideheading{font-size:14px;font-weight:bold;margin-bottom:12px}
+.sideheading{font-size:14px;font-weight:bold;margin-bottom:12px;display:flex;align-items:center;gap:7px}
 .statusbox{padding:12px;background:var(--panel2);border-radius:9px;font-size:12px;color:var(--muted);line-height:1.9;overflow-wrap:anywhere}
+.statusbox>div{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .panel{margin-top:18px;padding:16px}
 .panelhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.panelhead h2{font-size:17px;margin:0}
+.panelhead h2{font-size:17px;margin:0;display:flex;align-items:center;gap:8px}
 .tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
 .tab.active{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
 .adminGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .section{border:1px solid var(--line);background:var(--section);border-radius:10px;padding:14px;min-width:0}
-.section h3{font-size:14px;margin:0 0 12px}
+.section h3{font-size:14px;margin:0 0 12px;display:flex;align-items:center;gap:7px}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:11px;min-width:0}
 .field label{font-size:12px;color:var(--muted)}
 input,select{width:100%;min-width:0;background:var(--input);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px}
 input[type=color]{height:42px;padding:4px}
 input[type=range]{accent-color:var(--accent)}
+input[type=checkbox]{width:auto;accent-color:var(--accent)}
 .rowfields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .actions{display:flex;gap:7px;flex-wrap:wrap}
 .itemlist{display:flex;flex-direction:column;gap:7px;margin-top:10px}
 .listitem{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px;min-width:0}
 .iteminfo{flex:1;min-width:0}
-.itemname{font-size:12px;font-weight:bold;overflow-wrap:anywhere}
-.itemmeta{font-size:10px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere}
+.itemname{font-size:12px;font-weight:bold;overflow-wrap:anywhere;display:flex;align-items:center;gap:6px}
+.itemmeta{font-size:10px;color:var(--muted);margin-top:5px;overflow-wrap:anywhere;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.itemmeta .dur{color:var(--accent);font-family:monospace;display:inline-flex;align-items:center;gap:3px}
 .channelbutton{flex:1;text-align:start;min-width:0;overflow-wrap:anywhere}
 .channelbutton.selected{border-color:var(--accent);color:var(--accent)}
 .hidden{display:none!important}
@@ -134,7 +185,7 @@ body.viewerMode #videoElement{controls:none!important}
 }
 </style>
 </head>
-<body>
+<body class="booting">
 <header class="topbar">
   <div class="brand">
     <div class="logo" id="brandLogo">AM</div>
@@ -145,12 +196,12 @@ body.viewerMode #videoElement{controls:none!important}
   </div>
   <div class="topright">
     <div class="clock" id="clock">--:--:--</div>
-    <button id="modeTV" class="active">📺 TV</button>
-    <button id="modeRadio">📻 Radio</button>
-    <button id="guideToggle">📅 برنامه</button>
-    <button id="settingsToggle">⚙️ ظاهر</button>
-    <button id="loginToggle">🔐 مدیریت</button>
-    <button id="logoutButton" class="hidden">خروج مدیر</button>
+    <button id="modeTV" class="active"><i class="ic ic-tv"></i><span class="lbl" data-i18n="navTV">TV</span></button>
+    <button id="modeRadio"><i class="ic ic-radio"></i><span class="lbl" data-i18n="navRadio">Radio</span></button>
+    <button id="guideToggle"><i class="ic ic-guide"></i><span class="lbl" data-i18n="navGuide">برنامه</span></button>
+    <button id="settingsToggle"><i class="ic ic-appear"></i><span class="lbl" data-i18n="navAppear">ظاهر</span></button>
+    <button id="loginToggle"><i class="ic ic-admin"></i><span class="lbl" data-i18n="navAdmin">مدیریت</span></button>
+    <button id="logoutButton" class="hidden"><i class="ic ic-signin"></i><span class="lbl" data-i18n="navLogout">خروج</span></button>
   </div>
 </header>
 
@@ -160,7 +211,7 @@ body.viewerMode #videoElement{controls:none!important}
       <div class="playerhead">
         <div>
           <div class="programtitle" id="programTitle">AM TV 24/7</div>
-          <div class="subline" id="programSubtitle">در حال آماده‌سازی پخش...</div>
+          <div class="subline" id="programSubtitle" data-i18n="preparing">در حال آماده‌سازی پخش...</div>
         </div>
         <div class="onair" style="margin-inline-start:auto"><span class="dot"></span> ON AIR</div>
       </div>
@@ -168,12 +219,12 @@ body.viewerMode #videoElement{controls:none!important}
       <div id="playerShell">
         <div id="emptyScreen">
           <div class="emptylogo" id="emptyLogo">AM TV</div>
-          <div class="emptyhint" id="emptyHint">کانال در انتظار برنامه است</div>
+          <div class="emptyhint" id="emptyHint" data-i18n="waiting">کانال در انتظار برنامه است</div>
         </div>
         <div id="youtubePlayer"></div>
         <video id="videoElement" playsinline controlslist="nodownload noplaybackrate"></video>
         <div id="radioScreen">
-          <div class="radioicon">♫</div>
+          <div class="radioicon"><i class="ic ic-radio"></i></div>
           <div class="emptylogo" id="radioStationName">AM RADIO</div>
           <div class="radiofrequency">24 / 7 · LIVE SOUND</div>
           <audio id="audioElement" preload="metadata"></audio>
@@ -185,10 +236,10 @@ body.viewerMode #videoElement{controls:none!important}
           <div class="bumpernext" id="bumperNext"></div>
           <div id="bumperBar"></div>
         </div>
-        <button id="coverExit">✕ خروج از تمام‌صفحه</button>
-        <button id="rotateButton">🔄 افقی / عمودی</button>
-        <button id="ccFs">💬 زیرنویس</button>
-        <button id="viewerStart" class="hidden">🔊 برای فعال‌سازی صدا لمس کنید</button>
+        <button id="coverExit"><i class="ic ic-close"></i><span class="lbl" data-i18n="exitfs">خروج</span></button>
+        <button id="rotateButton"><i class="ic ic-sync"></i><span class="lbl" data-i18n="rotate">افقی / عمودی</span></button>
+        <button id="ccFs"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
+        <button id="viewerStart" class="hidden" data-i18n="unmute">🔊 برای فعال‌سازی صدا لمس کنید</button>
         <div id="watermark">
           <img id="watermarkImage" class="hidden" alt="Watermark">
           <div id="watermarkText"></div>
@@ -196,49 +247,48 @@ body.viewerMode #videoElement{controls:none!important}
       </div>
 
       <div class="playerfoot">
-        <div class="nowlabel" id="nowPlaying">در انتظار پخش</div>
+        <div class="nowlabel" id="nowPlaying" data-i18n="notplaying">در انتظار پخش</div>
         <div class="playercontrols admin-only" id="adminPlayerControls">
-          <button id="prevButton" title="قبلی">⏮</button>
-          <button id="playButton" title="پخش / توقف">▶</button>
-          <button id="nextButton" title="بعدی">⏭</button>
-          <button id="repeatButton" title="تکرار">🔁</button>
-          <button id="shuffleButton" title="تصادفی">🔀</button>
-          <label style="display:flex;align-items:center;gap:5px;font-size:11px">
-            🔊 <input id="volumeSlider" type="range" min="0" max="100" value="80">
+          <button id="prevButton" title="prev"><i class="ic ic-prev"></i></button>
+          <button id="playButton" title="play"><i class="ic ic-play"></i></button>
+          <button id="nextButton" title="next"><i class="ic ic-next"></i></button>
+          <button id="repeatButton" title="repeat"><i class="ic ic-repeat"></i></button>
+          <button id="shuffleButton" title="shuffle"><i class="ic ic-shuffle"></i></button>
+          <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)">
+            <i class="ic ic-vol"></i><input id="volumeSlider" type="range" min="0" max="100" value="80">
           </label>
-          <button id="fullscreenButton" title="تمام صفحه">⛶</button>
+          <button id="fullscreenButton" title="full"><i class="ic ic-full"></i></button>
         </div>
         <div class="playercontrols">
-          <button id="ccButton">💬 زیرنویس</button>
-          <button id="viewerFullscreen">⛶ تمام صفحه</button>
+          <button id="ccButton"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
+          <button id="viewerFullscreen"><i class="ic ic-full"></i><span class="lbl" data-i18n="fullscreen">تمام صفحه</span></button>
         </div>
       </div>
     </section>
-
     <aside class="sidepanel">
-      <div class="sideheading">وضعیت ایستگاه</div>
+      <div class="sideheading" data-i18n="stationStatus">وضعیت ایستگاه</div>
       <div class="statusbox">
-        <div>ایستگاه: <strong id="statusStation">AM TV 24/7</strong></div>
-        <div>حالت: <strong id="statusMode">تلویزیون</strong></div>
-        <div>وضعیت: <strong id="statusPlayback">آماده</strong></div>
-        <div>دسترسی: <strong id="statusRole">بیننده</strong></div>
-        <div>کانال: <strong id="statusChannel">اصلی</strong></div>
+        <div><span data-i18n="stationLbl">ایستگاه:</span> <strong id="statusStation">AM TV 24/7</strong></div>
+        <div><span data-i18n="modeLbl">حالت:</span> <strong id="statusMode">—</strong></div>
+        <div><span data-i18n="statusLbl">وضعیت:</span> <strong id="statusPlayback">—</strong></div>
+        <div><span data-i18n="roleLbl">دسترسی:</span> <strong id="statusRole">—</strong></div>
+        <div><span data-i18n="channelLbl">کانال:</span> <strong id="statusChannel">—</strong></div>
       </div>
 
       <div style="margin-top:16px">
-        <div class="sideheading">👥 بیننده‌ها</div>
+        <div class="sideheading"><i class="ic ic-people"></i><span data-i18n="viewersTitle">بیننده‌ها</span></div>
         <div class="statusbox">
-          <div>🟢 آنلاین الان: <strong id="onlineViewers" style="color:var(--accent)">—</strong></div>
-          <div>📺 روی TV: <strong id="viewTV">0</strong></div>
-          <div>📻 روی Radio: <strong id="viewRadio">0</strong></div>
-          <div>👤 بیننده: <strong id="viewViewers">0</strong></div>
-          <div>🔐 مدیر: <strong id="viewAdmin">0</strong></div>
-          <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:6px">👁 کل بازدید: <strong id="totalViews" style="color:var(--accent)">—</strong></div>
+          <div><span style="color:#52e879">●</span><span data-i18n="onlineLbl"> آنلاین الان:</span> <strong id="onlineViewers" style="color:var(--accent)">—</strong></div>
+          <div><i class="ic ic-tv"></i><span data-i18n="onTVLbl"> روی TV:</span> <strong id="viewTV">0</strong></div>
+          <div><i class="ic ic-radio"></i><span data-i18n="onRadioLbl"> روی Radio:</span> <strong id="viewRadio">0</strong></div>
+          <div><i class="ic ic-people"></i><span data-i18n="viewerLbl"> بیننده:</span> <strong id="viewViewers">0</strong></div>
+          <div><i class="ic ic-admin"></i><span data-i18n="adminLbl"> مدیر:</span> <strong id="viewAdmin">0</strong></div>
+          <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:6px"><i class="ic ic-eye"></i><span data-i18n="totalViewsLbl"> کل بازدید:</span> <strong id="totalViews" style="color:var(--accent)">—</strong></div>
         </div>
       </div>
 
       <div id="channelSelector" style="margin-top:16px">
-        <div class="sideheading">کانال‌ها</div>
+        <div class="sideheading"><i class="ic ic-tv"></i><span data-i18n="channelsTitle">کانال‌ها</span></div>
         <div id="channelButtons" class="itemlist"></div>
       </div>
     </aside>
@@ -246,43 +296,43 @@ body.viewerMode #videoElement{controls:none!important}
 
   <section id="guidePanel" class="panel hidden">
     <div class="panelhead">
-      <h2>📅 برنامهٔ پخش (EPG)</h2>
-      <button id="closeGuide" class="small">بستن</button>
+      <h2><i class="ic ic-guide"></i><span data-i18n="guideTitle">برنامهٔ پخش (EPG)</span></h2>
+      <button id="closeGuide" class="small"><i class="ic ic-close"></i><span class="lbl" data-i18n="close">بستن</span></button>
     </div>
     <div id="guideList" class="itemlist"></div>
-    <p class="viewerhint">زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند.</p>
+    <p class="viewerhint" data-i18n="guideHint">زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند.</p>
   </section>
 
   <section id="viewerSettings" class="panel hidden">
-    <div class="sideheading" style="margin-top:18px">شخصی‌سازی نمایش</div>
+    <div class="sideheading" style="margin-top:18px"><i class="ic ic-appear"></i><span data-i18n="settingsTitle">شخصی‌سازی نمایش</span></div>
     <div class="section">
       <div class="field">
-        <label for="themeSelect">رنگ آماده (فقط در اسپیشیال مود)</label>
+        <label for="themeSelect" data-i18n="lblPreset">رنگ آماده (فقط در اسپیشیال مود)</label>
         <select id="themeSelect">
-          <option value="green">سبز رترو</option>
-          <option value="amber">کهربایی</option>
-          <option value="blue">آبی</option>
-          <option value="purple">بنفش</option>
-          <option value="red">قرمز</option>
+          <option value="green" data-i18n="p_green">سبز رترو</option>
+          <option value="amber" data-i18n="p_amber">کهربایی</option>
+          <option value="blue" data-i18n="p_blue">آبی</option>
+          <option value="purple" data-i18n="p_purple">بنفش</option>
+          <option value="red" data-i18n="p_red">قرمز</option>
         </select>
       </div>
       <div class="field">
-        <label for="themeMode">حالت نمایش</label>
+        <label for="themeMode" data-i18n="lblMode">حالت نمایش</label>
         <select id="themeMode">
-          <option value="dark">🌙 دارک مود</option>
-          <option value="light">☀️ لایت مود</option>
-          <option value="special">✨ اسپیشیال مود</option>
+          <option value="dark" data-i18n="m_dark">🌙 دارک مود</option>
+          <option value="light" data-i18n="m_light">☀️ لایت مود</option>
+          <option value="special" data-i18n="m_special">✨ اسپیشیال مود</option>
         </select>
       </div>
       <div class="rowfields">
-        <div class="field"><label for="customAccent">رنگ اصلی دلخواه</label><input id="customAccent" type="color" value="#e8b85b"></div>
-        <div class="field"><label for="customBg">رنگ پس‌زمینهٔ دلخواه</label><input id="customBg" type="color" value="#101510"></div>
+        <div class="field"><label for="customAccent" data-i18n="lblAccent">رنگ اصلی دلخواه</label><input id="customAccent" type="color" value="#e8b85b"></div>
+        <div class="field"><label for="customBg" data-i18n="lblBg">رنگ پس‌زمینهٔ دلخواه</label><input id="customBg" type="color" value="#101510"></div>
       </div>
-      <div class="actions"><button id="resetCustom">بازنشانی رنگ‌های دلخواه</button></div>
+      <div class="actions"><button id="resetCustom"><i class="ic ic-sync"></i><span class="lbl" data-i18n="resetCustom">بازنشانی رنگ‌ها</span></button></div>
       <div class="field" style="margin-top:12px">
-        <label for="langSelect">زبان</label>
+        <label for="langSelect" data-i18n="lblLang">زبان</label>
         <select id="langSelect">
-          <option value="auto">خودکار (زبان دستگاه)</option>
+          <option value="auto" data-i18n="langAuto">خودکار (زبان دستگاه)</option>
           <option value="fa">فارسی</option>
           <option value="en">English</option>
           <option value="ar">العربية</option>
@@ -290,9 +340,15 @@ body.viewerMode #videoElement{controls:none!important}
         </select>
       </div>
       <div class="field" style="margin-top:12px">
-        <label for="subSelect">زیرنویس و ترجمه (ویدیوهای یوتیوب)</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--muted)">
+          <input type="checkbox" id="emojiOnlyMode">
+          <span data-i18n="emojiOnlyLbl">فقط آیکون — بدون متن در دکمه‌ها</span>
+        </label>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label for="subSelect" data-i18n="lblSub">زیرنویس و ترجمه (ویدیوهای یوتیوب)</label>
         <select id="subSelect">
-          <option value="off">خاموش</option>
+          <option value="off" data-i18n="subOff">خاموش</option>
           <option value="fa">فارسی</option>
           <option value="en">English</option>
           <option value="ar">العربية</option>
@@ -307,66 +363,65 @@ body.viewerMode #videoElement{controls:none!important}
           <option value="ja">日本語</option>
           <option value="ko">한국어</option>
         </select>
-        <div class="viewerhint">ترجمه خودکار است و فقط وقتی کار می‌کند که ویدیو زیرنویس داشته باشد.</div>
+        <div class="viewerhint" data-i18n="subHint">ترجمه خودکار است و فقط وقتی کار می‌کند که ویدیو زیرنویس داشته باشد.</div>
       </div>
-      <div class="viewerhint">این انتخاب‌ها فقط ظاهر همین مرورگر را تغییر می‌دهند.</div>
+      <div class="viewerhint" data-i18n="settingsHint">این انتخاب‌ها فقط ظاهر همین مرورگر را تغییر می‌دهند.</div>
     </div>
   </section>
 
   <section id="loginBox" class="panel hidden">
-    <div class="panelhead"><h2>ورود مدیر</h2><button id="closeLogin">بستن</button></div>
-    <div class="field"><label for="adminEmail">ایمیل مدیر</label><input id="adminEmail" type="email" autocomplete="username" placeholder="ایمیل حساب مدیر"></div>
-    <div class="field"><label for="adminPassword">رمز عبور</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="رمز عبور"></div>
-    <button class="primary" id="signInButton" style="width:100%">ورود به پنل مدیریت</button>
-    <p class="viewerhint">حساب باید از قبل در Supabase ساخته شده باشد و نقش مدیر در app_metadata آن تنظیم شده باشد.</p>
+    <div class="panelhead"><h2 data-i18n="loginTitle">ورود مدیر</h2><button id="closeLogin" class="small"><i class="ic ic-close"></i><span class="lbl" data-i18n="close">بستن</span></button></div>
+    <div class="field"><label for="adminEmail" data-i18n="emailLbl">ایمیل مدیر</label><input id="adminEmail" type="email" autocomplete="username" placeholder="admin@example.com"></div>
+    <div class="field"><label for="adminPassword" data-i18n="passLbl">رمز عبور</label><input id="adminPassword" type="password" autocomplete="current-password"></div>
+    <button class="primary" id="signInButton" style="width:100%"><i class="ic ic-signin"></i><span class="lbl" data-i18n="signIn">ورود به پنل مدیریت</span></button>
+    <p class="viewerhint" data-i18n="loginHint">حساب باید از قبل در Supabase ساخته شده باشد.</p>
   </section>
 
   <section id="adminPanel" class="panel hidden">
     <div class="panelhead">
-      <h2>پنل مدیریت AM TV</h2>
-      <span class="onair" id="viewerCount" style="color:var(--accent);font-size:13px">👁 —</span>
-      <span class="onair"><span class="dot"></span> ADMIN ACCESS</span>
+      <h2><i class="ic ic-admin"></i><span data-i18n="adminTitle">پنل مدیریت AM TV</span></h2>
+      <span class="onair" id="viewerCount" style="color:var(--accent);font-size:13px"><i class="ic ic-eye"></i> —</span>
+      <span class="onair"><span class="dot"></span> ADMIN</span>
     </div>
     <div class="tabs">
-      <button class="tab active" data-tab="contentTab">ویدیو و کانال</button>
-      <button class="tab" data-tab="radioTab">مدیریت رادیو</button>
-      <button class="tab" data-tab="watermarkTab">Watermark Studio</button>
-      <button class="tab" data-tab="youtubeTab">📡 YouTube Sync</button>
-      <button class="tab" data-tab="stationTab">ایستگاه و پشتیبان</button>
+      <button class="tab active" data-tab="contentTab"><i class="ic ic-video"></i><span class="lbl" data-i18n="tabContent">ویدیو و کانال</span></button>
+      <button class="tab" data-tab="radioTab"><i class="ic ic-radio"></i><span class="lbl" data-i18n="tabRadio">مدیریت رادیو</span></button>
+      <button class="tab" data-tab="watermarkTab"><i class="ic ic-wm"></i><span class="lbl" data-i18n="tabWatermark">Watermark</span></button>
+      <button class="tab" data-tab="youtubeTab"><i class="ic ic-yt"></i><span class="lbl" data-i18n="tabYoutube">YouTube Sync</span></button>
+      <button class="tab" data-tab="stationTab"><i class="ic ic-appear"></i><span class="lbl" data-i18n="tabStation">ایستگاه و پشتیبان</span></button>
     </div>
 
     <div id="contentTab" class="tabcontent">
       <div class="adminGrid">
         <div class="section">
-          <h3>افزودن برنامه به تلویزیون</h3>
-          <div class="field"><label for="videoTitle">نام برنامه (اختیاری)</label><input id="videoTitle" placeholder="مثلاً برنامه شماره یک"></div>
-          <div class="field"><label for="videoURL">لینک یوتیوب یا ویدیوی مستقیم</label><input id="videoURL" type="url" placeholder="https://..."></div>
-          <div class="field"><label for="videoFiles">یا فایل ویدیویی برای آپلود آنلاین</label><input id="videoFiles" type="file" accept="video/*" multiple></div>
+          <h3><i class="ic ic-video"></i><span data-i18n="addProgram">افزودن برنامه به تلویزیون</span></h3>
+          <div class="field"><label for="videoTitle" data-i18n="lblTitleOpt">نام برنامه (اختیاری)</label><input id="videoTitle" placeholder="—"></div>
+          <div class="field"><label for="videoURL" data-i18n="lblUrl">لینک یوتیوب یا ویدیوی مستقیم</label><input id="videoURL" type="url" placeholder="https://..."></div>
+          <div class="field"><label for="videoFiles" data-i18n="lblFile">یا فایل ویدیویی برای آپلود</label><input id="videoFiles" type="file" accept="video/*" multiple></div>
           <div class="actions">
-            <button id="addVideoButton" class="primary">افزودن به پلی‌لیست</button>
-            <button id="clearVideoFields">پاک‌کردن فیلدها</button>
+            <button id="addVideoButton" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="addBtn">افزودن</span></button>
+            <button id="clearVideoFields"><i class="ic ic-close"></i><span class="lbl" data-i18n="clearBtn">پاک‌کردن</span></button>
           </div>
-          <p class="viewerhint">برای نمایش فایل به همهٔ بیننده‌ها، آپلود آنلاین در Storage لازم است.</p>
         </div>
         <div class="section">
-          <h3>کانال‌ها</h3>
-          <div class="field"><label for="channelNameInput">نام کانال جدید</label><input id="channelNameInput" placeholder="نام کانال"></div>
+          <h3><i class="ic ic-tv"></i><span data-i18n="channelsTitle">کانال‌ها</span></h3>
+          <div class="field"><label for="channelNameInput" data-i18n="lblNewCh">نام کانال جدید</label><input id="channelNameInput" placeholder="—"></div>
           <div class="rowfields">
-            <div class="field"><label for="channelColorInput">رنگ کانال</label><input id="channelColorInput" type="color" value="#e8b85b"></div>
-            <div class="field" style="justify-content:end"><button id="createChannelButton" class="primary">ساخت کانال</button></div>
+            <div class="field"><label for="channelColorInput" data-i18n="lblColor">رنگ کانال</label><input id="channelColorInput" type="color" value="#e8b85b"></div>
+            <div class="field" style="justify-content:end"><button id="createChannelButton" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="createBtn">ساخت</span></button></div>
           </div>
           <div id="adminChannelList" class="itemlist"></div>
         </div>
         <div class="section" style="grid-column:1/-1">
-          <h3>پلی‌لیست کانال فعلی</h3>
+          <h3><i class="ic ic-video"></i><span data-i18n="playlistTitle">پلی‌لیست کانال فعلی</span></h3>
           <div class="actions">
-            <button id="playSelectedButton">پخش مورد انتخاب‌شده</button>
-            <button id="moveUpButton">⬆ جابه‌جایی</button>
-            <button id="moveDownButton">⬇ جابه‌جایی</button>
-            <button id="deleteSelectedButton" class="danger">حذف انتخاب‌شده</button>
+            <button id="playSelectedButton"><i class="ic ic-play"></i><span class="lbl" data-i18n="playSel">پخش</span></button>
+            <button id="moveUpButton"><i class="ic ic-up"></i></button>
+            <button id="moveDownButton"><i class="ic ic-down"></i></button>
+            <button id="deleteSelectedButton" class="danger"><i class="ic ic-trash"></i><span class="lbl" data-i18n="deleteBtn">حذف</span></button>
           </div>
           <div class="field" style="margin-top:12px">
-            <label for="scheduleTz">منطقهٔ زمانی ساعت‌های ثابت</label>
+            <label for="scheduleTz" data-i18n="tzLbl">منطقهٔ زمانی ساعت‌های ثابت</label>
             <select id="scheduleTz">
               <option value="210">ایران (UTC+3:30)</option>
               <option value="180">ترکیه / عراق (UTC+3:00)</option>
@@ -375,7 +430,7 @@ body.viewerMode #videoElement{controls:none!important}
               <option value="300">پاکستان (UTC+5:00)</option>
               <option value="0">UTC</option>
             </select>
-            <div class="viewerhint">با دکمهٔ ⏰ کنار هر برنامه می‌توانی یک ساعت پخش ثابت (هر روز) تعیین کنی.</div>
+            <div class="viewerhint" data-i18n="tzHint">با دکمهٔ ⏰ کنار هر برنامه می‌توانی یک ساعت پخش ثابت (هر روز) تعیین کنی.</div>
           </div>
           <div id="adminPlaylist" class="itemlist"></div>
         </div>
@@ -384,19 +439,27 @@ body.viewerMode #videoElement{controls:none!important}
 
     <div id="radioTab" class="tabcontent hidden">
       <div class="adminGrid">
-        <div class="section">
-          <h3>افزودن صوت به رادیو</h3>
-          <div class="field"><label for="radioTitle">نام آهنگ یا برنامه</label><input id="radioTitle" placeholder="نام برنامه صوتی"></div>
-          <div class="field"><label for="radioURL">لینک مستقیم صوت یا لینک یوتیوب</label><input id="radioURL" type="url" placeholder="https://.../audio.mp3"></div>
-          <div class="field"><label for="radioFiles">فایل‌های صوتی برای آپلود</label><input id="radioFiles" type="file" accept="audio/*" multiple></div>
-          <button id="addRadioButton" class="primary">افزودن به پلی‌لیست رادیو</button>
-          <p class="viewerhint">لینک یوتیوب در رادیو فقط به‌صورت صوتی و بدون تصویر پخش می‌شود.</p>
+        <div class="section" style="grid-column:1/-1">
+          <h3><i class="ic ic-radio"></i><span data-i18n="radioChannelsTitle">کانال‌های رادیو</span></h3>
+          <div class="rowfields">
+            <div class="field"><label for="radioChannelName" data-i18n="lblNewRadioCh">نام کانال رادیو جدید</label><input id="radioChannelName" placeholder="—"></div>
+            <div class="field" style="justify-content:end"><button id="createRadioChannelButton" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="createBtn">ساخت</span></button></div>
+          </div>
+          <div id="radioChannelList" class="itemlist"></div>
         </div>
         <div class="section">
-          <h3>پلی‌لیست رادیو</h3>
+          <h3><i class="ic ic-mic"></i><span data-i18n="addAudioTitle">افزودن صوت به کانال فعلی</span></h3>
+          <div class="field"><label for="radioTitle" data-i18n="lblAudioName">نام برنامه</label><input id="radioTitle" placeholder="—"></div>
+          <div class="field"><label for="radioURL" data-i18n="lblAudioUrl">لینک صوت / یوتیوب / پلی‌لیست یوتیوب</label><input id="radioURL" type="url" placeholder="MP3 یا playlist?list=... یا youtube.com/channel/UC..."></div>
+          <div class="field"><label for="radioFiles" data-i18n="lblAudioFile">یا فایل‌های صوتی برای آپلود</label><input id="radioFiles" type="file" accept="audio/*" multiple></div>
+          <button id="addRadioButton" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="addBtn">افزودن</span></button>
+          <p class="viewerhint">✅ لینک مستقیم فایل صوتی (mp3، ogg)<br>✅ ویدیوی یوتیوب (فقط صدا)<br>✅ پلی‌لیست یوتیوب (<code>playlist?list=...</code>)<br>✅ کانال یوتیوب با آی‌دی (<code>youtube.com/channel/UC...</code>)<br>❌ لینک <code>@handle</code> پشتیبانی نمی‌شود — از خود کانال Play all رو بزن</p>
+        </div>
+        <div class="section">
+          <h3><i class="ic ic-mic"></i><span data-i18n="playlistRadioTitle">پلی‌لیست کانال فعلی</span></h3>
           <div class="actions">
-            <button id="playSelectedRadio">پخش انتخاب‌شده</button>
-            <button id="deleteSelectedRadio" class="danger">حذف انتخاب‌شده</button>
+            <button id="playSelectedRadio"><i class="ic ic-play"></i><span class="lbl" data-i18n="playSel">پخش</span></button>
+            <button id="deleteSelectedRadio" class="danger"><i class="ic ic-trash"></i><span class="lbl" data-i18n="deleteBtn">حذف</span></button>
           </div>
           <div id="adminRadioList" class="itemlist"></div>
         </div>
@@ -406,39 +469,39 @@ body.viewerMode #videoElement{controls:none!important}
     <div id="watermarkTab" class="tabcontent hidden">
       <div class="adminGrid">
         <div class="section">
-          <h3>متن یا لوگوی واترمارک</h3>
-          <div class="field"><label for="wmTextInput">متن دلخواه</label><input id="wmTextInput" placeholder="مثلاً AM ORIGINAL"></div>
-          <div class="field"><label for="wmImageInput">تصویر لوگو (PNG / WebP / JPG)</label><input id="wmImageInput" type="file" accept="image/*"></div>
-          <div class="field"><label for="wmImageURL">یا لینک مستقیم تصویر</label><input id="wmImageURL" type="url" placeholder="https://.../logo.png"></div>
+          <h3><i class="ic ic-wm"></i><span data-i18n="wmTitle">متن یا لوگوی واترمارک</span></h3>
+          <div class="field"><label for="wmTextInput" data-i18n="wmText">متن دلخواه</label><input id="wmTextInput" placeholder="AM ORIGINAL"></div>
+          <div class="field"><label for="wmImageInput" data-i18n="wmImgFile">تصویر لوگو</label><input id="wmImageInput" type="file" accept="image/*"></div>
+          <div class="field"><label for="wmImageURL" data-i18n="wmImgUrl">یا لینک مستقیم تصویر</label><input id="wmImageURL" type="url" placeholder="https://.../logo.png"></div>
           <div class="rowfields">
-            <div class="field"><label for="wmSize">اندازه متن (%)</label><input id="wmSize" type="range" min="10" max="250" value="100"></div>
-            <div class="field"><label for="wmOpacity">شفافیت (%)</label><input id="wmOpacity" type="range" min="10" max="100" value="85"></div>
+            <div class="field"><label for="wmSize" data-i18n="wmSize">اندازه متن (%)</label><input id="wmSize" type="range" min="10" max="250" value="100"></div>
+            <div class="field"><label for="wmOpacity" data-i18n="wmOpacity">شفافیت (%)</label><input id="wmOpacity" type="range" min="10" max="100" value="85"></div>
           </div>
           <div class="rowfields">
-            <div class="field"><label for="wmWidth">عرض لوگو (px)</label><input id="wmWidth" type="number" min="20" max="700" value="110"></div>
-            <div class="field"><label for="wmColor">رنگ متن</label><input id="wmColor" type="color" value="#ffffff"></div>
+            <div class="field"><label for="wmWidth" data-i18n="wmWidth">عرض لوگو (px)</label><input id="wmWidth" type="number" min="20" max="700" value="110"></div>
+            <div class="field"><label for="wmColor" data-i18n="wmColor">رنگ متن</label><input id="wmColor" type="color" value="#ffffff"></div>
           </div>
         </div>
         <div class="section">
-          <h3>جایگاه واترمارک</h3>
-          <div class="field"><label for="wmPosition">جایگاه از پیش‌تعریف‌شده</label>
+          <h3><span data-i18n="wmPosTitle">جایگاه واترمارک</span></h3>
+          <div class="field"><label for="wmPosition" data-i18n="wmPos">جایگاه</label>
             <select id="wmPosition">
-              <option value="top-left">بالا چپ</option>
-              <option value="top-right">بالا راست</option>
-              <option value="bottom-left">پایین چپ</option>
-              <option value="bottom-right">پایین راست</option>
-              <option value="center">وسط</option>
-              <option value="custom">جایگاه دلخواه</option>
+              <option value="top-left" data-i18n="posTL">بالا چپ</option>
+              <option value="top-right" data-i18n="posTR">بالا راست</option>
+              <option value="bottom-left" data-i18n="posBL">پایین چپ</option>
+              <option value="bottom-right" data-i18n="posBR">پایین راست</option>
+              <option value="center" data-i18n="posC">وسط</option>
+              <option value="custom" data-i18n="posCustom">دلخواه</option>
             </select>
           </div>
           <div class="rowfields">
-            <div class="field"><label for="wmX">موقعیت افقی (%)</label><input id="wmX" type="range" min="0" max="95" value="3"></div>
-            <div class="field"><label for="wmY">موقعیت عمودی (%)</label><input id="wmY" type="range" min="0" max="95" value="4"></div>
+            <div class="field"><label for="wmX" data-i18n="wmX">افقی (%)</label><input id="wmX" type="range" min="0" max="95" value="3"></div>
+            <div class="field"><label for="wmY" data-i18n="wmY">عمودی (%)</label><input id="wmY" type="range" min="0" max="95" value="4"></div>
           </div>
           <div class="actions">
-            <button id="previewWatermark">پیش‌نمایش</button>
-            <button id="saveWatermark" class="primary">ذخیره واترمارک برای همه</button>
-            <button id="clearWatermark">حذف واترمارک</button>
+            <button id="previewWatermark"><i class="ic ic-eye"></i><span class="lbl" data-i18n="preview">پیش‌نمایش</span></button>
+            <button id="saveWatermark" class="primary"><i class="ic ic-save"></i><span class="lbl" data-i18n="saveAll">ذخیره برای همه</span></button>
+            <button id="clearWatermark"><i class="ic ic-trash"></i><span class="lbl" data-i18n="deleteBtn">حذف</span></button>
           </div>
         </div>
       </div>
@@ -447,14 +510,14 @@ body.viewerMode #videoElement{controls:none!important}
     <div id="youtubeTab" class="tabcontent hidden">
       <div class="adminGrid">
         <div class="section" style="grid-column:1/-1">
-          <h3>📡 همگام‌سازی خودکار YouTube</h3>
-          <p class="viewerhint">ویدیوهای جدید کانال‌هایی که با حساب یوتیوب دنبال می‌کنی شناسایی می‌شوند. ویدیوهای قدیمی‌تر از ۲۴ ساعت خودکار حذف می‌شوند.</p>
+          <h3><i class="ic ic-yt"></i><span data-i18n="ytTitle">همگام‌سازی خودکار YouTube</span></h3>
+          <p class="viewerhint" data-i18n="ytHint">ویدیوهای جدید کانال‌هایی که با حساب یوتیوب دنبال می‌کنی شناسایی می‌شوند. ویدیوهای قدیمی‌تر از ۲۴ ساعت خودکار حذف می‌شوند.</p>
           <div class="actions">
-            <button id="youtubeConnectButton" class="primary">اتصال حساب YouTube</button>
-            <button id="youtubeSyncButton">همگام‌سازی ویدیوهای ۲۴ ساعت اخیر</button>
+            <button id="youtubeConnectButton" class="primary"><i class="ic ic-yt"></i><span class="lbl" data-i18n="ytConnect">اتصال حساب YouTube</span></button>
+            <button id="youtubeSyncButton"><i class="ic ic-sync"></i><span class="lbl" data-i18n="ytSync">همگام‌سازی</span></button>
           </div>
-          <div class="statusbox" id="youtubeSyncStatus" style="margin-top:12px">وضعیت اتصال: هنوز بررسی نشده</div>
-          <div class="viewerhint" id="lastSyncLabel" style="margin-top:8px">آخرین همگام‌سازی: هنوز انجام نشده</div>
+          <div class="statusbox" id="youtubeSyncStatus" style="margin-top:12px" data-i18n="ytStatus">وضعیت: هنوز بررسی نشده</div>
+          <div class="viewerhint" id="lastSyncLabel" style="margin-top:8px">—</div>
         </div>
       </div>
     </div>
@@ -462,49 +525,48 @@ body.viewerMode #videoElement{controls:none!important}
     <div id="stationTab" class="tabcontent hidden">
       <div class="adminGrid">
         <div class="section">
-          <h3>تنظیمات ایستگاه</h3>
-          <div class="field"><label for="stationNameInput">نام ایستگاه</label><input id="stationNameInput" value="AM TV 24/7"></div>
-          <div class="field"><label for="stationLogoURL">لینک تصویر لوگوی سربرگ</label><input id="stationLogoURL" type="url" placeholder="https://.../logo.png"></div>
-          <div class="field"><label for="stationLogoFile">یا آپلود لوگوی سربرگ</label><input id="stationLogoFile" type="file" accept="image/*"></div>
-          <button id="saveStationButton" class="primary">ذخیره تنظیمات</button>
+          <h3><i class="ic ic-appear"></i><span data-i18n="stationTitle">تنظیمات ایستگاه</span></h3>
+          <div class="field"><label for="stationNameInput" data-i18n="lblStationName">نام ایستگاه</label><input id="stationNameInput" value="AM TV 24/7"></div>
+          <div class="field"><label for="stationLogoURL" data-i18n="lblLogoUrl">لینک لوگو</label><input id="stationLogoURL" type="url" placeholder="https://.../logo.png"></div>
+          <div class="field"><label for="stationLogoFile" data-i18n="lblLogoFile">یا آپلود لوگو</label><input id="stationLogoFile" type="file" accept="image/*"></div>
+          <button id="saveStationButton" class="primary"><i class="ic ic-save"></i><span class="lbl" data-i18n="saveBtn">ذخیره</span></button>
         </div>
         <div class="section">
-          <h3>پشتیبان‌گیری</h3>
+          <h3><i class="ic ic-export"></i><span data-i18n="backupTitle">پشتیبان‌گیری</span></h3>
           <div class="actions">
-            <button id="exportButton">خروجی JSON</button>
-            <button id="importButton">واردکردن JSON</button>
+            <button id="exportButton"><i class="ic ic-export"></i><span class="lbl" data-i18n="exportBtn">خروجی JSON</span></button>
+            <button id="importButton"><i class="ic ic-import"></i><span class="lbl" data-i18n="importBtn">واردکردن JSON</span></button>
             <input id="importFile" type="file" accept="application/json,.json" class="hidden">
           </div>
-          <div class="field" style="margin-top:11px"><label for="supabaseStatus">وضعیت اتصال</label><input id="supabaseStatus" readonly value="در حال بررسی..."></div>
-          <button id="refreshButton">همگام‌سازی مجدد</button>
+          <div class="field" style="margin-top:11px"><label for="supabaseStatus" data-i18n="connStatus">وضعیت اتصال</label><input id="supabaseStatus" readonly value="..."></div>
+          <button id="refreshButton"><i class="ic ic-sync"></i><span class="lbl" data-i18n="resync">همگام‌سازی مجدد</span></button>
         </div>
         <div class="section" style="grid-column:1/-1">
-          <h3>🎬 اینترو بین برنامه‌ها (Bumper)</h3>
-          <p class="viewerhint">وقتی یک برنامه تمام می‌شود، قبل از برنامهٔ بعدی یک صفحهٔ اینترو با نام و لوگوی شبکه و نام برنامهٔ بعدی نمایش داده می‌شود (فقط در تلویزیون).</p>
+          <h3><i class="ic ic-star"></i><span data-i18n="bumperTitle">اینترو بین برنامه‌ها (Bumper)</span></h3>
+          <p class="viewerhint" data-i18n="bumperHint">بین دو برنامهٔ تلویزیون، یک صفحهٔ کوتاه با نام و لوگوی شبکه و نام برنامهٔ بعدی نمایش داده می‌شود.</p>
           <div class="rowfields">
-            <div class="field"><label for="bumperEnabled">وضعیت</label>
-              <select id="bumperEnabled"><option value="on">روشن</option><option value="off">خاموش</option></select>
+            <div class="field"><label for="bumperEnabled" data-i18n="lblBumperStatus">وضعیت</label>
+              <select id="bumperEnabled"><option value="on" data-i18n="onLbl">روشن</option><option value="off" data-i18n="offLbl">خاموش</option></select>
             </div>
-            <div class="field"><label for="bumperSeconds">مدت نمایش (ثانیه، ۲ تا ۳۰)</label><input id="bumperSeconds" type="number" min="2" max="30" value="6"></div>
+            <div class="field"><label for="bumperSeconds" data-i18n="lblBumperSec">مدت (ثانیه، ۲ تا ۳۰)</label><input id="bumperSeconds" type="number" min="2" max="30" value="6"></div>
           </div>
-          <div class="field"><label for="bumperTextInput">متن دلخواه زیر نام شبکه (اختیاری)</label><input id="bumperTextInput" placeholder="مثلاً: شبکهٔ شما، دنیای شما"></div>
+          <div class="field"><label for="bumperTextInput" data-i18n="lblBumperText">متن دلخواه زیر نام شبکه</label><input id="bumperTextInput" placeholder="—"></div>
           <div class="actions">
-            <button id="saveBumperButton" class="primary">ذخیره اینترو</button>
-            <button id="previewBumperButton">پیش‌نمایش ۴ ثانیه‌ای</button>
+            <button id="saveBumperButton" class="primary"><i class="ic ic-save"></i><span class="lbl" data-i18n="saveBumper">ذخیره اینترو</span></button>
+            <button id="previewBumperButton"><i class="ic ic-eye"></i><span class="lbl" data-i18n="preview">پیش‌نمایش</span></button>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <div class="footer">AM TV 24/7 · YOUR WORLD · YOUR CHANNEL<br>v1.2.0 · Bumper + Pin + EPG + Sync + Viewers</div>
+  <div class="footer">AM TV 24/7 · YOUR WORLD · YOUR CHANNEL<br>v1.4.0</div>
   <div id="diag" style="direction:ltr;text-align:center;font-size:11px;color:#a9b09f;padding:6px 12px 24px;overflow-wrap:anywhere"></div>
 </main>
 <div aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;opacity:0;pointer-events:none"><div id="probePlayer"></div></div>
 <div id="toast" role="status"></div>
 
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js&quot;><\/script>')"></script>
-<script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js&quot;><\/script>')"></script><script>
 "use strict";
 
 const SUPABASE_URL = "https://nxcttzqubdlpfqqdzhpp.supabase.co";
@@ -519,23 +581,248 @@ const clone = v => JSON.parse(JSON.stringify(v));
 const makeId = () => "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,9);
 const DAY = 86400000;
 
-/* ============== Visitor ID ============== */
+/* ============ Visitor ID ============ */
 function getVisitorId(){
   let id = localStorage.getItem("amtv-visitor-id");
-  if (!id){
-    id = "v-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,9);
-    localStorage.setItem("amtv-visitor-id", id);
-  }
+  if(!id){ id = "v-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9); localStorage.setItem("amtv-visitor-id",id); }
   return id;
 }
 const VISITOR_ID = getVisitorId();
 
-/* ============== i18n ============== */
-const I18N={
-"fa":{"settings":"⚙️ ظاهر","admin":"🔐 مدیریت","logout":"خروج مدیر","exitfs":"✕ خروج از تمام‌صفحه","rotate":"🔄 افقی / عمودی","fullscreen":"⛶ تمام صفحه","untitled":"بدون عنوان","audioProgram":"برنامهٔ صوتی","nowOnAir":"برنامهٔ در حال پخش","waiting":"کانال در انتظار برنامه است","notplaying":"در انتظار پخش","emptySection":"برای این بخش هنوز برنامه‌ای اضافه نشده است","badYt":"شناسهٔ ویدیوی یوتیوب قابل تشخیص نیست","loadingYt":"در حال بارگذاری پلیر یوتیوب...","syncing":"در حال هماهنگ‌سازی با پخش زنده...","videoErr":"این لینک ویدیو قابل پخش نیست.","ytErr":"یوتیوب نتوانست ویدیو را پخش کند (کد {code}).","fetchErr":"دریافت برنامه ممکن نشد: {msg}","noSubs":"این ویدیو زیرنویس ندارد.","bumperDefault":"برنامهٔ بعدی تا لحظاتی دیگر","bumperNext":"بعدی:","guideNow":"اکنون","guideFixed":"ساعت ثابت","guideResume":"ادامه","guideCalc":"در حال محاسبهٔ برنامه…"},
-"en":{"settings":"⚙️ Appearance","admin":"🔐 Admin","logout":"Admin logout","exitfs":"✕ Exit full screen","rotate":"🔄 Landscape / Portrait","fullscreen":"⛶ Full screen","untitled":"Untitled","audioProgram":"Audio program","nowOnAir":"Now playing","waiting":"The channel is waiting for programming","notplaying":"Waiting to play","emptySection":"No programs have been added yet","badYt":"YouTube video ID not recognized","loadingYt":"Loading YouTube player…","syncing":"Syncing with live broadcast…","videoErr":"This video link can't be played.","ytErr":"YouTube couldn't play this video (code {code}).","fetchErr":"Couldn't load: {msg}","noSubs":"This video has no captions.","bumperDefault":"Next program in a moment","bumperNext":"Up next:","guideNow":"Now","guideFixed":"Fixed time","guideResume":"Resumes","guideCalc":"Calculating the schedule…"},
-"ar":{"settings":"⚙️ المظهر","admin":"🔐 المشرف","logout":"خروج المشرف","exitfs":"✕ الخروج","rotate":"🔄 أفقي / عمودي","fullscreen":"⛶ ملء الشاشة","untitled":"بدون عنوان","audioProgram":"برنامج صوتي","nowOnAir":"قيد التشغيل","waiting":"القناة بانتظار البرامج","notplaying":"بانتظار التشغيل","emptySection":"لا برامج بعد","badYt":"معرّف الفيديو غير معروف","loadingYt":"جارٍ التحميل…","syncing":"جارٍ المزامنة…","videoErr":"تعذّر التشغيل.","ytErr":"تعذّر يوتيوب التشغيل ({code}).","fetchErr":"تعذّر التحميل: {msg}","noSubs":"لا توجد ترجمة.","bumperDefault":"البرنامج التالي بعد لحظات","bumperNext":"التالي:","guideNow":"الآن","guideFixed":"وقت ثابت","guideResume":"يتابع","guideCalc":"جارٍ الحساب…"},
-"tr":{"settings":"⚙️ Görünüm","admin":"🔐 Yönetici","logout":"Çıkış","exitfs":"✕ Tam ekrandan çık","rotate":"🔄 Yatay / Dikey","fullscreen":"⛶ Tam ekran","untitled":"Başlıksız","audioProgram":"Ses programı","nowOnAir":"Şu an yayında","waiting":"Kanal program bekliyor","notplaying":"Oynatma bekleniyor","emptySection":"Henüz program yok","badYt":"Video kimliği tanınamadı","loadingYt":"Yükleniyor…","syncing":"Eşitleniyor…","videoErr":"Oynatılamıyor.","ytErr":"YouTube oynatamadı ({code}).","fetchErr":"Yüklenemedi: {msg}","noSubs":"Altyazı yok.","bumperDefault":"Sıradaki program birazdan","bumperNext":"Sıradaki:","guideNow":"Şimdi","guideFixed":"Sabit saat","guideResume":"Devam","guideCalc":"Hesaplanıyor…"}
+/* ============ i18n ============ */
+const I18N = {
+"fa":{
+  navTV:"تلویزیون",navRadio:"رادیو",navGuide:"برنامه",navAppear:"ظاهر",navAdmin:"مدیریت",navLogout:"خروج",
+  stationStatus:"وضعیت ایستگاه",stationLbl:"ایستگاه:",modeLbl:"حالت:",statusLbl:"وضعیت:",roleLbl:"دسترسی:",channelLbl:"کانال:",
+  viewersTitle:"بیننده‌ها",onlineLbl:" آنلاین الان:",onTVLbl:" روی TV:",onRadioLbl:" روی Radio:",viewerLbl:" بیننده:",adminLbl:" مدیر:",totalViewsLbl:" کل بازدید:",
+  channelsTitle:"کانال‌ها",guideTitle:"برنامهٔ پخش (EPG)",guideHint:"زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند.",
+  close:"بستن",preparing:"در حال آماده‌سازی پخش...",waiting:"کانال در انتظار برنامه است",notplaying:"در انتظار پخش",ready:"آماده",
+  tvMode:"تلویزیون",radioMode:"رادیو",viewerRole:"بیننده",adminRole:"مدیر",
+  settingsTitle:"شخصی‌سازی نمایش",lblPreset:"رنگ آماده",lblMode:"حالت نمایش",lblAccent:"رنگ اصلی",lblBg:"رنگ پس‌زمینه",
+  p_green:"سبز رترو",p_amber:"کهربایی",p_blue:"آبی",p_purple:"بنفش",p_red:"قرمز",
+  m_dark:"🌙 دارک",m_light:"☀️ لایت",m_special:"✨ اسپیشیال",
+  resetCustom:"بازنشانی",lblLang:"زبان",langAuto:"خودکار",emojiOnlyLbl:"فقط آیکون — بدون متن در دکمه‌ها",
+  lblSub:"زیرنویس و ترجمه",subOff:"خاموش",subHint:"ترجمه خودکار است و فقط وقتی کار می‌کند که ویدیو زیرنویس داشته باشد.",
+  settingsHint:"این انتخاب‌ها فقط ظاهر همین مرورگر را تغییر می‌دهند.",
+  loginTitle:"ورود مدیر",emailLbl:"ایمیل مدیر",passLbl:"رمز عبور",signIn:"ورود",loginHint:"حساب باید از قبل در Supabase ساخته شده باشد.",
+  adminTitle:"پنل مدیریت AM TV",
+  tabContent:"ویدیو و کانال",tabRadio:"مدیریت رادیو",tabWatermark:"Watermark",tabYoutube:"YouTube Sync",tabStation:"ایستگاه و پشتیبان",
+  addProgram:"افزودن برنامه به تلویزیون",lblTitleOpt:"نام برنامه (اختیاری)",lblUrl:"لینک یوتیوب یا ویدیوی مستقیم",lblFile:"یا فایل ویدیویی",
+  addBtn:"افزودن",clearBtn:"پاک‌کردن",deleteBtn:"حذف",createBtn:"ساخت",playSel:"پخش",saveBtn:"ذخیره",preview:"پیش‌نمایش",
+  lblNewCh:"نام کانال جدید",lblColor:"رنگ کانال",
+  playlistTitle:"پلی‌لیست کانال فعلی",tzLbl:"منطقهٔ زمانی ساعت‌های ثابت",
+  tzHint:"با دکمهٔ ⏰ کنار هر برنامه می‌توانی یک ساعت پخش ثابت (هر روز) تعیین کنی.",
+  radioChannelsTitle:"کانال‌های رادیو",lblNewRadioCh:"نام کانال رادیو جدید",addAudioTitle:"افزودن صوت به کانال فعلی",
+  lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست یوتیوب",lblAudioFile:"یا فایل‌های صوتی برای آپلود",
+  playlistRadioTitle:"پلی‌لیست کانال فعلی",
+  wmTitle:"متن یا لوگوی واترمارک",wmText:"متن دلخواه",wmImgFile:"تصویر لوگو",wmImgUrl:"یا لینک تصویر",
+  wmSize:"اندازه متن (%)",wmOpacity:"شفافیت (%)",wmWidth:"عرض لوگو (px)",wmColor:"رنگ متن",
+  wmPosTitle:"جایگاه واترمارک",wmPos:"جایگاه",posTL:"بالا چپ",posTR:"بالا راست",posBL:"پایین چپ",posBR:"پایین راست",posC:"وسط",posCustom:"دلخواه",wmX:"افقی (%)",wmY:"عمودی (%)",
+  saveAll:"ذخیره برای همه",
+  ytTitle:"همگام‌سازی خودکار YouTube",ytHint:"ویدیوهای جدید کانال‌هایی که با حساب یوتیوب دنبال می‌کنی شناسایی می‌شوند.",
+  ytConnect:"اتصال حساب YouTube",ytSync:"همگام‌سازی",ytStatus:"وضعیت: هنوز بررسی نشده",
+  stationTitle:"تنظیمات ایستگاه",lblStationName:"نام ایستگاه",lblLogoUrl:"لینک لوگو",lblLogoFile:"یا آپلود لوگو",
+  backupTitle:"پشتیبان‌گیری",exportBtn:"خروجی JSON",importBtn:"واردکردن JSON",connStatus:"وضعیت اتصال",resync:"همگام‌سازی مجدد",
+  bumperTitle:"اینترو بین برنامه‌ها (Bumper)",bumperHint:"بین دو برنامهٔ تلویزیون، یک صفحهٔ کوتاه نمایش داده می‌شود.",
+  lblBumperStatus:"وضعیت",lblBumperSec:"مدت (ثانیه)",lblBumperText:"متن دلخواه زیر نام شبکه",saveBumper:"ذخیره اینترو",
+  onLbl:"روشن",offLbl:"خاموش",
+  cc:"زیرنویس",fullscreen:"تمام صفحه",exitfs:"خروج",rotate:"افقی / عمودی",unmute:"🔊 برای فعال‌سازی صدا لمس کنید",
+  untitled:"بدون عنوان",audioProgram:"برنامهٔ صوتی",nowOnAir:"برنامهٔ در حال پخش",emptySection:"هنوز برنامه‌ای اضافه نشده",
+  badYt:"شناسهٔ ویدیو قابل تشخیص نیست",loadingYt:"در حال بارگذاری...",syncing:"در حال هماهنگ‌سازی...",
+  videoErr:"این لینک قابل پخش نیست.",ytErr:"یوتیوب نتوانست پخش کند (کد {code}).",
+  noSubs:"این ویدیو زیرنویس ندارد.",bumperDefault:"برنامهٔ بعدی تا لحظاتی دیگر",bumperNext:"بعدی:",
+  guideNow:"اکنون",guideFixed:"ساعت ثابت",guideResume:"ادامه",guideCalc:"در حال محاسبه…",
+  lastSyncNever:"آخرین همگام‌سازی: هنوز انجام نشده",
+  msgAdded:"{n} مورد اضافه شد.",msgChannelCreated:"کانال ساخته شد.",msgRadioChannelCreated:"کانال رادیو ساخته شد.",
+  msgEmojiOn:"حالت فقط آیکون روشن",msgEmojiOff:"حالت عادی",msgLangChanged:"زبان تغییر کرد",
+  msgPinSet:"ساعت ثابت ثبت شد.",msgPinCleared:"ساعت ثابت حذف شد.",msgPinInvalid:"ساعت نامعتبر است؛ مثل 20:00 بنویس.",
+  msgPinNoDur:"طول این برنامه هنوز معلوم نیست.",msgReset:"رنگ‌ها بازنشانی شد.",msgPreviewUpd:"پیش‌نمایش به‌روزرسانی شد.",
+  msgWmSaved:"واترمارک ذخیره شد.",msgWmCleared:"واترمارک حذف شد.",msgStationSaved:"تنظیمات ذخیره شد.",
+  msgBumperSaved:"تنظیمات اینترو ذخیره شد.",msgBackupIn:"پشتیبان وارد شد.",msgBackupFail:"واردکردن ناموفق: ",
+  msgLoggedIn:"ورود انجام شد.",msgLoggedOut:"خارج شدی.",msgAddFail:"افزودن ناموفق: ",msgUploadFail:"آپلود ناموفق: ",
+  msgPlayVideoFail:"پخش ویدیو ممکن نشد.",msgPlayAudioFail:"پخش صوت ممکن نشد.",msgEndOfList:"پلی‌لیست به پایان رسید",
+  msgNoChannelSwitch:"تعویض کانال فقط توسط مدیر.",msgNoAdmin:"فقط مدیر می‌تواند.",
+  msgRenamed:"عنوان تغییر کرد.",msgRenameEmpty:"عنوان نمی‌تواند خالی باشد.",
+  msgYtHandle:"برای کانال، لینک playlist رو کپی کن (playlist?list=...).",
+  msgSaved:"ذخیره شد.",
+  confirmDelCh:"این کانال حذف شود؟",confirmDelRadioCh:"این کانال رادیو حذف شود؟",
+  promptPin:"ساعت پخش ثابت این برنامه (هر روز)، مثلاً 20:00\nخالی = حذف ثابت‌بودن",
+  promptRename:"عنوان جدید برای این برنامه:"
+},
+"en":{
+  navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
+  stationStatus:"Station status",stationLbl:"Station:",modeLbl:"Mode:",statusLbl:"Status:",roleLbl:"Access:",channelLbl:"Channel:",
+  viewersTitle:"Viewers",onlineLbl:" Online now:",onTVLbl:" On TV:",onRadioLbl:" On Radio:",viewerLbl:" Viewers:",adminLbl:" Admins:",totalViewsLbl:" Total views:",
+  channelsTitle:"Channels",guideTitle:"Schedule (EPG)",guideHint:"Times are based on the admin's timezone.",
+  close:"Close",preparing:"Preparing...",waiting:"Channel is waiting for programs",notplaying:"Waiting to play",ready:"Ready",
+  tvMode:"TV",radioMode:"Radio",viewerRole:"Viewer",adminRole:"Admin",
+  settingsTitle:"Display settings",lblPreset:"Preset color",lblMode:"Display mode",lblAccent:"Accent color",lblBg:"Background color",
+  p_green:"Retro green",p_amber:"Amber",p_blue:"Blue",p_purple:"Purple",p_red:"Red",
+  m_dark:"🌙 Dark",m_light:"☀️ Light",m_special:"✨ Special",
+  resetCustom:"Reset",lblLang:"Language",langAuto:"Auto",emojiOnlyLbl:"Icons only — no text on buttons",
+  lblSub:"Subtitles",subOff:"Off",subHint:"Auto translation works only when captions exist.",
+  settingsHint:"These choices only affect this browser.",
+  loginTitle:"Admin login",emailLbl:"Admin email",passLbl:"Password",signIn:"Sign in",loginHint:"Account must exist in Supabase.",
+  adminTitle:"AM TV Admin Panel",
+  tabContent:"Video & Channels",tabRadio:"Radio",tabWatermark:"Watermark",tabYoutube:"YouTube Sync",tabStation:"Station & Backup",
+  addProgram:"Add TV program",lblTitleOpt:"Program title (optional)",lblUrl:"YouTube or direct video link",lblFile:"Or video file",
+  addBtn:"Add",clearBtn:"Clear",deleteBtn:"Delete",createBtn:"Create",playSel:"Play",saveBtn:"Save",preview:"Preview",
+  lblNewCh:"New channel name",lblColor:"Channel color",
+  playlistTitle:"Current channel playlist",tzLbl:"Timezone for fixed times",
+  tzHint:"Use ⏰ next to each item to set a daily fixed time.",
+  radioChannelsTitle:"Radio channels",lblNewRadioCh:"New radio channel name",addAudioTitle:"Add audio to current channel",
+  lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube / YouTube playlist link",lblAudioFile:"Or audio files to upload",
+  playlistRadioTitle:"Current channel playlist",
+  wmTitle:"Watermark",wmText:"Text",wmImgFile:"Logo image",wmImgUrl:"Or image URL",
+  wmSize:"Text size (%)",wmOpacity:"Opacity (%)",wmWidth:"Logo width (px)",wmColor:"Text color",
+  wmPosTitle:"Watermark position",wmPos:"Position",posTL:"Top left",posTR:"Top right",posBL:"Bottom left",posBR:"Bottom right",posC:"Center",posCustom:"Custom",wmX:"X (%)",wmY:"Y (%)",
+  saveAll:"Save for everyone",
+  ytTitle:"Auto YouTube sync",ytHint:"New videos from channels you follow are detected.",
+  ytConnect:"Connect YouTube account",ytSync:"Sync",ytStatus:"Status: not checked yet",
+  stationTitle:"Station settings",lblStationName:"Station name",lblLogoUrl:"Logo URL",lblLogoFile:"Or upload logo",
+  backupTitle:"Backup",exportBtn:"Export JSON",importBtn:"Import JSON",connStatus:"Connection status",resync:"Resync",
+  bumperTitle:"Bumper (intro between programs)",bumperHint:"A short intro between two TV programs.",
+  lblBumperStatus:"Status",lblBumperSec:"Duration (sec)",lblBumperText:"Custom text below station name",saveBumper:"Save bumper",
+  onLbl:"On",offLbl:"Off",
+  cc:"Subtitles",fullscreen:"Full screen",exitfs:"Exit",rotate:"Landscape / Portrait",unmute:"🔊 Tap to enable sound",
+  untitled:"Untitled",audioProgram:"Audio program",nowOnAir:"Now playing",emptySection:"Nothing added yet",
+  badYt:"Video ID not recognized",loadingYt:"Loading...",syncing:"Syncing...",
+  videoErr:"This link cannot be played.",ytErr:"YouTube couldn't play (code {code}).",
+  noSubs:"No captions for this video.",bumperDefault:"Next program in a moment",bumperNext:"Up next:",
+  guideNow:"Now",guideFixed:"Fixed time",guideResume:"Resumes",guideCalc:"Calculating...",
+  lastSyncNever:"Last sync: never",
+  msgAdded:"{n} item(s) added.",msgChannelCreated:"Channel created.",msgRadioChannelCreated:"Radio channel created.",
+  msgEmojiOn:"Icons-only mode on",msgEmojiOff:"Normal mode",msgLangChanged:"Language changed",
+  msgPinSet:"Fixed time saved.",msgPinCleared:"Fixed time cleared.",msgPinInvalid:"Invalid time; use 20:00.",
+  msgPinNoDur:"Duration unknown yet.",msgReset:"Colors reset.",msgPreviewUpd:"Preview updated.",
+  msgWmSaved:"Watermark saved.",msgWmCleared:"Watermark cleared.",msgStationSaved:"Settings saved.",
+  msgBumperSaved:"Bumper saved.",msgBackupIn:"Backup imported.",msgBackupFail:"Import failed: ",
+  msgLoggedIn:"Signed in.",msgLoggedOut:"Signed out.",msgAddFail:"Add failed: ",msgUploadFail:"Upload failed: ",
+  msgPlayVideoFail:"Video play failed.",msgPlayAudioFail:"Audio play failed.",msgEndOfList:"End of playlist",
+  msgNoChannelSwitch:"Only admin can switch channels.",msgNoAdmin:"Admin only.",
+  msgRenamed:"Title updated.",msgRenameEmpty:"Title cannot be empty.",
+  msgYtHandle:"For channels, copy the playlist URL (playlist?list=...).",
+  msgSaved:"Saved.",
+  confirmDelCh:"Delete this channel?",confirmDelRadioCh:"Delete this radio channel?",
+  promptPin:"Fixed daily air time for this program, e.g. 20:00\nEmpty = remove pin",
+  promptRename:"New title for this program:"
+},
+"ar":{
+  navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
+  stationStatus:"حالة المحطة",stationLbl:"المحطة:",modeLbl:"الوضع:",statusLbl:"الحالة:",roleLbl:"الصلاحية:",channelLbl:"القناة:",
+  viewersTitle:"المشاهدون",onlineLbl:" متصل الآن:",onTVLbl:" على TV:",onRadioLbl:" على Radio:",viewerLbl:" مشاهد:",adminLbl:" مشرف:",totalViewsLbl:" إجمالي:",
+  channelsTitle:"القنوات",guideTitle:"جدول البث",guideHint:"الأوقات حسب المنطقة الزمنية للمشرف.",
+  close:"إغلاق",preparing:"جارٍ التجهيز...",waiting:"القناة بانتظار البرامج",notplaying:"بانتظار التشغيل",ready:"جاهز",
+  tvMode:"تلفزيون",radioMode:"راديو",viewerRole:"مشاهد",adminRole:"مشرف",
+  settingsTitle:"تخصيص العرض",lblPreset:"لون جاهز",lblMode:"وضع العرض",lblAccent:"اللون الرئيسي",lblBg:"لون الخلفية",
+  p_green:"أخضر",p_amber:"كهرماني",p_blue:"أزرق",p_purple:"بنفسجي",p_red:"أحمر",
+  m_dark:"🌙 داكن",m_light:"☀️ فاتح",m_special:"✨ خاص",
+  resetCustom:"إعادة",lblLang:"اللغة",langAuto:"تلقائي",emojiOnlyLbl:"أيقونات فقط — بدون نص",
+  lblSub:"الترجمة",subOff:"إيقاف",subHint:"الترجمة تعمل فقط إذا كان للفيديو ترجمة.",
+  settingsHint:"هذه الخيارات تغيّر هذا المتصفح فقط.",
+  loginTitle:"دخول المشرف",emailLbl:"البريد",passLbl:"كلمة المرور",signIn:"دخول",loginHint:"الحساب يجب أن يكون موجودًا في Supabase.",
+  adminTitle:"لوحة إدارة AM TV",
+  tabContent:"فيديو وقنوات",tabRadio:"راديو",tabWatermark:"واترمارك",tabYoutube:"مزامنة YouTube",tabStation:"المحطة والنسخ الاحتياطي",
+  addProgram:"إضافة برنامج تلفزيوني",lblTitleOpt:"اسم البرنامج (اختياري)",lblUrl:"رابط يوتيوب أو فيديو مباشر",lblFile:"أو ملف فيديو",
+  addBtn:"إضافة",clearBtn:"مسح",deleteBtn:"حذف",createBtn:"إنشاء",playSel:"تشغيل",saveBtn:"حفظ",preview:"معاينة",
+  lblNewCh:"اسم القناة الجديدة",lblColor:"لون القناة",
+  playlistTitle:"قائمة القناة الحالية",tzLbl:"المنطقة الزمنية للأوقات الثابتة",
+  tzHint:"استخدم ⏰ لتحديد وقت ثابت يومي.",
+  radioChannelsTitle:"قنوات الراديو",lblNewRadioCh:"اسم قناة الراديو الجديدة",addAudioTitle:"إضافة صوت للقناة الحالية",
+  lblAudioName:"اسم البرنامج",lblAudioUrl:"رابط صوت / يوتيوب / قائمة يوتيوب",lblAudioFile:"أو ملفات صوتية",
+  playlistRadioTitle:"قائمة القناة الحالية",
+  wmTitle:"الواترمارك",wmText:"النص",wmImgFile:"صورة الشعار",wmImgUrl:"أو رابط الصورة",
+  wmSize:"حجم النص (%)",wmOpacity:"الشفافية (%)",wmWidth:"عرض الشعار (px)",wmColor:"لون النص",
+  wmPosTitle:"موضع الواترمارك",wmPos:"الموضع",posTL:"أعلى يسار",posTR:"أعلى يمين",posBL:"أسفل يسار",posBR:"أسفل يمين",posC:"وسط",posCustom:"مخصص",wmX:"أفقي (%)",wmY:"عمودي (%)",
+  saveAll:"حفظ للجميع",
+  ytTitle:"مزامنة YouTube التلقائية",ytHint:"يتم اكتشاف الفيديوهات الجديدة.",
+  ytConnect:"ربط حساب YouTube",ytSync:"مزامنة",ytStatus:"الحالة: لم يتم الفحص",
+  stationTitle:"إعدادات المحطة",lblStationName:"اسم المحطة",lblLogoUrl:"رابط الشعار",lblLogoFile:"أو ارفع الشعار",
+  backupTitle:"نسخ احتياطي",exportBtn:"تصدير JSON",importBtn:"استيراد JSON",connStatus:"حالة الاتصال",resync:"إعادة المزامنة",
+  bumperTitle:"الفواصل (Bumper)",bumperHint:"مقدمة قصيرة بين البرامج.",
+  lblBumperStatus:"الحالة",lblBumperSec:"المدة (ثانية)",lblBumperText:"نص مخصص",saveBumper:"حفظ الفواصل",
+  onLbl:"تشغيل",offLbl:"إيقاف",
+  cc:"ترجمة",fullscreen:"ملء الشاشة",exitfs:"خروج",rotate:"أفقي / عمودي",unmute:"🔊 المس لتفعيل الصوت",
+  untitled:"بدون عنوان",audioProgram:"برنامج صوتي",nowOnAir:"يُبث الآن",emptySection:"لم يُضف شيء بعد",
+  badYt:"معرّف الفيديو غير معروف",loadingYt:"جارٍ التحميل...",syncing:"جارٍ المزامنة...",
+  videoErr:"تعذّر التشغيل.",ytErr:"تعذّر يوتيوب التشغيل ({code}).",
+  noSubs:"لا توجد ترجمة.",bumperDefault:"البرنامج التالي بعد لحظات",bumperNext:"التالي:",
+  guideNow:"الآن",guideFixed:"وقت ثابت",guideResume:"يتابع",guideCalc:"جارٍ الحساب...",
+  lastSyncNever:"آخر مزامنة: أبدًا",
+  msgAdded:"تمت إضافة {n} عنصر.",msgChannelCreated:"تم إنشاء القناة.",msgRadioChannelCreated:"تم إنشاء قناة الراديو.",
+  msgEmojiOn:"وضع الأيقونات فقط",msgEmojiOff:"الوضع العادي",msgLangChanged:"تم تغيير اللغة",
+  msgPinSet:"تم حفظ الوقت.",msgPinCleared:"تم مسح الوقت.",msgPinInvalid:"وقت غير صالح؛ استخدم 20:00.",
+  msgPinNoDur:"المدة غير معروفة بعد.",msgReset:"تمت إعادة الألوان.",msgPreviewUpd:"تم تحديث المعاينة.",
+  msgWmSaved:"تم حفظ الواترمارك.",msgWmCleared:"تم مسح الواترمارك.",msgStationSaved:"تم الحفظ.",
+  msgBumperSaved:"تم حفظ الفواصل.",msgBackupIn:"تم الاستيراد.",msgBackupFail:"فشل الاستيراد: ",
+  msgLoggedIn:"تم الدخول.",msgLoggedOut:"تم الخروج.",msgAddFail:"فشل الإضافة: ",msgUploadFail:"فشل الرفع: ",
+  msgPlayVideoFail:"تعذّر التشغيل.",msgPlayAudioFail:"تعذّر تشغيل الصوت.",msgEndOfList:"نهاية القائمة",
+  msgNoChannelSwitch:"فقط المشرف.",msgNoAdmin:"للمشرف فقط.",
+  msgRenamed:"تم تحديث العنوان.",msgRenameEmpty:"العنوان لا يمكن أن يكون فارغًا.",
+  msgYtHandle:"لقنوات، انسخ رابط القائمة (playlist?list=...).",
+  msgSaved:"تم الحفظ.",
+  confirmDelCh:"حذف هذه القناة؟",confirmDelRadioCh:"حذف قناة الراديو؟",
+  promptPin:"الوقت الثابت اليومي، مثلاً 20:00\nفارغ = إزالة",
+  promptRename:"العنوان الجديد:"
+},
+"tr":{
+  navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
+  stationStatus:"İstasyon",stationLbl:"İstasyon:",modeLbl:"Mod:",statusLbl:"Durum:",roleLbl:"Erişim:",channelLbl:"Kanal:",
+  viewersTitle:"İzleyiciler",onlineLbl:" Şu an çevrimiçi:",onTVLbl:" TV'de:",onRadioLbl:" Radyoda:",viewerLbl:" İzleyici:",adminLbl:" Yönetici:",totalViewsLbl:" Toplam:",
+  channelsTitle:"Kanallar",guideTitle:"Yayın Akışı",guideHint:"Saatler yöneticinin saat dilimine göredir.",
+  close:"Kapat",preparing:"Hazırlanıyor...",waiting:"Kanal program bekliyor",notplaying:"Oynatma bekleniyor",ready:"Hazır",
+  tvMode:"Televizyon",radioMode:"Radyo",viewerRole:"İzleyici",adminRole:"Yönetici",
+  settingsTitle:"Görünüm",lblPreset:"Hazır renk",lblMode:"Görünüm modu",lblAccent:"Ana renk",lblBg:"Arka plan",
+  p_green:"Retro yeşil",p_amber:"Kehribar",p_blue:"Mavi",p_purple:"Mor",p_red:"Kırmızı",
+  m_dark:"🌙 Koyu",m_light:"☀️ Açık",m_special:"✨ Özel",
+  resetCustom:"Sıfırla",lblLang:"Dil",langAuto:"Otomatik",emojiOnlyLbl:"Yalnızca simge — düğmelerde yazı yok",
+  lblSub:"Altyazı",subOff:"Kapalı",subHint:"Çeviri yalnızca altyazı varsa çalışır.",
+  settingsHint:"Bu seçimler yalnızca bu tarayıcıyı etkiler.",
+  loginTitle:"Yönetici girişi",emailLbl:"E-posta",passLbl:"Şifre",signIn:"Giriş",loginHint:"Hesap Supabase'de olmalı.",
+  adminTitle:"AM TV Yönetim Paneli",
+  tabContent:"Video ve Kanallar",tabRadio:"Radyo",tabWatermark:"Filigran",tabYoutube:"YouTube Senkron",tabStation:"İstasyon ve Yedek",
+  addProgram:"TV programı ekle",lblTitleOpt:"Program adı (isteğe bağlı)",lblUrl:"YouTube veya doğrudan video bağlantısı",lblFile:"Veya video dosyası",
+  addBtn:"Ekle",clearBtn:"Temizle",deleteBtn:"Sil",createBtn:"Oluştur",playSel:"Oynat",saveBtn:"Kaydet",preview:"Önizle",
+  lblNewCh:"Yeni kanal adı",lblColor:"Kanal rengi",
+  playlistTitle:"Mevcut kanalın listesi",tzLbl:"Sabit saatler için saat dilimi",
+  tzHint:"Günlük sabit saat için ⏰ kullan.",
+  radioChannelsTitle:"Radyo kanalları",lblNewRadioCh:"Yeni radyo kanalı adı",addAudioTitle:"Mevcut kanala ses ekle",
+  lblAudioName:"Program adı",lblAudioUrl:"Ses / YouTube / YouTube çalma listesi",lblAudioFile:"Veya ses dosyaları",
+  playlistRadioTitle:"Mevcut kanalın listesi",
+  wmTitle:"Filigran",wmText:"Metin",wmImgFile:"Logo resmi",wmImgUrl:"Veya resim bağlantısı",
+  wmSize:"Metin boyutu (%)",wmOpacity:"Opaklık (%)",wmWidth:"Logo genişliği (px)",wmColor:"Metin rengi",
+  wmPosTitle:"Filigran konumu",wmPos:"Konum",posTL:"Sol üst",posTR:"Sağ üst",posBL:"Sol alt",posBR:"Sağ alt",posC:"Merkez",posCustom:"Özel",wmX:"X (%)",wmY:"Y (%)",
+  saveAll:"Herkes için kaydet",
+  ytTitle:"Otomatik YouTube senkron",ytHint:"Takip ettiğin kanalların yeni videoları algılanır.",
+  ytConnect:"YouTube hesabını bağla",ytSync:"Senkronize et",ytStatus:"Durum: kontrol edilmedi",
+  stationTitle:"İstasyon ayarları",lblStationName:"İstasyon adı",lblLogoUrl:"Logo URL",lblLogoFile:"Veya logo yükle",
+  backupTitle:"Yedekleme",exportBtn:"JSON dışa",importBtn:"JSON içe",connStatus:"Bağlantı durumu",resync:"Yeniden senkron",
+  bumperTitle:"Bumper (program arası)",bumperHint:"İki TV programı arasında kısa bir giriş.",
+  lblBumperStatus:"Durum",lblBumperSec:"Süre (sn)",lblBumperText:"İstasyon adı altında özel metin",saveBumper:"Bumper'ı kaydet",
+  onLbl:"Açık",offLbl:"Kapalı",
+  cc:"Altyazı",fullscreen:"Tam ekran",exitfs:"Çıkış",rotate:"Yatay / Dikey",unmute:"🔊 Sesi açmak için dokunun",
+  untitled:"Başlıksız",audioProgram:"Ses programı",nowOnAir:"Şu an yayında",emptySection:"Henüz eklenmedi",
+  badYt:"Video kimliği tanınamadı",loadingYt:"Yükleniyor...",syncing:"Eşitleniyor...",
+  videoErr:"Oynatılamıyor.",ytErr:"YouTube oynatamadı ({code}).",
+  noSubs:"Altyazı yok.",bumperDefault:"Sıradaki program birazdan",bumperNext:"Sıradaki:",
+  guideNow:"Şimdi",guideFixed:"Sabit saat",guideResume:"Devam",guideCalc:"Hesaplanıyor...",
+  lastSyncNever:"Son senkron: hiç",
+  msgAdded:"{n} öğe eklendi.",msgChannelCreated:"Kanal oluşturuldu.",msgRadioChannelCreated:"Radyo kanalı oluşturuldu.",
+  msgEmojiOn:"Yalnızca simge modu açık",msgEmojiOff:"Normal mod",msgLangChanged:"Dil değiştirildi",
+  msgPinSet:"Sabit saat kaydedildi.",msgPinCleared:"Sabit saat silindi.",msgPinInvalid:"Geçersiz saat; 20:00 gibi.",
+  msgPinNoDur:"Süre henüz bilinmiyor.",msgReset:"Renkler sıfırlandı.",msgPreviewUpd:"Önizleme güncellendi.",
+  msgWmSaved:"Filigran kaydedildi.",msgWmCleared:"Filigran silindi.",msgStationSaved:"Kaydedildi.",
+  msgBumperSaved:"Bumper kaydedildi.",msgBackupIn:"Yedek yüklendi.",msgBackupFail:"İçe aktarma başarısız: ",
+  msgLoggedIn:"Giriş yapıldı.",msgLoggedOut:"Çıkış yapıldı.",msgAddFail:"Ekleme başarısız: ",msgUploadFail:"Yükleme başarısız: ",
+  msgPlayVideoFail:"Oynatılamadı.",msgPlayAudioFail:"Ses oynatılamadı.",msgEndOfList:"Liste sonu",
+  msgNoChannelSwitch:"Yalnızca yönetici.",msgNoAdmin:"Yalnızca yönetici.",
+  msgRenamed:"Başlık güncellendi.",msgRenameEmpty:"Başlık boş olamaz.",
+  msgYtHandle:"Kanallar için çalma listesi URL'sini kopyala (playlist?list=...).",
+  msgSaved:"Kaydedildi.",
+  confirmDelCh:"Bu kanal silinsin mi?",confirmDelRadioCh:"Bu radyo kanalı silinsin mi?",
+  promptPin:"Bu program için günlük sabit saat, örn. 20:00\nBoş = sil",
+  promptRename:"Yeni başlık:"
+}
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
 const LANG_LOCALE={fa:"fa-IR",en:"en-US",ar:"ar",tr:"tr-TR"};
@@ -581,13 +868,15 @@ function applyLang(init){
   try{tickClock()}catch(_){}
 }
 
-/* ============== State ============== */
+/* ============ State ============ */
 const DEFAULT_STATE = {
   stationName:"AM TV 24/7",
   stationLogo:"",
   mode:"tv",
   channelIndex:0,
   channels:[{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}],
+  radioChannels:[{id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]}],
+  radioChannelIndex:0,
   radioList:[],
   radioIndex:0,
   playback:{index:0,startedAt:0,nonce:0},
@@ -621,7 +910,6 @@ let viewerSoundOn = false;
 let adminBumperTimer = null;
 let bumperOn = false;
 
-/* ============== Presence + Views ============== */
 let presenceChannel = null;
 let presenceOnline = 0;
 let presenceBreakdown = { tv:0, radio:0, admin:0, viewers:0 };
@@ -629,9 +917,7 @@ let presenceBreakdown = { tv:0, radio:0, admin:0, viewers:0 };
 function applyAudioState(){
   const mute = !isAdmin && !viewerSoundOn;
   try{ $("videoElement").muted = mute; $("audioElement").muted = mute; }catch(_){}
-  if(ytReady && ytPlayer){
-    try{ if(mute) ytPlayer.mute(); else ytPlayer.unMute(); }catch(_){}
-  }
+  if(ytReady && ytPlayer){ try{ if(mute) ytPlayer.mute(); else ytPlayer.unMute(); }catch(_){} }
 }
 function notify(message){
   const el=$("toast");
@@ -656,6 +942,24 @@ function youtubeId(url){
     return i>=0?(parts[i+1]||""):"";
   }catch(_){return ""}
 }
+function parseYouTubeSource(url){
+  try{
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./,'');
+    if(!/(^|\.)youtube\.com$|(^|\.)youtu\.be$|(^|\.)youtube-nocookie\.com$/.test(host)) return null;
+    const path = u.pathname;
+    const listId = u.searchParams.get('list');
+    const vId = u.searchParams.get('v');
+    if((path === '/playlist' || path === '/embed/playlist') && listId) return { kind:'playlist', id: listId };
+    if(!vId && listId) return { kind:'playlist', id: listId };
+    const chMatch = path.match(/^\/channel\/(UC[\w-]{20,})/);
+    if(chMatch) return { kind:'playlist', id: 'UU' + chMatch[1].slice(2) };
+    if(/^\/@/.test(path) || path.startsWith('/c/') || path.startsWith('/user/')) return { kind:'handle', id: path };
+    const vid = youtubeId(url);
+    if(vid) return { kind:'video', id: vid };
+    return null;
+  }catch(_){ return null; }
+}
 function mediaUrl(item){return item && (item.url||item.src)||""}
 function currentChannel(){
   if(!Array.isArray(state.channels))state.channels=[];
@@ -665,15 +969,23 @@ function currentChannel(){
   if(!Array.isArray(c.list))c.list=[];
   return c;
 }
+function currentRadioChannel(){
+  if(!Array.isArray(state.radioChannels))state.radioChannels=[];
+  if(!state.radioChannels.length)state.radioChannels.push({id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]});
+  state.radioChannelIndex=Math.max(0,Math.min(Number(state.radioChannelIndex)||0,state.radioChannels.length-1));
+  const c=state.radioChannels[state.radioChannelIndex];
+  if(!Array.isArray(c.list))c.list=[];
+  return c;
+}
 function activeMode(){return isAdmin ? state.mode : localViewerMode}
-function currentList(){return activeMode()==="radio" ? state.radioList : currentChannel().list}
+function currentList(){return activeMode()==="radio" ? currentRadioChannel().list : currentChannel().list}
 function currentIndex(){
   const mode=activeMode();
   if(!isAdmin)return liveInfo(mode).index;
   return mode==="radio" ? Number(state.radioIndex)||0 : Number(state.playback.index)||0;
 }
 
-/* ============== Server time ============== */
+/* ============ Server time ============ */
 let serverOffset=0;
 let pendingSeek=0,pendingSeekAudio=0;
 let adminResumed=false;
@@ -701,6 +1013,13 @@ function recordDuration(item,secs){
     scheduleSave();
   }
 }
+function fmtDur(sec){
+  sec=Math.round(Number(sec)||0);
+  if(!sec)return "—";
+  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+  if(h>0)return h+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  return m+":"+String(s).padStart(2,"0");
+}
 function anchorFor(kind){
   if(kind==="radio"){
     const p=state.radioPlayback||{};
@@ -710,7 +1029,7 @@ function anchorFor(kind){
   return {index:Number(p.index)||0,startedAt:Number(p.startedAt)||0};
 }
 
-/* ============== Bumper ============== */
+/* ============ Bumper ============ */
 function bumperSecs(kind){
   if(kind==="radio")return 0;
   const b=state.bumper||{};
@@ -745,7 +1064,7 @@ function hideBumper(){
   bumperOn=false;
 }
 
-/* ============== Pin (fixed schedule) ============== */
+/* ============ Pin (fixed schedule) ============ */
 function parsePin(str){
   const m=/^(\d{1,2}):(\d{2})$/.exec(String(str||"").trim());
   if(!m)return null;
@@ -807,9 +1126,9 @@ function nextPinStart(t){
   return best;
 }
 
-/* ============== Live info ============== */
+/* ============ Live info ============ */
 function liveInfoAt(kind,t){
-  const list=kind==="radio"?state.radioList:currentChannel().list;
+  const list=kind==="radio"?currentRadioChannel().list:currentChannel().list;
   const n=list.length;
   if(!n)return {index:0,offset:0,known:false};
   const a=anchorFor(kind);
@@ -855,7 +1174,7 @@ function liveInfoAt(kind,t){
 }
 function liveInfo(kind){return liveInfoAt(kind,serverNow())}
 
-/* ============== EPG ============== */
+/* ============ EPG ============ */
 function buildGuide(maxRows,horizonMs){
   const out=[];
   const list=currentChannel().list;
@@ -923,7 +1242,7 @@ function renderGuide(){
   });
 }
 
-/* ============== Prune old synced ============== */
+/* ============ Prune ============ */
 function pruneOldSynced(){
   const ch=currentChannel();
   const list=ch.list;
@@ -944,33 +1263,32 @@ function pruneOldSynced(){
   return removed;
 }
 
-/* ============== YouTube sync ============== */
+/* ============ YouTube sync ============ */
 async function callYouTubeSync(action){
-  if(!isAdmin||!sbClient){notify("فقط مدیر واردشده می‌تواند این کار را انجام دهد.");return}
+  if(!isAdmin||!sbClient){notify(t("msgNoAdmin"));return}
   const status=$("youtubeSyncStatus");
   const connectButton=$("youtubeConnectButton");
   const syncButton=$("youtubeSyncButton");
   connectButton.disabled=true;syncButton.disabled=true;
-  status.textContent="در حال ارتباط با سرویس همگام‌سازی...";
+  status.textContent="...";
   try{
     const {data:sessionData,error:sessionError}=await sbClient.auth.getSession();
     if(sessionError)throw sessionError;
     const token=sessionData?.session?.access_token;
-    if(!token)throw new Error("نشست مدیر معتبر نیست؛ دوباره وارد شو.");
+    if(!token)throw new Error("No session");
     const response=await fetch(YOUTUBE_FUNCTION_URL,{
       method:"POST",
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,"apikey":SUPABASE_ANON_KEY},
       body:JSON.stringify({action})
     });
     const result=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(result.error||"سرویس همگام‌سازی آماده نیست.");
+    if(!response.ok)throw new Error(result.error||"Service error");
     if(action==="connect"){
-      if(!result.url)throw new Error("آدرس اتصال گوگل از سرور دریافت نشد.");
+      if(!result.url)throw new Error("No URL");
       window.location.assign(result.url);
       return;
     }
-    status.textContent=result.message||"درخواست همگام‌سازی با موفقیت انجام شد.";
-    notify("پاسخ سرویس دریافت شد.");
+    status.textContent=result.message||"OK";
     state.lastSyncAt=Date.now();
     renderLastSync();
     if(Array.isArray(result.videos)&&result.videos.length){
@@ -979,24 +1297,18 @@ async function callYouTubeSync(action){
       const existingIds=new Set(list.map(i=>i.youtubeId).filter(Boolean));
       for(const video of result.videos){
         if(!video.id||existingIds.has(video.id))continue;
-        list.push({id:makeId(),youtubeId:video.id,title:video.title||"ویدیوی YouTube",url:"https://www.youtube.com/watch?v="+video.id,addedAt:Date.now()});
+        list.push({id:makeId(),youtubeId:video.id,title:video.title||"YouTube",url:"https://www.youtube.com/watch?v="+video.id,addedAt:Date.now()});
         existingIds.add(video.id);added++;
       }
-      if(added){clearTimeout(saveTimer);renderAll();await saveRemoteState();status.textContent=added+" ویدیو اضافه شد.";notify(added+" ویدیو اضافه شد.");}
-      else notify("ویدیوی جدیدی پیدا نشد.");
+      if(added){clearTimeout(saveTimer);renderAll();await saveRemoteState();notify(t("msgAdded",{n:added}));}
     }
     const pruned=pruneOldSynced();
-    if(pruned){
-      clearTimeout(saveTimer);renderAll();
-      await saveRemoteState();
-      status.textContent+=" · "+pruned+" ویدیوی قدیمی حذف شد.";
-    } else {
-      clearTimeout(saveTimer);await saveRemoteState();
-    }
+    if(pruned){clearTimeout(saveTimer);renderAll();await saveRemoteState();}
+    else{clearTimeout(saveTimer);await saveRemoteState();}
   }catch(error){
     console.error(error);
-    status.textContent="خطا: "+error.message;
-    notify("همگام‌سازی انجام نشد.");
+    status.textContent="Error: "+error.message;
+    notify(t("msgAddFail")+error.message);
   }finally{
     connectButton.disabled=false;syncButton.disabled=false;
   }
@@ -1005,17 +1317,17 @@ function renderLastSync(){
   const el=$("lastSyncLabel");
   if(!el)return;
   const tt=Number(state.lastSyncAt)||0;
-  if(!tt){el.textContent="آخرین همگام‌سازی: هنوز انجام نشده";return}
+  if(!tt){el.textContent=t("lastSyncNever");return}
   const mins=Math.max(0,Math.floor((Date.now()-tt)/60000));
   let ago;
-  if(mins<1)ago="همین الان";
-  else if(mins<60)ago=mins+" دقیقه پیش";
-  else if(mins<1440)ago=Math.floor(mins/60)+" ساعت پیش";
-  else ago=Math.floor(mins/1440)+" روز پیش";
-  el.textContent="آخرین همگام‌سازی: "+new Date(tt).toLocaleString(dateLocale())+" ("+ago+")";
+  if(mins<1)ago="now";
+  else if(mins<60)ago=mins+"m";
+  else if(mins<1440)ago=Math.floor(mins/60)+"h";
+  else ago=Math.floor(mins/1440)+"d";
+  el.textContent=new Date(tt).toLocaleString(dateLocale())+" ("+ago+")";
 }
 
-/* ============== Duration probing ============== */
+/* ============ Probing ============ */
 let holdLive=false,holdUntil=0,holdStarted=false;
 let probeRunning=false,probePlayer=null,probeReady=false;
 const probeFailed=new Set();
@@ -1025,8 +1337,8 @@ function probeOne(item){
     let done=false;
     const finish=ok=>{if(done)return;done=true;if(ok===false)probeFailed.add(item.id);resolve()};
     if(isYouTube(url)){
-      const id=youtubeId(url);
-      if(!id)return finish(false);
+      const id=item.ytId||youtubeId(url);
+      if(!id||item.ytKind==='playlist')return finish(false);
       if(!probeReady||!probePlayer)return finish("skip");
       try{probePlayer.cueVideoById(id)}catch(_){return finish(false)}
       let tries=0;
@@ -1055,7 +1367,7 @@ function probeOne(item){
 function persistLocalDurations(){
   if(!isAdmin)return;
   let changed=false;
-  const all=[...state.channels.flatMap(c=>c.list||[]),...(state.radioList||[])];
+  const all=[...state.channels.flatMap(c=>c.list||[]),...state.radioChannels.flatMap(c=>c.list||[])];
   all.forEach(it=>{
     const d=it&&localDur[it.id];
     if(d&&!Number(it.duration)){it.duration=d;changed=true}
@@ -1081,7 +1393,7 @@ async function startProbing(){
   const order=activeMode()==="radio"?["radio","tv"]:["tv","radio"];
   const jobs=[];
   order.forEach(k=>{
-    const list=k==="radio"?state.radioList:currentChannel().list;
+    const list=k==="radio"?currentRadioChannel().list:currentChannel().list;
     const n=list.length;
     const a=anchorFor(k).index;
     for(let i=0;i<n;i++){
@@ -1111,7 +1423,7 @@ function beginHold(){
   startProbing();
 }
 
-/* ============== Drift correct ============== */
+/* ============ Drift correct ============ */
 function driftCorrect(){
   const mode=activeMode(),item=activeItem();
   if(!item)return;
@@ -1142,6 +1454,13 @@ function ensureState(){
   if(!state.channels.length)state.channels=clone(DEFAULT_STATE.channels);
   state.channels.forEach(c=>{if(!Array.isArray(c.list))c.list=[];if(!c.id)c.id=makeId()});
   if(!Array.isArray(state.radioList))state.radioList=[];
+  if(!Array.isArray(state.radioChannels))state.radioChannels=[];
+  if(!state.radioChannels.length){
+    state.radioChannels=[{id:"rad-main",name:"AM Radio",color:"#e8b85b",list:state.radioList.slice()}];
+    state.radioChannelIndex=0;
+  }
+  state.radioChannels.forEach(c=>{if(!Array.isArray(c.list))c.list=[];if(!c.id)c.id=makeId()});
+  state.radioChannelIndex=Math.max(0,Math.min(Number(state.radioChannelIndex)||0,state.radioChannels.length-1));
   if(!state.playback)state.playback={index:0,startedAt:0,nonce:0};
   if(!state.radioPlayback)state.radioPlayback={index:0,startedAt:0,nonce:0};
   if(!state.watermark)state.watermark=clone(DEFAULT_STATE.watermark);
@@ -1152,10 +1471,10 @@ function ensureState(){
 }
 function effectiveItemKey(item){
   if(!item)return "";
-  return [activeMode(),item.id||mediaUrl(item),state.channelIndex].join("|");
+  return [activeMode(),item.id||mediaUrl(item),state.channelIndex,state.radioChannelIndex].join("|");
 }
 
-/* ============== Supabase ============== */
+/* ============ Supabase ============ */
 try{
   if(window.supabase && window.supabase.createClient){
     sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
@@ -1173,11 +1492,10 @@ try{
 }catch(e){console.error(e)}
 
 async function loadRemoteState(){
-  if(!sbClient){$("supabaseStatus").value="کتابخانه یا تنظیمات Supabase در دسترس نیست";return}
+  if(!sbClient){$("supabaseStatus").value="no client";return}
   const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
   if(error){
-    $("supabaseStatus").value="خطا: "+error.message;
-    if(!isAdmin)notify(t("fetchErr",{msg:error.message}));
+    $("supabaseStatus").value="err: "+error.message;
     return;
   }
   if(data && data.data && typeof data.data==="object"){
@@ -1188,9 +1506,9 @@ async function loadRemoteState(){
     beginHold();
     renderAll();
     await syncPlayback(true);
-    $("supabaseStatus").value="متصل · آخرین تنظیمات دریافت شد";
+    $("supabaseStatus").value="OK";
   }else{
-    $("supabaseStatus").value="اتصال برقرار است؛ ردیف id=1 در جدول موجود نیست";
+    $("supabaseStatus").value="connected · no row";
   }
 }
 async function saveRemoteState(){
@@ -1198,11 +1516,10 @@ async function saveRemoteState(){
   const payload={id:1,data:clone(state),updated_at:new Date().toISOString()};
   const {error}=await sbClient.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
   if(error){
-    $("supabaseStatus").value="ذخیره نشد: "+error.message;
-    notify("ذخیره ناموفق بود؛ تنظیمات RLS را بررسی کن.");
+    $("supabaseStatus").value="save err: "+error.message;
     return false;
   }else{
-    $("supabaseStatus").value="ذخیره و همگام‌سازی شد";
+    $("supabaseStatus").value="synced";
     return true;
   }
 }
@@ -1231,20 +1548,19 @@ async function applySession(session){
   document.body.classList.toggle("viewerMode",!isAdmin);
   renderAll();
   trackPresence();
-  if(isAdmin)notify("ورود انجام شد.");
 }
 async function signIn(){
-  if(!sbClient){notify("اتصال Supabase برقرار نیست.");return}
+  if(!sbClient){notify("No client");return}
   const email=$("adminEmail").value.trim();
   const password=$("adminPassword").value;
-  if(!email||!password){notify("ایمیل و رمز عبور را وارد کن.");return}
+  if(!email||!password){notify("Email and password required.");return}
   $("signInButton").disabled=true;
   const {data,error}=await sbClient.auth.signInWithPassword({email,password});
   $("signInButton").disabled=false;
-  if(error){notify("ورود ناموفق: "+error.message);return}
+  if(error){notify("Sign in failed: "+error.message);return}
   if(data?.user?.app_metadata?.role!=="admin"){
     await sbClient.auth.signOut();
-    notify("این حساب نقش مدیر ندارد.");
+    notify("Not an admin.");
     return;
   }
   await applySession(data.session);
@@ -1259,20 +1575,19 @@ async function signOut(){
   document.body.classList.add("viewerMode");
   renderAll();
   trackPresence();
-  notify("از حساب مدیر خارج شدی.");
 }
 async function uploadFile(file,folder){
-  if(!sbClient||!isAdmin)throw new Error("برای آپلود باید مدیر وارد شده باشد.");
+  if(!sbClient||!isAdmin)throw new Error("Admin only");
   const cleanName=file.name.replace(/[^\w.\-]+/g,"_").slice(-100);
   const path=folder+"/"+Date.now()+"_"+makeId()+"_"+cleanName;
   const {error}=await sbClient.storage.from(STORAGE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type||undefined});
   if(error)throw error;
   const {data}=sbClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-  if(!data?.publicUrl)throw new Error("لینک عمومی فایل ساخته نشد.");
+  if(!data?.publicUrl)throw new Error("No public URL");
   return data.publicUrl;
 }
 
-/* ============== Presence ============== */
+/* ============ Presence ============ */
 async function setupPresence(){
   if(!sbClient)return;
   presenceChannel = sbClient.channel("amtv-presence", {
@@ -1316,7 +1631,9 @@ function renderPresence(){
 }
 function updateViewerUI(){
   const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
-  set("viewerCount", "👁 " + presenceOnline);
+  set("viewerCount", "");
+  const vc = $("viewerCount");
+  if(vc) vc.innerHTML = '<i class="ic ic-eye"></i> ' + presenceOnline;
   set("onlineViewers", presenceOnline);
   set("viewTV", presenceBreakdown.tv);
   set("viewRadio", presenceBreakdown.radio);
@@ -1324,7 +1641,7 @@ function updateViewerUI(){
   set("viewAdmin", presenceBreakdown.admin);
 }
 
-/* ============== Total views ============== */
+/* ============ Total views ============ */
 async function countTotalViews(){
   if (!sbClient) return;
   const VISIT_KEY = "amtv-visit-counted";
@@ -1356,7 +1673,7 @@ function watchTotalViewsRealtime(){
     .subscribe();
 }
 
-/* ============== YouTube player ============== */
+/* ============ YouTube player ============ */
 window.onYouTubeIframeAPIReady=function(){
   try{
     probePlayer=new YT.Player("probePlayer",{
@@ -1364,7 +1681,7 @@ window.onYouTubeIframeAPIReady=function(){
       playerVars:{controls:0,playsinline:1,rel:0},
       events:{onReady:function(){probeReady=true;try{probePlayer.mute()}catch(_){}}}
     });
-  }catch(e){console.warn("probe player error",e)}
+  }catch(e){console.warn(e)}
   try{
     ytPlayer=new YT.Player("youtubePlayer",{
       width:"100%",height:"100%",videoId:"",
@@ -1380,18 +1697,20 @@ window.onYouTubeIframeAPIReady=function(){
           if(e.data===YT.PlayerState.PLAYING){
             try{recordDuration(activeItem(),ytPlayer.getDuration())}catch(_){}
             applySubtitles();
-            localPlaying=true;$("playButton").textContent="⏸";
+            localPlaying=true;
+            $("playButton").innerHTML='<i class="ic ic-pause"></i>';
           }else if(e.data===YT.PlayerState.PAUSED){
-            localPlaying=false;$("playButton").textContent="▶";
+            localPlaying=false;
+            $("playButton").innerHTML='<i class="ic ic-play"></i>';
           }
         },
         onError:function(e){notify(t("ytErr",{code:e.data}))}
       }
     });
-  }catch(e){console.warn("YouTube player error",e)}
+  }catch(e){console.warn(e)}
 };
 
-/* ============== Media display ============== */
+/* ============ Media display ============ */
 function hideAllMedia(){
   $("emptyScreen").style.display="none";
   $("youtubePlayer").style.display="none";
@@ -1407,21 +1726,21 @@ function showEmpty(message){
   $("emptyScreen").style.display="flex";
   $("emptyHint").textContent=message||t("waiting");
   $("nowPlaying").textContent=t("notplaying");
-  $("statusPlayback").textContent="آماده";
+  $("statusPlayback").textContent=t("ready");
 }
 function renderPlayer(force=false){
   applyAudioState();
   ensureState();
   const mode=activeMode();
   const item=activeItem();
-  $("statusMode").textContent=mode==="radio"?"رادیو":"تلویزیون";
+  $("statusMode").textContent=mode==="radio"?t("radioMode"):t("tvMode");
   $("radioStationName").textContent=state.stationName||"AM RADIO";
   $("programTitle").textContent=item?.title||state.stationName||"AM TV 24/7";
   $("programSubtitle").textContent=item?(mode==="radio"?t("audioProgram"):t("nowOnAir")):t("waiting");
-  $("nowPlaying").textContent=item?((mode==="radio"?"📻 ":"📺 ")+(item.title||t("untitled"))):t("notplaying");
+  $("nowPlaying").textContent=item?((mode==="radio"?"":((mode==="tv")?"":""))+(item.title||t("untitled"))):t("notplaying");
   $("emptyLogo").textContent=state.stationName||"AM TV";
-  $("statusPlayback").textContent=item?"در حال آماده‌سازی":"آماده";
-  $("statusChannel").textContent=currentChannel().name;
+  $("statusPlayback").textContent=item?t("preparing"):t("ready");
+  $("statusChannel").textContent=(mode==="radio"?currentRadioChannel().name:currentChannel().name);
   applyWatermark();
 
   if(mode==="tv"){
@@ -1454,30 +1773,45 @@ function renderPlayer(force=false){
 
   if(mode==="radio"){
     $("radioScreen").style.display="flex";
-    if(isYouTube(url)){
-      const rid=youtubeId(url);
+    const isYtItem = item.ytKind === 'playlist' || item.ytKind === 'video' || isYouTube(url);
+    if(isYtItem){
+      const rid = (item.ytKind === 'playlist' || item.ytKind === 'video') ? item.ytId : youtubeId(url);
       $("youtubePlayer").style.display="block";
       if(rid && ytReady && ytPlayer){
-        try{ytPlayer.loadVideoById({videoId:rid,startSeconds:off});ytPlayer.setVolume(Number($("volumeSlider").value)||80)}catch(e){console.error(e)}
+        try{
+          if(item.ytKind === 'playlist'){
+            ytPlayer.loadPlaylist({ list:rid, listType:'playlist', index:0, startSeconds:0 });
+          } else {
+            ytPlayer.loadVideoById({videoId:rid, startSeconds:off});
+          }
+          ytPlayer.setVolume(Number($("volumeSlider").value)||80);
+        } catch(e){ console.error(e); }
       }
-      $("statusPlayback").textContent="رادیو";
+      $("statusPlayback").textContent=t("radioMode");
       return;
     }
     const audio=$("audioElement");
     pendingSeekAudio=off;if(audio.src!==url)audio.src=url;else if(off>0){try{audio.currentTime=off}catch(_){}}
     audio.volume=(Number($("volumeSlider").value)||80)/100;
     audio.loop=!!state.repeat;
-    audio.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").textContent="⏸"}).catch(()=>{$("statusPlayback").textContent="برای پخش، تعامل لازم است";});
-    $("statusPlayback").textContent="رادیو";
+    audio.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").innerHTML='<i class="ic ic-pause"></i>'}).catch(()=>{});
+    $("statusPlayback").textContent=t("radioMode");
     return;
   }
 
   if(isYouTube(url)){
     $("youtubePlayer").style.display="block";
-    const id=youtubeId(url);
+    const id=item.ytId||youtubeId(url);
     if(!id){showEmpty(t("badYt"));return}
     if(ytReady && ytPlayer){
-      try{ytPlayer.loadVideoById({videoId:id,startSeconds:off});ytPlayer.setVolume(Number($("volumeSlider").value)||80)}catch(e){console.error(e)}
+      try{
+        if(item.ytKind === 'playlist'){
+          ytPlayer.loadPlaylist({ list:id, listType:'playlist', index:0, startSeconds:0 });
+        } else {
+          ytPlayer.loadVideoById({videoId:id,startSeconds:off});
+        }
+        ytPlayer.setVolume(Number($("volumeSlider").value)||80);
+      }catch(e){console.error(e)}
     }else{
       $("youtubePlayer").style.display="block";
       $("emptyScreen").style.display="flex";
@@ -1490,7 +1824,7 @@ function renderPlayer(force=false){
     pendingSeek=off;video.src=url;
     video.volume=(Number($("volumeSlider").value)||80)/100;
     video.loop=!!state.repeat;
-    video.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").textContent="⏸"}).catch(()=>{$("statusPlayback").textContent="برای پخش، تعامل لازم است";});
+    video.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").innerHTML='<i class="ic ic-pause"></i>'}).catch(()=>{});
     video.onerror=()=>notify(t("videoErr"));
   }
 }
@@ -1498,15 +1832,16 @@ function togglePlay(){
   if(!isAdmin)return;
   if(activeMode()==="radio"){
     const ri=activeItem();
-    if(ri && isYouTube(mediaUrl(ri))){
+    const isYt = ri && (ri.ytKind === 'playlist' || ri.ytKind === 'video' || isYouTube(mediaUrl(ri)));
+    if(isYt){
       if(!ytReady||!ytPlayer)return;
       const rs=ytPlayer.getPlayerState();
       if(rs===YT.PlayerState.PLAYING)ytPlayer.pauseVideo();else ytPlayer.playVideo();
       return;
     }
     const a=$("audioElement");
-    if(a.paused)a.play().then(()=>{localPlaying=true;$("playButton").textContent="⏸"}).catch(()=>notify("پخش صوت ممکن نشد."));
-    else{a.pause();localPlaying=false;$("playButton").textContent="▶"}
+    if(a.paused)a.play().then(()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>'}).catch(()=>notify(t("msgPlayAudioFail")));
+    else{a.pause();localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>'}
     return;
   }
   const item=activeItem();
@@ -1517,12 +1852,12 @@ function togglePlay(){
     if(s===YT.PlayerState.PLAYING)ytPlayer.pauseVideo();else ytPlayer.playVideo();
   }else{
     const v=$("videoElement");
-    if(v.paused)v.play().then(()=>{localPlaying=true;$("playButton").textContent="⏸"}).catch(()=>notify("پخش ممکن نشد."));
-    else{v.pause();localPlaying=false;$("playButton").textContent="▶"}
+    if(v.paused)v.play().then(()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>'}).catch(()=>notify(t("msgPlayVideoFail")));
+    else{v.pause();localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>'}
   }
 }
 function chooseIndex(index,kind=activeMode()){
-  const list=kind==="radio"?state.radioList:currentChannel().list;
+  const list=kind==="radio"?currentRadioChannel().list:currentChannel().list;
   if(!list.length)return;
   clearTimeout(adminBumperTimer);adminBumperTimer=null;
   if(bumperOn)hideBumper();
@@ -1545,7 +1880,7 @@ function nextItem(){
   let i=currentIndex();
   if(state.shuffle && list.length>1){let n=i;while(n===i)n=Math.floor(Math.random()*list.length);i=n}
   else i++;
-  if(i>=list.length&&!state.repeat){showEmpty("پلی‌لیست به پایان رسید");return}
+  if(i>=list.length&&!state.repeat){showEmpty(t("msgEndOfList"));return}
   chooseIndex(i);
 }
 function previousItem(){
@@ -1611,7 +1946,7 @@ function adminResumeLive(){
   if(did){adminResumed=true;activeMediaKey="";}
 }
 
-/* ============== Watermark ============== */
+/* ============ Watermark ============ */
 function applyWatermark(){
   const w=state.watermark||DEFAULT_STATE.watermark;
   const root=$("watermark"),img=$("watermarkImage"),txt=$("watermarkText");
@@ -1674,7 +2009,7 @@ function loadScheduleFields(){
   el.value=String(z);
 }
 
-/* ============== Render UI ============== */
+/* ============ Render UI ============ */
 function renderBrand(){
   $("brandName").textContent=state.stationName||"AM TV 24/7";
   $("statusStation").textContent=state.stationName||"AM TV 24/7";
@@ -1694,23 +2029,24 @@ function renderChannels(){
   state.channels.forEach((c,i)=>{
     const b=document.createElement("button");
     b.className="channelbutton"+(i===state.channelIndex?" selected":"");
-    b.textContent="📺 "+c.name;
+    b.innerHTML='<i class="ic ic-tv"></i> '+c.name;
     b.onclick=()=>{
       if(isAdmin){state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};scheduleSave();activeMediaKey="";renderPlayer(true)}
-      else notify("تعویض کانال فقط توسط مدیر انجام می‌شود.");
+      else notify(t("msgNoChannelSwitch"));
     };
     list.appendChild(b);
     const item=document.createElement("div");item.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const name=document.createElement("div");name.className="itemname";name.textContent=c.name;
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" برنامه";
+    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •";
     info.append(name,meta);
-    const select=document.createElement("button");select.className="small";select.textContent="انتخاب";
+    const select=document.createElement("button");select.className="small";select.textContent=(i===state.channelIndex)?"✓":"→";
     select.onclick=()=>{state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};activeMediaKey="";scheduleSave();renderPlayer(true)};
-    const del=document.createElement("button");del.className="small danger";del.textContent="حذف";
+    const del=document.createElement("button");del.className="small danger";
+    del.innerHTML='<i class="ic ic-trash"></i>';
     del.disabled=state.channels.length<=1;
     del.onclick=()=>{
-      if(!confirm("این کانال حذف شود؟"))return;
+      if(!confirm(t("confirmDelCh")))return;
       state.channels.splice(i,1);state.channelIndex=Math.min(state.channelIndex,state.channels.length-1);
       scheduleSave();renderPlayer(true);
     };
@@ -1720,51 +2056,108 @@ function renderChannels(){
 function renderPlaylist(){
   const root=$("adminPlaylist");root.innerHTML="";
   const list=currentChannel().list;
-  if(!list.length){root.innerHTML='<div class="viewerhint">این کانال هنوز برنامه‌ای ندارد.</div>';return}
+  if(!list.length){root.innerHTML='<div class="viewerhint">—</div>';return}
   list.forEach((v,i)=>{
     const item=document.createElement("div");item.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const title=document.createElement("div");title.className="itemname";
-    title.textContent=(i===state.playback.index?"▶ ":"")+(v.title||"بدون عنوان");
+    title.innerHTML=(i===state.playback.index?'<i class="ic ic-play"></i> ':'')+(v.title||t("untitled"));
     const meta=document.createElement("div");meta.className="itemmeta";
-    meta.textContent=(v.pin?"⏰ "+v.pin+" · ":"")+(isYouTube(mediaUrl(v))?"YouTube":"فایل")+" · "+mediaUrl(v);
+    const d=durOf(v);
+    const durTxt=d?('⏱ '+fmtDur(d)+' · '):'';
+    let srcLabel;
+    if(v.ytKind === 'playlist') srcLabel = '<i class="ic ic-list"></i> playlist';
+    else if(v.ytKind === 'video') srcLabel = '<i class="ic ic-yt"></i> yt';
+    else if(isYouTube(mediaUrl(v))) srcLabel = '<i class="ic ic-yt"></i> yt';
+    else srcLabel = '<i class="ic ic-video"></i> file';
+    meta.innerHTML = (v.pin?"⏰ "+v.pin+" · ":"") + durTxt + srcLabel + " · " + mediaUrl(v);
     info.append(title,meta);
-    const pick=document.createElement("button");pick.className="small";pick.textContent="انتخاب";
+    const pick=document.createElement("button");pick.className="small";pick.textContent="•";
     pick.onclick=()=>{selectedVideoIndex=i;renderPlaylist()};
     if(selectedVideoIndex===i)pick.classList.add("primary");
-    const play=document.createElement("button");play.className="small";play.textContent="پخش";
+    const play=document.createElement("button");play.className="small";
+    play.innerHTML='<i class="ic ic-play"></i>';
     play.onclick=()=>chooseIndex(i,"tv");
-    const pin=document.createElement("button");pin.className="small";pin.textContent="⏰";
-    pin.title="ساعت پخش ثابت";
+    const pin=document.createElement("button");pin.className="small";
+    pin.innerHTML='<i class="ic ic-clock"></i>';
     if(v.pin)pin.classList.add("primary");
     pin.onclick=()=>setPin(i);
-    item.append(info,pick,play,pin);root.appendChild(item);
+    const edit=document.createElement("button");edit.className="small";
+    edit.innerHTML='<i class="ic ic-pencil"></i>';
+    edit.onclick=()=>renameItem(v);
+    item.append(info,pick,play,pin,edit);root.appendChild(item);
   });
 }
 function renderRadioList(){
   const root=$("adminRadioList");root.innerHTML="";
-  if(!state.radioList.length){root.innerHTML='<div class="viewerhint">هنوز فایل صوتی اضافه نشده.</div>';return}
-  state.radioList.forEach((v,i)=>{
-    const item=document.createElement("div");item.className="listitem";
-    const info=document.createElement("div");info.className="iteminfo";
-    const title=document.createElement("div");title.className="itemname";
-    title.textContent=(i===state.radioIndex?"♫ ":"")+(v.title||"بدون عنوان");
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=mediaUrl(v);
-    info.append(title,meta);
-    const pick=document.createElement("button");pick.className="small";pick.textContent="انتخاب";
-    pick.onclick=()=>{selectedRadioIndex=i;renderRadioList()};
-    if(selectedRadioIndex===i)pick.classList.add("primary");
-    const play=document.createElement("button");play.className="small";play.textContent="پخش";
-    play.onclick=()=>{localViewerMode="radio";if(isAdmin)state.mode="radio";chooseIndex(i,"radio")};
-    item.append(info,pick,play);root.appendChild(item);
-  });
+  const list=currentRadioChannel().list;
+  if(!list.length){root.innerHTML='<div class="viewerhint">—</div>'}
+  else{
+    list.forEach((v,i)=>{
+      const item=document.createElement("div");item.className="listitem";
+      const info=document.createElement("div");info.className="iteminfo";
+      const title=document.createElement("div");title.className="itemname";
+      title.innerHTML=(i===state.radioIndex?'<i class="ic ic-play"></i> ':'')+(v.title||t("untitled"));
+      const meta=document.createElement("div");meta.className="itemmeta";
+      const d=durOf(v);
+      const durTxt=d?('⏱ '+fmtDur(d)+' · '):'';
+      let srcLabel;
+      if(v.ytKind === 'playlist') srcLabel = '<i class="ic ic-list"></i> playlist';
+      else if(v.ytKind === 'video') srcLabel = '<i class="ic ic-yt"></i> yt';
+      else if(isYouTube(mediaUrl(v))) srcLabel = '<i class="ic ic-yt"></i> yt';
+      else srcLabel = '<i class="ic ic-mic"></i> audio';
+      meta.innerHTML = durTxt + srcLabel + " · " + mediaUrl(v);
+      info.append(title,meta);
+      const pick=document.createElement("button");pick.className="small";pick.textContent="•";
+      pick.onclick=()=>{selectedRadioIndex=i;renderRadioList()};
+      if(selectedRadioIndex===i)pick.classList.add("primary");
+      const play=document.createElement("button");play.className="small";
+      play.innerHTML='<i class="ic ic-play"></i>';
+      play.onclick=()=>{localViewerMode="radio";if(isAdmin)state.mode="radio";chooseIndex(i,"radio")};
+      const edit=document.createElement("button");edit.className="small";
+      edit.innerHTML='<i class="ic ic-pencil"></i>';
+      edit.onclick=()=>renameItem(v);
+      item.append(info,pick,play,edit);root.appendChild(item);
+    });
+  }
+  const chRoot=$("radioChannelList");
+  if(chRoot){
+    chRoot.innerHTML="";
+    state.radioChannels.forEach((c,i)=>{
+      const item=document.createElement("div");item.className="listitem";
+      const info=document.createElement("div");info.className="iteminfo";
+      const name=document.createElement("div");name.className="itemname";
+      name.innerHTML='<i class="ic ic-radio"></i> '+c.name;
+      const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •";
+      info.append(name,meta);
+      const select=document.createElement("button");select.className="small";
+      select.textContent=(i===state.radioChannelIndex)?"✓":"→";
+      if(i===state.radioChannelIndex)select.classList.add("primary");
+      select.onclick=()=>{
+        state.radioChannelIndex=i;
+        state.radioIndex=0;
+        state.radioPlayback={index:0,startedAt:serverNow(),nonce:(state.radioPlayback?.nonce||0)+1};
+        activeMediaKey="";scheduleSave();renderAll();
+      };
+      const del=document.createElement("button");del.className="small danger";
+      del.innerHTML='<i class="ic ic-trash"></i>';
+      del.disabled=state.radioChannels.length<=1;
+      del.onclick=()=>{
+        if(!confirm(t("confirmDelRadioCh")))return;
+        state.radioChannels.splice(i,1);
+        state.radioChannelIndex=Math.min(state.radioChannelIndex,state.radioChannels.length-1);
+        activeMediaKey="";scheduleSave();renderAll();
+      };
+      item.append(info,select,del);chRoot.appendChild(item);
+    });
+  }
 }
 function renderAll(){
   ensureState();
   renderBrand();renderChannels();renderPlaylist();renderRadioList();
   $("modeTV").classList.toggle("active",activeMode()==="tv");
   $("modeRadio").classList.toggle("active",activeMode()==="radio");
-  $("statusRole").textContent=isAdmin?"مدیر":"بیننده";
+  $("statusRole").textContent=isAdmin?t("adminRole"):t("viewerRole");
   $("channelSelector").classList.toggle("hidden",!isAdmin);
   $("adminPanel").classList.toggle("hidden",!isAdmin);
   document.body.classList.toggle("viewerMode",!isAdmin);
@@ -1774,7 +2167,7 @@ function renderAll(){
   renderGuide();renderLastSync();updateViewerUI();renderPlayer();
 }
 
-/* ============== Pin setter ============== */
+/* ============ Pin setter ============ */
 function normDigits(str){
   return String(str||"").replace(/[۰-۹]/g,c=>"۰۱۲۳۴۵۶۷۸۹".indexOf(c)).replace(/[٠-٩]/g,c=>"٠١٢٣٤٥٦٧٨٩".indexOf(c));
 }
@@ -1782,38 +2175,63 @@ function setPin(i){
   if(!isAdmin)return;
   const it=currentChannel().list[i];
   if(!it)return;
-  let v=prompt("ساعت پخش ثابت این برنامه (هر روز)، مثلاً 20:00\nخالی = حذف ثابت‌بودن",it.pin||"");
+  let v=prompt(t("promptPin"),it.pin||"");
   if(v===null)return;
   v=normDigits(v).replace(/[٫.]/g,":").trim();
   if(!v){delete it.pin}
   else{
     const m=parsePin(v);
-    if(m===null){notify("ساعت نامعتبر است؛ مثل 20:00 بنویس.");return}
+    if(m===null){notify(t("msgPinInvalid"));return}
     it.pin=String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
   }
   activeMediaKey="";
   scheduleSave();renderPlayer(true);
-  if(it.pin&&!durOf(it))notify("طول این برنامه هنوز معلوم نیست.");
-  else notify(it.pin?"ساعت ثابت ثبت شد.":"ساعت ثابت حذف شد.");
+  if(it.pin&&!durOf(it))notify(t("msgPinNoDur"));
+  else notify(it.pin?t("msgPinSet"):t("msgPinCleared"));
 }
 
-/* ============== Add content ============== */
+/* ============ Rename ============ */
+function renameItem(v){
+  if(!isAdmin) return;
+  const cur = v.title || "";
+  const nv = prompt(t("promptRename"), cur);
+  if(nv === null) return;
+  const tt = nv.trim();
+  if(!tt){ notify(t("msgRenameEmpty")); return; }
+  v.title = tt.slice(0,200);
+  scheduleSave();
+  renderAll();
+  notify(t("msgRenamed"));
+}
+
+/* ============ Add content ============ */
 async function addVideos(){
-  if(!isAdmin){notify("فقط مدیر می‌تواند اضافه کند.");return}
+  if(!isAdmin){notify(t("msgNoAdmin"));return}
   const title=$("videoTitle").value.trim();
   const url=$("videoURL").value.trim();
   const files=Array.from($("videoFiles").files||[]);
-  if(!url&&!files.length){notify("یک لینک یا فایل انتخاب کن.");return}
+  if(!url&&!files.length){notify(t("addProgram"));return}
   $("addVideoButton").disabled=true;
   try{
     const additions=[];
     if(url){
-      if(!/^https?:\/\//i.test(url))throw new Error("لینک باید با http:// یا https:// شروع شود.");
-      additions.push({id:makeId(),title:title||"برنامه جدید",url,addedAt:Date.now()});
+      if(!/^https?:\/\//i.test(url))throw new Error("Invalid URL");
+      const yt = parseYouTubeSource(url);
+      if(yt){
+        if(yt.kind === 'playlist'){
+          additions.push({id:makeId(),title:title||"YouTube Playlist",url,ytKind:'playlist',ytId:yt.id,addedAt:Date.now()});
+        } else if(yt.kind === 'video'){
+          additions.push({id:makeId(),title:title||"YouTube Video",url,ytKind:'video',ytId:yt.id,addedAt:Date.now()});
+        } else if(yt.kind === 'handle'){
+          throw new Error(t("msgYtHandle"));
+        }
+      } else {
+        additions.push({id:makeId(),title:title||"Program",url,addedAt:Date.now()});
+      }
     }
     for(const file of files){
       const uploaded=await uploadFile(file,"videos");
-      additions.push({id:makeId(),title:file.name||title||"ویدیو",url:uploaded,addedAt:Date.now()});
+      additions.push({id:makeId(),title:file.name||title||"Video",url:uploaded,addedAt:Date.now()});
     }
     currentChannel().list.push(...additions);
     selectedVideoIndex=currentChannel().list.length-1;
@@ -1823,36 +2241,47 @@ async function addVideos(){
     $("videoTitle").value="";$("videoURL").value="";$("videoFiles").value="";
     activeMediaKey="";
     scheduleSave();renderPlayer(true);
-    notify(additions.length+" برنامه اضافه شد.");
-  }catch(e){console.error(e);notify("افزودن ناموفق: "+e.message)}
+    notify(t("msgAdded",{n:additions.length}));
+  }catch(e){console.error(e);notify(t("msgAddFail")+e.message)}
   finally{$("addVideoButton").disabled=false}
 }
 async function addRadio(){
-  if(!isAdmin){notify("فقط مدیر می‌تواند اضافه کند.");return}
+  if(!isAdmin){notify(t("msgNoAdmin"));return}
   const title=$("radioTitle").value.trim();
   const url=$("radioURL").value.trim();
   const files=Array.from($("radioFiles").files||[]);
-  if(!url&&!files.length){notify("یک لینک یا فایل انتخاب کن.");return}
+  if(!url&&!files.length){notify(t("addAudioTitle"));return}
   $("addRadioButton").disabled=true;
   try{
     const additions=[];
     if(url){
-      if(!/^https?:\/\//i.test(url))throw new Error("لینک نامعتبر");
-      additions.push({id:makeId(),title:title||"برنامه صوتی",url,addedAt:Date.now()});
+      if(!/^https?:\/\//i.test(url))throw new Error("Invalid URL");
+      const yt = parseYouTubeSource(url);
+      if(yt){
+        if(yt.kind === 'playlist'){
+          additions.push({id:makeId(),title:title||"YouTube Playlist",url,ytKind:'playlist',ytId:yt.id,addedAt:Date.now()});
+        } else if(yt.kind === 'video'){
+          additions.push({id:makeId(),title:title||"YouTube Video",url,ytKind:'video',ytId:yt.id,addedAt:Date.now()});
+        } else if(yt.kind === 'handle'){
+          throw new Error(t("msgYtHandle"));
+        }
+      } else {
+        additions.push({id:makeId(),title:title||t("audioProgram"),url,addedAt:Date.now()});
+      }
     }
     for(const file of files){
       const uploaded=await uploadFile(file,"radio");
-      additions.push({id:makeId(),title:file.name||title||"صوت",url:uploaded,addedAt:Date.now()});
+      additions.push({id:makeId(),title:file.name||title||"Audio",url:uploaded,addedAt:Date.now()});
     }
-    state.radioList.push(...additions);
-    selectedRadioIndex=state.radioList.length-1;
+    currentRadioChannel().list.push(...additions);
+    selectedRadioIndex=currentRadioChannel().list.length-1;
     $("radioTitle").value="";$("radioURL").value="";$("radioFiles").value="";
-    scheduleSave();renderRadioList();notify(additions.length+" فایل اضافه شد.");
-  }catch(e){console.error(e);notify("افزودن ناموفق: "+e.message)}
+    scheduleSave();renderRadioList();notify(t("msgAdded",{n:additions.length}));
+  }catch(e){console.error(e);notify(t("msgAddFail")+e.message)}
   finally{$("addRadioButton").disabled=false}
 }
 
-/* ============== Theme ============== */
+/* ============ Theme ============ */
 const THEMES={
   green:{bg:"#101510",panel:"#1b211b",panel2:"#242c24",text:"#f2eedf",muted:"#a9b09f",accent:"#e8b85b",line:"#384237"},
   amber:{bg:"#17120b",panel:"#241c10",panel2:"#342713",text:"#fff0d1",muted:"#c1a984",accent:"#ffbd4a",line:"#574329"},
@@ -1905,12 +2334,14 @@ function applyPrefs(){
     $("themeMode").value=mode;
     $("customAccent").value=/^#[0-9a-f]{6}$/i.test(t.accent)?t.accent:"#e8b85b";
     $("customBg").value=/^#[0-9a-f]{6}$/i.test(t.bg)?t.bg:"#101510";
+    const cb=$("emojiOnlyMode");if(cb)cb.checked=!!p.emojiOnly;
   }catch(_){}
+  document.body.classList.toggle("emoji-only",!!p.emojiOnly);
 }
 function applyTheme(name){const p=getPrefs();p.preset=THEMES[name]?name:"green";delete p.accent;delete p.bg;savePrefs(p);applyPrefs()}
 function initPrefs(){const p=getPrefs();if(!p.preset){p.preset="green";p.mode="dark";savePrefs(p)}applyPrefs()}
 
-/* ============== Subtitles ============== */
+/* ============ Subtitles ============ */
 let subTimer=null,subNotified="";
 function applySubtitles(){
   clearTimeout(subTimer);
@@ -1943,7 +2374,7 @@ function syncSubUI(){const lang=getPrefs().subLang||"off";try{$("subSelect").val
 function setSubLang(lang){const p=getPrefs();p.subLang=lang;if(lang!=="off")p.subLast=lang;savePrefs(p);syncSubUI();applySubtitles()}
 function toggleSubs(){const p=getPrefs();if((p.subLang||"off")!=="off")setSubLang("off");else setSubLang(p.subLast||(SUPPORTED_LANGS.includes(curLang)?curLang:"en"))}
 
-/* ============== Orientation / Fullscreen ============== */
+/* ============ Orientation / Fullscreen ============ */
 async function toggleOrientation(){
   const shell=$("playerShell");
   const type=(screen.orientation&&screen.orientation.type)||(innerWidth>innerHeight?"landscape-primary":"portrait-primary");
@@ -1952,7 +2383,6 @@ async function toggleOrientation(){
     try{await screen.orientation.lock(wantLandscape?"landscape":"portrait");return}catch(_){}
   }
   if(shell.classList.contains("pagecover")){shell.classList.toggle("rotated");return}
-  notify("این مرورگر قفل چرخش را پشتیبانی نمی‌کند.");
 }
 async function toggleFullscreen(){
   const el=$("playerShell");
@@ -1964,7 +2394,7 @@ async function toggleFullscreen(){
   }catch(_){el.classList.add("pagecover");document.body.style.overflow="hidden"}
 }
 
-/* ============== Mode / Tabs ============== */
+/* ============ Mode / Tabs ============ */
 function setMode(mode){
   if(mode!=="tv"&&mode!=="radio")return;
   clearTimeout(adminBumperTimer);adminBumperTimer=null;
@@ -1981,7 +2411,7 @@ function openTab(tabId){
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
 
-/* ============== Event listeners ============== */
+/* ============ Event listeners ============ */
 $("modeTV").addEventListener("click",()=>setMode("tv"));
 $("modeRadio").addEventListener("click",()=>setMode("radio"));
 $("guideToggle").addEventListener("click",()=>{
@@ -1998,8 +2428,21 @@ $("themeSelect").addEventListener("change",e=>applyTheme(e.target.value));
 $("themeMode").addEventListener("change",e=>{const p=getPrefs();p.mode=e.target.value;savePrefs(p);applyPrefs()});
 $("customAccent").addEventListener("input",e=>{const p=getPrefs();p.accent=e.target.value;savePrefs(p);applyPrefs()});
 $("customBg").addEventListener("input",e=>{const p=getPrefs();p.bg=e.target.value;savePrefs(p);applyPrefs()});
-$("resetCustom").addEventListener("click",()=>{const p=getPrefs();delete p.accent;delete p.bg;savePrefs(p);applyPrefs();notify("رنگ‌ها بازنشانی شد.")});
-$("langSelect").addEventListener("change",e=>{const p=getPrefs();if(e.target.value==="auto")delete p.lang;else p.lang=e.target.value;savePrefs(p);applyLang()});
+$("resetCustom").addEventListener("click",()=>{const p=getPrefs();delete p.accent;delete p.bg;savePrefs(p);applyPrefs();notify(t("msgReset"))});
+$("langSelect").addEventListener("change",e=>{
+  const p=getPrefs();
+  if(e.target.value==="auto")delete p.lang;else p.lang=e.target.value;
+  savePrefs(p);
+  applyLang();
+  notify(t("msgLangChanged"));
+});
+$("emojiOnlyMode").addEventListener("change",e=>{
+  const p=getPrefs();
+  p.emojiOnly=!!e.target.checked;
+  savePrefs(p);
+  document.body.classList.toggle("emoji-only",p.emojiOnly);
+  notify(p.emojiOnly?t("msgEmojiOn"):t("msgEmojiOff"));
+});
 $("subSelect").addEventListener("change",e=>setSubLang(e.target.value));
 $("ccButton").addEventListener("click",toggleSubs);
 $("ccFs").addEventListener("click",toggleSubs);
@@ -2023,13 +2466,13 @@ $("repeatButton").addEventListener("click",()=>{
   state.repeat=!state.repeat;
   $("repeatButton").classList.toggle("primary",state.repeat);
   $("videoElement").loop=state.repeat;$("audioElement").loop=state.repeat;
-  scheduleSave();notify(state.repeat?"تکرار روشن":"تکرار خاموش");
+  scheduleSave();
 });
 $("shuffleButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   state.shuffle=!state.shuffle;
   $("shuffleButton").classList.toggle("primary",state.shuffle);
-  scheduleSave();notify(state.shuffle?"تصادفی روشن":"تصادفی خاموش");
+  scheduleSave();
 });
 $("volumeSlider").addEventListener("input",e=>{
   const v=Number(e.target.value)||0;
@@ -2041,20 +2484,30 @@ $("clearVideoFields").addEventListener("click",()=>{$("videoTitle").value="";$("
 $("createChannelButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   const name=$("channelNameInput").value.trim();
-  if(!name){notify("نام کانال را وارد کن.");return}
+  if(!name)return;
   state.channels.push({id:makeId(),name,color:$("channelColorInput").value||"#e8b85b",list:[]});
   state.channelIndex=state.channels.length-1;
   state.playback={index:0,startedAt:serverNow(),nonce:1};
   $("channelNameInput").value="";
-  activeMediaKey="";scheduleSave();renderPlayer(true);notify("کانال ساخته شد.");
+  activeMediaKey="";scheduleSave();renderPlayer(true);notify(t("msgChannelCreated"));
+});
+$("createRadioChannelButton").addEventListener("click",()=>{
+  if(!isAdmin)return;
+  const name=$("radioChannelName").value.trim();
+  if(!name)return;
+  state.radioChannels.push({id:"rad-"+Date.now(),name,color:"#e8b85b",list:[]});
+  state.radioChannelIndex=state.radioChannels.length-1;
+  state.radioIndex=0;
+  state.radioPlayback={index:0,startedAt:serverNow(),nonce:(state.radioPlayback?.nonce||0)+1};
+  $("radioChannelName").value="";
+  activeMediaKey="";scheduleSave();renderAll();notify(t("msgRadioChannelCreated"));
 });
 $("playSelectedButton").addEventListener("click",()=>{
   if(selectedVideoIndex>=0)chooseIndex(selectedVideoIndex,"tv");
-  else notify("اول یک برنامه را انتخاب کن.");
 });
 $("deleteSelectedButton").addEventListener("click",()=>{
   const list=currentChannel().list;
-  if(selectedVideoIndex<0||selectedVideoIndex>=list.length){notify("اول یک برنامه را انتخاب کن.");return}
+  if(selectedVideoIndex<0||selectedVideoIndex>=list.length)return;
   list.splice(selectedVideoIndex,1);
   selectedVideoIndex=-1;
   state.playback.index=Math.max(0,Math.min(state.playback.index,list.length-1));
@@ -2073,17 +2526,17 @@ $("moveDownButton").addEventListener("click",()=>{
 $("scheduleTz").addEventListener("change",e=>{
   if(!isAdmin)return;
   state.schedule={tz:Number(e.target.value)};
-  activeMediaKey="";scheduleSave();notify("منطقهٔ زمانی ذخیره شد.");
+  activeMediaKey="";scheduleSave();
 });
 $("addRadioButton").addEventListener("click",addRadio);
 $("playSelectedRadio").addEventListener("click",()=>{
   if(selectedRadioIndex>=0){setMode("radio");chooseIndex(selectedRadioIndex,"radio")}
-  else notify("اول یک فایل را انتخاب کن.");
 });
 $("deleteSelectedRadio").addEventListener("click",()=>{
-  if(selectedRadioIndex<0||selectedRadioIndex>=state.radioList.length){notify("اول یک فایل را انتخاب کن.");return}
-  state.radioList.splice(selectedRadioIndex,1);selectedRadioIndex=-1;
-  state.radioIndex=Math.max(0,Math.min(state.radioIndex,state.radioList.length-1));
+  const list=currentRadioChannel().list;
+  if(selectedRadioIndex<0||selectedRadioIndex>=list.length)return;
+  list.splice(selectedRadioIndex,1);selectedRadioIndex=-1;
+  state.radioIndex=Math.max(0,Math.min(state.radioIndex,list.length-1));
   activeMediaKey="";scheduleSave();renderPlayer(true);
 });
 $("wmPosition").addEventListener("change",()=>{state.watermark={...state.watermark,...readWatermarkFields()};applyWatermark()});
@@ -2093,24 +2546,23 @@ $("wmPosition").addEventListener("change",()=>{state.watermark={...state.waterma
 $("wmImageURL").addEventListener("input",()=>{state.watermark={...state.watermark,image:$("wmImageURL").value.trim()};applyWatermark()});
 $("wmImageInput").addEventListener("change",async e=>{
   const file=e.target.files?.[0];if(!file)return;
-  if(!isAdmin){notify("برای آپلود باید مدیر وارد شود.");e.target.value="";return}
+  if(!isAdmin)return;
   try{
     const url=await uploadFile(file,"watermarks");
     $("wmImageURL").value=url;
     state.watermark={...state.watermark,image:url};applyWatermark();
-    notify("لوگو آپلود شد.");
-  }catch(err){notify("آپلود ناموفق: "+err.message)}
+  }catch(err){notify(t("msgUploadFail")+err.message)}
 });
-$("previewWatermark").addEventListener("click",()=>{state.watermark={...state.watermark,...readWatermarkFields()};applyWatermark();notify("پیش‌نمایش به‌روزرسانی شد.")});
+$("previewWatermark").addEventListener("click",()=>{state.watermark={...state.watermark,...readWatermarkFields()};applyWatermark();notify(t("msgPreviewUpd"))});
 $("saveWatermark").addEventListener("click",()=>{
-  if(!isAdmin){notify("فقط مدیر می‌تواند ذخیره کند.");return}
+  if(!isAdmin)return;
   state.watermark={...state.watermark,...readWatermarkFields()};
-  scheduleSave();applyWatermark();notify("واترمارک ذخیره شد.");
+  scheduleSave();applyWatermark();notify(t("msgWmSaved"));
 });
 $("clearWatermark").addEventListener("click",()=>{
-  if(!isAdmin){notify("فقط مدیر می‌تواند تغییر دهد.");return}
+  if(!isAdmin)return;
   state.watermark=clone(DEFAULT_STATE.watermark);
-  loadWatermarkFields();applyWatermark();scheduleSave();notify("واترمارک حذف شد.");
+  loadWatermarkFields();applyWatermark();scheduleSave();notify(t("msgWmCleared"));
 });
 $("saveStationButton").addEventListener("click",async()=>{
   if(!isAdmin)return;
@@ -2121,9 +2573,9 @@ $("saveStationButton").addEventListener("click",async()=>{
   const file=$("stationLogoFile").files?.[0];
   if(file){
     try{state.stationLogo=await uploadFile(file,"logos")}
-    catch(e){notify("آپلود لوگو ناموفق: "+e.message);return}
+    catch(e){notify(t("msgUploadFail")+e.message);return}
   }
-  scheduleSave();renderBrand();notify("تنظیمات ذخیره شد.");
+  scheduleSave();renderBrand();notify(t("msgStationSaved"));
 });
 $("exportButton").addEventListener("click",()=>{
   if(!isAdmin)return;
@@ -2138,10 +2590,10 @@ $("importFile").addEventListener("change",async e=>{
   const file=e.target.files?.[0];if(!file)return;
   try{
     const parsed=JSON.parse(await file.text());
-    if(!parsed||!Array.isArray(parsed.channels))throw new Error("ساختار نامعتبر");
+    if(!parsed||!Array.isArray(parsed.channels))throw new Error("Bad format");
     state={...clone(DEFAULT_STATE),...parsed};ensureState();activeMediaKey="";
-    scheduleSave();renderAll();notify("پشتیبان وارد شد.");
-  }catch(err){notify("واردکردن ناموفق: "+err.message)}
+    scheduleSave();renderAll();notify(t("msgBackupIn"));
+  }catch(err){notify(t("msgBackupFail")+err.message)}
   e.target.value="";
 });
 $("refreshButton").addEventListener("click",loadRemoteState);
@@ -2152,7 +2604,7 @@ $("saveBumperButton").addEventListener("click",()=>{
     seconds:Math.max(2,Math.min(30,Number($("bumperSeconds").value)||6)),
     text:$("bumperTextInput").value.trim()
   };
-  scheduleSave();notify("تنظیمات اینترو ذخیره شد.");
+  scheduleSave();notify(t("msgBumperSaved"));
 });
 $("previewBumperButton").addEventListener("click",()=>{
   if(!isAdmin)return;
@@ -2167,8 +2619,8 @@ $("youtubeConnectButton")?.addEventListener("click",()=>callYouTubeSync("connect
 $("youtubeSyncButton")?.addEventListener("click",()=>callYouTubeSync("sync"));
 $("videoElement").addEventListener("ended",handleEnded);
 $("audioElement").addEventListener("ended",handleEnded);
-$("videoElement").addEventListener("play",()=>{localPlaying=true;$("playButton").textContent="⏸"});
-$("videoElement").addEventListener("pause",()=>{localPlaying=false;$("playButton").textContent="▶"});
+$("videoElement").addEventListener("play",()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>'});
+$("videoElement").addEventListener("pause",()=>{localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>'});
 $("videoElement").addEventListener("loadedmetadata",()=>{
   const v=$("videoElement");
   recordDuration(activeItem(),v.duration);
@@ -2182,7 +2634,7 @@ $("audioElement").addEventListener("loadedmetadata",()=>{
   pendingSeekAudio=0;
 });
 
-/* ============== Realtime state ============== */
+/* ============ Realtime ============ */
 async function setupRealtime(){
   if(!sbClient)return;
   sbClient.channel("amtv-state-live")
@@ -2199,11 +2651,11 @@ async function setupRealtime(){
       if(oldKey!==effectiveItemKey(activeItem()))renderPlayer(true);
     })
     .subscribe(status=>{
-      if(status==="SUBSCRIBED")$("supabaseStatus").value="اتصال زنده برقرار است";
+      if(status==="SUBSCRIBED")$("supabaseStatus").value="live";
     });
 }
 
-/* ============== Clock / Boot ============== */
+/* ============ Clock / Boot ============ */
 function tickClock(){
   const d=new Date();
   const loc=dateLocale();
@@ -2219,19 +2671,29 @@ document.body.classList.toggle("viewerMode",!isAdmin);
 (async function boot(){
   ensureState();
   renderAll();
-  if(!sbClient){$("supabaseStatus").value="Supabase در دسترس نیست";return}
-  await syncServerTime();
-  await loadRemoteState();
-  await initAuth();
-  await setupRealtime();
-  await setupPresence();
-  await countTotalViews();
-  watchTotalViewsRealtime();
-  if(isAdmin){const p=pruneOldSynced();if(p){await saveRemoteState()}}
-  renderAll();
+  if(!sbClient){
+    $("supabaseStatus").value="no client";
+    document.body.classList.remove("booting");
+    return;
+  }
+  try{
+    await syncServerTime();
+    await loadRemoteState();
+    await initAuth();
+    await setupRealtime();
+    await setupPresence();
+    await countTotalViews();
+    watchTotalViewsRealtime();
+    if(isAdmin){const p=pruneOldSynced();if(p){await saveRemoteState()}}
+    renderAll();
+  }catch(e){console.error(e)}
+  finally{
+    document.body.classList.remove("booting");
+  }
 })();
+setTimeout(()=>{document.body.classList.remove("booting")},3000);
 
-/* ============== Viewer lock ============== */
+/* ============ Viewer lock ============ */
 (function lockViewerPlayback(){
   $("viewerStart").addEventListener("click",()=>{
     viewerSoundOn=true;applyAudioState();
@@ -2258,7 +2720,7 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   apply();setInterval(apply,1000);
 })();
 
-/* ============== Periodic loops ============== */
+/* ============ Periodic loops ============ */
 let driftTick=0;
 setInterval(()=>{
   if(isAdmin)return;
@@ -2281,7 +2743,7 @@ setInterval(()=>{if(holdLive)checkHold()},1000);
 setInterval(renderLastSync,30000);
 setInterval(()=>{if(!$("guidePanel").classList.contains("hidden"))renderGuide()},15000);
 
-/* ============== Fallback polling ============== */
+/* ============ Fallback polling ============ */
 let lastRemoteJson="";
 setInterval(async()=>{
   if(isAdmin||!sbClient)return;
@@ -2296,31 +2758,22 @@ setInterval(async()=>{
     ensureState();
     isApplyingRemote=false;
     renderAll();
-  }catch(e){console.warn(e)}
+  }catch(e){}
 },8000);
 
-/* ============== Diagnostics ============== */
-let diagFetch="در حال تست...";
-async function diagTest(){
-  try{
-    const r=await fetch(SUPABASE_URL+"/rest/v1/"+STATE_TABLE+"?id=eq.1&select=data&apikey="+SUPABASE_ANON_KEY);
-    const txt=await r.text();
-    diagFetch="HTTP "+r.status+" · "+txt.length+" bytes";
-  }catch(e){diagFetch="FETCH FAIL: "+e.message}
-}
-diagTest();setInterval(diagTest,15000);
+/* ============ Diagnostics ============ */
 setInterval(()=>{
   try{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.2.0 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
-      " | ch="+state.channelIndex+" | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
-      (l.pinned?" [PIN]":"")+(l.bumper?" [BUMP]":"")+
-      " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ready":"not")+
-      " | 👁 online="+presenceOnline+" | "+$("supabaseStatus").value;
+    el.textContent="v1.4.0 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+      " | ch="+state.channelIndex+"/"+state.radioChannelIndex+
+      " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
+      " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ok":"no")+
+      " | online="+presenceOnline+" | "+$("supabaseStatus").value;
   }catch(e){}
 },1000);
 </script>
 </body>
-            </html>
+  </html>
