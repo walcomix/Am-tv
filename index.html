@@ -19,8 +19,6 @@ button,input,select{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.4;cursor:not-allowed}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-
-/* ===== Phase 1 polish ===== */
 html{scroll-behavior:smooth}
 body{line-height:1.5;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:10px;height:10px}
@@ -50,8 +48,6 @@ input:focus,select:focus{border-color:var(--accent)}
  .clock{display:none}
  .panel{padding:12px}
 }
-
-/* ===== icons ===== */
 .ic{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;
   background-color:currentColor;flex-shrink:0;
   -webkit-mask-size:contain;mask-size:contain;
@@ -97,27 +93,19 @@ input:focus,select:focus{border-color:var(--accent)}
 .ic-snooze{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'/><path d='M12 9v4l3 2M5 3l2 2M19 3l-2 2'/></svg>")}
 .ic-kids{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3-7 8-7s8 3 8 7'/><circle cx='10' cy='7' r='.5' fill='black'/><circle cx='14' cy='7' r='.5' fill='black'/><path d='M10 9.5c1 .8 3 .8 4 0'/></svg>")}
 .ic-lock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>")}
-
 body.emoji-only button .lbl,body.emoji-only .btnlabel{display:none!important}
 body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px;min-width:38px}
-
-/* ===== Cast ===== */
 #castButton{position:relative}
 #castButton.casting{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
 #castButton.casting::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:#52e879;box-shadow:0 0 6px #52e879;animation:castPulse 1.6s ease-in-out infinite}
 @keyframes castPulse{0%,100%{opacity:1}50%{opacity:.4}}
 body.casting-on .playerpanel{box-shadow:0 0 60px rgba(82,232,121,.35)}
 body.casting-on #castButton{background:#1e3a24}
-
-/* ===== Sleep Timer ===== */
 #sleepBadge{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:200;background:#0d1712ee;border:1px solid var(--accent);color:var(--accent);padding:7px 14px;border-radius:20px;font-size:12px;font-weight:bold;display:none;box-shadow:0 4px 16px #000a}
 #sleepBadge.show{display:block}
 #sleepButton.active{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
-
-/* ===== Kids Mode ===== */
 body.kids-mode{--accent:#ff9e3d;--bg:#1a1035;--panel:#2a1a50;--panel2:#3a2660;--text:#fff9e6;--muted:#c7b8e0;--line:#5c4a8c;--onaccent:#1a1035}
-body.kids-mode::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 20%,rgba(255,158,61,.3),transparent 40%),radial-gradient(circle at 80% 30%,rgba(82,232,121,.25),transparent 45%),radial-gradient(circle at 50% 80%,rgba(255,110,199,.3),transparent 50%);pointer-events:none;animation:kidsGlow 8s ease-in-out infinite alternate}
-@keyframes kidsGlow{from{opacity:.7;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
+body.kids-mode::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 20%,rgba(255,158,61,.3),transparent 40%),radial-gradient(circle at 80% 30%,rgba(82,232,121,.25),transparent 45%),radial-gradient(circle at 50% 80%,rgba(255,110,199,.3),transparent 50%);pointer-events:none}
 body.kids-mode .panel,body.kids-mode .playerpanel{background:rgba(42,26,80,.85);backdrop-filter:blur(10px)}
 body.kids-mode .topbar{background:rgba(42,26,80,.85)}
 body.kids-mode .brandname{color:#fff;text-shadow:0 2px 8px rgba(255,158,61,.5)}
@@ -128,11 +116,8 @@ body.kids-mode .hero{grid-template-columns:minmax(0,1fr)}
 body.kids-mode .playerpanel{box-shadow:0 0 80px rgba(255,158,61,.25)}
 body.kids-mode .dot{background:#52e879;box-shadow:0 0 9px #52e879}
 body.kids-mode .onair{color:#52e879}
-
 #kidsExitBtn{position:fixed;top:12px;left:12px;z-index:200;background:#ff9e3d;color:#1a1035;border:0;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:bold;display:none;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;align-items:center;gap:7px}
 body.kids-mode #kidsExitBtn{display:inline-flex}
-
-/* ===== PIN Modal ===== */
 #pinModal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
 #pinModal.show{display:flex}
 #pinModal .pinBox{background:var(--panel);border:1px solid var(--accent);border-radius:18px;padding:24px;max-width:340px;width:90%;text-align:center}
@@ -142,12 +127,8 @@ body.kids-mode #kidsExitBtn{display:inline-flex}
 #pinInput:focus{border-color:var(--accent);outline:none}
 .pinActions{display:flex;gap:8px}
 .pinActions button{flex:1}
-
-/* ===== event banner ===== */
 #eventBanner{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 14px;background:var(--accent);color:var(--onaccent);font-size:13px;font-weight:bold;text-align:center}
 #eventBanner button{background:transparent;border:0;color:inherit;padding:2px 8px;font-size:15px}
-
-/* ===== layout ===== */
 .topbar{min-height:68px;display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--topbar);flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:11px;min-width:0}
 .logo{width:45px;height:45px;object-fit:contain;border-radius:9px;background:var(--accent);color:#111;display:grid;place-items:center;font-weight:900;font-size:18px;overflow:hidden}
@@ -225,16 +206,12 @@ input[type=checkbox]{width:auto;accent-color:var(--accent)}
 #ccFs{display:none;position:absolute;top:54px;left:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
 #playerShell:fullscreen #rotateButton,#playerShell.pagecover #rotateButton,#playerShell:fullscreen #ccFs,#playerShell.pagecover #ccFs{display:block}
 #playerShell.pagecover.rotated{inset:auto;top:0;left:100vw;width:100vh;height:100vw;transform-origin:0 0;transform:rotate(90deg)}
-
-/* ===== fallback layer ===== */
 #fallbackLayer{position:absolute;inset:0;z-index:0}
 #fallbackLayer img,#fallbackLayer video{width:100%;height:100%;object-fit:cover;display:block}
 #emptyScreen>*:not(#fallbackLayer){position:relative;z-index:1}
 #emptyScreen.has-fallback{justify-content:flex-end;padding-bottom:18px;background:#000}
 #emptyScreen.has-fallback .emptylogo{font-size:clamp(14px,3vw,26px);text-shadow:0 2px 10px #000}
 #emptyScreen.has-fallback .emptyhint{color:#fff;text-shadow:0 1px 6px #000}
-
-/* ===== bumper ===== */
 #bumperScreen{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;text-align:center;padding:20px;background:radial-gradient(ellipse at center,var(--screen1) 0,var(--screen2) 85%);animation:bumperIn .5s ease both}
 .bumperlogo{width:clamp(56px,14vw,110px);height:clamp(56px,14vw,110px);border-radius:18px;background:var(--screenaccent);color:#111;display:grid;place-items:center;font-weight:900;font-size:clamp(22px,6vw,42px);overflow:hidden;animation:bumperPulse 1.6s ease-in-out infinite}
 .bumperlogo img{width:100%;height:100%;object-fit:contain}
@@ -246,8 +223,6 @@ input[type=checkbox]{width:auto;accent-color:var(--accent)}
 @keyframes bumperIn{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
 @keyframes bumperPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 @keyframes bumperBar{from{width:0}to{width:100%}}
-
-/* ===== VHS ===== */
 #vhsOverlay{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
 #vhsOverlay::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 120px rgba(0,0,0,.55)}
 .vhs-lines{position:absolute;inset:0;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.2) 0 1px,transparent 1px 3px)}
@@ -259,8 +234,6 @@ input[type=checkbox]{width:auto;accent-color:var(--accent)}
 #vhsPlay{animation:vhsBlink 1.6s steps(2) infinite}
 @keyframes vhsBlink{50%{opacity:.35}}
 #playerShell.vhs #youtubePlayer,#playerShell.vhs #videoElement{filter:contrast(1.12) saturate(1.25) sepia(.12) blur(.4px)}
-
-/* ===== cinema ===== */
 #cinemaExit{position:fixed;top:12px;right:12px;z-index:200;background:rgba(0,0,0,.7);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
 body.cinema{background:#000}
 body.cinema .topbar,body.cinema .footer,body.cinema #diag,body.cinema .sidepanel,body.cinema #guidePanel,body.cinema #viewerSettings,body.cinema #loginBox,body.cinema #adminPanel,body.cinema #eventBanner{display:none!important}
@@ -271,8 +244,6 @@ body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
 body.cinema .playerfoot:hover{opacity:1}
-
-/* ===== dream ===== */
 body.dream{background:linear-gradient(160deg,#140b2e 0%,#2a1650 45%,#0d1a3d 100%) fixed}
 body.dream::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 15% 20%,rgba(255,154,213,.16),transparent 40%),radial-gradient(circle at 85% 30%,rgba(140,170,255,.14),transparent 45%),radial-gradient(circle at 50% 90%,rgba(190,140,255,.14),transparent 50%);animation:dreamDrift 18s ease-in-out infinite alternate}
 @keyframes dreamDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(2%,-2%) scale(1.08)}}
@@ -281,8 +252,6 @@ body.dream .panel,body.dream .playerpanel,body.dream .sidepanel{background:color
 body.dream .playerpanel{box-shadow:0 0 70px rgba(255,154,213,.22)}
 body.dream .topbar{background:rgba(20,11,46,.62)}
 body.dream .section,body.dream .listitem{background:rgba(255,255,255,.05)}
-
-/* ===== guide / misc ===== */
 #guideList .guide-row{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:9px;background:var(--panel2);border:1px solid var(--line)}
 #guideList .guide-row.now{border-color:var(--accent);background:rgba(232,184,91,.08)}
 #guideList .guide-time{color:var(--accent);font-size:11px;min-width:90px;padding-top:2px;font-family:monospace;direction:ltr}
@@ -886,7 +855,12 @@ const I18N = {
   msgFbSaved:"تصویر جایگزین ذخیره شد.",msgLogoRemoved:"لوگو حذف شد.",msgEvAdded:"رویداد اضافه شد.",msgEvInvalid:"نام و تاریخ را کامل وارد کن.",
   cast:"پخش به تلویزیون",castActive:"در حال پخش روی تلویزیون",castNotSupported:"دستگاه یا مرورگر شما از Cast پشتیبانی نمی‌کند.",
   castStarted:"اتصال به تلویزیون برقرار شد.",castFailed:"اتصال یا پخش روی تلویزیون ممکن نشد.",castYT:"برای یوتیوب، از اپلیکیشن YouTube تلویزیون استفاده کن یا لینک را دستی بفرست.",
-  castDisconnected:"اتصال به تلویزیون قطع شد."
+  castDisconnected:"اتصال به تلویزیون قطع شد.",
+  sleep:"خواب",sleepSet:"تایمر خواب: {n} دقیقه",sleepOff:"تایمر خواب خاموش شد",sleepDone:"تایمر خواب — پخش متوقف شد",
+  kidsBtn:"کودک",kidsOn:"حالت کودک روشن شد",kidsOff:"حالت کودک خاموش شد",exitKids:"خروج از حالت کودک",
+  pinTitle:"رمز والدین",pinHint:"رمز پیش‌فرض: 1234",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
+  noKidsItems:"هنوز برنامه‌ای برای کودک مشخص نشده. در پنل مدیریت، کنار برنامه‌ها تیک «کودک» رو بزن.",
+  lblKidsPin:"رمز حالت کودک (PIN)",kidsTag:"کودک"
 },
 "en":{
   navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
@@ -955,7 +929,12 @@ const I18N = {
   msgFbSaved:"Fallback saved.",msgLogoRemoved:"Logo removed.",msgEvAdded:"Event added.",msgEvInvalid:"Enter both a name and a date.",
   cast:"Cast to TV",castActive:"Casting to TV",castNotSupported:"Your device or browser doesn't support Cast.",
   castStarted:"Connected to TV.",castFailed:"Couldn't connect or cast to TV.",castYT:"For YouTube, use the TV's YouTube app or send the link manually.",
-  castDisconnected:"Disconnected from TV."
+  castDisconnected:"Disconnected from TV.",
+  sleep:"Sleep",sleepSet:"Sleep timer: {n} min",sleepOff:"Sleep timer off",sleepDone:"Sleep timer — playback stopped",
+  kidsBtn:"Kids",kidsOn:"Kids mode on",kidsOff:"Kids mode off",exitKids:"Exit kids mode",
+  pinTitle:"Parent PIN",pinHint:"Default PIN: 1234",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
+  noKidsItems:"No kids programs yet. Tag items with 'Kids' in admin panel.",
+  lblKidsPin:"Kids mode PIN",kidsTag:"Kids"
 },
 "ar":{
   navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
@@ -1023,7 +1002,11 @@ const I18N = {
   msgFbSaved:"تم حفظ الصورة البديلة.",msgLogoRemoved:"تم حذف الشعار.",msgEvAdded:"تمت إضافة المناسبة.",msgEvInvalid:"أدخل الاسم والتاريخ.",
   cast:"عرض على التلفزيون",castActive:"قيد العرض على التلفزيون",castNotSupported:"جهازك أو متصفحك لا يدعم Cast.",
   castStarted:"تم الاتصال بالتلفزيون.",castFailed:"تعذّر الاتصال بالتلفزيون.",castYT:"ليوتيوب، استخدم تطبيق YouTube على التلفزيون.",
-  castDisconnected:"تم قطع الاتصال."
+  castDisconnected:"تم قطع الاتصال.",
+  sleep:"النوم",sleepSet:"مؤقّت النوم: {n} دقيقة",sleepOff:"مؤقّت النوم مغلق",sleepDone:"مؤقّت النوم — توقف التشغيل",
+  kidsBtn:"أطفال",kidsOn:"وضع الأطفال مفعّل",kidsOff:"وضع الأطفال مغلق",exitKids:"الخروج من وضع الأطفال",
+  pinTitle:"رمز الوالدين",pinHint:"الرمز الافتراضي: 1234",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"رمز خاطئ",
+  noKidsItems:"لا برامج للأطفال بعد.",lblKidsPin:"رمز وضع الأطفال",kidsTag:"أطفال"
 },
 "tr":{
   navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
@@ -1091,7 +1074,11 @@ const I18N = {
   msgFbSaved:"Yedek kaydedildi.",msgLogoRemoved:"Logo kaldırıldı.",msgEvAdded:"Etkinlik eklendi.",msgEvInvalid:"Ad ve tarih gerekli.",
   cast:"TV'ye yayınla",castActive:"TV'ye yayınlanıyor",castNotSupported:"Cihazınız veya tarayıcınız Cast'i desteklemiyor.",
   castStarted:"TV'ye bağlandı.",castFailed:"TV'ye bağlanılamadı.",castYT:"YouTube için TV'nin YouTube uygulamasını kullanın.",
-  castDisconnected:"TV bağlantısı kesildi."
+  castDisconnected:"TV bağlantısı kesildi.",
+  sleep:"Uyku",sleepSet:"Uyku zamanlayıcı: {n} dk",sleepOff:"Uyku zamanlayıcı kapalı",sleepDone:"Uyku zamanlayıcı — oynatma durdu",
+  kidsBtn:"Çocuk",kidsOn:"Çocuk modu açık",kidsOff:"Çocuk modu kapalı",exitKids:"Çocuk modundan çık",
+  pinTitle:"Ebeveyn PIN",pinHint:"Varsayılan PIN: 1234",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış PIN",
+  noKidsItems:"Henüz çocuk programı yok.",lblKidsPin:"Çocuk modu PIN",kidsTag:"Çocuk"
 }
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
@@ -1197,6 +1184,12 @@ let isCasting = false;
 let airplayAvailable = false;
 let remotePlaybackAvailable = false;
 let lastCastItemId = null;
+
+/* Sleep / Kids state */
+let sleepTimer=null, sleepEnd=0, sleepTick=null;
+const SLEEP_STEPS=[15,30,60,90,0];
+let sleepStepIdx=4;
+let kidsMode=false;
 
 /* ============ Utils ============ */
 function applyAudioState(){
@@ -1764,7 +1757,160 @@ function ensureState(){
 function effectiveItemKey(item){
   if(!item)return "";
   return [activeMode(),item.id||mediaUrl(item),state.channelIndex,state.radioChannelIndex].join("|");
-}/* ============ Supabase ============ */
+}
+
+/* ============ Sleep Timer ============ */
+function setupSleepTimer(){
+  if(!$("sleepButton"))return;
+  $("sleepButton").addEventListener("click",()=>{
+    sleepStepIdx=(sleepStepIdx+1)%SLEEP_STEPS.length;
+    const mins=SLEEP_STEPS[sleepStepIdx];
+    clearTimeout(sleepTimer);clearInterval(sleepTick);
+    const badge=$("sleepBadge");
+    const btn=$("sleepButton");
+    if(mins===0){
+      badge.classList.remove("show");
+      btn.classList.remove("active");
+      notify(t("sleepOff"));
+      return;
+    }
+    btn.classList.add("active");
+    sleepEnd=Date.now()+mins*60*1000;
+    badge.classList.add("show");
+    sleepTick=setInterval(()=>{
+      const remain=sleepEnd-Date.now();
+      if(remain<=0){
+        clearInterval(sleepTick);clearTimeout(sleepTimer);
+        badge.classList.remove("show");
+        btn.classList.remove("active");
+        sleepStepIdx=4;
+        try{$("videoElement").pause()}catch(_){}
+        try{$("audioElement").pause()}catch(_){}
+        try{if(ytReady&&ytPlayer)ytPlayer.pauseVideo()}catch(_){}
+        notify(t("sleepDone"));
+        return;
+      }
+      const m=Math.floor(remain/60000),s=Math.floor((remain%60000)/1000);
+      $("sleepTime").textContent=m+":"+String(s).padStart(2,"0");
+    },500);
+    notify(t("sleepSet",{n:mins}));
+  });
+}
+
+/* ============ Media Session (Lock Screen) ============ */
+function setupMediaSession(){
+  if(!("mediaSession" in navigator))return;
+  const handlers={
+    play:()=>{ if(activeItem())togglePlay(); },
+    pause:()=>{ if(activeItem())togglePlay(); },
+    previoustrack:()=>{ previousItem(); },
+    nexttrack:()=>{ nextItem(); },
+    stop:()=>{ try{$("videoElement").pause()}catch(_){}; try{$("audioElement").pause()}catch(_){}; try{if(ytReady&&ytPlayer)ytPlayer.pauseVideo()}catch(_){}; }
+  };
+  Object.keys(handlers).forEach(a=>{
+    try{ navigator.mediaSession.setActionHandler(a,handlers[a]); }catch(_){}
+  });
+  updateMediaSessionMeta();
+}
+function updateMediaSessionMeta(){
+  if(!("mediaSession" in navigator))return;
+  try{
+    const item=activeItem();
+    const artwork=[];
+    if(state.stationLogo)artwork.push({src:state.stationLogo,sizes:"512x512",type:"image/png"});
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:item?(item.title||t("untitled")):"AM TV 24/7",
+      artist:state.stationName||"AM TV",
+      album:activeMode()==="radio"?"AM Radio":"AM TV",
+      artwork:artwork
+    });
+    navigator.mediaSession.playbackState=localPlaying?"playing":"paused";
+  }catch(_){}
+}
+
+/* ============ Kids Mode ============ */
+function isKidsItem(item){ return !!(item && item.kids===true); }
+function firstKidsIndex(){
+  const list=currentList();
+  return list.findIndex(v=>isKidsItem(v));
+}
+function skipToKids(step){
+  const list=currentList();
+  if(!list.length)return;
+  let i=currentIndex();
+  for(let n=0;n<list.length;n++){
+    i=(i+step+list.length)%list.length;
+    if(isKidsItem(list[i])){ chooseIndex(i); return; }
+  }
+  notify(t("noKidsItems"));
+}
+function applyKidsFilter(){
+  const idx=firstKidsIndex();
+  if(idx<0){
+    notify(t("noKidsItems"));
+    setTimeout(()=>setKidsMode(false),2500);
+    return;
+  }
+  chooseIndex(idx);
+}
+function setKidsMode(on){
+  kidsMode=!!on;
+  document.body.classList.toggle("kids-mode",kidsMode);
+  try{ localStorage.setItem("amtv-kids",kidsMode?"1":"0"); }catch(_){}
+  if(kidsMode){
+    notify(t("kidsOn"));
+    applyKidsFilter();
+  } else {
+    notify(t("kidsOff"));
+  }
+}
+function getKidsPin(){
+  try{
+    const stored=localStorage.getItem("amtv-kids-pin");
+    if(stored)return stored;
+    if(state.schedule && state.schedule.kidsPin)return state.schedule.kidsPin;
+    return "1234";
+  }catch(_){ return "1234"; }
+}
+function promptKidsExit(){
+  const modal=$("pinModal");
+  if(!modal)return;
+  modal.classList.add("show");
+  $("pinInput").value="";
+  $("pinInput").style.borderColor="";
+  setTimeout(()=>$("pinInput").focus(),100);
+}
+function checkPin(){
+  const entered=($("pinInput").value||"").trim();
+  const stored=getKidsPin();
+  if(entered===stored){
+    $("pinModal").classList.remove("show");
+    setKidsMode(false);
+  } else {
+    $("pinInput").value="";
+    $("pinInput").style.borderColor="#ff5252";
+    notify(t("pinWrong"));
+    setTimeout(()=>{$("pinInput").style.borderColor=""},700);
+  }
+}
+function setupSleepAndKids(){
+  setupSleepTimer();
+  setupMediaSession();
+  $("kidsToggle")?.addEventListener("click",()=>{
+    if(kidsMode){ promptKidsExit(); return; }
+    setKidsMode(true);
+  });
+  $("kidsExitBtn")?.addEventListener("click",()=>promptKidsExit());
+  $("pinCancel")?.addEventListener("click",()=>$("pinModal").classList.remove("show"));
+  $("pinConfirm")?.addEventListener("click",checkPin);
+  $("pinInput")?.addEventListener("keydown",e=>{if(e.key==="Enter")checkPin();});
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape" && $("pinModal")?.classList.contains("show")){
+      $("pinModal").classList.remove("show");
+    }
+  });
+}
+/* ============ Supabase ============ */
 try{
   if(window.supabase && window.supabase.createClient){
     sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
@@ -3503,7 +3649,7 @@ setInterval(()=>{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.0.0 The Next Era + Cast + Sleep + Kids | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.textContent="v1.0.0 The Next Era | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | ch="+state.channelIndex+"/"+state.radioChannelIndex+
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ok":"no")+
@@ -3512,6 +3658,7 @@ setInterval(()=>{
       " | online="+presenceOnline+" | "+$("supabaseStatus").value;
   }catch(e){}
 },1000);
+
 </script>
 </body>
   </html>
