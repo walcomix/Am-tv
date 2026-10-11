@@ -1918,14 +1918,7 @@ function setupSleepAndKids(){
 }
 
 /* ============ Supabase ============ */
-
-
-    
-/* ============ Supabase ============ */
-try{
-  if(window.supabase && window.supabase.createClient){
-    
-  setupSleepTimer();
+  
   setupMediaSession();
   $("kidsToggle")?.addEventListener("click",()=>{
     if(kidsMode){ promptKidsExit(); return; }
