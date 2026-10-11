@@ -2258,4 +2258,69 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   apply();setInterval(apply,1000);
 })();
 
-/* ============== Periodic
+/* ============== Periodic loops ============== */
+let driftTick=0;
+setInterval(()=>{
+  if(isAdmin)return;
+  try{
+    const item=activeItem();
+    if(!item||!mediaUrl(item))return;
+    if(effectiveItemKey(item)!==activeMediaKey){renderPlayer(true);return}
+    if(++driftTick%5===0)driftCorrect();
+    const li=liveInfo("tv");
+    if(li.known && li.bumper && !bumperOn && activeMode()==="tv"){
+      showBumper(currentChannel().list[li.index],li.left);
+    } else if(!li.bumper && bumperOn && !adminBumperTimer){
+      hideBumper();
+    }
+  }catch(e){}
+},1000);
+setInterval(syncServerTime,300000);
+setInterval(startProbing,5000);
+setInterval(()=>{if(holdLive)checkHold()},1000);
+setInterval(renderLastSync,30000);
+setInterval(()=>{if(!$("guidePanel").classList.contains("hidden"))renderGuide()},15000);
+
+/* ============== Fallback polling ============== */
+let lastRemoteJson="";
+setInterval(async()=>{
+  if(isAdmin||!sbClient)return;
+  try{
+    const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
+    if(error||!data||!data.data)return;
+    const j=JSON.stringify(data.data);
+    if(j===lastRemoteJson)return;
+    lastRemoteJson=j;
+    isApplyingRemote=true;
+    state={...clone(DEFAULT_STATE),...data.data};
+    ensureState();
+    isApplyingRemote=false;
+    renderAll();
+  }catch(e){console.warn(e)}
+},8000);
+
+/* ============== Diagnostics ============== */
+let diagFetch="در حال تست...";
+async function diagTest(){
+  try{
+    const r=await fetch(SUPABASE_URL+"/rest/v1/"+STATE_TABLE+"?id=eq.1&select=data&apikey="+SUPABASE_ANON_KEY);
+    const txt=await r.text();
+    diagFetch="HTTP "+r.status+" · "+txt.length+" bytes";
+  }catch(e){diagFetch="FETCH FAIL: "+e.message}
+}
+diagTest();setInterval(diagTest,15000);
+setInterval(()=>{
+  try{
+    const el=$("diag");if(!el)return;
+    el.style.display=location.search.includes("debug")?"block":"none";
+    const l=liveInfo(activeMode());
+    el.textContent="v1.2.0 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+      " | ch="+state.channelIndex+" | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
+      (l.pinned?" [PIN]":"")+(l.bumper?" [BUMP]":"")+
+      " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ready":"not")+
+      " | 👁 online="+presenceOnline+" | "+$("supabaseStatus").value;
+  }catch(e){}
+},1000);
+</script>
+</body>
+            </html>
