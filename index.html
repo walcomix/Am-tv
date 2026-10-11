@@ -168,7 +168,7 @@ body.viewerMode #videoElement{controls:none!important}
       <div id="playerShell">
         <div id="emptyScreen">
           <div class="emptylogo" id="emptyLogo">AM TV</div>
-          <div id="emptyHint" class="emptyhint">کانال در انتظار برنامه است</div>
+          <div class="emptyhint" id="emptyHint">کانال در انتظار برنامه است</div>
         </div>
         <div id="youtubePlayer"></div>
         <video id="videoElement" playsinline controlslist="nodownload noplaybackrate"></video>
@@ -224,6 +224,19 @@ body.viewerMode #videoElement{controls:none!important}
         <div>دسترسی: <strong id="statusRole">بیننده</strong></div>
         <div>کانال: <strong id="statusChannel">اصلی</strong></div>
       </div>
+
+      <div style="margin-top:16px">
+        <div class="sideheading">👥 بیننده‌ها</div>
+        <div class="statusbox">
+          <div>🟢 آنلاین الان: <strong id="onlineViewers" style="color:var(--accent)">—</strong></div>
+          <div>📺 روی TV: <strong id="viewTV">0</strong></div>
+          <div>📻 روی Radio: <strong id="viewRadio">0</strong></div>
+          <div>👤 بیننده: <strong id="viewViewers">0</strong></div>
+          <div>🔐 مدیر: <strong id="viewAdmin">0</strong></div>
+          <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:6px">👁 کل بازدید: <strong id="totalViews" style="color:var(--accent)">—</strong></div>
+        </div>
+      </div>
+
       <div id="channelSelector" style="margin-top:16px">
         <div class="sideheading">کانال‌ها</div>
         <div id="channelButtons" class="itemlist"></div>
@@ -237,7 +250,7 @@ body.viewerMode #videoElement{controls:none!important}
       <button id="closeGuide" class="small">بستن</button>
     </div>
     <div id="guideList" class="itemlist"></div>
-    <p class="viewerhint">زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند. برای دیدن تغییرات، دکمهٔ بروزرسانی را بزن.</p>
+    <p class="viewerhint">زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند.</p>
   </section>
 
   <section id="viewerSettings" class="panel hidden">
@@ -311,6 +324,7 @@ body.viewerMode #videoElement{controls:none!important}
   <section id="adminPanel" class="panel hidden">
     <div class="panelhead">
       <h2>پنل مدیریت AM TV</h2>
+      <span class="onair" id="viewerCount" style="color:var(--accent);font-size:13px">👁 —</span>
       <span class="onair"><span class="dot"></span> ADMIN ACCESS</span>
     </div>
     <div class="tabs">
@@ -361,7 +375,7 @@ body.viewerMode #videoElement{controls:none!important}
               <option value="300">پاکستان (UTC+5:00)</option>
               <option value="0">UTC</option>
             </select>
-            <div class="viewerhint">با دکمهٔ ⏰ کنار هر برنامه می‌توانی یک ساعت پخش ثابت (هر روز) تعیین کنی. برای پخش یک برنامه در دو ساعت مختلف، آن را دو بار اضافه کن.</div>
+            <div class="viewerhint">با دکمهٔ ⏰ کنار هر برنامه می‌توانی یک ساعت پخش ثابت (هر روز) تعیین کنی.</div>
           </div>
           <div id="adminPlaylist" class="itemlist"></div>
         </div>
@@ -434,7 +448,7 @@ body.viewerMode #videoElement{controls:none!important}
       <div class="adminGrid">
         <div class="section" style="grid-column:1/-1">
           <h3>📡 همگام‌سازی خودکار YouTube</h3>
-          <p class="viewerhint">ویدیوهای جدید کانال‌هایی که با حساب یوتیوب دنبال می‌کنی شناسایی می‌شوند و به پلی‌لیست اضافه می‌شوند. ویدیوهای همگام‌شدهٔ قدیمی‌تر از ۲۴ ساعت خودکار حذف می‌شوند.</p>
+          <p class="viewerhint">ویدیوهای جدید کانال‌هایی که با حساب یوتیوب دنبال می‌کنی شناسایی می‌شوند. ویدیوهای قدیمی‌تر از ۲۴ ساعت خودکار حذف می‌شوند.</p>
           <div class="actions">
             <button id="youtubeConnectButton" class="primary">اتصال حساب YouTube</button>
             <button id="youtubeSyncButton">همگام‌سازی ویدیوهای ۲۴ ساعت اخیر</button>
@@ -482,7 +496,7 @@ body.viewerMode #videoElement{controls:none!important}
       </div>
     </div>
   </section>
-  <div class="footer">AM TV 24/7 · YOUR WORLD · YOUR CHANNEL<br>v1.1.0 · Bumper + Pin + EPG + Sync</div>
+  <div class="footer">AM TV 24/7 · YOUR WORLD · YOUR CHANNEL<br>v1.2.0 · Bumper + Pin + EPG + Sync + Viewers</div>
   <div id="diag" style="direction:ltr;text-align:center;font-size:11px;color:#a9b09f;padding:6px 12px 24px;overflow-wrap:anywhere"></div>
 </main>
 <div aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;opacity:0;pointer-events:none"><div id="probePlayer"></div></div>
@@ -497,12 +511,24 @@ const SUPABASE_URL = "https://nxcttzqubdlpfqqdzhpp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_HZ47UxckVEESAOSO1Muv1w_fsheHSYG";
 const STORAGE_BUCKET = "amtv-media";
 const STATE_TABLE = "amtv_state";
+const VIEWS_TABLE = "amtv_views";
 const YOUTUBE_FUNCTION_URL = SUPABASE_URL + "/functions/v1/youtube-sync";
 
 const $ = id => document.getElementById(id);
 const clone = v => JSON.parse(JSON.stringify(v));
 const makeId = () => "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,9);
 const DAY = 86400000;
+
+/* ============== Visitor ID ============== */
+function getVisitorId(){
+  let id = localStorage.getItem("amtv-visitor-id");
+  if (!id){
+    id = "v-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,9);
+    localStorage.setItem("amtv-visitor-id", id);
+  }
+  return id;
+}
+const VISITOR_ID = getVisitorId();
 
 /* ============== i18n ============== */
 const I18N={
@@ -594,6 +620,11 @@ let localPlaying = false;
 let viewerSoundOn = false;
 let adminBumperTimer = null;
 let bumperOn = false;
+
+/* ============== Presence + Views ============== */
+let presenceChannel = null;
+let presenceOnline = 0;
+let presenceBreakdown = { tv:0, radio:0, admin:0, viewers:0 };
 
 function applyAudioState(){
   const mute = !isAdmin && !viewerSoundOn;
@@ -701,7 +732,6 @@ function showBumper(next,left){
   const txt=((state.bumper&&state.bumper.text)||"").trim();
   $("bumperText").textContent=txt||t("bumperDefault");
   $("bumperNext").textContent=next?(t("bumperNext")+" "+(next.title||t("untitled"))):"";
-  // پنهان کردن بقیهٔ مدیا
   $("emptyScreen").style.display="none";
   $("youtubePlayer").style.display="none";
   $("videoElement").style.display="none";
@@ -777,7 +807,7 @@ function nextPinStart(t){
   return best;
 }
 
-/* ============== Live info (core) ============== */
+/* ============== Live info ============== */
 function liveInfoAt(kind,t){
   const list=kind==="radio"?state.radioList:currentChannel().list;
   const n=list.length;
@@ -825,7 +855,7 @@ function liveInfoAt(kind,t){
 }
 function liveInfo(kind){return liveInfoAt(kind,serverNow())}
 
-/* ============== EPG builder ============== */
+/* ============== EPG ============== */
 function buildGuide(maxRows,horizonMs){
   const out=[];
   const list=currentChannel().list;
@@ -893,7 +923,7 @@ function renderGuide(){
   });
 }
 
-/* ============== Auto prune YouTube ============== */
+/* ============== Prune old synced ============== */
 function pruneOldSynced(){
   const ch=currentChannel();
   const list=ch.list;
@@ -914,11 +944,7 @@ function pruneOldSynced(){
   return removed;
 }
 
-/* ============== YouTube Sync client ============== */
-function renderYouTubeManager(){
-  const panel=$("youtubeTab");
-  if(!panel)return;
-}
+/* ============== YouTube sync ============== */
 async function callYouTubeSync(action){
   if(!isAdmin||!sbClient){notify("فقط مدیر واردشده می‌تواند این کار را انجام دهد.");return}
   const status=$("youtubeSyncStatus");
@@ -956,7 +982,7 @@ async function callYouTubeSync(action){
         list.push({id:makeId(),youtubeId:video.id,title:video.title||"ویدیوی YouTube",url:"https://www.youtube.com/watch?v="+video.id,addedAt:Date.now()});
         existingIds.add(video.id);added++;
       }
-      if(added){clearTimeout(saveTimer);renderAll();const ok=await saveRemoteState();status.textContent=added+" ویدیو اضافه شد.";notify(added+" ویدیو اضافه شد.");}
+      if(added){clearTimeout(saveTimer);renderAll();await saveRemoteState();status.textContent=added+" ویدیو اضافه شد.";notify(added+" ویدیو اضافه شد.");}
       else notify("ویدیوی جدیدی پیدا نشد.");
     }
     const pruned=pruneOldSynced();
@@ -989,7 +1015,7 @@ function renderLastSync(){
   el.textContent="آخرین همگام‌سازی: "+new Date(tt).toLocaleString(dateLocale())+" ("+ago+")";
 }
 
-/* ============== Probing durations ============== */
+/* ============== Duration probing ============== */
 let holdLive=false,holdUntil=0,holdStarted=false;
 let probeRunning=false,probePlayer=null,probeReady=false;
 const probeFailed=new Set();
@@ -1204,6 +1230,7 @@ async function applySession(session){
   $("loginBox").classList.add("hidden");
   document.body.classList.toggle("viewerMode",!isAdmin);
   renderAll();
+  trackPresence();
   if(isAdmin)notify("ورود انجام شد.");
 }
 async function signIn(){
@@ -1231,6 +1258,7 @@ async function signOut(){
   $("loginToggle").classList.remove("hidden");
   document.body.classList.add("viewerMode");
   renderAll();
+  trackPresence();
   notify("از حساب مدیر خارج شدی.");
 }
 async function uploadFile(file,folder){
@@ -1242,6 +1270,90 @@ async function uploadFile(file,folder){
   const {data}=sbClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
   if(!data?.publicUrl)throw new Error("لینک عمومی فایل ساخته نشد.");
   return data.publicUrl;
+}
+
+/* ============== Presence ============== */
+async function setupPresence(){
+  if(!sbClient)return;
+  presenceChannel = sbClient.channel("amtv-presence", {
+    config: { presence: { key: VISITOR_ID } }
+  });
+  presenceChannel
+    .on("presence", { event: "sync" }, renderPresence)
+    .on("presence", { event: "join" }, renderPresence)
+    .on("presence", { event: "leave" }, renderPresence)
+    .subscribe(async (status) => {
+      if (status === "SUBSCRIBED") await trackPresence();
+    });
+}
+async function trackPresence(){
+  if (!presenceChannel) return;
+  try{
+    await presenceChannel.track({
+      mode: activeMode(),
+      role: isAdmin ? "admin" : "viewer",
+      joinedAt: Date.now()
+    });
+  }catch(_){}
+}
+function renderPresence(){
+  if (!presenceChannel) return;
+  const st = presenceChannel.presenceState() || {};
+  let total = 0, tv = 0, radio = 0, admins = 0, viewers = 0;
+  Object.values(st).forEach(arr => {
+    if (!Array.isArray(arr)) return;
+    arr.forEach(m => {
+      total++;
+      if (m.mode === "tv") tv++;
+      else if (m.mode === "radio") radio++;
+      if (m.role === "admin") admins++;
+      else viewers++;
+    });
+  });
+  presenceOnline = total;
+  presenceBreakdown = { tv, radio, admin: admins, viewers };
+  updateViewerUI();
+}
+function updateViewerUI(){
+  const set = (id, val) => { const el = $(id); if (el) el.textContent = val; };
+  set("viewerCount", "👁 " + presenceOnline);
+  set("onlineViewers", presenceOnline);
+  set("viewTV", presenceBreakdown.tv);
+  set("viewRadio", presenceBreakdown.radio);
+  set("viewViewers", presenceBreakdown.viewers);
+  set("viewAdmin", presenceBreakdown.admin);
+}
+
+/* ============== Total views ============== */
+async function countTotalViews(){
+  if (!sbClient) return;
+  const VISIT_KEY = "amtv-visit-counted";
+  try{
+    if (!sessionStorage.getItem(VISIT_KEY)){
+      const { data, error } = await sbClient.rpc("amtv_increment_views");
+      if (!error && data != null){
+        renderTotalViews(data);
+        sessionStorage.setItem(VISIT_KEY, "1");
+        return;
+      }
+    }
+    const { data: row } = await sbClient.from(VIEWS_TABLE).select("total").eq("id",1).maybeSingle();
+    if (row && row.total != null) renderTotalViews(row.total);
+  }catch(_){}
+}
+function renderTotalViews(n){
+  const el = $("totalViews");
+  if (el) el.textContent = Number(n).toLocaleString(dateLocale());
+}
+function watchTotalViewsRealtime(){
+  if (!sbClient) return;
+  sbClient.channel("amtv-views-live")
+    .on("postgres_changes",
+      { event: "UPDATE", schema: "public", table: VIEWS_TABLE, filter: "id=eq.1" },
+      payload => {
+        if (payload?.new?.total != null) renderTotalViews(payload.new.total);
+      })
+    .subscribe();
 }
 
 /* ============== YouTube player ============== */
@@ -1312,7 +1424,6 @@ function renderPlayer(force=false){
   $("statusChannel").textContent=currentChannel().name;
   applyWatermark();
 
-  // Bumper mode: between programs (only TV, only viewers OR when shared mode)
   if(mode==="tv"){
     const lb=liveInfo("tv");
     if(lb.known && lb.bumper && !adminBumperTimer){
@@ -1660,7 +1771,7 @@ function renderAll(){
   $("stationNameInput").value=state.stationName||"AM TV 24/7";
   $("stationLogoURL").value=state.stationLogo||"";
   loadWatermarkFields();loadBumperFields();loadScheduleFields();
-  renderGuide();renderLastSync();renderPlayer();
+  renderGuide();renderLastSync();updateViewerUI();renderPlayer();
 }
 
 /* ============== Pin setter ============== */
@@ -1861,6 +1972,7 @@ function setMode(mode){
   else{localViewerMode=mode;localStorage.setItem("amtv-viewer-mode",mode)}
   activeMediaKey="";renderAll();
   if(isAdmin)syncPlayback(true);
+  trackPresence();
 }
 function openTab(tabId){
   document.querySelectorAll(".tabcontent").forEach(el=>el.classList.add("hidden"));
@@ -2070,7 +2182,7 @@ $("audioElement").addEventListener("loadedmetadata",()=>{
   pendingSeekAudio=0;
 });
 
-/* ============== Realtime ============== */
+/* ============== Realtime state ============== */
 async function setupRealtime(){
   if(!sbClient)return;
   sbClient.channel("amtv-state-live")
@@ -2112,12 +2224,14 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   await loadRemoteState();
   await initAuth();
   await setupRealtime();
-  // prune on boot
+  await setupPresence();
+  await countTotalViews();
+  watchTotalViewsRealtime();
   if(isAdmin){const p=pruneOldSynced();if(p){await saveRemoteState()}}
   renderAll();
 })();
 
-/* Viewer playback lock */
+/* ============== Viewer lock ============== */
 (function lockViewerPlayback(){
   $("viewerStart").addEventListener("click",()=>{
     viewerSoundOn=true;applyAudioState();
@@ -2144,70 +2258,4 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   apply();setInterval(apply,1000);
 })();
 
-/* Periodic sync loops */
-let driftTick=0;
-setInterval(()=>{
-  if(isAdmin)return;
-  try{
-    const item=activeItem();
-    if(!item||!mediaUrl(item))return;
-    if(effectiveItemKey(item)!==activeMediaKey){renderPlayer(true);return}
-    if(++driftTick%5===0)driftCorrect();
-    // Bumper check every second
-    const li=liveInfo("tv");
-    if(li.known && li.bumper && !bumperOn && activeMode()==="tv"){
-      showBumper(currentChannel().list[li.index],li.left);
-    } else if(!li.bumper && bumperOn && !adminBumperTimer){
-      hideBumper();
-    }
-  }catch(e){}
-},1000);
-setInterval(syncServerTime,300000);
-setInterval(startProbing,5000);
-setInterval(()=>{if(holdLive)checkHold()},1000);
-setInterval(renderLastSync,30000);
-setInterval(()=>{if(!$("guidePanel").classList.contains("hidden"))renderGuide()},15000);
-
-/* Viewer fallback polling */
-let lastRemoteJson="";
-setInterval(async()=>{
-  if(isAdmin||!sbClient)return;
-  try{
-    const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
-    if(error||!data||!data.data)return;
-    const j=JSON.stringify(data.data);
-    if(j===lastRemoteJson)return;
-    lastRemoteJson=j;
-    isApplyingRemote=true;
-    state={...clone(DEFAULT_STATE),...data.data};
-    ensureState();
-    isApplyingRemote=false;
-    renderAll();
-  }catch(e){console.warn(e)}
-},8000);
-
-/* Diagnostics */
-let diagFetch="در حال تست...";
-async function diagTest(){
-  try{
-    const r=await fetch(SUPABASE_URL+"/rest/v1/"+STATE_TABLE+"?id=eq.1&select=data&apikey="+SUPABASE_ANON_KEY);
-    const txt=await r.text();
-    diagFetch="HTTP "+r.status+" · "+txt.length+" bytes";
-  }catch(e){diagFetch="FETCH FAIL: "+e.message}
-}
-diagTest();setInterval(diagTest,15000);
-setInterval(()=>{
-  try{
-    const el=$("diag");if(!el)return;
-    el.style.display=location.search.includes("debug")?"block":"none";
-    const l=liveInfo(activeMode());
-    el.textContent="v1.1.0 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
-      " | ch="+state.channelIndex+" | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
-      (l.pinned?" [PIN]":"")+(l.bumper?" [BUMP]":"")+
-      " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ready":"not")+
-      " | "+$("supabaseStatus").value;
-  }catch(e){}
-},1000);
-</script>
-</body>
-  </html>
+/* ============== Periodic
