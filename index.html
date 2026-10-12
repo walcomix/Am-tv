@@ -242,6 +242,12 @@ body.cinema .hero{grid-template-columns:minmax(0,1fr)}
 body.cinema .playerpanel{border:0;border-radius:0;box-shadow:none;background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
+#screenLockBtn{display:none;position:absolute;top:54px;right:10px;z-index:22;background:rgba(0,0,0,.82);color:#fff;border:1px solid #ffffff66;border-radius:999px;padding:10px 13px;font-size:13px}
+#playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
+#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:transparent;touch-action:none}
+#playerShell.screen-locked #lockOverlay{display:flex}
+#lockOverlay button{background:rgba(0,0,0,.86);color:#fff;border:1px solid #ffffff77;border-radius:999px;padding:13px 18px;font-weight:700;pointer-events:auto}
+#playerShell.screen-locked #screenLockBtn{display:none}
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
 body.cinema .playerfoot:hover{opacity:1}
 body.dream{background:linear-gradient(160deg,#140b2e 0%,#2a1650 45%,#0d1a3d 100%) fixed}
@@ -353,6 +359,8 @@ body.viewerMode #videoElement{controls:none!important}
         <button id="coverExit"><i class="ic ic-close"></i><span class="lbl" data-i18n="exitfs">خروج</span></button>
         <button id="rotateButton"><i class="ic ic-sync"></i><span class="lbl" data-i18n="rotate">افقی / عمودی</span></button>
         <button id="ccFs"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
+        <button id="screenLockBtn" type="button" title="قفل لمس صفحه">🔒 قفل صفحه</button>
+        <div id="lockOverlay" aria-label="صفحه قفل است"><button id="screenUnlockBtn" type="button">🔓 برای بازکردن لمس کن</button></div>
         <button id="viewerStart" class="hidden" data-i18n="unmute">🔊 برای فعال‌سازی صدا لمس کنید</button>
         <div id="watermark">
           <img id="watermarkImage" class="hidden" alt="Watermark">
@@ -647,6 +655,17 @@ body.viewerMode #videoElement{controls:none!important}
           </div>
           <div class="statusbox" id="youtubeSyncStatus" style="margin-top:12px" data-i18n="ytStatus">وضعیت: هنوز بررسی نشده</div>
           <div class="viewerhint" id="lastSyncLabel" style="margin-top:8px">—</div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+          <h3>همگام‌سازی کانال با لینک</h3>
+          <p class="viewerhint">لینک کانال یوتیوب را وارد کن تا ویدیوهای منتشرشده در ۲۴ ساعت اخیر دریافت شوند. برای هر کانال، بخش مقصد را جدا انتخاب کن. دریافت به RSS عمومی و سرویس واسط وابسته است.</p>
+          <div class="field"><label for="feedChannelUrl">لینک کانال یوتیوب</label><input id="feedChannelUrl" type="url" placeholder="https://www.youtube.com/@channel یا /channel/UC..."></div>
+          <div class="rowfields">
+            <div class="field"><label for="feedChannelName">نام نمایشی کانال (اختیاری)</label><input id="feedChannelName" placeholder="مثلاً کانال نوستالژی"></div>
+            <div class="field"><label for="feedTargetSection">بخش مقصد</label><select id="feedTargetSection"><option value="tv">TV</option><option value="radio">Radio</option><option value="kids">Kids</option></select></div>
+          </div>
+          <div class="actions"><button id="addChannelFeedButton" class="primary">＋ افزودن کانال</button><button id="syncChannelFeedsButton">⟳ همگام‌سازی ۲۴ ساعت اخیر</button></div>
+          <div class="statusbox" id="channelFeedStatus" style="margin-top:12px">هنوز کانالی اضافه نشده.</div>
+          <div id="channelFeedsList" class="itemlist"></div>
         </div>
       </div>
     </div>
@@ -1148,6 +1167,7 @@ const DEFAULT_STATE = {
   fallback:{type:"none",url:""},
   events:{enabled:true,custom:[]},
   lastSyncAt:0,
+  channelFeeds:[],
   watermark:{text:"",image:"",size:100,opacity:85,width:110,color:"#ffffff",position:"top-left",x:3,y:4}
 };
 
@@ -1250,6 +1270,7 @@ function currentChannel(){
   return c;
 }
 function currentRadioChannel(){
+  if(!Array.isArray(state.channelFeeds))state.channelFeeds=[];
   if(!Array.isArray(state.radioChannels))state.radioChannels=[];
   if(!state.radioChannels.length)state.radioChannels.push({id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]});
   state.radioChannelIndex=Math.max(0,Math.min(Number(state.radioChannelIndex)||0,state.radioChannels.length-1));
@@ -1597,6 +1618,88 @@ async function callYouTubeSync(action){
     connectButton.disabled=false;syncButton.disabled=false;
   }
 }
+function parseYouTubeChannelIdFromUrl(channelUrl){
+  const u=new URL(channelUrl);
+  const direct=u.pathname.match(/\/channel\/(UC[\w-]+)/);
+  if(direct)return direct[1];
+  const query=u.searchParams.get("channel_id");
+  return query&&/^UC[\w-]+$/.test(query)?query:"";
+}
+async function resolveYouTubeChannelId(channelUrl){
+  const direct=parseYouTubeChannelIdFromUrl(channelUrl);
+  if(direct)return direct;
+  const response=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(channelUrl));
+  if(!response.ok)throw new Error("شناسهٔ کانال پیدا نشد؛ لینک /channel/UC... را امتحان کن.");
+  const html=await response.text();
+  for(const re of [/"channelId"\s*:\s*"(UC[\w-]+)"/,/"externalId"\s*:\s*"(UC[\w-]+)"/,/"browseId"\s*:\s*"(UC[\w-]+)"/]){const m=html.match(re);if(m)return m[1]}
+  throw new Error("شناسهٔ کانال پیدا نشد؛ لینک کامل کانال یا /channel/UC... را وارد کن.");
+}
+async function fetchRecentChannelVideos(channelUrl){
+  const channelId=await resolveYouTubeChannelId(channelUrl);
+  const feedUrl="https://www.youtube.com/feeds/videos.xml?channel_id="+encodeURIComponent(channelId);
+  const response=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(feedUrl));
+  if(!response.ok)throw new Error("سرویس RSS فعلاً در دسترس نیست.");
+  const data=await response.json();
+  if(data.status!=="ok"||!Array.isArray(data.items))throw new Error(data.message||"فهرست RSS خوانده نشد.");
+  const cutoff=Date.now()-24*60*60*1000;
+  return data.items.map(v=>{
+    const published=Date.parse(v.pubDate||"")||0;
+    const match=String(v.link||"").match(/[?&]v=([\w-]{6,})/);
+    const id=match?match[1]:(String(v.guid||"").match(/yt:video:([\w-]+)/)||[])[1];
+    return {id,title:v.title||"YouTube",url:v.link||("https://www.youtube.com/watch?v="+id),publishedAt:published};
+  }).filter(v=>v.id&&v.publishedAt>=cutoff);
+}
+async function addChannelFeed(){
+  if(!isAdmin){notify(t("msgNoAdmin"));return}
+  const url=$("feedChannelUrl").value.trim(),name=$("feedChannelName").value.trim(),section=$("feedTargetSection").value;
+  if(!url||!/^https?:\/\//i.test(url)){notify("لینک معتبر کانال یوتیوب را وارد کن.");return}
+  let parsed;try{parsed=new URL(url);if(!parsed.hostname.toLowerCase().endsWith("youtube.com")&&!parsed.hostname.toLowerCase().endsWith("youtu.be"))throw new Error()}catch(_){notify("لطفاً لینک معتبر YouTube وارد کن.");return}
+  const feed={id:makeId(),url,name:name||"کانال YouTube",section,createdAt:Date.now(),targetId:""};
+  if(section==="radio"){
+    const channel={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[]};state.radioChannels.push(channel);state.radioChannelIndex=state.radioChannels.length-1;feed.targetId=channel.id;
+  }else{
+    const channel={id:"feed-"+feed.id,name:feed.name,color:section==="kids"?"#ff9e3d":"#e8b85b",list:[]};state.channels.push(channel);state.channelIndex=state.channels.length-1;feed.targetId=channel.id;
+  }
+  state.channelFeeds.push(feed);$("feedChannelUrl").value="";$("feedChannelName").value="";
+  $("channelFeedStatus").textContent="کانال اضافه شد؛ در حال دریافت ویدیوهای ۲۴ ساعت اخیر…";
+  try{await syncChannelFeeds(false,feed.id)}catch(error){$("channelFeedStatus").textContent="کانال ذخیره شد، اما همگام‌سازی ناموفق بود: "+error.message;renderChannelFeedsList();clearTimeout(saveTimer);await saveRemoteState()}
+}
+function renderChannelFeedsList(){
+  const root=$("channelFeedsList");if(!root)return;root.innerHTML="";
+  (state.channelFeeds||[]).forEach(feed=>{
+    const row=document.createElement("div");row.className="listitem";
+    const info=document.createElement("div");info.className="iteminfo";
+    const title=document.createElement("div");title.className="itemname";title.textContent=feed.name;
+    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=feed.section.toUpperCase()+" · "+feed.url;info.append(title,meta);
+    const del=document.createElement("button");del.className="small danger";del.textContent="حذف";
+    del.onclick=async()=>{if(!confirm("این کانال از فهرست همگام‌سازی حذف شود؟"))return;
+      state.channelFeeds=state.channelFeeds.filter(x=>x.id!==feed.id);
+      state.channels=state.channels.filter(c=>c.id!==feed.targetId);state.radioChannels=state.radioChannels.filter(c=>c.id!==feed.targetId);
+      state.channelIndex=Math.max(0,Math.min(state.channelIndex,Math.max(0,state.channels.length-1)));state.radioChannelIndex=Math.max(0,Math.min(state.radioChannelIndex,Math.max(0,state.radioChannels.length-1)));
+      activeMediaKey="";renderAll();clearTimeout(saveTimer);await saveRemoteState();
+    };row.append(info,del);root.appendChild(row);
+  });
+}
+async function syncChannelFeeds(showNotice=true,onlyFeedId=""){
+  if(!isAdmin){notify(t("msgNoAdmin"));return}
+  const status=$("channelFeedStatus");if(status)status.textContent="در حال همگام‌سازی…";
+  const feeds=(state.channelFeeds||[]).filter(f=>!onlyFeedId||f.id===onlyFeedId);
+  if(!feeds.length){if(status)status.textContent="اول لینک یک کانال را اضافه کن.";return}
+  let total=0,errors=[];
+  for(const feed of feeds){
+    try{
+      const videos=await fetchRecentChannelVideos(feed.url);
+      const channels=feed.section==="radio"?state.radioChannels:state.channels;
+      const target=channels.find(c=>c.id===feed.targetId);if(!target)continue;
+      target.list=videos.map(v=>({id:makeId(),youtubeId:v.id,title:v.title,url:v.url,ytKind:"video",addedAt:v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"}));
+      total+=videos.length;
+    }catch(error){errors.push(feed.name+": "+error.message)}
+  }
+  state.lastSyncAt=Date.now();renderAll();
+  if(status)status.textContent=errors.length?"برخی کانال‌ها خطا داشتند: "+errors.join(" · "):"همگام‌سازی کامل شد؛ "+total+" ویدیو از ۲۴ ساعت اخیر.";
+  clearTimeout(saveTimer);await saveRemoteState();
+  if(showNotice)notify(errors.length?"همگام‌سازی ناقص بود.":"همگام‌سازی ۲۴ ساعت اخیر انجام شد.");
+}
 function renderLastSync(){
   const el=$("lastSyncLabel");
   if(!el)return;
@@ -1833,8 +1936,20 @@ function updateMediaSessionMeta(){
 /* ============ Kids Mode ============ */
 function isKidsItem(item){ return !!(item && item.kids===true); }
 function firstKidsIndex(){
-  const list=currentList();
-  return list.findIndex(v=>isKidsItem(v));
+  let list=currentList();
+  let idx=list.findIndex(v=>isKidsItem(v));
+  if(idx>=0)return idx;
+  const ci=(state.channels||[]).findIndex(c=>(c.list||[]).some(v=>isKidsItem(v)));
+  if(ci>=0){
+    if(activeMode()!=="tv"){
+      if(isAdmin)state.mode="tv";
+      else {localViewerMode="tv";try{localStorage.setItem("amtv-viewer-mode","tv")}catch(_){}}
+    }
+    state.channelIndex=ci;
+    list=(state.channels[ci]&&state.channels[ci].list)||[];
+    idx=list.findIndex(v=>isKidsItem(v));
+  }
+  return idx;
 }
 function skipToKids(step){
   const list=currentList();
@@ -2936,7 +3051,7 @@ function renderAll(){
   $("statusRole").textContent=isAdmin?t("adminRole"):t("viewerRole");
   $("channelSelector").classList.toggle("hidden",!isAdmin);
   $("adminPanel").classList.toggle("hidden",!isAdmin);
-  $("kidsToggle").classList.toggle("hidden",!isAdmin);
+  $("kidsToggle").classList.remove("hidden");
   document.body.classList.toggle("viewerMode",!isAdmin && !kidsMode);
   $("stationNameInput").value=state.stationName||"AM TV 24/7";
   $("stationLogoURL").value=state.stationLogo||"";
@@ -2944,7 +3059,7 @@ function renderAll(){
   const ek=eventKey();
   if(ek!==lastEventKey){lastEventKey=ek;applyPrefs();renderEventBanner()}
   renderEventList();
-  renderGuide();renderLastSync();updateViewerUI();renderPlayer();
+  renderGuide();renderLastSync();renderChannelFeedsList();updateViewerUI();renderPlayer();
 }
 
 /* ============ Pin / Rename ============ */
@@ -3273,6 +3388,11 @@ $("prevButton").addEventListener("click",previousItem);
 $("nextButton").addEventListener("click",nextItem);
 $("playButton").addEventListener("click",togglePlay);
 $("fullscreenButton").addEventListener("click",toggleFullscreen);
+$("screenLockBtn").addEventListener("click",()=>$("playerShell").classList.add("screen-locked"));
+$("screenUnlockBtn").addEventListener("click",e=>{e.stopPropagation();$("playerShell").classList.remove("screen-locked")});
+$("lockOverlay").addEventListener("click",e=>e.preventDefault());
+$("addChannelFeedButton").addEventListener("click",addChannelFeed);
+$("syncChannelFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
 $("viewerFullscreen").addEventListener("click",toggleFullscreen);
 $("coverExit").addEventListener("click",toggleFullscreen);
 $("rotateButton").addEventListener("click",toggleOrientation);
