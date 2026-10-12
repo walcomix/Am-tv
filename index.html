@@ -93,6 +93,7 @@ input:focus,select:focus{border-color:var(--accent)}
 .ic-snooze{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'/><path d='M12 9v4l3 2M5 3l2 2M19 3l-2 2'/></svg>")}
 .ic-kids{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3-7 8-7s8 3 8 7'/><circle cx='10' cy='7' r='.5' fill='black'/><circle cx='14' cy='7' r='.5' fill='black'/><path d='M10 9.5c1 .8 3 .8 4 0'/></svg>")}
 .ic-lock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>")}
+.ic-unlock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 7-2.6'/></svg>")}
 body.emoji-only button .lbl,body.emoji-only .btnlabel{display:none!important}
 body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px;min-width:38px}
 #castButton{position:relative}
@@ -242,11 +243,34 @@ body.cinema .hero{grid-template-columns:minmax(0,1fr)}
 body.cinema .playerpanel{border:0;border-radius:0;box-shadow:none;background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
-#screenLockBtn{display:none;position:absolute;top:54px;right:10px;z-index:22;background:rgba(0,0,0,.82);color:#fff;border:1px solid #ffffff66;border-radius:999px;padding:10px 13px;font-size:13px}
-#playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
-#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:transparent;touch-action:none}
+/* ===== Lock screen (redesigned) ===== */
+#screenLockBtn{
+  display:none;position:absolute;top:54px;right:10px;z-index:22;
+  background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;
+  border-radius:999px;padding:10px 14px;font-size:13px;
+  align-items:center;gap:6px;backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:opacity .2s,background .2s;
+}
+#playerShell:fullscreen #screenLockBtn,
+#playerShell.pagecover #screenLockBtn{display:inline-flex}
+#screenLockBtn:hover{background:rgba(0,0,0,.9)}
+#lockOverlay{
+  display:none;position:absolute;inset:0;z-index:21;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,.35);backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  touch-action:none;cursor:pointer;
+}
 #playerShell.screen-locked #lockOverlay{display:flex}
-#lockOverlay button{background:rgba(0,0,0,.86);color:#fff;border:1px solid #ffffff77;border-radius:999px;padding:13px 18px;font-weight:700;pointer-events:auto}
+#lockOverlay button{
+  background:var(--panel);color:var(--text);
+  border:1px solid var(--accent);border-radius:999px;
+  padding:14px 22px;font-weight:700;font-size:14px;
+  display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 6px 26px #000a;pointer-events:auto;
+}
+#lockOverlay button:hover{filter:brightness(1.1)}
 #playerShell.screen-locked #screenLockBtn{display:none}
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
 body.cinema .playerfoot:hover{opacity:1}
@@ -359,8 +383,15 @@ body.viewerMode #videoElement{controls:none!important}
         <button id="coverExit"><i class="ic ic-close"></i><span class="lbl" data-i18n="exitfs">خروج</span></button>
         <button id="rotateButton"><i class="ic ic-sync"></i><span class="lbl" data-i18n="rotate">افقی / عمودی</span></button>
         <button id="ccFs"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
-        <button id="screenLockBtn" type="button" title="قفل لمس صفحه">🔒 قفل صفحه</button>
-        <div id="lockOverlay" aria-label="صفحه قفل است"><button id="screenUnlockBtn" type="button">🔓 برای بازکردن لمس کن</button></div>
+        <button id="screenLockBtn" type="button" title="قفل صفحه">
+          <i class="ic ic-lock"></i><span class="lbl" data-i18n="lockScreen">قفل صفحه</span>
+        </button>
+        <div id="lockOverlay" aria-label="صفحه قفل است">
+          <button id="screenUnlockBtn" type="button">
+            <i class="ic ic-unlock"></i>
+            <span data-i18n="unlockScreen">برای بازکردن لمس کن</span>
+          </button>
+        </div>
         <button id="viewerStart" class="hidden" data-i18n="unmute">🔊 برای فعال‌سازی صدا لمس کنید</button>
         <div id="watermark">
           <img id="watermarkImage" class="hidden" alt="Watermark">
@@ -526,6 +557,7 @@ body.viewerMode #videoElement{controls:none!important}
       <button class="tab" data-tab="watermarkTab"><i class="ic ic-wm"></i><span class="lbl" data-i18n="tabWatermark">Watermark</span></button>
       <button class="tab" data-tab="youtubeTab"><i class="ic ic-yt"></i><span class="lbl" data-i18n="tabYoutube">YouTube Sync</span></button>
       <button class="tab" data-tab="stationTab"><i class="ic ic-appear"></i><span class="lbl" data-i18n="tabStation">ایستگاه و پشتیبان</span></button>
+      <button class="tab" data-tab="kidsTab"><i class="ic ic-kids"></i><span class="lbl" data-i18n="tabKids">حالت کودک</span></button>
     </div>
 
     <div id="contentTab" class="tabcontent">
@@ -677,7 +709,6 @@ body.viewerMode #videoElement{controls:none!important}
           <div class="field"><label for="stationNameInput" data-i18n="lblStationName">نام ایستگاه</label><input id="stationNameInput" value="AM TV 24/7"></div>
           <div class="field"><label for="stationLogoURL" data-i18n="lblLogoUrl">لینک لوگو</label><input id="stationLogoURL" type="url" placeholder="https://.../logo.png"></div>
           <div class="field"><label for="stationLogoFile" data-i18n="lblLogoFile">یا آپلود لوگو</label><input id="stationLogoFile" type="file" accept="image/*"></div>
-          <div class="field"><label for="kidsPinInput" data-i18n="lblKidsPin">رمز حالت کودک (PIN)</label><input id="kidsPinInput" type="tel" inputmode="numeric" maxlength="6" placeholder="1234"></div>
           <div class="field"><label for="logoMode" data-i18n="lblLogoMode">نمایش لوگو در سربرگ</label>
             <select id="logoMode">
               <option value="auto" data-i18n="logoAuto">تصویر (اگر باشد) وگرنه «AM»</option>
@@ -760,6 +791,33 @@ body.viewerMode #videoElement{controls:none!important}
         </div>
       </div>
     </div>
+
+    <div id="kidsTab" class="tabcontent hidden">
+      <div class="adminGrid">
+        <div class="section">
+          <h3><i class="ic ic-kids"></i><span data-i18n="kidsSettingsTitle">تنظیمات حالت کودک</span></h3>
+          <div class="field">
+            <label data-i18n="lblKidsPinNew">رمز جدید خروج (۴ تا ۶ رقم)</label>
+            <input id="kidsPinNew" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••">
+          </div>
+          <div class="field">
+            <label data-i18n="lblKidsPinConfirm">تکرار رمز</label>
+            <input id="kidsPinConfirm" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••">
+          </div>
+          <div class="actions">
+            <button id="saveKidsPinButton" class="primary"><i class="ic ic-save"></i><span data-i18n="saveBtn">ذخیره</span></button>
+            <button id="clearKidsPinButton"><i class="ic ic-trash"></i><span data-i18n="clearKidsPin">حذف رمز</span></button>
+          </div>
+          <div class="viewerhint" data-i18n="kidsPinHint">رمز فعلی هرگز نمایش داده نمی‌شود. پیش‌فرض 1234 است.</div>
+        </div>
+
+        <div class="section">
+          <h3><i class="ic ic-star"></i><span data-i18n="kidsContentTitle">محتوای علامت‌خوردهٔ کودک</span></h3>
+          <p class="viewerhint" data-i18n="kidsContentHint">برای علامت‌زدن هر برنامه، در تب «ویدیو و کانال» تیک «کودک» را بزن.</p>
+          <div id="kidsContentList" class="itemlist"></div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <div class="footer">AM TV · THE NEXT ERA · YOUR WORLD · YOUR CHANNEL<br>v1.0.0 · The Next Era Begins</div>
@@ -774,7 +832,7 @@ body.viewerMode #videoElement{controls:none!important}
 <div id="pinModal">
   <div class="pinBox">
     <h3 data-i18n="pinTitle">رمز والدین</h3>
-    <p data-i18n="pinHint">رمز پیش‌فرض: 1234</p>
+    <p data-i18n="pinHint">رمز را وارد کنید.</p>
     <input id="pinInput" type="tel" inputmode="numeric" maxlength="6" autocomplete="off">
     <div class="pinActions">
       <button id="pinCancel" data-i18n="cancel">انصراف</button>
@@ -798,6 +856,18 @@ const $ = id => document.getElementById(id);
 const clone = v => JSON.parse(JSON.stringify(v));
 const makeId = () => "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,9);
 const DAY = 86400000;
+
+/* ============ Escape helpers ============ */
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function escUrl(u){
+  try{
+    const x=String(u||"");
+    if(!/^(https?:|blob:|data:)/i.test(x))return "";
+    return esc(x);
+  }catch(_){return ""}
+}
 
 /* ============ Visitor ID ============ */
 function getVisitorId(){
@@ -825,6 +895,7 @@ const I18N = {
   loginTitle:"ورود مدیر",emailLbl:"ایمیل مدیر",passLbl:"رمز عبور",signIn:"ورود",loginHint:"حساب باید از قبل در Supabase ساخته شده باشد.",
   adminTitle:"پنل مدیریت AM TV",
   tabContent:"ویدیو و کانال",tabRadio:"مدیریت رادیو",tabWatermark:"Watermark",tabYoutube:"YouTube Sync",tabStation:"ایستگاه و پشتیبان",
+  tabKids:"حالت کودک",
   addProgram:"افزودن برنامه به تلویزیون",lblTitleOpt:"نام برنامه (اختیاری)",lblUrl:"لینک یوتیوب یا ویدیوی مستقیم",lblFile:"یا فایل ویدیویی",
   addBtn:"افزودن",clearBtn:"پاک‌کردن",deleteBtn:"حذف",createBtn:"ساخت",playSel:"پخش",saveBtn:"ذخیره",preview:"پیش‌نمایش",
   lblNewCh:"نام کانال جدید",lblColor:"رنگ کانال",
@@ -879,9 +950,22 @@ const I18N = {
   castDisconnected:"اتصال به تلویزیون قطع شد.",
   sleep:"خواب",sleepSet:"تایمر خواب: {n} دقیقه",sleepOff:"تایمر خواب خاموش شد",sleepDone:"تایمر خواب — پخش متوقف شد",
   kidsBtn:"کودک",kidsOn:"حالت کودک روشن شد",kidsOff:"حالت کودک خاموش شد",exitKids:"خروج از حالت کودک",
-  pinTitle:"رمز والدین",pinHint:"رمز پیش‌فرض: 1234",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
+  pinTitle:"رمز والدین",pinHint:"رمز را وارد کنید.",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
   noKidsItems:"هنوز برنامه‌ای برای کودک مشخص نشده. در پنل مدیریت، کنار برنامه‌ها تیک «کودک» رو بزن.",
-  lblKidsPin:"رمز حالت کودک (PIN)",kidsTag:"کودک"
+  lblKidsPin:"رمز حالت کودک (PIN)",kidsTag:"کودک",
+  kidsSettingsTitle:"تنظیمات حالت کودک",
+  lblKidsPinNew:"رمز جدید خروج (۴ تا ۶ رقم)",
+  lblKidsPinConfirm:"تکرار رمز",
+  clearKidsPin:"حذف رمز",
+  kidsPinHint:"رمز فعلی هرگز نمایش داده نمی‌شود. پیش‌فرض 1234 است.",
+  kidsContentTitle:"محتوای علامت‌خوردهٔ کودک",
+  kidsContentHint:"برای علامت‌زدن هر برنامه، در تب «ویدیو و کانال» تیک «کودک» را بزن.",
+  pinInvalidFormat:"رمز باید ۴ تا ۶ رقم باشد.",
+  pinMismatch:"رمزها یکسان نیستند.",
+  msgPinSaved:"رمز کودک ذخیره شد.",
+  msgPinCleared2:"رمز کودک حذف شد.",
+  lockScreen:"قفل صفحه",
+  unlockScreen:"برای بازکردن لمس کن"
 },
 "en":{
   navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
@@ -899,6 +983,7 @@ const I18N = {
   loginTitle:"Admin login",emailLbl:"Admin email",passLbl:"Password",signIn:"Sign in",loginHint:"Account must exist in Supabase.",
   adminTitle:"AM TV Admin Panel",
   tabContent:"Video & Channels",tabRadio:"Radio",tabWatermark:"Watermark",tabYoutube:"YouTube Sync",tabStation:"Station & Backup",
+  tabKids:"Kids mode",
   addProgram:"Add TV program",lblTitleOpt:"Program title (optional)",lblUrl:"YouTube or direct video link",lblFile:"Or video file",
   addBtn:"Add",clearBtn:"Clear",deleteBtn:"Delete",createBtn:"Create",playSel:"Play",saveBtn:"Save",preview:"Preview",
   lblNewCh:"New channel name",lblColor:"Channel color",
@@ -953,9 +1038,22 @@ const I18N = {
   castDisconnected:"Disconnected from TV.",
   sleep:"Sleep",sleepSet:"Sleep timer: {n} min",sleepOff:"Sleep timer off",sleepDone:"Sleep timer — playback stopped",
   kidsBtn:"Kids",kidsOn:"Kids mode on",kidsOff:"Kids mode off",exitKids:"Exit kids mode",
-  pinTitle:"Parent PIN",pinHint:"Default PIN: 1234",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
+  pinTitle:"Parent PIN",pinHint:"Enter PIN.",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
   noKidsItems:"No kids programs yet. Tag items with 'Kids' in admin panel.",
-  lblKidsPin:"Kids mode PIN",kidsTag:"Kids"
+  lblKidsPin:"Kids mode PIN",kidsTag:"Kids",
+  kidsSettingsTitle:"Kids mode settings",
+  lblKidsPinNew:"New exit PIN (4-6 digits)",
+  lblKidsPinConfirm:"Repeat PIN",
+  clearKidsPin:"Clear PIN",
+  kidsPinHint:"Current PIN is never shown. Default is 1234.",
+  kidsContentTitle:"Kids-tagged content",
+  kidsContentHint:"To tag an item, check 'Kids' in the Video & Channels tab.",
+  pinInvalidFormat:"PIN must be 4-6 digits.",
+  pinMismatch:"PINs don't match.",
+  msgPinSaved:"Kids PIN saved.",
+  msgPinCleared2:"Kids PIN cleared.",
+  lockScreen:"Lock screen",
+  unlockScreen:"Tap to unlock"
 },
 "ar":{
   navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
@@ -973,6 +1071,7 @@ const I18N = {
   loginTitle:"دخول المشرف",emailLbl:"البريد",passLbl:"كلمة المرور",signIn:"دخول",loginHint:"الحساب يجب أن يكون موجودًا في Supabase.",
   adminTitle:"لوحة إدارة AM TV",
   tabContent:"فيديو وقنوات",tabRadio:"راديو",tabWatermark:"واترمارك",tabYoutube:"مزامنة YouTube",tabStation:"المحطة والنسخ الاحتياطي",
+  tabKids:"وضع الأطفال",
   addProgram:"إضافة برنامج تلفزيوني",lblTitleOpt:"اسم البرنامج (اختياري)",lblUrl:"رابط يوتيوب أو فيديو مباشر",lblFile:"أو ملف فيديو",
   addBtn:"إضافة",clearBtn:"مسح",deleteBtn:"حذف",createBtn:"إنشاء",playSel:"تشغيل",saveBtn:"حفظ",preview:"معاينة",
   lblNewCh:"اسم القناة الجديدة",lblColor:"لون القناة",
@@ -1026,8 +1125,21 @@ const I18N = {
   castDisconnected:"تم قطع الاتصال.",
   sleep:"النوم",sleepSet:"مؤقّت النوم: {n} دقيقة",sleepOff:"مؤقّت النوم مغلق",sleepDone:"مؤقّت النوم — توقف التشغيل",
   kidsBtn:"أطفال",kidsOn:"وضع الأطفال مفعّل",kidsOff:"وضع الأطفال مغلق",exitKids:"الخروج من وضع الأطفال",
-  pinTitle:"رمز الوالدين",pinHint:"الرمز الافتراضي: 1234",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"رمز خاطئ",
-  noKidsItems:"لا برامج للأطفال بعد.",lblKidsPin:"رمز وضع الأطفال",kidsTag:"أطفال"
+  pinTitle:"رمز الوالدين",pinHint:"أدخل الرمز.",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"رمز خاطئ",
+  noKidsItems:"لا برامج للأطفال بعد.",lblKidsPin:"رمز وضع الأطفال",kidsTag:"أطفال",
+  kidsSettingsTitle:"إعدادات وضع الأطفال",
+  lblKidsPinNew:"رمز الخروج الجديد",
+  lblKidsPinConfirm:"تأكيد الرمز",
+  clearKidsPin:"حذف الرمز",
+  kidsPinHint:"لا يُعرض الرمز الحالي أبدًا. الافتراضي 1234.",
+  kidsContentTitle:"المحتوى المميز للأطفال",
+  kidsContentHint:"لوضع علامة، ضع علامة صح بجانب البرنامج في تبويب الفيديو.",
+  pinInvalidFormat:"يجب أن يكون الرمز 4-6 أرقام.",
+  pinMismatch:"الرموز غير متطابقة.",
+  msgPinSaved:"تم حفظ رمز الأطفال.",
+  msgPinCleared2:"تم حذف رمز الأطفال.",
+  lockScreen:"قفل الشاشة",
+  unlockScreen:"المس لفتح القفل"
 },
 "tr":{
   navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
@@ -1045,6 +1157,7 @@ const I18N = {
   loginTitle:"Yönetici girişi",emailLbl:"E-posta",passLbl:"Şifre",signIn:"Giriş",loginHint:"Hesap Supabase'de olmalı.",
   adminTitle:"AM TV Yönetim Paneli",
   tabContent:"Video ve Kanallar",tabRadio:"Radyo",tabWatermark:"Filigran",tabYoutube:"YouTube Senkron",tabStation:"İstasyon ve Yedek",
+  tabKids:"Çocuk modu",
   addProgram:"TV programı ekle",lblTitleOpt:"Program adı (isteğe bağlı)",lblUrl:"YouTube veya doğrudan video bağlantısı",lblFile:"Veya video dosyası",
   addBtn:"Ekle",clearBtn:"Temizle",deleteBtn:"Sil",createBtn:"Oluştur",playSel:"Oynat",saveBtn:"Kaydet",preview:"Önizle",
   lblNewCh:"Yeni kanal adı",lblColor:"Kanal rengi",
@@ -1098,8 +1211,21 @@ const I18N = {
   castDisconnected:"TV bağlantısı kesildi.",
   sleep:"Uyku",sleepSet:"Uyku zamanlayıcı: {n} dk",sleepOff:"Uyku zamanlayıcı kapalı",sleepDone:"Uyku zamanlayıcı — oynatma durdu",
   kidsBtn:"Çocuk",kidsOn:"Çocuk modu açık",kidsOff:"Çocuk modu kapalı",exitKids:"Çocuk modundan çık",
-  pinTitle:"Ebeveyn PIN",pinHint:"Varsayılan PIN: 1234",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış PIN",
-  noKidsItems:"Henüz çocuk programı yok.",lblKidsPin:"Çocuk modu PIN",kidsTag:"Çocuk"
+  pinTitle:"Ebeveyn PIN",pinHint:"PIN girin.",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış PIN",
+  noKidsItems:"Henüz çocuk programı yok.",lblKidsPin:"Çocuk modu PIN",kidsTag:"Çocuk",
+  kidsSettingsTitle:"Çocuk modu ayarları",
+  lblKidsPinNew:"Yeni çıkış PIN'i",
+  lblKidsPinConfirm:"PIN tekrarı",
+  clearKidsPin:"PIN'i sil",
+  kidsPinHint:"Mevcut PIN asla gösterilmez. Varsayılan 1234.",
+  kidsContentTitle:"Çocuk olarak işaretlenmiş içerik",
+  kidsContentHint:"İşaretlemek için Video ve Kanallar sekmesinde 'Çocuk'u seçin.",
+  pinInvalidFormat:"PIN 4-6 haneli olmalıdır.",
+  pinMismatch:"PIN'ler eşleşmiyor.",
+  msgPinSaved:"Çocuk PIN'i kaydedildi.",
+  msgPinCleared2:"Çocuk PIN'i silindi.",
+  lockScreen:"Ekranı kilitle",
+  unlockScreen:"Kilidi açmak için dokunun"
 }
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
@@ -1669,8 +1795,10 @@ function renderChannelFeedsList(){
   (state.channelFeeds||[]).forEach(feed=>{
     const row=document.createElement("div");row.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
-    const title=document.createElement("div");title.className="itemname";title.textContent=feed.name;
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=feed.section.toUpperCase()+" · "+feed.url;info.append(title,meta);
+    const title=document.createElement("div");title.className="itemname";title.textContent=feed.name||"";
+    const meta=document.createElement("div");meta.className="itemmeta";
+    meta.textContent=(feed.section||"").toUpperCase()+" · "+String(feed.url||"");
+    info.append(title,meta);
     const del=document.createElement("button");del.className="small danger";del.textContent="حذف";
     del.onclick=async()=>{if(!confirm("این کانال از فهرست همگام‌سازی حذف شود؟"))return;
       state.channelFeeds=state.channelFeeds.filter(x=>x.id!==feed.id);
@@ -2010,7 +2138,7 @@ function checkPin(){
     setTimeout(()=>{$("pinInput").style.borderColor=""},700);
   }
 }
-    
+
 function setupSleepAndKids(){
   setupSleepTimer();
   setupMediaSession();
@@ -2034,9 +2162,6 @@ function setupSleepAndKids(){
   });
 }
 
-  
-
-    
 /* ============ Supabase ============ */
 try{
   if(window.supabase && window.supabase.createClient){
@@ -2912,7 +3037,7 @@ function renderChannels(){
   state.channels.forEach((c,i)=>{
     const b=document.createElement("button");
     b.className="channelbutton"+(i===state.channelIndex?" selected":"");
-    b.innerHTML='<i class="ic ic-tv"></i> '+c.name;
+    b.innerHTML='<i class="ic ic-tv"></i> '+esc(c.name||"");
     b.onclick=()=>{
       if(isAdmin){state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};scheduleSave();activeMediaKey="";renderPlayer(true)}
       else notify(t("msgNoChannelSwitch"));
@@ -2920,7 +3045,7 @@ function renderChannels(){
     list.appendChild(b);
     const item=document.createElement("div");item.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
-    const name=document.createElement("div");name.className="itemname";name.textContent=c.name;
+    const name=document.createElement("div");name.className="itemname";name.textContent=c.name||"";
     const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •";
     info.append(name,meta);
     const select=document.createElement("button");select.className="small";select.textContent=(i===state.channelIndex)?"✓":"→";
@@ -2944,7 +3069,9 @@ function renderPlaylist(){
     const item=document.createElement("div");item.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const title=document.createElement("div");title.className="itemname";
-    title.innerHTML=(i===state.playback.index?'<i class="ic ic-play"></i> ':'')+(v.title||t("untitled"))+(v.kids?' <i class="ic ic-kids" style="color:#ff9e3d"></i>':'');
+    const prefix=i===state.playback.index?'<i class="ic ic-play"></i> ':'';
+    const kidsIco=v.kids?' <i class="ic ic-kids" style="color:#ff9e3d"></i>':'';
+    title.innerHTML=prefix+esc(v.title||t("untitled"))+kidsIco;
     const meta=document.createElement("div");meta.className="itemmeta";
     const d=durOf(v);
     const durTxt=d?('⏱ '+fmtDur(d)+' · '):'';
@@ -2953,7 +3080,7 @@ function renderPlaylist(){
     else if(v.ytKind === 'video') srcLabel = '<i class="ic ic-yt"></i> yt';
     else if(isYouTube(mediaUrl(v))) srcLabel = '<i class="ic ic-yt"></i> yt';
     else srcLabel = '<i class="ic ic-video"></i> file';
-    meta.innerHTML = (v.pin?"⏰ "+v.pin+" · ":"") + durTxt + srcLabel + " · " + mediaUrl(v);
+    meta.innerHTML = (v.pin?"⏰ "+esc(v.pin)+" · ":"") + durTxt + srcLabel + " · " + escUrl(mediaUrl(v));
     info.append(title,meta);
     const pick=document.createElement("button");pick.className="small";pick.textContent="•";
     pick.onclick=()=>{selectedVideoIndex=i;renderPlaylist()};
@@ -2972,7 +3099,7 @@ function renderPlaylist(){
     kidsLabel.style.cssText="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);cursor:pointer;padding:4px 6px;border:1px solid var(--line);border-radius:6px";
     const kidsCb=document.createElement("input");
     kidsCb.type="checkbox";kidsCb.checked=!!v.kids;kidsCb.style.width="auto";kidsCb.style.margin="0";
-    kidsCb.onchange=()=>{ v.kids=!!kidsCb.checked; scheduleSave(); renderPlaylist(); };
+    kidsCb.onchange=()=>{ v.kids=!!kidsCb.checked; scheduleSave(); renderPlaylist(); renderKidsContentList(); };
     kidsLabel.appendChild(kidsCb);
     kidsLabel.appendChild(document.createTextNode(t("kidsTag")));
     if(v.kids)kidsLabel.style.borderColor="#ff9e3d";
@@ -2988,7 +3115,7 @@ function renderRadioList(){
       const item=document.createElement("div");item.className="listitem";
       const info=document.createElement("div");info.className="iteminfo";
       const title=document.createElement("div");title.className="itemname";
-      title.innerHTML=(i===state.radioIndex?'<i class="ic ic-play"></i> ':'')+(v.title||t("untitled"));
+      title.innerHTML=(i===state.radioIndex?'<i class="ic ic-play"></i> ':'')+esc(v.title||t("untitled"));
       const meta=document.createElement("div");meta.className="itemmeta";
       const d=durOf(v);
       const durTxt=d?('⏱ '+fmtDur(d)+' · '):'';
@@ -2997,7 +3124,7 @@ function renderRadioList(){
       else if(v.ytKind === 'video') srcLabel = '<i class="ic ic-yt"></i> yt';
       else if(isYouTube(mediaUrl(v))) srcLabel = '<i class="ic ic-yt"></i> yt';
       else srcLabel = '<i class="ic ic-mic"></i> audio';
-      meta.innerHTML = durTxt + srcLabel + " · " + mediaUrl(v);
+      meta.innerHTML = durTxt + srcLabel + " · " + escUrl(mediaUrl(v));
       info.append(title,meta);
       const pick=document.createElement("button");pick.className="small";pick.textContent="•";
       pick.onclick=()=>{selectedRadioIndex=i;renderRadioList()};
@@ -3018,7 +3145,7 @@ function renderRadioList(){
       const item=document.createElement("div");item.className="listitem";
       const info=document.createElement("div");info.className="iteminfo";
       const name=document.createElement("div");name.className="itemname";
-      name.innerHTML='<i class="ic ic-radio"></i> '+c.name;
+      name.innerHTML='<i class="ic ic-radio"></i> '+esc(c.name||"");
       const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •";
       info.append(name,meta);
       const select=document.createElement("button");select.className="small";
@@ -3043,9 +3170,30 @@ function renderRadioList(){
     });
   }
 }
+function renderKidsContentList(){
+  const root=$("kidsContentList");if(!root)return;root.innerHTML="";
+  let any=false;
+  state.channels.forEach(c=>{
+    (c.list||[]).forEach(v=>{
+      if(!v.kids)return;
+      any=true;
+      const row=document.createElement("div");row.className="listitem";
+      const info=document.createElement("div");info.className="iteminfo";
+      const name=document.createElement("div");name.className="itemname";
+      name.textContent=v.title||t("untitled");
+      const meta=document.createElement("div");meta.className="itemmeta";
+      meta.textContent=(c.name||"")+" · "+t("kidsTag");
+      info.append(name,meta);row.appendChild(info);root.appendChild(row);
+    });
+  });
+  if(!any){
+    const d=document.createElement("div");d.className="viewerhint";
+    d.textContent=t("noKidsItems");root.appendChild(d);
+  }
+}
 function renderAll(){
   ensureState();
-  renderBrand();renderChannels();renderPlaylist();renderRadioList();
+  renderBrand();renderChannels();renderPlaylist();renderRadioList();renderKidsContentList();
   $("modeTV").classList.toggle("active",activeMode()==="tv");
   $("modeRadio").classList.toggle("active",activeMode()==="radio");
   $("statusRole").textContent=isAdmin?t("adminRole"):t("viewerRole");
@@ -3388,9 +3536,21 @@ $("prevButton").addEventListener("click",previousItem);
 $("nextButton").addEventListener("click",nextItem);
 $("playButton").addEventListener("click",togglePlay);
 $("fullscreenButton").addEventListener("click",toggleFullscreen);
-$("screenLockBtn").addEventListener("click",()=>$("playerShell").classList.add("screen-locked"));
-$("screenUnlockBtn").addEventListener("click",e=>{e.stopPropagation();$("playerShell").classList.remove("screen-locked")});
-$("lockOverlay").addEventListener("click",e=>e.preventDefault());
+$("screenLockBtn").addEventListener("click",()=>{
+  $("playerShell").classList.add("screen-locked");
+});
+$("screenUnlockBtn").addEventListener("click",e=>{
+  e.stopPropagation();e.preventDefault();
+  $("playerShell").classList.remove("screen-locked");
+});
+$("lockOverlay").addEventListener("click",e=>{
+  e.preventDefault();e.stopPropagation();
+});
+$("lockOverlay").addEventListener("touchstart",e=>e.preventDefault(),{passive:false});
+$("screenUnlockBtn").addEventListener("touchstart",e=>{
+  e.preventDefault();
+  $("playerShell").classList.remove("screen-locked");
+},{passive:false});
 $("addChannelFeedButton").addEventListener("click",addChannelFeed);
 $("syncChannelFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
 $("viewerFullscreen").addEventListener("click",toggleFullscreen);
@@ -3513,12 +3673,6 @@ $("saveStationButton").addEventListener("click",async()=>{
     try{state.stationLogo=await uploadFile(file,"logos")}
     catch(e){notify(t("msgUploadFail")+e.message);return}
   }
-  const pin=$("kidsPinInput")?.value.trim();
-  if(pin && /^\d{4,6}$/.test(pin)){
-    try{ localStorage.setItem("amtv-kids-pin",pin); }catch(_){}
-    state.schedule=state.schedule||{tz:210};
-    state.schedule.kidsPin=pin;
-  }
   scheduleSave();renderBrand();notify(t("msgStationSaved"));
 });
 $("logoMode").addEventListener("change",e=>{if(!isAdmin)return;state.logoMode=e.target.value;scheduleSave()});
@@ -3621,6 +3775,27 @@ $("audioElement").addEventListener("loadedmetadata",()=>{
   pendingSeekAudio=0;
 });
 
+/* ============ Kids PIN management (admin) ============ */
+$("saveKidsPinButton").addEventListener("click",()=>{
+  if(!isAdmin)return;
+  const p1=normDigits(($("kidsPinNew").value||"").trim());
+  const p2=normDigits(($("kidsPinConfirm").value||"").trim());
+  if(!/^\d{4,6}$/.test(p1)){notify(t("pinInvalidFormat"));return}
+  if(p1!==p2){notify(t("pinMismatch"));return}
+  try{localStorage.setItem("amtv-kids-pin",p1)}catch(_){}
+  state.schedule=state.schedule||{tz:210};
+  state.schedule.kidsPin=p1;
+  $("kidsPinNew").value="";$("kidsPinConfirm").value="";
+  scheduleSave();notify(t("msgPinSaved"));
+});
+$("clearKidsPinButton").addEventListener("click",()=>{
+  if(!isAdmin)return;
+  try{localStorage.removeItem("amtv-kids-pin")}catch(_){}
+  if(state.schedule)delete state.schedule.kidsPin;
+  $("kidsPinNew").value="";$("kidsPinConfirm").value="";
+  scheduleSave();notify(t("msgPinCleared2"));
+});
+
 /* ============ Cast + Sleep + Kids init ============ */
 loadCastSDK();
 setupAirPlay();
@@ -3684,10 +3859,6 @@ document.body.classList.toggle("viewerMode",!isAdmin);
     if(isAdmin){const p=pruneOldSynced();if(p){await saveRemoteState()}}
     try{ if(localStorage.getItem("amtv-kids")==="1") kidsMode=true; }catch(_){}
     if(kidsMode) document.body.classList.add("kids-mode");
-    if($("kidsPinInput")){
-      const kp=getKidsPin();
-      if(kp && kp!=="1234") $("kidsPinInput").value=kp;
-    }
     renderAll();
   }catch(e){console.error(e)}
   finally{
@@ -3781,7 +3952,7 @@ setInterval(()=>{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.0.0 The Next Era | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.textContent="v1.0.1 The Next Era | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | ch="+state.channelIndex+"/"+state.radioChannelIndex+
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | srv="+Math.round(serverOffset/1000)+"s | yt="+(ytReady?"ok":"no")+
@@ -3793,4 +3964,4 @@ setInterval(()=>{
 
 </script>
 </body>
-                   </html>
+              </html>
