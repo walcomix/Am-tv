@@ -1917,23 +1917,8 @@ function setupSleepAndKids(){
   });
 }
 
-/* ============ Supabase ============ */
   
-  setupMediaSession();
-  $("kidsToggle")?.addEventListener("click",()=>{
-    if(kidsMode){ promptKidsExit(); return; }
-    setKidsMode(true);
-  });
-  $("kidsExitBtn")?.addEventListener("click",()=>promptKidsExit());
-  $("pinCancel")?.addEventListener("click",()=>$("pinModal").classList.remove("show"));
-  $("pinConfirm")?.addEventListener("click",checkPin);
-  $("pinInput")?.addEventListener("keydown",e=>{if(e.key==="Enter")checkPin();});
-  document.addEventListener("keydown",e=>{
-    if(e.key==="Escape" && $("pinModal")?.classList.contains("show")){
-      $("pinModal").classList.remove("show");
-    }
-  });
-}
+
     
 /* ============ Supabase ============ */
 try{
