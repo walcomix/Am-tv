@@ -25,6 +25,9 @@ body{line-height:1.5;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
 ::-webkit-scrollbar-track{background:transparent}
 .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.topbar,.brand,.topright{min-width:0}
+.brand{max-width:100%}
+.brandname,.tagline{overflow-wrap:anywhere}
 .logo{border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
 .logo.has-img{background:transparent;box-shadow:none}
 button{transition:background .15s,border-color .15s,transform .1s,box-shadow .15s,filter .15s}
@@ -41,8 +44,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 .sideheading{letter-spacing:.2px}
 .playerfoot{background:linear-gradient(to bottom,transparent,rgba(0,0,0,.08))}
 @media(max-width:600px){
- .topbar{gap:8px}
- .topright{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+ .topbar{gap:8px;flex-wrap:wrap}
+ .topright{width:100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-inline-start:0}
  .topright::-webkit-scrollbar{display:none}
  .topright button{flex-shrink:0}
  .clock{display:none}
@@ -287,9 +290,9 @@ body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 au
 #screenLockBtn{display:none;position:absolute;top:54px;right:10px;z-index:22;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 #playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
 #screenLockBtn:hover{background:rgba(0,0,0,.9)}
-#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;cursor:pointer}
+#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:rgba(0,0,0,.12);backdrop-filter:none;-webkit-backdrop-filter:none;padding:16px;box-sizing:border-box;touch-action:none;cursor:pointer}
 #playerShell.screen-locked #lockOverlay{display:flex}
-#lockOverlay button{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:999px;padding:14px 22px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 26px #000a;pointer-events:auto}
+#lockOverlay button{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:999px;padding:14px 22px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;max-width:90%;flex-wrap:wrap;text-align:center;box-shadow:0 6px 26px #000a;pointer-events:auto}
 #lockOverlay button:hover{filter:brightness(1.1)}
 #playerShell.screen-locked #screenLockBtn{display:none}
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
@@ -371,7 +374,12 @@ body.viewerMode #videoElement{controls:none!important}
  .modeGrid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:460px){
- .topright{width:100%;margin-inline-start:0}
+ .topbar{align-items:flex-start}
+ .brand{min-width:0;flex:1}
+ .brandname{font-size:16px;overflow-wrap:anywhere}
+ .tagline{font-size:10px;overflow-wrap:anywhere}
+ .topright{width:100%;min-width:0;margin-inline-start:0;gap:6px}
+ .topright button{padding:8px 10px;font-size:12px}
  .clock{margin-inline-start:auto}
  .playerfoot{align-items:flex-start}
  .rowfields{grid-template-columns:minmax(0,1fr)}
@@ -1008,14 +1016,18 @@ body.viewerMode #videoElement{controls:none!important}
     </div>
     <div class="field"><label>نام (اختیاری)</label><input id="fbName" maxlength="60" placeholder="—"></div>
     <div class="field">
-      <label>امتیاز</label>
-      <div class="ratingStars" id="fbRating">
-        <span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span>
-      </div>
+      <label for="fbType">نوع پیام</label>
+      <select id="fbType">
+        <option value="suggestion">پیشنهاد</option>
+        <option value="bug">گزارش باگ / مشکل</option>
+        <option value="design">ایده برای ظاهر و رابط کاربری</option>
+        <option value="content">پیشنهاد محتوا یا برنامه</option>
+        <option value="other">سایر</option>
+      </select>
     </div>
     <div class="field">
-      <label>پیام</label>
-      <textarea id="fbMessage" rows="4" maxlength="800" placeholder="تجربه‌ات از AM TV چطور بوده؟"></textarea>
+      <label for="fbMessage">توضیحات</label>
+      <textarea id="fbMessage" rows="4" maxlength="800" placeholder="پیشنهادت یا مشکلی که در AM TV دیدی را بنویس…"></textarea>
     </div>
     <button id="fbSubmit" class="primary" style="width:100%"><i class="ic ic-save"></i> ارسال</button>
   </div>
@@ -2262,37 +2274,63 @@ async function applySession(session){
   document.body.classList.toggle("viewerMode",!isAdmin);
   renderAll();trackPresence();
 }
-async function signIn(){
-  if(!sbClient){notify("No client");return}
-  const email=$("adminEmail").value.trim();
-  const password=$("adminPassword").value;
-  if(!email||!password){notify("Email & password required.");return}
-  $("signInButton").disabled=true;
-  const {data,error}=await sbClient.auth.signInWithPassword({email,password});
-  $("signInButton").disabled=false;
-  if(error){notify("Sign in failed: "+error.message);return}
-  if(data?.user?.app_metadata?.role!=="admin"){await sbClient.auth.signOut();notify("Not admin.");return}
-  await applySession(data.session);await loadRemoteState();
+
+async function signIn() {
+  if (!sbClient) {
+    notify("اتصال Supabase آماده نیست.");
+    return;
+  }
+
+  const email = $("adminEmail").value.trim();
+  const password = $("adminPassword").value;
+  const button = $("signInButton");
+
+  if (!email || !password) {
+    notify("ایمیل و رمز عبور را وارد کن.");
+    return;
+  }
+
+  button.disabled = true;
+
+  try {
+    const { data, error } =
+      await sbClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if (error) {
+      notify("ورود ناموفق: " + error.message);
+      return;
+    }
+
+    if (data?.user?.app_metadata?.role !== "admin") {
+      await sbClient.auth.signOut();
+      notify("این حساب دسترسی ادمین ندارد.");
+      return;
+    }
+
+    await applySession(data.session);
+    await loadRemoteState();
+
+  } catch (err) {
+    console.error("AM TV sign-in error:", err);
+
+    const message = String(err?.message || err);
+
+    if (/failed to fetch|networkerror|load failed/i.test(message)) {
+      notify(
+        "ارتباط با سرور برقرار نشد. اینترنت، دسترسی به Supabase و وضعیت پروژه را بررسی کن."
+      );
+    } else {
+      notify("خطای ورود: " + message);
+    }
+
+  } finally {
+    button.disabled = false;
+  }
 }
-async function signOut(){
-  if(sbClient)await sbClient.auth.signOut();
-  currentUser=null;isAdmin=false;
-  $("adminPanel").classList.add("hidden");
-  $("logoutButton").classList.add("hidden");
-  $("loginToggle").classList.remove("hidden");
-  document.body.classList.add("viewerMode");
-  renderAll();trackPresence();
-}
-async function uploadFile(file,folder){
-  if(!sbClient||!isAdmin)throw new Error("Admin only");
-  const cleanName=file.name.replace(/[^\w.\-]+/g,"_").slice(-100);
-  const path=folder+"/"+Date.now()+"_"+makeId()+"_"+cleanName;
-  const {error}=await sbClient.storage.from(STORAGE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type||undefined});
-  if(error)throw error;
-  const {data}=sbClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-  if(!data?.publicUrl)throw new Error("No public URL");
-  return data.publicUrl;
-}
+
 
 /* ============ Presence ============ */
 async function setupPresence(){
@@ -2988,7 +3026,6 @@ function renderPollList(){
 }
 
 /* ============ Feedback ============ */
-let fbRatingValue=0;
 function renderFeedbackList(){
   const root=$("feedbackList");if(!root)return;root.innerHTML="";
   const list=state.feedback||[];
@@ -2997,7 +3034,8 @@ function renderFeedbackList(){
     const row=document.createElement("div");row.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const name=document.createElement("div");name.className="itemname";
-    name.innerHTML=esc(f.name||"ناشناس")+" "+(f.rating?"★".repeat(f.rating):"");
+    const feedbackTypes={suggestion:"پیشنهاد",bug:"گزارش باگ / مشکل",design:"ایدهٔ طراحی",content:"پیشنهاد محتوا",other:"سایر"};
+    name.textContent=(f.name||"ناشناس")+" · "+(feedbackTypes[f.type]||"فیدبک قدیمی");
     const meta=document.createElement("div");meta.className="itemmeta";
     meta.textContent=new Date(f.createdAt).toLocaleString(dateLocale());
     const msg=document.createElement("div");
@@ -3835,35 +3873,14 @@ $("pollModal")?.addEventListener("click",e=>{if(e.target.id==="pollModal")$("pol
 $("feedbackBtn")?.addEventListener("click",()=>{$("feedbackModal").style.display="flex";});
 $("feedbackClose")?.addEventListener("click",()=>$("feedbackModal").style.display="none");
 $("feedbackModal")?.addEventListener("click",e=>{if(e.target.id==="feedbackModal")$("feedbackModal").style.display="none";});
-document.querySelectorAll("#fbRating span").forEach(sp=>{
-  sp.addEventListener("click",()=>{
-    fbRatingValue=Number(sp.dataset.v);
-    document.querySelectorAll("#fbRating span").forEach(s=>{
-      s.textContent=Number(s.dataset.v)<=fbRatingValue?"★":"☆";
-      s.style.color=Number(s.dataset.v)<=fbRatingValue?"var(--accent)":"var(--muted)";
-    });
-  });
-  sp.addEventListener("mouseenter",()=>{
-    const hv=Number(sp.dataset.v);
-    document.querySelectorAll("#fbRating span").forEach(s=>{
-      s.style.color=Number(s.dataset.v)<=hv?"var(--accent)":"var(--muted)";
-    });
-  });
-});
-$("fbRating")?.addEventListener("mouseleave",()=>{
-  document.querySelectorAll("#fbRating span").forEach(s=>{
-    s.style.color=Number(s.dataset.v)<=fbRatingValue?"var(--accent)":"var(--muted)";
-  });
-});
 $("fbSubmit")?.addEventListener("click",()=>{
   const name=$("fbName").value.trim().slice(0,60);
   const message=$("fbMessage").value.trim().slice(0,800);
   if(!message){notify("متن پیام لازم است.");return;}
   state.feedback=state.feedback||[];
-  state.feedback.unshift({id:"fb-"+Date.now(),name:name||"ناشناس",message,rating:fbRatingValue||0,createdAt:Date.now(),mode:activeMode()});
+  state.feedback.unshift({id:"fb-"+Date.now(),name:name||"ناشناس",type:$("fbType")?.value||"suggestion",message,createdAt:Date.now(),mode:activeMode()});
   state.feedback=state.feedback.slice(0,200);
-  $("fbName").value="";$("fbMessage").value="";fbRatingValue=0;
-  document.querySelectorAll("#fbRating span").forEach(s=>{s.textContent="☆";s.style.color="var(--muted)";});
+  $("fbName").value="";$("fbMessage").value="";if($("fbType"))$("fbType").value="suggestion";
   $("feedbackModal").style.display="none";scheduleSave();notify("فیدبک ارسال شد ✓");
 });
 $("clearFeedbackBtn")?.addEventListener("click",()=>{
@@ -4021,4 +4038,4 @@ setInterval(()=>{
 
 </script>
 </body>
-      </html>
+  </html>
