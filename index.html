@@ -242,11 +242,11 @@ body.cinema .hero{grid-template-columns:minmax(0,1fr)}
 body.cinema .playerpanel{border:0;border-radius:0;box-shadow:none;background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
-#screenLockBtn{display:none;position:absolute;top:54px;right:10px;z-index:22;background:rgba(0,0,0,.82);color:#fff;border:1px solid #ffffff66;border-radius:999px;padding:10px 13px;font-size:13px}
+#screenLockBtn{display:none;position:absolute;top:54px;right:10px;z-index:22;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .2s}
 #playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
-#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:transparent;touch-action:none}
+#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:rgba(0,0,0,.35);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);touch-action:none;cursor:pointer}
 #playerShell.screen-locked #lockOverlay{display:flex}
-#lockOverlay button{background:rgba(0,0,0,.86);color:#fff;border:1px solid #ffffff77;border-radius:999px;padding:13px 18px;font-weight:700;pointer-events:auto}
+#lockOverlay button{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:999px;padding:14px 22px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 26px #000a;pointer-events:auto}
 #playerShell.screen-locked #screenLockBtn{display:none}
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
 body.cinema .playerfoot:hover{opacity:1}
@@ -386,8 +386,8 @@ body.viewerMode #videoElement{controls:none!important}
         <button id="coverExit"><i class="ic ic-close"></i><span class="lbl" data-i18n="exitfs">خروج</span></button>
         <button id="rotateButton"><i class="ic ic-sync"></i><span class="lbl" data-i18n="rotate">افقی / عمودی</span></button>
         <button id="ccFs"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
-        <button id="screenLockBtn" type="button" title="قفل لمس صفحه">🔒 قفل صفحه</button>
-        <div id="lockOverlay" aria-label="صفحه قفل است"><button id="screenUnlockBtn" type="button">🔓 برای بازکردن لمس کن</button></div>
+        <button id="screenLockBtn" type="button" title="قفل صفحه"><i class="ic ic-lock"></i><span class="lbl" data-i18n="lockScreen">قفل صفحه</span></button>
+        <div id="lockOverlay" aria-label="صفحه قفل است"><button id="screenUnlockBtn" type="button"><i class="ic ic-unlock"></i><span data-i18n="unlockScreen">برای بازکردن لمس کن</span></button></div>
         <button id="viewerStart" class="hidden" data-i18n="unmute">🔊 برای فعال‌سازی صدا لمس کنید</button>
         <div id="watermark">
           <img id="watermarkImage" class="hidden" alt="Watermark">
@@ -802,7 +802,7 @@ body.viewerMode #videoElement{controls:none!important}
 <div id="pinModal">
   <div class="pinBox">
     <h3 data-i18n="pinTitle">رمز والدین</h3>
-    <p data-i18n="pinHint">رمز پیش‌فرض: 1234</p>
+    <p data-i18n="pinHint">رمز را وارد کنید.</p>
     <input id="pinInput" type="tel" inputmode="numeric" maxlength="6" autocomplete="off">
     <div class="pinActions">
       <button id="pinCancel" data-i18n="cancel">انصراف</button>
@@ -907,7 +907,7 @@ const I18N = {
   castDisconnected:"اتصال به تلویزیون قطع شد.",
   sleep:"خواب",sleepSet:"تایمر خواب: {n} دقیقه",sleepOff:"تایمر خواب خاموش شد",sleepDone:"تایمر خواب — پخش متوقف شد",
   kidsBtn:"کودک",kidsOn:"حالت کودک روشن شد",kidsOff:"حالت کودک خاموش شد",exitKids:"خروج از حالت کودک",
-  pinTitle:"رمز والدین",pinHint:"رمز پیش‌فرض: 1234",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
+  pinTitle:"رمز والدین",pinHint:"رمز را وارد کنید.",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
   noKidsItems:"هنوز برنامه‌ای برای کودک مشخص نشده. در پنل مدیریت، کنار برنامه‌ها تیک «کودک» رو بزن.",
   lblKidsPin:"رمز حالت کودک (PIN)",kidsTag:"کودک"
 },
@@ -981,7 +981,7 @@ const I18N = {
   castDisconnected:"Disconnected from TV.",
   sleep:"Sleep",sleepSet:"Sleep timer: {n} min",sleepOff:"Sleep timer off",sleepDone:"Sleep timer — playback stopped",
   kidsBtn:"Kids",kidsOn:"Kids mode on",kidsOff:"Kids mode off",exitKids:"Exit kids mode",
-  pinTitle:"Parent PIN",pinHint:"Default PIN: 1234",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
+  pinTitle:"Parent PIN",pinHint:"Enter your PIN.",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
   noKidsItems:"No kids programs yet. Tag items with 'Kids' in admin panel.",
   lblKidsPin:"Kids mode PIN",kidsTag:"Kids"
 },
@@ -1054,7 +1054,7 @@ const I18N = {
   castDisconnected:"تم قطع الاتصال.",
   sleep:"النوم",sleepSet:"مؤقّت النوم: {n} دقيقة",sleepOff:"مؤقّت النوم مغلق",sleepDone:"مؤقّت النوم — توقف التشغيل",
   kidsBtn:"أطفال",kidsOn:"وضع الأطفال مفعّل",kidsOff:"وضع الأطفال مغلق",exitKids:"الخروج من وضع الأطفال",
-  pinTitle:"رمز الوالدين",pinHint:"الرمز الافتراضي: 1234",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"رمز خاطئ",
+  pinTitle:"رمز الوالدين",pinHint:"أدخل الرمز.",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"رمز خاطئ",
   noKidsItems:"لا برامج للأطفال بعد.",lblKidsPin:"رمز وضع الأطفال",kidsTag:"أطفال"
 },
 "tr":{
@@ -1126,7 +1126,7 @@ const I18N = {
   castDisconnected:"TV bağlantısı kesildi.",
   sleep:"Uyku",sleepSet:"Uyku zamanlayıcı: {n} dk",sleepOff:"Uyku zamanlayıcı kapalı",sleepDone:"Uyku zamanlayıcı — oynatma durdu",
   kidsBtn:"Çocuk",kidsOn:"Çocuk modu açık",kidsOff:"Çocuk modu kapalı",exitKids:"Çocuk modundan çık",
-  pinTitle:"Ebeveyn PIN",pinHint:"Varsayılan PIN: 1234",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış PIN",
+  pinTitle:"Ebeveyn PIN",pinHint:"PIN kodunu girin.",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış PIN",
   noKidsItems:"Henüz çocuk programı yok.",lblKidsPin:"Çocuk modu PIN",kidsTag:"Çocuk"
 }
 };
@@ -1197,6 +1197,13 @@ const DEFAULT_STATE = {
   events:{enabled:true,custom:[]},
   lastSyncAt:0,
   channelFeeds:[],
+  feedback:[],
+  polls:[],
+  voterId:"",
+  analytics:{itemViews:{},itemWatchTime:{},hourViews:new Array(24).fill(0),dailyViews:{},totalWatchSeconds:0},
+  kidsChannels:[{id:"kids-main",name:"Kids World",color:"#ff9e3d",list:[]}],
+  kidsChannelIndex:0,
+  kidsPlayback:{index:0,startedAt:0,nonce:0},
   watermark:{text:"",image:"",size:100,opacity:85,width:110,color:"#ffffff",position:"top-left",x:3,y:4}
 };
 
@@ -2952,7 +2959,7 @@ function renderChannels(){
   state.channels.forEach((c,i)=>{
     const b=document.createElement("button");
     b.className="channelbutton"+(i===state.channelIndex?" selected":"");
-    b.innerHTML='<i class="ic ic-tv"></i> '+c.name;
+    b.innerHTML='<i class="ic ic-tv"></i> '+esc(c.name);
     b.onclick=()=>{
       if(isAdmin){state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};scheduleSave();activeMediaKey="";renderPlayer(true)}
       else notify(t("msgNoChannelSwitch"));
@@ -3058,7 +3065,7 @@ function renderRadioList(){
       const item=document.createElement("div");item.className="listitem";
       const info=document.createElement("div");info.className="iteminfo";
       const name=document.createElement("div");name.className="itemname";
-      name.innerHTML='<i class="ic ic-radio"></i> '+c.name;
+      name.innerHTML='<i class="ic ic-radio"></i> '+esc(c.name);
       const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •";
       info.append(name,meta);
       const select=document.createElement("button");select.className="small";
@@ -3431,7 +3438,9 @@ $("playButton").addEventListener("click",togglePlay);
 $("fullscreenButton").addEventListener("click",toggleFullscreen);
 $("screenLockBtn").addEventListener("click",()=>$("playerShell").classList.add("screen-locked"));
 $("screenUnlockBtn").addEventListener("click",e=>{e.stopPropagation();$("playerShell").classList.remove("screen-locked")});
-$("lockOverlay").addEventListener("click",e=>e.preventDefault());
+$("lockOverlay").addEventListener("click",e=>{e.preventDefault();e.stopPropagation()});
+$("lockOverlay").addEventListener("touchstart",e=>e.preventDefault(),{passive:false});
+$("screenUnlockBtn").addEventListener("touchstart",e=>{e.preventDefault();$("playerShell").classList.remove("screen-locked")},{passive:false});
 $("addChannelFeedButton").addEventListener("click",addChannelFeed);
 $("syncChannelFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
 $("viewerFullscreen").addEventListener("click",toggleFullscreen);
@@ -3929,6 +3938,49 @@ $("partyBtn")?.addEventListener("click",openParty);$("partyClose")?.addEventList
     <p class="viewerhint" style="margin-top:10px">چت گروهی فقط وقتی کار می‌کند که اتصال Supabase پروژه فعال باشد. پیام‌ها برای افراد آنلاین همان لحظه پخش می‌شوند.</p>
   </div>
 </div>
+
+
+<style>
+.ic-unlock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 7-2.6'/></svg>")}
+.modeGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.modeCard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;background:var(--panel2);border:2px solid var(--line);border-radius:12px;cursor:pointer;color:var(--text);transition:all .15s;font-size:11px}.modeCard.active{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}.modeIcon{width:26px;height:26px}.modeCard span{font-weight:bold}
+.statsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.statCard{padding:16px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;text-align:center}.statValue{font-size:28px;font-weight:900;color:var(--accent)}.statLabel{font-size:11px;color:var(--muted);margin-top:6px}.barChart{display:flex;align-items:flex-end;gap:4px;height:150px;padding:10px;background:var(--panel2);border-radius:10px;overflow-x:auto}.bar{flex:1;min-width:10px;background:linear-gradient(to top,var(--accent),color-mix(in srgb,var(--accent) 50%,transparent));border-radius:6px 6px 0 0;position:relative}.barLabel{font-size:9px;color:var(--muted)}.barChart.horizontal{flex-direction:column;height:auto;align-items:stretch}.barChart.horizontal .bar{min-height:24px;display:flex;align-items:center;padding:6px 10px}.barChart.horizontal .barLabel{font-size:11px;color:var(--text)}
+#pollModal{position:fixed;inset:0;z-index:401;background:#000b;display:none;align-items:center;justify-content:center}#pollModal>div{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:420px;width:92%}
+</style>
+<div class="amtvQuickActions" id="extraActions" aria-label="ویژگی‌های بیشتر AM TV">
+<button id="pollsViewerBtn" class="hidden" type="button">📊 نظرسنجی</button><button id="extraFeedbackBtn" type="button">⭐ فیدبک امتیازی</button><button id="extraAdminFeaturesToggle" type="button">⚙️ آمار و نظرسنجی</button>
+</div>
+<div class="amtvModal" id="extraFeedbackModal" role="dialog" aria-modal="true"><div class="amtvModalBox"><h3>ارسال فیدبک</h3><div class="field"><label>نام (اختیاری)</label><input id="extraFbName" maxlength="60" placeholder="ناشناس"></div><div class="field"><label>امتیاز</label><div id="fbRating" style="display:flex;gap:6px;font-size:24px"><span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span></div></div><div class="field"><label>پیام</label><textarea id="extraFbMessage" rows="4" maxlength="800" placeholder="تجربه‌ات از AM TV چطور بوده؟"></textarea></div><div class="amtvModalActions"><button id="extraFbClose">بستن</button><button id="extraFbSubmit" class="primary">ذخیره</button></div></div></div>
+<div class="amtvModal" id="pollModal" role="dialog" aria-modal="true"><div><div style="display:flex;justify-content:space-between;align-items:center"><h3>نظرسنجی</h3><button id="pollModalClose">✕</button></div><div id="pollModalBody"></div></div></div>
+<section id="extraAdminFeatures" class="panel hidden" style="margin-top:12px"><div class="panelhead"><h2>ویژگی‌های مدیریتی تکمیلی</h2></div><div class="adminGrid">
+<div class="section"><h3>ساخت نظرسنجی</h3><div class="field"><label>سؤال</label><input id="pollQuestion" placeholder="نظرت درباره برنامه امشب چیه؟"></div><div class="field"><label>گزینه‌ها (هر خط یک گزینه)</label><textarea id="pollOptions" rows="4"></textarea></div><div class="field"><label>مدت (ساعت؛ صفر یعنی بدون محدودیت)</label><input id="pollDuration" type="number" min="0" max="720" value="24"></div><button id="createPollButton" class="primary">ایجاد نظرسنجی</button><div id="pollList" class="itemlist"></div></div>
+<div class="section"><h3>آمار محلی</h3><div id="statsOverview" class="statsGrid"></div><h4>بازدید ساعتی</h4><div id="hourChart" class="barChart"></div><h4>برنامه‌های پربازدید</h4><div id="topItemsChart" class="barChart horizontal"></div><h4>۱۴ روز اخیر</h4><div id="dailyChart" class="barChart"></div><div class="actions"><button id="resetAnalyticsBtn" class="danger">پاک‌کردن آمار</button><button id="exportAnalyticsBtn">خروجی JSON</button></div></div>
+<div class="section"><h3>تنظیمات حالت کودک</h3><div class="field"><label>رمز جدید خروج (۴ تا ۶ رقم)</label><input id="kidsPinNew" type="password" inputmode="numeric" maxlength="6"></div><div class="field"><label>تکرار رمز</label><input id="kidsPinConfirm" type="password" inputmode="numeric" maxlength="6"></div><button id="saveKidsPinButton" class="primary">ذخیره رمز کودک</button> <button id="clearKidsPinButton">حذف رمز</button><p class="viewerhint">رمز فعلی نمایش داده نمی‌شود. اگر قبلاً رمز پیش‌فرض تنظیم شده باشد، برای خروج از حالت کودک از همان رمز استفاده کن.</p><h4>محتوای علامت‌خوردهٔ کودک</h4><div id="kidsContentList" class="itemlist"></div></div>
+<div class="section"><h3>حالت نمایش</h3><div class="modeGrid" id="themeModeGrid"><button class="modeCard" data-mode="dark"><span>🌙 دارک</span></button><button class="modeCard" data-mode="light"><span>☀️ لایت</span></button><button class="modeCard" data-mode="special"><span>✨ اسپیشیال</span></button><button class="modeCard" data-mode="dream"><span>🌌 دریمکور</span></button></div><h4>حالت نمایش لوگو</h4><div class="logoModeRadios"><label><input type="radio" name="logoModeRad" value="auto"> تصویر</label><label><input type="radio" name="logoModeRad" value="text"> متن</label><label><input type="radio" name="logoModeRad" value="hidden"> پنهان</label></div><div class="logoPreviewWrap"><div class="logoPreview" id="logoPreview">AM</div><div class="viewerhint">پیش‌نمایش لوگو</div></div></div>
+</div></section>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);let extraRating=0;
+const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(d))}catch(_){return d}};
+const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
+let extraFeedback=read('amtv-feedback-ratings',[]),polls=read('amtv-polls',[]),analytics=read('amtv-analytics',{itemViews:{},itemWatchTime:{},hourViews:Array(24).fill(0),dailyViews:{},totalWatchSeconds:0});
+function escX(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function notifyX(s){if(typeof notify==='function')notify(s);else alert(s)}
+function renderPollList(){const root=$('pollList');if(!root)return;root.textContent='';polls.forEach((p,i)=>{const row=document.createElement('div');row.className='listitem';const info=document.createElement('div');info.className='iteminfo';const q=document.createElement('div');q.className='itemname';q.textContent=p.question;const meta=document.createElement('div');meta.className='itemmeta';meta.textContent=(p.active?'🟢 فعال':'⚫ بسته')+' · '+p.options.length+' گزینه · '+p.options.reduce((n,o)=>n+o.votes,0)+' رأی';info.append(q,meta);const toggle=document.createElement('button');toggle.textContent=p.active?'بستن':'فعال‌سازی';toggle.onclick=()=>{p.active=!p.active;write('amtv-polls',polls);renderPollList();syncPollBtn()};const del=document.createElement('button');del.textContent='حذف';del.onclick=()=>{polls.splice(i,1);write('amtv-polls',polls);renderPollList();syncPollBtn()};row.append(info,toggle,del);root.append(row)})}
+function activePollX(){return polls.find(p=>p.active&&(!p.endsAt||p.endsAt>Date.now()))}function syncPollBtn(){const b=$('pollsViewerBtn');if(b)b.classList.toggle('hidden',!activePollX())}
+function renderPollModal(){const body=$('pollModalBody');if(!body)return;body.textContent='';const p=activePollX();if(!p){body.textContent='فعلاً نظرسنجی فعالی نیست.';return}const key='amtv-poll-vote-'+p.id;let my='';try{my=localStorage.getItem(key)||''}catch(_){}const total=Math.max(1,p.options.reduce((n,o)=>n+o.votes,0));const q=document.createElement('h4');q.textContent=p.question;body.append(q);p.options.forEach((o,i)=>{const b=document.createElement('button');b.style.cssText='display:block;width:100%;text-align:right;margin:7px 0;padding:12px;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px';b.textContent=o.text+(my!==''?' · '+Math.round(o.votes/total*100)+'%':'');b.disabled=my!=='';b.onclick=()=>{o.votes++;try{localStorage.setItem(key,String(i))}catch(_){}write('amtv-polls',polls);renderPollModal();renderPollList();notifyX('رأی شما ثبت شد ✓')};body.append(b)});const info=document.createElement('p');info.className='viewerhint';info.textContent='مجموع آرا: '+p.options.reduce((n,o)=>n+o.votes,0);body.append(info)}
+$('createPollButton')?.addEventListener('click',()=>{if(typeof isAdmin!=='undefined'&&!isAdmin){notifyX('فقط مدیر می‌تواند نظرسنجی بسازد.');return}const question=$('pollQuestion').value.trim(),opts=$('pollOptions').value.split('\n').map(x=>x.trim()).filter(Boolean),hours=Number($('pollDuration').value)||0;if(!question||opts.length<2){notifyX('سؤال و حداقل دو گزینه لازم است.');return}polls.unshift({id:'poll-'+Date.now(),question,options:opts.map(text=>({text,votes:0})),active:true,createdAt:Date.now(),endsAt:hours>0?Date.now()+hours*3600000:0});write('amtv-polls',polls);$('pollQuestion').value='';$('pollOptions').value='';renderPollList();syncPollBtn();notifyX('نظرسنجی ساخته شد.')});
+$('pollsViewerBtn')?.addEventListener('click',()=>{$('pollModal').style.display='flex';renderPollModal()});$('pollModalClose')?.addEventListener('click',()=>{$('pollModal').style.display='none'});$('pollModal')?.addEventListener('click',e=>{if(e.target.id==='pollModal')e.currentTarget.style.display='none'});
+$('extraFeedbackBtn')?.addEventListener('click',()=>{$('extraFeedbackModal').style.display='flex'});$('extraFbClose')?.addEventListener('click',()=>{$('extraFeedbackModal').style.display='none'});document.querySelectorAll('#fbRating span').forEach(sp=>{sp.style.cursor='pointer';sp.addEventListener('click',()=>{extraRating=Number(sp.dataset.v);document.querySelectorAll('#fbRating span').forEach(x=>{x.textContent=Number(x.dataset.v)<=extraRating?'★':'☆';x.style.color=Number(x.dataset.v)<=extraRating?'var(--accent)':'var(--muted)'})})});$('extraFbSubmit')?.addEventListener('click',()=>{const message=$('extraFbMessage').value.trim().slice(0,800);if(!message){notifyX('متن پیام لازم است.');return}extraFeedback.unshift({id:'fb-'+Date.now(),name:$('extraFbName').value.trim().slice(0,60)||'ناشناس',message,rating:extraRating,createdAt:Date.now()});extraFeedback=extraFeedback.slice(0,200);write('amtv-feedback-ratings',extraFeedback);$('extraFbMessage').value='';$('extraFbName').value='';extraRating=0;$('extraFeedbackModal').style.display='none';notifyX('فیدبک روی همین دستگاه ذخیره شد ✓')});
+function renderKidsContentList(){const root=$('kidsContentList');if(!root)return;root.textContent='';let any=false;try{(state.channels||[]).forEach(c=>(c.list||[]).forEach(v=>{if(!v.kids)return;any=true;const r=document.createElement('div');r.className='listitem';const t=document.createElement('div');t.className='itemname';t.textContent=v.title||'بدون عنوان';const m=document.createElement('div');m.className='itemmeta';m.textContent=(c.name||'')+' · محتوای کودک';r.append(t,m);root.append(r)}))}catch(_){}if(!any)root.textContent='هنوز برنامه‌ای با برچسب کودک وجود ندارد.'}
+$('saveKidsPinButton')?.addEventListener('click',()=>{if(typeof isAdmin!=='undefined'&&!isAdmin)return;const a=String($('kidsPinNew').value).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)),b=String($('kidsPinConfirm').value).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));if(!/^\d{4,6}$/.test(a)){notifyX('رمز باید ۴ تا ۶ رقم باشد.');return}if(a!==b){notifyX('رمزها یکسان نیستند.');return}try{localStorage.setItem('amtv-kids-pin',a)}catch(_){}if(typeof state!=='undefined'){state.schedule=state.schedule||{tz:210};state.schedule.kidsPin=a;if(typeof scheduleSave==='function')scheduleSave()}$('kidsPinNew').value='';$('kidsPinConfirm').value='';notifyX('رمز کودک ذخیره شد.')});$('clearKidsPinButton')?.addEventListener('click',()=>{try{localStorage.removeItem('amtv-kids-pin')}catch(_){}if(typeof state!=='undefined'&&state.schedule){delete state.schedule.kidsPin;if(typeof scheduleSave==='function')scheduleSave()}notifyX('رمز کودک حذف شد.')});
+function renderAnalyticsX(){const ov=$('statsOverview');if(!ov)return;const views=Object.values(analytics.itemViews||{}).reduce((a,b)=>a+b,0),mins=Math.round((analytics.totalWatchSeconds||0)/60);ov.innerHTML='<div class="statCard"><div class="statValue">'+views+'</div><div class="statLabel">کل بازدید محلی</div></div><div class="statCard"><div class="statValue">'+mins+'</div><div class="statLabel">دقیقه تماشا</div></div>';const root=$('hourChart');if(root){root.textContent='';const max=Math.max(1,...analytics.hourViews);analytics.hourViews.forEach((v,i)=>{const b=document.createElement('div');b.className='bar';b.style.height=Math.max(2,v/max*100)+'%';b.title=i+':00 · '+v;b.textContent=i;root.append(b)})}const top=$('topItemsChart');if(top){top.textContent='';Object.entries(analytics.itemViews).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(([k,v])=>{const b=document.createElement('div');b.className='bar';b.style.width=Math.max(8,v/Math.max(1,...Object.values(analytics.itemViews))*100)+'%';const l=document.createElement('span');l.className='barLabel';l.textContent=k+' · '+v;b.append(l);top.append(b)})}const day=$('dailyChart');if(day){day.textContent='';Object.entries(analytics.dailyViews).sort().slice(-14).forEach(([k,v])=>{const b=document.createElement('div');b.className='bar';b.style.height=Math.max(2,v/Math.max(1,...Object.values(analytics.dailyViews))*100)+'%';b.title=k+' · '+v;day.append(b)})}}
+$('resetAnalyticsBtn')?.addEventListener('click',()=>{if(!confirm('همهٔ آمار محلی حذف شود؟'))return;analytics={itemViews:{},itemWatchTime:{},hourViews:Array(24).fill(0),dailyViews:{},totalWatchSeconds:0};write('amtv-analytics',analytics);renderAnalyticsX()});$('exportAnalyticsBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(analytics,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='amtv-analytics.json';a.click();URL.revokeObjectURL(url)});
+document.querySelectorAll('.modeCard').forEach(card=>card.addEventListener('click',()=>{document.querySelectorAll('.modeCard').forEach(c=>c.classList.toggle('active',c===card));try{const p=JSON.parse(localStorage.getItem('amtv-prefs')||'{}');p.mode=card.dataset.mode;localStorage.setItem('amtv-prefs',JSON.stringify(p));if(typeof applyPrefs==='function')applyPrefs()}catch(_){}}));
+document.querySelectorAll('input[name="logoModeRad"]').forEach(r=>r.addEventListener('change',()=>{if(typeof state!=='undefined'){state.logoMode=r.value;if(typeof scheduleSave==='function')scheduleSave();if(typeof renderBrand==='function')renderBrand()}const el=$('logoPreview');if(el){el.textContent=r.value==='hidden'?'🚫':r.value==='text'?'AM':'🖼️'}}));
+$('extraAdminFeaturesToggle')?.addEventListener('click',()=>{if(typeof isAdmin!=='undefined'&&!isAdmin){notifyX('این بخش مخصوص مدیر است.');return}const panel=$('extraAdminFeatures');panel.classList.toggle('hidden');if(!panel.classList.contains('hidden')){renderPollList();renderKidsContentList();renderAnalyticsX()}});
+renderPollList();syncPollBtn();renderKidsContentList();renderAnalyticsX();
+})();
+</script>
 
 </body>
                    </html>
