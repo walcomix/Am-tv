@@ -3947,11 +3947,11 @@ $("partyBtn")?.addEventListener("click",openParty);$("partyClose")?.addEventList
 #pollModal{position:fixed;inset:0;z-index:401;background:#000b;display:none;align-items:center;justify-content:center}#pollModal>div{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:420px;width:92%}
 </style>
 <div class="amtvQuickActions" id="extraActions" aria-label="ویژگی‌های بیشتر AM TV">
-<button id="pollsViewerBtn" class="hidden" type="button">📊 نظرسنجی</button><button id="extraFeedbackBtn" type="button">⭐ فیدبک امتیازی</button><button id="extraAdminFeaturesToggle" type="button">⚙️ آمار و نظرسنجی</button>
+<button id="pollsViewerBtn" class="hidden" type="button">📊 نظرسنجی</button><button id="extraFeedbackBtn" type="button">⭐ فیدبک امتیازی</button><button id="extraAdminFeaturesToggle" type="button">⚙️ رفتن به ابزارها</button><button id="openLanguagePicker" type="button">🌐 زبان</button>
 </div>
 <div class="amtvModal" id="extraFeedbackModal" role="dialog" aria-modal="true"><div class="amtvModalBox"><h3>ارسال فیدبک</h3><div class="field"><label>نام (اختیاری)</label><input id="extraFbName" maxlength="60" placeholder="ناشناس"></div><div class="field"><label>امتیاز</label><div id="fbRating" style="display:flex;gap:6px;font-size:24px"><span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span></div></div><div class="field"><label>پیام</label><textarea id="extraFbMessage" rows="4" maxlength="800" placeholder="تجربه‌ات از AM TV چطور بوده؟"></textarea></div><div class="amtvModalActions"><button id="extraFbClose">بستن</button><button id="extraFbSubmit" class="primary">ذخیره</button></div></div></div>
 <div class="amtvModal" id="pollModal" role="dialog" aria-modal="true"><div><div style="display:flex;justify-content:space-between;align-items:center"><h3>نظرسنجی</h3><button id="pollModalClose">✕</button></div><div id="pollModalBody"></div></div></div>
-<section id="extraAdminFeatures" class="panel hidden" style="margin-top:12px"><div class="panelhead"><h2>ویژگی‌های مدیریتی تکمیلی</h2></div><div class="adminGrid">
+<section id="extraAdminFeatures" class="panel" style="margin-top:18px"><div class="panelhead"><h2>ویژگی‌های مدیریتی تکمیلی</h2></div><div class="adminGrid">
 <div class="section"><h3>ساخت نظرسنجی</h3><div class="field"><label>سؤال</label><input id="pollQuestion" placeholder="نظرت درباره برنامه امشب چیه؟"></div><div class="field"><label>گزینه‌ها (هر خط یک گزینه)</label><textarea id="pollOptions" rows="4"></textarea></div><div class="field"><label>مدت (ساعت؛ صفر یعنی بدون محدودیت)</label><input id="pollDuration" type="number" min="0" max="720" value="24"></div><button id="createPollButton" class="primary">ایجاد نظرسنجی</button><div id="pollList" class="itemlist"></div></div>
 <div class="section"><h3>آمار محلی</h3><div id="statsOverview" class="statsGrid"></div><h4>بازدید ساعتی</h4><div id="hourChart" class="barChart"></div><h4>برنامه‌های پربازدید</h4><div id="topItemsChart" class="barChart horizontal"></div><h4>۱۴ روز اخیر</h4><div id="dailyChart" class="barChart"></div><div class="actions"><button id="resetAnalyticsBtn" class="danger">پاک‌کردن آمار</button><button id="exportAnalyticsBtn">خروجی JSON</button></div></div>
 <div class="section"><h3>تنظیمات حالت کودک</h3><div class="field"><label>رمز جدید خروج (۴ تا ۶ رقم)</label><input id="kidsPinNew" type="password" inputmode="numeric" maxlength="6"></div><div class="field"><label>تکرار رمز</label><input id="kidsPinConfirm" type="password" inputmode="numeric" maxlength="6"></div><button id="saveKidsPinButton" class="primary">ذخیره رمز کودک</button> <button id="clearKidsPinButton">حذف رمز</button><p class="viewerhint">رمز فعلی نمایش داده نمی‌شود. اگر قبلاً رمز پیش‌فرض تنظیم شده باشد، برای خروج از حالت کودک از همان رمز استفاده کن.</p><h4>محتوای علامت‌خوردهٔ کودک</h4><div id="kidsContentList" class="itemlist"></div></div>
@@ -3977,8 +3977,87 @@ function renderAnalyticsX(){const ov=$('statsOverview');if(!ov)return;const view
 $('resetAnalyticsBtn')?.addEventListener('click',()=>{if(!confirm('همهٔ آمار محلی حذف شود؟'))return;analytics={itemViews:{},itemWatchTime:{},hourViews:Array(24).fill(0),dailyViews:{},totalWatchSeconds:0};write('amtv-analytics',analytics);renderAnalyticsX()});$('exportAnalyticsBtn')?.addEventListener('click',()=>{const blob=new Blob([JSON.stringify(analytics,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='amtv-analytics.json';a.click();URL.revokeObjectURL(url)});
 document.querySelectorAll('.modeCard').forEach(card=>card.addEventListener('click',()=>{document.querySelectorAll('.modeCard').forEach(c=>c.classList.toggle('active',c===card));try{const p=JSON.parse(localStorage.getItem('amtv-prefs')||'{}');p.mode=card.dataset.mode;localStorage.setItem('amtv-prefs',JSON.stringify(p));if(typeof applyPrefs==='function')applyPrefs()}catch(_){}}));
 document.querySelectorAll('input[name="logoModeRad"]').forEach(r=>r.addEventListener('change',()=>{if(typeof state!=='undefined'){state.logoMode=r.value;if(typeof scheduleSave==='function')scheduleSave();if(typeof renderBrand==='function')renderBrand()}const el=$('logoPreview');if(el){el.textContent=r.value==='hidden'?'🚫':r.value==='text'?'AM':'🖼️'}}));
-$('extraAdminFeaturesToggle')?.addEventListener('click',()=>{if(typeof isAdmin!=='undefined'&&!isAdmin){notifyX('این بخش مخصوص مدیر است.');return}const panel=$('extraAdminFeatures');panel.classList.toggle('hidden');if(!panel.classList.contains('hidden')){renderPollList();renderKidsContentList();renderAnalyticsX()}});
+$('extraAdminFeaturesToggle')?.addEventListener('click',()=>{$('extraAdminFeatures')?.scrollIntoView({behavior:'smooth',block:'start'});renderPollList();renderKidsContentList();renderAnalyticsX()});
 renderPollList();syncPollBtn();renderKidsContentList();renderAnalyticsX();
+})();
+</script>
+
+
+<style id="amtv-native-ui-redesign">
+/* AM TV feature dashboard: app-native cards rather than browser dialogs */
+#extraActions{position:static;z-index:auto;max-width:none;margin:18px 0 8px;justify-content:flex-start;padding:0 2px}
+#extraActions button{border-radius:14px;min-height:48px;padding:12px 15px;font-weight:750;background:var(--panel2);color:var(--text);border:1px solid var(--line);box-shadow:none}
+#extraAdminFeatures{display:block!important;scroll-margin-top:16px}
+#extraAdminFeatures .panelhead h2{font-size:clamp(18px,3vw,24px)}
+#extraAdminFeatures .adminGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#extraAdminFeatures .section{border-radius:18px;padding:16px;background:var(--panel);border:1px solid var(--line);min-width:0}
+#themeModeGrid.modeGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#themeModeGrid .modeCard{min-height:112px;padding:18px 10px;border-radius:18px;font-size:15px;box-shadow:0 5px 16px #0001}
+#themeModeGrid .modeCard::before{font-size:30px;line-height:1.2}
+#themeModeGrid .modeCard[data-mode="dark"]::before{content:"🌙"}
+#themeModeGrid .modeCard[data-mode="light"]::before{content:"☀️"}
+#themeModeGrid .modeCard[data-mode="special"]::before{content:"✨"}
+#themeModeGrid .modeCard[data-mode="dream"]::before{content:"🌌"}
+#themeModeGrid .modeCard span{font-size:14px}
+#langSelect{display:none!important}
+#languagePickerModal,#kidsHome{display:none}
+#languagePickerModal{position:fixed;inset:0;z-index:9000;background:#050711d9;backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:18px}
+#languagePickerModal .languageBox{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 25px 90px #0008}
+.languageGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.languageCard{min-height:90px;border:1px solid var(--line);border-radius:16px;background:var(--panel2);color:var(--text);font-size:16px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.languageCard small{font-size:11px;color:var(--muted);font-weight:500}
+.languageCard.active{outline:3px solid var(--accent);border-color:var(--accent)}
+#kidsHome{margin:18px 0;padding:clamp(16px,4vw,30px);border-radius:28px;background:linear-gradient(145deg,#1a8bff,#8b5cf6 55%,#ff80b5);color:white;box-shadow:0 18px 50px #4326a044;min-height:240px}
+body.kids-mode #kidsHome{display:block}
+body.kids-mode main>.hero{display:block!important}body.kids-mode main>.hero .sidepanel,body.kids-mode main>.hero>.sidepanel{display:none!important}body.kids-mode main>.hero .playerpanel{border:2px solid #ffffff66;border-radius:24px;overflow:hidden;box-shadow:0 12px 34px #2a176644}body.kids-mode main>.hero .playerhead .onair,body.kids-mode main>.hero .playercontrols,body.kids-mode main>.hero .playerfoot .admin-only{display:none!important}body.kids-mode main>.sidepanel,body.kids-mode main>.panel:not(#kidsHome){display:none!important}
+body.kids-mode main{max-width:1100px}
+.kidsHead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.kidsBrand{font-size:clamp(25px,5vw,40px);font-weight:1000;letter-spacing:-1px;text-shadow:0 3px 0 #4326a044}
+.kidsSubtitle{opacity:.92;font-size:13px;margin-top:3px}
+.kidsExitPill{border:0!important;border-radius:999px!important;background:#fff2!important;color:#fff!important;padding:12px 16px!important;font-weight:800}
+.kidsCategoryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.kidsCategory{border:1px solid #ffffff55;border-radius:20px;min-height:88px;background:#ffffff20;color:white;font-size:15px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.kidsProgramGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px}
+.kidsProgram{border:0;border-radius:18px;background:#fff;color:#2a2455;overflow:hidden;text-align:left;padding:0;box-shadow:0 8px 22px #25105b30}
+.kidsProgram .kidEmoji{height:76px;display:grid;place-items:center;font-size:35px;background:linear-gradient(135deg,#ffdb6e,#ff9dc7)}
+.kidsProgram .kidTitle{display:block;padding:11px;font-size:13px;font-weight:850}
+.kidsEmpty{background:#ffffff20;border-radius:16px;padding:16px;line-height:1.7}
+body.kids-mode .amtvQuickActions,body.kids-mode #extraAdminFeatures{display:none!important}
+@media(max-width:650px){#extraAdminFeatures .adminGrid{grid-template-columns:1fr}#extraAdminFeatures .section{padding:13px}.kidsCategoryGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.kidsCategory{font-size:12px;min-height:76px}.languageBox{padding:15px}}
+</style>
+<section id="kidsHome" aria-label="AM TV Kids">
+  <div class="kidsHead"><div><div class="kidsBrand">🌈 AM TV Kids</div><div class="kidsSubtitle">دنیای رنگیِ برنامه‌های کودک</div></div><button id="kidsHomeExit" class="kidsExitPill" type="button">🔒 خروج والدین</button></div>
+  <div class="kidsCategoryGrid"><button class="kidsCategory" data-kid-filter="all">🎈<span>همهٔ برنامه‌ها</span></button><button class="kidsCategory" data-kid-filter="cartoon">🦊<span>کارتون‌ها</span></button><button class="kidsCategory" data-kid-filter="music">🎵<span>موسیقی و سرگرمی</span></button></div>
+  <h2 style="margin:8px 0 12px">چی ببینیم؟ 🍭</h2><div id="kidsProgramGrid" class="kidsProgramGrid"></div>
+</section>
+<div id="languagePickerModal" role="dialog" aria-modal="true" aria-labelledby="languagePickerTitle">
+ <div class="languageBox"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><h2 id="languagePickerTitle" style="margin:0">🌐 انتخاب زبان</h2><p style="margin:6px 0 0;color:var(--muted);font-size:13px">زبان رابط AM TV را انتخاب کن</p></div><button id="closeLanguagePicker" type="button" aria-label="بستن">✕</button></div>
+  <div class="languageGrid"><button class="languageCard" data-lang="fa">🇮🇷 فارسی<small>Persian</small></button><button class="languageCard" data-lang="en">🇬🇧 English<small>انگلیسی</small></button><button class="languageCard" data-lang="ar">🌙 العربية<small>عربی</small></button><button class="languageCard" data-lang="tr">🇹🇷 Türkçe<small>ترکی</small></button><button class="languageCard" data-lang="auto" style="grid-column:1/-1">📱 خودکار<small>زبان دستگاه</small></button></div>
+ </div>
+</div>
+<script>
+(()=>{
+ const $=id=>document.getElementById(id);
+ const langModal=$('languagePickerModal'),langSelect=$('langSelect');
+ function openLang(){if(!langModal)return;langModal.style.display='flex';syncLangCards()}
+ function closeLang(){if(langModal)langModal.style.display='none'}
+ function syncLangCards(){document.querySelectorAll('.languageCard').forEach(b=>b.classList.toggle('active',b.dataset.lang===(langSelect?.value||'auto')))}
+ $('openLanguagePicker')?.addEventListener('click',openLang);$('closeLanguagePicker')?.addEventListener('click',closeLang);langModal?.addEventListener('click',e=>{if(e.target===langModal)closeLang()});
+ document.querySelectorAll('.languageCard').forEach(b=>b.addEventListener('click',()=>{if(!langSelect)return;langSelect.value=b.dataset.lang;langSelect.dispatchEvent(new Event('change',{bubbles:true}));try{const prefs=JSON.parse(localStorage.getItem('amtv-prefs')||'{}');prefs.language=b.dataset.lang;localStorage.setItem('amtv-prefs',JSON.stringify(prefs))}catch(_){}syncLangCards();closeLang()}));
+ // Big mode cards control the same existing theme setting and remain in sync.
+ document.querySelectorAll('#themeModeGrid .modeCard').forEach(card=>card.addEventListener('click',()=>{const sel=$('themeMode');if(sel){sel.value=card.dataset.mode;sel.dispatchEvent(new Event('change',{bubbles:true}))}document.querySelectorAll('#themeModeGrid .modeCard').forEach(c=>c.classList.toggle('active',c===card))}));
+ function kidItems(){const out=[];try{(state.channels||[]).forEach((ch,ci)=>(ch.list||[]).forEach((item,ii)=>{if(item&&item.kids)out.push({item,ch,ci,ii})}))}catch(_){}return out}
+ function renderKidPrograms(filter='all'){const root=$('kidsProgramGrid');if(!root)return;root.textContent='';let list=kidItems();if(filter==='music')list=list.filter(x=>/music|song|آهنگ|موسیقی|ترانه/i.test((x.item.title||'')+' '+(x.ch.name||'')));if(filter==='cartoon')list=list.filter(x=>/cartoon|animation|کارتون|انیمیشن/i.test((x.item.title||'')+' '+(x.ch.name||'')));if(!list.length){const empty=document.createElement('div');empty.className='kidsEmpty';empty.style.gridColumn='1/-1';empty.textContent='هنوز برنامه‌ای برای کودک علامت‌گذاری نشده. مدیر می‌تواند از فهرست برنامه‌ها، گزینهٔ «محتوای کودک» را فعال کند.';root.append(empty);return}list.forEach((x,i)=>{const b=document.createElement('button');b.className='kidsProgram';const emoji=document.createElement('span');emoji.className='kidEmoji';emoji.textContent=['🧸','🚀','🦄','🐼','🌟','🎨'][i%6];const title=document.createElement('span');title.className='kidTitle';title.textContent=x.item.title||'برنامهٔ کودک';b.append(emoji,title);b.addEventListener('click',()=>{try{state.channelIndex=x.ci;chooseIndex(x.ii,'tv')}catch(_){try{state.channelIndex=x.ci;state.playback.index=x.ii;if(typeof scheduleSave==='function')scheduleSave();if(typeof renderPlayer==='function')renderPlayer(true)}catch(__){}}});root.append(b)})}
+ document.querySelectorAll('[data-kid-filter]').forEach(b=>b.addEventListener('click',()=>renderKidPrograms(b.dataset.kidFilter)));
+ $('kidsHomeExit')?.addEventListener('click',()=>{if(typeof promptKidsExit==='function')promptKidsExit();else $('kidsExitBtn')?.click()});
+ const originalSetKidsMode=window.setKidsMode;
+ // Existing setKidsMode is a top-level declaration; refresh the dedicated Kids home after every mode change.
+ const observer=new MutationObserver(()=>{if(document.body.classList.contains('kids-mode'))renderKidPrograms(document.querySelector('[data-kid-filter].active')?.dataset.kidFilter||'all')});observer.observe(document.body,{attributes:true,attributeFilter:['class']});
+ // The feature dashboard is intentionally always visible; this button simply jumps to it.
+ $('extraAdminFeaturesToggle')?.addEventListener('click',()=>{$('extraAdminFeatures')?.scrollIntoView({behavior:'smooth',block:'start'})});
+ // Do not use browser alert/confirm for the added controls.
+ $('resetAnalyticsBtn')?.addEventListener('click',e=>{e.preventDefault();const yes=document.createElement('div');yes.style.cssText='position:fixed;inset:0;z-index:9500;background:#000a;display:grid;place-items:center;padding:18px';yes.innerHTML='<div style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:18px;padding:20px;max-width:340px;width:100%"><h3>پاک‌کردن آمار؟</h3><p>آمار ذخیره‌شده روی همین دستگاه حذف می‌شود.</p><div style="display:flex;gap:8px;justify-content:flex-end"><button data-no>انصراف</button><button data-yes class="danger">پاک‌کردن</button></div></div>';document.body.append(yes);yes.querySelector('[data-no]').onclick=()=>yes.remove();yes.querySelector('[data-yes]').onclick=()=>{try{localStorage.setItem('amtv-analytics',JSON.stringify({itemViews:{},itemWatchTime:{},hourViews:Array(24).fill(0),dailyViews:{},totalWatchSeconds:0}))}catch(_){}yes.remove();location.reload()}});
+ syncLangCards();renderKidPrograms();
 })();
 </script>
 
