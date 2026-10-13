@@ -397,12 +397,39 @@ body.viewerMode #videoElement{controls:none!important}
 .cs-opt:hover,.cs-opt.active{background:color-mix(in srgb,var(--accent) 22%,transparent)}
 .cs-opt.selected{color:var(--accent);font-weight:bold}
 
+/* ===== Fixed top menu ===== */
 .menu-wrap{position:relative;display:inline-block}
 .menu-dropdown{position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 14px 40px #000b;display:none;z-index:90;flex-direction:column;gap:2px}
 .menu-wrap.open .menu-dropdown{display:flex}
 .menu-dropdown button{display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;border-radius:8px;text-align:start;justify-content:flex-start;background:transparent;border:0;font-size:13px}
 .menu-dropdown button:hover{background:var(--panel);border-color:transparent}
 .menu-dropdown button.hidden{display:none!important}
+
+#menuBackdrop{display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#menuBackdrop.show{display:block}
+
+@media(max-width:600px){
+  .menu-dropdown{
+    position:fixed;
+    top:auto;
+    bottom:14px;
+    left:12px;
+    right:12px;
+    min-width:0;
+    width:auto;
+    max-height:70vh;
+    overflow-y:auto;
+    border-radius:16px;
+    padding:10px;
+    gap:4px;
+    border:1px solid var(--accent);
+    z-index:85;
+    animation:menuUp .18s ease;
+  }
+  .menu-dropdown button{padding:14px 16px;font-size:15px;border-radius:10px}
+  .menu-wrap.open .menu-dropdown{display:flex}
+}
+@keyframes menuUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
 .more-wrap{position:relative;display:inline-block}
 .more-panel{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px;display:none;flex-direction:column;gap:3px;min-width:210px;max-height:min(70vh,420px);overflow-y:auto;box-shadow:0 -10px 40px #000b;z-index:90}
@@ -483,6 +510,7 @@ body.viewerMode #videoElement{controls:none!important}
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا در بارگذاری</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
+<div id="menuBackdrop"></div>
 <header class="topbar">
   <div class="brand">
     <div class="logo" id="brandLogo">AM</div>
@@ -1098,7 +1126,7 @@ body.viewerMode #videoElement{controls:none!important}
     </div>
   </section>
 
-  <div class="footer">AM TV · THE NEXT ERA · YOUR WORLD · YOUR CHANNEL<br>v1.0.3 · The Next Era Begins</div>
+  <div class="footer">AM TV · THE NEXT ERA · YOUR WORLD · YOUR CHANNEL<br>v1.0.4 · The Next Era Begins</div>
   <div id="diag" style="direction:ltr;text-align:center;font-size:11px;color:#a9b09f;padding:6px 12px 24px;overflow-wrap:anywhere"></div>
 </main>
 
@@ -1200,9 +1228,20 @@ body.viewerMode #videoElement{controls:none!important}
   </div>
 </div>
 
+<!-- ================== Libraries ================== -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js&quot;><\/script>')"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* Fallback for Supabase SDK — avoid document.write (which can wipe the page) */
+if(!window.supabase){
+  var _fb = document.createElement("script");
+  _fb.src = "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js";
+  _fb.async = false;
+  document.head.appendChild(_fb);
+}
+</script>
+
 <script>
 (function(){
   function showAmTvError(message){
@@ -1220,13 +1259,20 @@ body.viewerMode #videoElement{controls:none!important}
   window.addEventListener("error",function(event){
     if(event && (event.error || event.message)){
       var detail=(event.error&&event.error.message)||event.message||"خطای جاوااسکریپت";
+      /* Ignore benign cross-origin script errors */
+      if(String(detail).includes("Script error"))return;
       showAmTvError("خطای اجرای برنامه: "+String(detail).slice(0,220));
     }
   });
   window.addEventListener("unhandledrejection",function(event){
     var reason=event&&event.reason;
     var detail=(reason&&reason.message)||String(reason||"خطای ارتباط");
-    showAmTvError("یک درخواست کامل نشد: "+detail.slice(0,220));
+    /* Only show meaningful network errors */
+    if(/failed to fetch|networkerror|load failed|network/i.test(detail)){
+      showAmTvError("مشکل در اتصال به سرور: اتصال اینترنت یا VPN/فیلترشکن را بررسی کن. ("+detail.slice(0,160)+")");
+    }else{
+      showAmTvError("یک درخواست کامل نشد: "+detail.slice(0,220));
+    }
   });
   setTimeout(function(){
     if(document.body&&document.body.classList.contains("booting")){
@@ -1235,6 +1281,7 @@ body.viewerMode #videoElement{controls:none!important}
   },4500);
 })();
 </script>
+
 <script>
 const SUPABASE_URL = "https://nxcttzqubdlpfqqdzhpp.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_HZ47UxckVEESAOSO1Muv1w_fsheHSYG";
@@ -2505,42 +2552,65 @@ function setupSleepAndKids(){
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("pinModal")?.classList.contains("show"))$("pinModal").classList.remove("show");});
 }
 
+/* ================== Supabase init (simplified — removed custom fetch wrapper that could break requests) ================== */
 try{
   if(window.supabase && window.supabase.createClient){
     sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
-      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
-      global:{fetch:(input,init={})=>{
-        try{
-          if(init.headers && typeof init.headers.forEach==="function" && !Array.isArray(init.headers)){
-            const h={};init.headers.forEach((v,k)=>{h[k]=v});init={...init,headers:h};
-          }
-        }catch(_){}
-        return fetch(input,init);
-      }}
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
     });
   }
-}catch(e){console.error(e)}
+}catch(e){console.error("Supabase init failed:",e)}
+
+/* Test connectivity to Supabase — used to show clear error to user */
+let supabaseReachable=null;
+async function testSupabaseConnection(){
+  if(!sbClient)return false;
+  try{
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),8000);
+    const res=await fetch(SUPABASE_URL+"/auth/v1/health",{signal:ctrl.signal,headers:{apikey:SUPABASE_ANON_KEY}});
+    clearTimeout(t);
+    supabaseReachable=res.ok||res.status<500;
+    return supabaseReachable;
+  }catch(e){
+    supabaseReachable=false;
+    return false;
+  }
+}
 
 async function loadRemoteState(){
   if(!sbClient){$("supabaseStatus").value="no client";return}
-  const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
-  if(error){$("supabaseStatus").value="err: "+error.message;return}
-  if(data && data.data && typeof data.data==="object"){
-    isApplyingRemote=true;
-    state={...clone(DEFAULT_STATE),...data.data};
-    ensureState();
-    isApplyingRemote=false;
-    beginHold();renderAll();
-    await syncPlayback(true);
-    $("supabaseStatus").value="OK";
-  }else{$("supabaseStatus").value="connected · no row";}
+  try{
+    const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
+    if(error){$("supabaseStatus").value="err: "+error.message;return}
+    if(data && data.data && typeof data.data==="object"){
+      isApplyingRemote=true;
+      state={...clone(DEFAULT_STATE),...data.data};
+      ensureState();
+      isApplyingRemote=false;
+      beginHold();renderAll();
+      await syncPlayback(true);
+      $("supabaseStatus").value="OK";
+    }else{$("supabaseStatus").value="connected · no row";}
+  }catch(err){
+    console.error("loadRemoteState failed:",err);
+    $("supabaseStatus").value="net err";
+    if(/failed to fetch|networkerror|load failed/i.test(String(err&&err.message||err))){
+      showAmTvError("اتصال به Supabase برقرار نشد. اتصال اینترنت / فیلترشکن را بررسی کن.");
+    }
+  }
 }
 async function saveRemoteState(){
   if(!sbClient || !isAdmin || isApplyingRemote)return false;
-  const payload={id:1,data:clone(state),updated_at:new Date().toISOString()};
-  const {error}=await sbClient.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
-  if(error){$("supabaseStatus").value="save err: "+error.message;return false}
-  $("supabaseStatus").value="synced";return true;
+  try{
+    const payload={id:1,data:clone(state),updated_at:new Date().toISOString()};
+    const {error}=await sbClient.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
+    if(error){$("supabaseStatus").value="save err: "+error.message;return false}
+    $("supabaseStatus").value="synced";return true;
+  }catch(err){
+    $("supabaseStatus").value="save net err";
+    return false;
+  }
 }
 function scheduleSave(){
   renderAll();
@@ -2550,9 +2620,15 @@ function scheduleSave(){
 }
 async function initAuth(){
   if(!sbClient)return;
-  const {data}=await sbClient.auth.getSession();
-  await applySession(data?.session||null);
-  sbClient.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>applySession(session),0);});
+  try{
+    const {data}=await sbClient.auth.getSession();
+    await applySession(data?.session||null);
+    sbClient.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>applySession(session),0);});
+  }catch(err){
+    console.error("initAuth failed:",err);
+    /* Still allow anonymous view */
+    applySession(null);
+  }
 }
 async function applySession(session){
   currentUser=session?.user||null;
@@ -2567,33 +2643,62 @@ async function applySession(session){
   setTimeout(refreshSelects,50);
 }
 async function signIn(){
-  if(!sbClient){notify("Supabase not ready.");return;}
+  if(!sbClient){notify("Supabase not ready. Reload the page.");return;}
   const email=$("adminEmail").value.trim();
   const password=$("adminPassword").value;
   const button=$("signInButton");
   if(!email||!password){notify("Enter email and password.");return;}
   button.disabled=true;
+  const originalText=button.innerHTML;
+  button.innerHTML='<i class="ic ic-sync"></i> ...';
   try{
+    /* Pre-check connectivity */
+    const reachable=await testSupabaseConnection();
+    if(reachable===false){
+      notify("اتصال به Supabase برقرار نشد. اینترنت/VPN را بررسی کن.");
+      showAmTvError("سرور Supabase در دسترس نیست. احتمالاً اتصال اینترنت یا DNS مشکل دارد. اگر از VPN/فیلترشکن استفاده می‌کنی، آن را روشن/خاموش کن.");
+      return;
+    }
     const {data,error}=await sbClient.auth.signInWithPassword({email,password});
-    if(error){notify("Sign in failed: "+error.message);return;}
-    if(data?.user?.app_metadata?.role!=="admin"){await sbClient.auth.signOut();notify("Not an admin.");return;}
+    if(error){
+      if(/invalid login|invalid credentials/i.test(error.message)){
+        notify("ایمیل یا رمز عبور اشتباه است.");
+      }else{
+        notify("Sign in failed: "+error.message);
+      }
+      return;
+    }
+    if(data?.user?.app_metadata?.role!=="admin"){
+      await sbClient.auth.signOut();
+      notify("این حساب دسترسی ادمین ندارد. در Supabase برای user نقش admin تنظیم کن.");
+      return;
+    }
     await applySession(data.session);
     await loadRemoteState();
+    notify(t("msgLoggedIn"));
   }catch(err){
-    console.error(err);
+    console.error("signIn error:",err);
     const message=String(err?.message||err);
-    if(/failed to fetch|networkerror|load failed/i.test(message)){
-      notify("Network error.");
-    }else{notify("Sign in error: "+message);}
-  }finally{button.disabled=false;}
+    if(/failed to fetch|networkerror|load failed|aborted|abort/i.test(message)){
+      notify("عدم دسترسی به سرور. اتصال اینترنت را بررسی کن.");
+      showAmTvError("خطای شبکه هنگام ورود. لطفاً اتصال اینترنت / DNS / VPN را بررسی کن.");
+    }else{
+      notify("Sign in error: "+message);
+    }
+  }finally{
+    button.disabled=false;
+    button.innerHTML=originalText;
+  }
 }
-async function signOut(){if(!sbClient)return;await sbClient.auth.signOut();currentUser=null;isAdmin=false;applySession(null);notify(t("msgLoggedOut"));}
+async function signOut(){if(!sbClient)return;try{await sbClient.auth.signOut();}catch(_){}currentUser=null;isAdmin=false;applySession(null);notify(t("msgLoggedOut"));}
 
 async function setupPresence(){
   if(!sbClient)return;
-  presenceChannel = sbClient.channel("amtv-presence",{config:{presence:{key:VISITOR_ID}}});
-  presenceChannel.on("presence",{event:"sync"},renderPresence).on("presence",{event:"join"},renderPresence).on("presence",{event:"leave"},renderPresence)
-  .subscribe(async(status)=>{if(status==="SUBSCRIBED")await trackPresence();});
+  try{
+    presenceChannel = sbClient.channel("amtv-presence",{config:{presence:{key:VISITOR_ID}}});
+    presenceChannel.on("presence",{event:"sync"},renderPresence).on("presence",{event:"join"},renderPresence).on("presence",{event:"leave"},renderPresence)
+    .subscribe(async(status)=>{if(status==="SUBSCRIBED")await trackPresence();});
+  }catch(_){}
 }
 async function trackPresence(){
   if(!presenceChannel)return;
@@ -2640,9 +2745,11 @@ async function countTotalViews(){
 function renderTotalViews(n){const el=$("totalViews");if(el)el.textContent=Number(n).toLocaleString(dateLocale());}
 function watchTotalViewsRealtime(){
   if(!sbClient)return;
-  sbClient.channel("amtv-views-live").on("postgres_changes",{event:"UPDATE",schema:"public",table:VIEWS_TABLE,filter:"id=eq.1"},payload=>{
-    if(payload?.new?.total!=null)renderTotalViews(payload.new.total);
-  }).subscribe();
+  try{
+    sbClient.channel("amtv-views-live").on("postgres_changes",{event:"UPDATE",schema:"public",table:VIEWS_TABLE,filter:"id=eq.1"},payload=>{
+      if(payload?.new?.total!=null)renderTotalViews(payload.new.total);
+    }).subscribe();
+  }catch(_){}
 }
 
 let partyChannel=null;
@@ -3941,34 +4048,50 @@ function openTab(tabId){
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
 
-/* ===== Dropdown menus (fixed) ===== */
+/* ===== Fixed dropdown menus (mobile-friendly) ===== */
+function closeAllMenus(){
+  document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));
+  const bd=$("menuBackdrop");
+  if(bd)bd.classList.remove("show");
+}
 function setupMenu(btnId, wrapId){
   const btn=$(btnId), wrap=$(wrapId);
   if(!btn || !wrap) return;
+  const backdrop=$("menuBackdrop");
+  const isMobile=()=>window.matchMedia("(max-width:600px)").matches;
+  const isTopMenu=()=>wrap.classList.contains("menu-wrap");
+
   btn.addEventListener("click", function(e){
     e.preventDefault();
     e.stopPropagation();
     const isOpen = wrap.classList.contains("open");
-    document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>{if(el!==wrap)el.classList.remove("open")});
-    wrap.classList.toggle("open", !isOpen);
+    closeAllMenus();
+    if(!isOpen){
+      wrap.classList.add("open");
+      if(backdrop && isMobile() && isTopMenu()) backdrop.classList.add("show");
+    }
   });
+
   wrap.addEventListener("click", function(e){
-    const clickedInside = e.target.closest(".menu-dropdown button, .more-panel button, .more-panel label");
-    if(clickedInside){
-      // close after action
-      setTimeout(()=>wrap.classList.remove("open"),30);
+    const clickedAction = e.target.closest(".menu-dropdown button, .more-panel button, .more-panel label");
+    if(clickedAction){
+      setTimeout(closeAllMenus,30);
     }
     e.stopPropagation();
   });
+
+  if(backdrop){
+    backdrop.addEventListener("click", closeAllMenus);
+  }
 }
 document.addEventListener("click", function(e){
   if(!e.target.closest(".menu-wrap") && !e.target.closest(".more-wrap")){
-    document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));
+    closeAllMenus();
   }
 });
 document.addEventListener("keydown", e=>{
   if(e.key==="Escape"){
-    document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));
+    closeAllMenus();
   }
 });
 
@@ -4166,7 +4289,17 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.class
 $("subSelect").addEventListener("change",e=>setSubLang(e.target.value));
 $("ccButton").addEventListener("click",toggleSubs);
 $("ccFs").addEventListener("click",toggleSubs);
-$("loginToggle").addEventListener("click",()=>{$("loginBox").classList.toggle("hidden");$("adminEmail").focus();});
+$("loginToggle").addEventListener("click",async()=>{
+  $("loginBox").classList.toggle("hidden");
+  if(!$("loginBox").classList.contains("hidden")){
+    $("adminEmail").focus();
+    /* Quick connectivity test — user will see a hint if Supabase is unreachable */
+    const ok=await testSupabaseConnection();
+    if(ok===false){
+      showAmTvError("سرور Supabase در دسترس نیست. اگر از VPN/فیلترشکن استفاده می‌کنی، آن را روشن/خاموش کن یا اتصال اینترنت را بررسی کن.");
+    }
+  }
+});
 $("closeLogin").addEventListener("click",()=>$("loginBox").classList.add("hidden"));
 $("signInButton").addEventListener("click",signIn);
 $("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn();});
@@ -4558,19 +4691,21 @@ setupMenu("moreBtn","moreWrap");
 
 async function setupRealtime(){
   if(!sbClient)return;
-  sbClient.channel("amtv-state-live")
-    .on("postgres_changes",{event:"UPDATE",schema:"public",table:STATE_TABLE,filter:"id=eq.1"},payload=>{
-      if(isAdmin)return;
-      const incoming=payload?.new?.data;
-      if(!incoming||typeof incoming!=="object")return;
-      const oldKey=effectiveItemKey(activeItem());
-      isApplyingRemote=true;
-      state={...clone(DEFAULT_STATE),...incoming};
-      ensureState();isApplyingRemote=false;
-      renderAll();
-      if(oldKey!==effectiveItemKey(activeItem()))renderPlayer(true);
-    })
-    .subscribe(status=>{if(status==="SUBSCRIBED")$("supabaseStatus").value="live";});
+  try{
+    sbClient.channel("amtv-state-live")
+      .on("postgres_changes",{event:"UPDATE",schema:"public",table:STATE_TABLE,filter:"id=eq.1"},payload=>{
+        if(isAdmin)return;
+        const incoming=payload?.new?.data;
+        if(!incoming||typeof incoming!=="object")return;
+        const oldKey=effectiveItemKey(activeItem());
+        isApplyingRemote=true;
+        state={...clone(DEFAULT_STATE),...incoming};
+        ensureState();isApplyingRemote=false;
+        renderAll();
+        if(oldKey!==effectiveItemKey(activeItem()))renderPlayer(true);
+      })
+      .subscribe(status=>{if(status==="SUBSCRIBED")$("supabaseStatus").value="live";});
+  }catch(_){}
 }
 
 function tickClock(){
@@ -4687,7 +4822,7 @@ setInterval(()=>{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.0.3 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.textContent="v1.0.4 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | yt="+(ytReady?"ok":"no")+
       " | kids="+(kidsMode?"ON":"off")+" | polls="+(state.polls||[]).length+
