@@ -549,6 +549,11 @@ body.viewerMode #videoElement{controls:none!important}
 #connDiag .cdRow.ok{color:#52e879}
 #connDiag .cdRow.bad{color:#ff9c8d}
 #connDiag .cdHint{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);color:var(--text)}
+
+/* AM TV menu stacking fix */
+.topbar.menu-open{position:relative;z-index:90;backdrop-filter:none;-webkit-backdrop-filter:none}
+.topbar .menu-wrap.open,.topbar .menu-wrap.open .menu-dropdown{z-index:91}
+@media(max-width:600px){.topbar.menu-open{z-index:90}.topbar .menu-wrap.open .menu-dropdown{max-width:min(92vw,360px)}}
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
@@ -4281,6 +4286,8 @@ function closeAllMenus(){
   document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));
   const bd=$("menuBackdrop");
   if(bd)bd.classList.remove("show");
+  const tb=document.querySelector(".topbar");
+  if(tb)tb.classList.remove("menu-open");
 }
 function setupMenu(btnId, wrapId){
   const btn=$(btnId), wrap=$(wrapId);
@@ -4294,6 +4301,10 @@ function setupMenu(btnId, wrapId){
     closeAllMenus();
     if(!isOpen){
       wrap.classList.add("open");
+      if(isTopMenu()){
+        const tb=document.querySelector(".topbar");
+        if(tb)tb.classList.add("menu-open");
+      }
       if(backdrop && isMobile() && isTopMenu()) backdrop.classList.add("show");
     }
   });
@@ -4506,12 +4517,23 @@ $("subSelect").addEventListener("change",e=>setSubLang(e.target.value));
 $("ccButton").addEventListener("click",toggleSubs);
 $("ccFs").addEventListener("click",toggleSubs);
 $("loginToggle").addEventListener("click",async()=>{
-  $("loginBox").classList.toggle("hidden");
-  if(!$("loginBox").classList.contains("hidden")){
-    $("adminEmail").focus();
+  const box=$("loginBox");
+  box.classList.toggle("hidden");
+  if(!box.classList.contains("hidden")){
+    setTimeout(()=>{
+      box.scrollIntoView({behavior:"smooth",block:"center"});
+      $("adminEmail").focus({preventScroll:true});
+    },60);
     await testSupabaseConnection();
   }
 });
+if(location.search.includes("admin")){
+  try{localStorage.setItem("amtv-kids","0")}catch(_){}
+  setTimeout(()=>{
+    const box=$("loginBox");
+    if(box){box.classList.remove("hidden");box.scrollIntoView({behavior:"smooth",block:"center"});}
+  },1200);
+}
 $("closeLogin").addEventListener("click",()=>$("loginBox").classList.add("hidden"));
 $("signInButton").addEventListener("click",signIn);
 $("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn();});
