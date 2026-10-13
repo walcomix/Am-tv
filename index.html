@@ -4407,38 +4407,57 @@ async function loadGIS(){
     const iv=setInterval(()=>{
       tries++;
       if(window.google?.accounts?.oauth2){clearInterval(iv);resolve(true);return;}
-      if(tries>40){clearInterval(iv);resolve(false);}
+      if(tries>60){clearInterval(iv);resolve(false);}
     },200);
   });
 }
 async function initGoogleOAuth(){
   const clientId=(state.googleClientId||"").trim();
-  if(!clientId)return false;
+  if(!clientId){console.warn("AM TV: Google OAuth Client ID is empty.");return false;}
   const ok=await loadGIS();
-  if(!ok)return false;
+  if(!ok){console.error("AM TV: Google Identity Services did not load. Check network/VPN/ad blocker.");return false;}
   try{
     googleTokenClient=google.accounts.oauth2.initTokenClient({
       client_id:clientId,
       scope:"https://www.googleapis.com/auth/youtube.readonly",
-      callback:onGoogleToken
+      callback:onGoogleToken,
+      error_callback:(err)=>{
+        const reason=err?.type||err?.message||"popup_failed";
+        console.error("AM TV Google OAuth popup error:",err);
+        notify("پنجرهٔ ورود Google باز نشد ("+reason+"). پاپ‌آپ‌ها را مجاز کن و دوباره بزن.");
+      }
     });
     return true;
-  }catch(e){console.warn(e);return false;}
+  }catch(e){console.error("AM TV Google OAuth init error:",e);return false;}
 }
 function onGoogleToken(resp){
-  if(resp.error){notify("Google: "+resp.error);return;}
+  if(resp.error){
+    console.error("AM TV Google OAuth response:",resp);
+    const desc=resp.error_description||resp.error;
+    notify("خطای Google OAuth: "+desc);
+    return;
+  }
+  if(!resp.access_token){notify("Google توکن دسترسی برنگرداند؛ Client ID و تنظیمات OAuth را بررسی کن.");return;}
   googleAccessToken=resp.access_token;
   try{sessionStorage.setItem("amtv-yt-token",googleAccessToken);}catch(_){}
   fetchYouTubeSubscriptions();
 }
 async function connectYouTube(){
   if(!isAdmin){notify(t("msgNoAdmin"));return;}
-  if(!state.googleClientId){notify("Google Client ID required.");return;}
+  const clientId=(state.googleClientId||"").trim();
+  if(!clientId){notify("اول Google OAuth Client ID را در تنظیمات وارد و ذخیره کن.");return;}
+  // Initialize the token client before requesting the popup so that the actual
+  // OAuth popup request remains as close as possible to the user's click gesture.
   if(!googleTokenClient){
     const ok=await initGoogleOAuth();
-    if(!ok){notify("Google auth init failed.");return;}
+    if(!ok){notify("اتصال Google آماده نشد. اینترنت/VPN، Client ID و Console را بررسی کن؛ خطای دقیق در Console ثبت می‌شود.");return;}
   }
-  try{googleTokenClient.requestAccessToken();}catch(e){notify("Error: "+e.message);}
+  try{
+    googleTokenClient.requestAccessToken({prompt:"consent"});
+  }catch(e){
+    console.error("AM TV requestAccessToken failed:",e);
+    notify("شروع ورود Google ناموفق بود: "+(e.message||"خطای ناشناخته"));
+  }
 }
 async function fetchYouTubeSubscriptions(){
   if(!googleAccessToken){notify("Not connected.");return;}
@@ -4990,6 +5009,8 @@ $("saveGoogleClientBtn")?.addEventListener("click",()=>{
   scheduleSave();notify("Saved.");
 });
 $("connectYouTubeBtn")?.addEventListener("click",connectYouTube);
+// Preload the Google OAuth client while the page is idle; do not open a popup automatically.
+setTimeout(()=>{if(isAdmin&&state.googleClientId&&!googleTokenClient)initGoogleOAuth();},1200);
 $("refreshSubsBtn")?.addEventListener("click",()=>{
   if(googleAccessToken)fetchYouTubeSubscriptions();
   else connectYouTube();
