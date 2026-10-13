@@ -301,6 +301,9 @@ input[type=checkbox]{width:auto;accent-color:var(--accent)}
 @keyframes vhsBlink{50%{opacity:.35}}
 #playerShell.vhs #youtubePlayer,#playerShell.vhs #videoElement{filter:contrast(1.12) saturate(1.25) sepia(.12) blur(.4px)}
 #cinemaExit{position:fixed;top:12px;right:12px;z-index:200;background:rgba(0,0,0,.7);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
+#cinemaRotate{position:fixed;top:12px;left:12px;z-index:200;background:rgba(0,0,0,.7);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px;display:none;align-items:center;gap:6px;cursor:pointer}
+body.cinema #cinemaRotate{display:inline-flex}
+#cinemaRotate:hover{background:rgba(0,0,0,.9)}
 body.cinema{background:#000}
 body.cinema .topbar,body.cinema .footer,body.cinema #diag,body.cinema .sidepanel,body.cinema #guidePanel,body.cinema #viewerSettings,body.cinema #loginBox,body.cinema #adminPanel,body.cinema #eventBanner{display:none!important}
 body.cinema main{max-width:none;padding:0}
@@ -308,6 +311,22 @@ body.cinema .hero{grid-template-columns:minmax(0,1fr)}
 body.cinema .playerpanel{border:0;border-radius:0;box-shadow:none;background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
+/* ====== Cinema portrait mode ====== */
+body.cinema.portrait .playerpanel{min-height:100vh;justify-content:center}
+body.cinema.portrait #playerShell{
+  width:min(100vw,calc((100vh - 110px) * 9 / 16));
+  height:auto;
+  aspect-ratio:9/16;
+  max-height:calc(100vh - 90px);
+  margin:0 auto;
+  box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)
+}
+body.cinema.portrait #playerShell #videoElement,
+body.cinema.portrait #playerShell #youtubePlayer,
+body.cinema.portrait #playerShell #radioScreen{
+  object-fit:contain;
+}
+body.cinema.portrait .playerfoot{position:absolute;bottom:12px;left:12px;right:12px;background:transparent;border:0}
 
 /* ===== Lock Screen ===== */
 #screenLockBtn{display:none;position:absolute;top:10px;right:10px;z-index:23;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -397,7 +416,7 @@ body.viewerMode #videoElement{controls:none!important}
 .cs-opt:hover,.cs-opt.active{background:color-mix(in srgb,var(--accent) 22%,transparent)}
 .cs-opt.selected{color:var(--accent);font-weight:bold}
 
-/* ===== Fixed top menu ===== */
+/* ===== Fixed top menu (bottom sheet on mobile) ===== */
 .menu-wrap{position:relative;display:inline-block}
 .menu-dropdown{position:absolute;top:calc(100% + 6px);right:0;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 14px 40px #000b;display:none;z-index:90;flex-direction:column;gap:2px}
 .menu-wrap.open .menu-dropdown{display:flex}
@@ -454,25 +473,37 @@ body.viewerMode #videoElement{controls:none!important}
 #partyBtn{position:relative}
 #partyBtn.live{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
 #partyBtn.live::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#52e879;box-shadow:0 0 7px #52e879;animation:castPulse 1.6s ease-in-out infinite}
-#partyModal{position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+
+/* ===== Party modal (redesigned with player) ===== */
+#partyModal{position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:10px}
 #partyModal.show{display:flex}
-.partyBox{background:var(--panel);border:1px solid var(--accent);border-radius:18px;width:min(560px,94vw);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
-.partyHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
-.partyHead h3{margin:0;color:var(--accent);font-size:16px;flex:1;display:flex;align-items:center;gap:8px}
-.partyBody{padding:14px 16px;overflow-y:auto;flex:1;min-height:180px}
-.partyRoom{display:flex;gap:8px;align-items:center;background:var(--panel2);border:1px dashed var(--accent);border-radius:10px;padding:10px 12px;margin-bottom:12px;flex-wrap:wrap}
-.partyCode{font-family:monospace;font-size:18px;letter-spacing:4px;color:var(--accent);font-weight:bold}
-.partyUsers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.partyBox{background:var(--panel);border:1px solid var(--accent);border-radius:18px;width:min(920px,98vw);max-height:96vh;display:flex;flex-direction:column;overflow:hidden}
+.partyHead{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.partyHead h3{margin:0;color:var(--accent);font-size:15px;flex:1;display:flex;align-items:center;gap:8px}
+.partyBody{padding:10px 14px;overflow-y:auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
+.partyRoom{display:flex;gap:8px;align-items:center;background:var(--panel2);border:1px dashed var(--accent);border-radius:10px;padding:8px 12px;flex-wrap:wrap;flex-shrink:0}
+.partyCode{font-family:monospace;font-size:16px;letter-spacing:3px;color:var(--accent);font-weight:bold}
+.partyUsers{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .partyUser{font-size:11px;padding:4px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
 .partyUser.me{border-color:var(--accent);color:var(--accent)}
-.partyChat{max-height:280px;overflow-y:auto;padding:8px;background:var(--input);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;min-height:140px}
-.pcMsg{font-size:12px;line-height:1.5;padding:6px 10px;border-radius:10px;background:var(--panel2);max-width:88%;overflow-wrap:anywhere}
+.partyLabel{font-size:11px;color:var(--muted);margin:0;display:flex;align-items:center;gap:6px}
+
+/* Party video player */
+#partyPlayerWrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;flex-shrink:0;border:1px solid var(--line)}
+#partyPlayerWrap:fullscreen{border-radius:0;border:0}
+#partyYouTubePlayer{position:absolute;inset:0;width:100%;height:100%;border:0;display:none}
+#partyVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;display:none}
+#partyEmpty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--muted);font-size:12px;text-align:center;padding:20px}
+#partyFullBtn{position:absolute;top:8px;right:8px;z-index:3;background:rgba(0,0,0,.7);color:#fff;border:0;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+#partyFullBtn:hover{background:rgba(0,0,0,.9)}
+
+.partyChat{max-height:200px;overflow-y:auto;padding:8px;background:var(--input);border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;gap:6px;min-height:110px;flex-shrink:0}
+.pcMsg{font-size:12px;line-height:1.5;padding:5px 9px;border-radius:10px;background:var(--panel2);max-width:88%;overflow-wrap:anywhere}
 .pcMsg.me{align-self:flex-end;background:color-mix(in srgb,var(--accent) 26%,var(--panel2))}
 .pcMsg .pcWho{font-size:10px;color:var(--accent);font-weight:bold;display:block;margin-bottom:2px}
-.pcMsg .pcTime{font-size:9px;color:var(--muted);display:block;text-align:end;margin-top:3px}
-.partyInputRow{display:flex;gap:8px}
+.pcMsg .pcTime{font-size:9px;color:var(--muted);display:block;text-align:end;margin-top:2px}
+.partyInputRow{display:flex;gap:8px;flex-shrink:0}
 .partyInputRow input{flex:1}
-.partyLabel{font-size:12px;color:var(--muted);margin:14px 0 6px;display:flex;align-items:center;gap:6px}
 
 .fbTypeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .fbTypeBtn{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:13px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -494,6 +525,11 @@ body.viewerMode #videoElement{controls:none!important}
  .adminGrid{grid-template-columns:minmax(0,1fr)}
  .topbar{padding:10px}.brandname{font-size:17px}
  .modeGrid{grid-template-columns:repeat(2,1fr)}
+ .partyBox{max-height:96vh}
+}
+@media(max-width:600px){
+  #partyPlayerWrap{aspect-ratio:16/9}
+  .partyChat{max-height:120px;min-height:80px}
 }
 @media(max-width:460px){
  .topright{width:100%;margin-inline-start:0}
@@ -507,9 +543,15 @@ body.viewerMode #videoElement{controls:none!important}
   padding:12px 14px;box-shadow:0 8px 28px #0008;font-size:14px;line-height:1.65;direction:rtl}
 #amtvErrorNotice.show{display:block}
 #amtvErrorNotice strong{display:block;margin-bottom:4px}
+#connDiag{margin-top:12px;padding:10px;background:var(--panel2);border:1px dashed var(--line);border-radius:9px;font-size:11px;line-height:1.85;color:var(--muted);display:none}
+#connDiag .cdHead{font-weight:bold;color:var(--accent);margin-bottom:6px}
+#connDiag .cdRow{display:flex;align-items:center;gap:6px;padding:2px 0}
+#connDiag .cdRow.ok{color:#52e879}
+#connDiag .cdRow.bad{color:#ff9c8d}
+#connDiag .cdHint{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);color:var(--text)}
 </style>
 </head><body class="booting">
-<div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا در بارگذاری</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
+<div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
 <div id="menuBackdrop"></div>
 <header class="topbar">
   <div class="brand">
@@ -750,6 +792,11 @@ body.viewerMode #videoElement{controls:none!important}
     <div class="field"><label for="adminPassword" data-i18n="passLbl">رمز عبور</label><input id="adminPassword" type="password" autocomplete="current-password"></div>
     <button class="primary" id="signInButton" type="button" style="width:100%"><i class="ic ic-signin"></i><span class="lbl" data-i18n="signIn">ورود به پنل مدیریت</span></button>
     <p class="viewerhint" data-i18n="loginHint">حساب باید از قبل در Supabase ساخته شده باشد.</p>
+    <div id="connDiag">
+      <div class="cdHead">🔍 تشخیص اتصال</div>
+      <div id="connDiagBody">—</div>
+      <button id="connRetryBtn" type="button" class="small" style="margin-top:8px;width:100%">🔄 تست مجدد</button>
+    </div>
   </section>
 
   <section id="adminPanel" class="panel hidden">
@@ -1126,7 +1173,7 @@ body.viewerMode #videoElement{controls:none!important}
     </div>
   </section>
 
-  <div class="footer">AM TV · THE NEXT ERA · YOUR WORLD · YOUR CHANNEL<br>v1.0.4 · The Next Era Begins</div>
+  <div class="footer">AM TV · THE NEXT ERA · YOUR WORLD · YOUR CHANNEL<br>v1.0.5 · The Next Era Begins</div>
   <div id="diag" style="direction:ltr;text-align:center;font-size:11px;color:#a9b09f;padding:6px 12px 24px;overflow-wrap:anywhere"></div>
 </main>
 
@@ -1139,6 +1186,7 @@ body.viewerMode #videoElement{controls:none!important}
   <div class="nu-time" id="nextUpTime"></div>
 </div>
 <button id="cinemaExit" type="button" class="hidden"><i class="ic ic-close"></i><span class="lbl" data-i18n="cinemaExit">خروج از حالت سینمایی</span></button>
+<button id="cinemaRotate" type="button" title="Portrait/Landscape"><i class="ic ic-sync"></i> افقی / عمودی</button>
 <div id="sleepBadge"><i class="ic ic-snooze"></i> <span id="sleepTime">--:--</span></div>
 <button id="kidsExitBtn" type="button"><i class="ic ic-lock"></i><span data-i18n="exitKids">خروج از حالت کودک</span></button>
 <div id="pinModal">
@@ -1215,12 +1263,24 @@ body.viewerMode #videoElement{controls:none!important}
           <button id="partyCopyBtn" type="button" class="small" style="margin-inline-start:auto"><i class="ic ic-copy"></i> <span data-i18n="copyLbl">کپی</span></button>
           <button id="partyLeaveBtn" type="button" class="small danger"><i class="ic ic-exit"></i> <span data-i18n="leaveLbl">خروج</span></button>
         </div>
-        <div class="partyLabel"><i class="ic ic-people"></i><span data-i18n="membersLbl">اعضا</span></div>
+
+        <div id="partyPlayerWrap">
+          <div id="partyEmpty">
+            <i class="ic ic-video" style="width:32px;height:32px;opacity:.6"></i>
+            <div>هنوز پخشی شروع نشده</div>
+            <div style="font-size:10px;opacity:.7">میزبان با پخش محتوا، اینجا سینک می‌شه</div>
+          </div>
+          <div id="partyYouTubePlayer"></div>
+          <video id="partyVideo" playsinline></video>
+          <button id="partyFullBtn" type="button"><i class="ic ic-full"></i> تمام صفحه</button>
+        </div>
+
+        <div class="partyLabel"><i class="ic ic-people"></i><span data-i18n="membersLbl">اعضا</span> (<span id="partyUserCount">0</span>)</div>
         <div class="partyUsers" id="partyUsers"></div>
-        <div class="partyLabel"><i class="ic ic-chat"></i><span data-i18n="chatLbl">چت اتاق</span></div>
+        <div class="partyLabel"><i class="ic ic-chat"></i><span data-i18n="chatLbl">چت</span></div>
         <div class="partyChat" id="partyChat"></div>
         <div class="partyInputRow">
-          <input id="partyMsgInput" maxlength="400" placeholder="—">
+          <input id="partyMsgInput" maxlength="400" placeholder="پیام...">
           <button id="partySendBtn" type="button" class="primary"><span data-i18n="sendLbl">ارسال</span></button>
         </div>
       </div>
@@ -1228,30 +1288,24 @@ body.viewerMode #videoElement{controls:none!important}
   </div>
 </div>
 
-<!-- ================== Libraries ================== -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* Fallback for Supabase SDK — avoid document.write (which can wipe the page) */
 if(!window.supabase){
-  var _fb = document.createElement("script");
-  _fb.src = "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js";
-  _fb.async = false;
+  var _fb=document.createElement("script");
+  _fb.src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js";
+  _fb.async=false;
   document.head.appendChild(_fb);
 }
 </script>
-
 <script>
 (function(){
   function showAmTvError(message){
     try{
       var box=document.getElementById("amtvErrorNotice");
       var text=document.getElementById("amtvErrorText");
-      if(box&&text){
-        text.textContent=message||"بخشی از برنامه درست بارگذاری نشده است.";
-        box.classList.add("show");
-      }
+      if(box&&text){text.textContent=message||"بخشی از برنامه درست بارگذاری نشده است.";box.classList.add("show");}
       document.body.classList.remove("booting");
     }catch(_){}
   }
@@ -1259,7 +1313,6 @@ if(!window.supabase){
   window.addEventListener("error",function(event){
     if(event && (event.error || event.message)){
       var detail=(event.error&&event.error.message)||event.message||"خطای جاوااسکریپت";
-      /* Ignore benign cross-origin script errors */
       if(String(detail).includes("Script error"))return;
       showAmTvError("خطای اجرای برنامه: "+String(detail).slice(0,220));
     }
@@ -1267,16 +1320,15 @@ if(!window.supabase){
   window.addEventListener("unhandledrejection",function(event){
     var reason=event&&event.reason;
     var detail=(reason&&reason.message)||String(reason||"خطای ارتباط");
-    /* Only show meaningful network errors */
     if(/failed to fetch|networkerror|load failed|network/i.test(detail)){
-      showAmTvError("مشکل در اتصال به سرور: اتصال اینترنت یا VPN/فیلترشکن را بررسی کن. ("+detail.slice(0,160)+")");
+      showAmTvError("مشکل در اتصال: "+detail.slice(0,160)+" — اینترنت/VPN را بررسی کن.");
     }else{
-      showAmTvError("یک درخواست کامل نشد: "+detail.slice(0,220));
+      showAmTvError("خطا: "+detail.slice(0,220));
     }
   });
   setTimeout(function(){
     if(document.body&&document.body.classList.contains("booting")){
-      showAmTvError("بارگذاری بیش از حد طول کشید. اتصال اینترنت را بررسی کن.");
+      showAmTvError("بارگذاری طول کشید. اتصال اینترنت را بررسی کن.");
     }
   },4500);
 })();
@@ -1299,8 +1351,6 @@ function escUrl(u){try{const x=String(u||"");if(!/^(https?:|blob:|data:)/i.test(
 
 function getVisitorId(){let id=localStorage.getItem("amtv-visitor-id");if(!id){id="v-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9);localStorage.setItem("amtv-visitor-id",id);}return id;}
 const VISITOR_ID = getVisitorId();
-function getVoterId(){let id=localStorage.getItem("amtv-voter-id");if(!id){id="vt-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);localStorage.setItem("amtv-voter-id",id);}return id;}
-const VOTER_ID = getVoterId();
 
 function enhanceSelect(sel){
   if(!sel || sel.dataset.csEnhanced==="1") return;
@@ -1337,391 +1387,384 @@ function enhanceSelect(sel){
   sel._csRender=render;
   render();
 }
-function enhanceAllSelects(root){
-  (root||document).querySelectorAll("select").forEach(enhanceSelect);
-}
-function refreshSelects(){
-  document.querySelectorAll("select").forEach(s=>{if(s._csRender)s._csRender();});
-}
+function enhanceAllSelects(root){(root||document).querySelectorAll("select").forEach(enhanceSelect);}
+function refreshSelects(){document.querySelectorAll("select").forEach(s=>{if(s._csRender)s._csRender();});}
 
-const I18N = {
+const I18N={
 "fa":{
-  navTV:"تلویزیون",navRadio:"رادیو",navGuide:"برنامه",navAppear:"ظاهر",navAdmin:"مدیریت",navLogout:"خروج",
-  stationStatus:"وضعیت ایستگاه",stationLbl:"ایستگاه:",modeLbl:"حالت:",statusLbl:"وضعیت:",roleLbl:"دسترسی:",channelLbl:"کانال:",
-  viewersTitle:"بیننده‌ها",onlineLbl:" آنلاین الان:",onTVLbl:" روی TV:",onRadioLbl:" روی Radio:",viewerLbl:" بیننده:",adminLbl:" مدیر:",totalViewsLbl:" کل بازدید:",
-  channelsTitle:"کانال‌ها",guideTitle:"برنامهٔ پخش (EPG)",guideHint:"زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند.",
-  close:"بستن",preparing:"در حال آماده‌سازی پخش...",waiting:"کانال در انتظار برنامه است",notplaying:"در انتظار پخش",ready:"آماده",
-  tvMode:"تلویزیون",radioMode:"رادیو",kidsMode:"کودک",viewerRole:"بیننده",adminRole:"مدیر",
-  settingsTitle:"شخصی‌سازی نمایش",lblPreset:"رنگ آماده (فقط در اسپیشیال مود)",lblMode:"حالت نمایش",lblAccent:"رنگ اصلی دلخواه",lblBg:"رنگ پس‌زمینهٔ دلخواه",
-  modeDark:"دارک",modeLight:"لایت",modeSpecial:"اسپیشیال",modeDream:"دریم‌کور",
-  p_green:"سبز رترو",p_amber:"کهربایی",p_blue:"آبی",p_purple:"بنفش",p_red:"قرمز",
-  resetCustom:"بازنشانی رنگ‌ها",lblLang:"زبان",langAuto:"خودکار (زبان دستگاه)",emojiOnlyLbl:"فقط آیکون — بدون متن در دکمه‌ها",
-  lblSub:"زیرنویس و ترجمه (ویدیوهای یوتیوب)",subOff:"خاموش",subHint:"ترجمه خودکار است و فقط وقتی کار می‌کند که ویدیو زیرنویس داشته باشد.",
-  settingsHint:"این انتخاب‌ها فقط ظاهر همین مرورگر را تغییر می‌دهند.",
-  loginTitle:"ورود مدیر",emailLbl:"ایمیل مدیر",passLbl:"رمز عبور",signIn:"ورود به پنل مدیریت",loginHint:"حساب باید از قبل در Supabase ساخته شده باشد.",
-  adminTitle:"پنل مدیریت AM TV",
-  tabContent:"ویدیو و کانال",tabRadio:"مدیریت رادیو",tabKids:"کودک",tabWatermark:"واترمارک",tabYoutube:"یوتیوب",tabStation:"ایستگاه و پشتیبان",tabAnalytics:"آمار",tabPolls:"نظرسنجی",tabFeedback:"فیدبک",
-  addProgram:"افزودن برنامه به تلویزیون",lblTitleOpt:"نام برنامه (اختیاری)",lblUrl:"لینک یوتیوب یا ویدیوی مستقیم",lblFile:"یا فایل ویدیویی برای آپلود",
-  addBtn:"افزودن",clearBtn:"پاک‌کردن",deleteBtn:"حذف",deleteLbl:"حذف",createBtn:"ساخت",playSel:"پخش",playLbl:"پخش",
-  lblNewCh:"نام کانال جدید",lblColor:"رنگ کانال",
-  playlistTitle:"پلی‌لیست کانال فعلی",tzLbl:"منطقهٔ زمانی ساعت‌های ثابت",
-  radioChannelsTitle:"کانال‌های رادیو",lblNewRadioCh:"نام کانال رادیو جدید",addAudioTitle:"افزودن صوت به کانال فعلی",
-  lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست یوتیوب",lblAudioFile:"یا فایل‌های صوتی برای آپلود",
-  playlistRadioTitle:"پلی‌لیست کانال فعلی",
-  wmTitle:"متن یا لوگوی واترمارک",wmText:"متن دلخواه",wmImgFile:"تصویر لوگو",wmImgUrl:"یا لینک مستقیم تصویر",
-  wmSize:"اندازه متن (%)",wmOpacity:"شفافیت (%)",wmWidth:"عرض لوگو (px)",wmColor:"رنگ متن",
-  wmPosTitle:"جایگاه واترمارک",wmPos:"جایگاه",wmX:"افقی (%)",wmY:"عمودی (%)",
-  previewLbl:"پیش‌نمایش",saveAllLbl:"ذخیره برای همه",saveLbl:"ذخیره",
-  ytSubsTitle:"اتصال به حساب YouTube و دریافت سابسکریپشن‌ها",
-  ytSubsDesc:"با اتصال به حساب گوگل، تمام کانال‌هایی که ساب کرده‌اید اینجا نمایش داده می‌شوند و می‌توانید هرکدام را به یکی از بخش‌های TV / Radio / Kids اضافه کنید. برای این کار نیاز به یک Google OAuth Client ID دارید.",
-  googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"ذخیره Client ID",connectYtLbl:"اتصال به YouTube",refreshSubsLbl:"دریافت مجدد",addAllSubsLbl:"افزودن همه",
-  ytSubsNotConnected:"هنوز به YouTube متصل نشده‌اید.",
-  ytManualTitle:"همگام‌سازی خودکار YouTube (لینک دستی)",
-  ytManualDesc:"کانال‌های ساب‌شده رو با لینک زیر اضافه کن. هر کانال در بخش دلخواه (TV / Radio / Kids) ساخته می‌شود.",
-  feedChannelUrlLbl:"لینک کانال یوتیوب (@handle یا /channel/UC...)",feedChannelNameLbl:"نام نمایشی کانال",feedTargetSectionLbl:"بخش مقصد",
-  addChannelFeedLbl:"افزودن کانال",syncChannelFeedsLbl:"همگام‌سازی ۲۴ ساعت اخیر",syncAllFeedsLbl:"همگام‌سازی همه",noFeedsYet:"هنوز کانالی اضافه نشده.",
-  stationTitle:"تنظیمات ایستگاه",lblStationName:"نام ایستگاه",lblTagline:"شعار / زیرنویس برند",lblLogoMode:"حالت نمایش لوگو",
-  logoImg:"تصویر",logoText:"متن",logoHidden:"پنهان",livePreviewLbl:"پیش‌نمایش زنده",lblLogoUrl:"لینک لوگو",uploadImgLbl:"آپلود تصویر",removeImgLbl:"حذف تصویر",
-  backupTitle:"پشتیبان‌گیری",exportBtn:"خروجی JSON",importBtn:"واردکردن JSON",connStatus:"وضعیت اتصال",resync:"همگام‌سازی مجدد",
-  fallbackTitle:"تصویر یا ویدیوی جایگزین",fallbackDesc:"وقتی برنامه‌ای پخش نمی‌شود یا ویدیو خطا دارد، این نمایش داده می‌شود.",
-  typeLbl:"نوع",typeNone:"هیچ",typeImage:"تصویر",typeVideo:"ویدیوی کوتاه",directUrlLbl:"لینک مستقیم",orUploadLbl:"یا آپلود",
-  eventsTitle:"رویدادها و تم‌های مناسبتی",evThemeLbl:"تم رویدادها برای همه",onLbl:"روشن",offLbl:"خاموش",
-  evNameLbl:"نام / پیام رویداد",evDateLbl:"تاریخ شروع",evDaysLbl:"تعداد روز",evEmojiLbl:"ایموجی",evAccentLbl:"رنگ اصلی",evBgLbl:"رنگ پس‌زمینه",
-  evYearlyLbl:"هر سال تکرار شود",addEventLbl:"افزودن رویداد",
-  bumperTitle:"اینترو بین برنامه‌ها (Bumper)",lblBumperStatus:"وضعیت",lblBumperSec:"مدت (ثانیه، ۲ تا ۳۰)",lblBumperText:"متن دلخواه زیر نام شبکه",saveBumper:"ذخیره اینترو",
-  statsOverviewLbl:"آمار کلی",resetStatsLbl:"پاک‌کردن آمار",exportJsonLbl:"خروجی JSON",
-  hourChartLbl:"پربازدیدترین ساعات روز",topItemsLbl:"پربازدیدترین برنامه‌ها",dailyChartLbl:"بازدید ۱۴ روز اخیر",
-  createPollLbl:"ایجاد نظرسنجی جدید",pollQuestionLbl:"سؤال",pollOptionsLbl:"گزینه‌ها (هر خط یک گزینه)",pollDurationLbl:"مدت (ساعت، 0=بدون محدودیت)",
-  fbListLbl:"ایده‌ها و گزارش‌های دریافتی",clearAllLbl:"پاک‌کردن همه",
-  kidsSettingsTitle:"تنظیمات حالت کودک",kidsPinNewLbl:"رمز جدید خروج (۴ تا ۶ رقم)",kidsPinConfirmLbl:"تکرار رمز",clearPinLbl:"حذف رمز",
-  kidsPinHint:"رمز فعلی هرگز نمایش داده نمی‌شود. پیش‌فرض 1234 است.",
-  newKidsChannelLbl:"کانال کودک جدید",nameLbl:"نام کانال",colorLbl:"رنگ",
-  addKidsContentLbl:"افزودن محتوا به کانال کودک",programNameOptLbl:"نام برنامه (اختیاری)",linkYtOrDirectLbl:"لینک یوتیوب یا ویدیوی مستقیم",orVideoFileLbl:"یا فایل ویدیویی",clearFieldsLbl:"پاک‌کردن",
-  kidsPlaylistLbl:"پلی‌لیست کانال کودک فعلی",
-  cc:"زیرنویس",fullscreen:"تمام صفحه",exitfs:"خروج",rotate:"افقی / عمودی",unmute:"🔊 برای فعال‌سازی صدا لمس کنید",
-  untitled:"بدون عنوان",audioProgram:"برنامهٔ صوتی",nowOnAir:"برنامهٔ در حال پخش",emptySection:"هنوز برنامه‌ای اضافه نشده",
-  badYt:"شناسهٔ ویدیو قابل تشخیص نیست",loadingYt:"در حال بارگذاری...",syncing:"در حال هماهنگ‌سازی...",
-  videoErr:"این لینک قابل پخش نیست.",ytErr:"یوتیوب نتوانست پخش کند (کد {code}).",
-  bumperDefault:"برنامهٔ بعدی تا لحظاتی دیگر",bumperNext:"بعدی:",
-  guideNow:"اکنون",guideFixed:"ساعت ثابت",guideResume:"ادامه",guideCalc:"در حال محاسبه…",
-  lastSyncNever:"آخرین همگام‌سازی: هنوز انجام نشده",
-  msgAdded:"{n} مورد اضافه شد.",msgChannelCreated:"کانال ساخته شد.",msgRadioChannelCreated:"کانال رادیو ساخته شد.",
-  msgEmojiOn:"حالت فقط آیکون روشن",msgEmojiOff:"حالت عادی",msgLangChanged:"زبان تغییر کرد",
-  msgPinSet:"ساعت ثابت ثبت شد.",msgPinCleared:"ساعت ثابت حذف شد.",msgPinInvalid:"ساعت نامعتبر است؛ مثل 20:00 بنویس.",
-  msgPinNoDur:"طول این برنامه هنوز معلوم نیست.",msgReset:"رنگ‌ها بازنشانی شد.",msgPreviewUpd:"پیش‌نمایش به‌روزرسانی شد.",
-  msgWmSaved:"واترمارک ذخیره شد.",msgWmCleared:"واترمارک حذف شد.",msgStationSaved:"تنظیمات ذخیره شد.",
-  msgBumperSaved:"تنظیمات اینترو ذخیره شد.",msgBackupIn:"پشتیبان وارد شد.",msgBackupFail:"واردکردن ناموفق: ",
-  msgLoggedIn:"ورود انجام شد.",msgLoggedOut:"خارج شدی.",msgAddFail:"افزودن ناموفق: ",msgUploadFail:"آپلود ناموفق: ",
-  msgPlayVideoFail:"پخش ویدیو ممکن نشد.",msgPlayAudioFail:"پخش صوت ممکن نشد.",msgEndOfList:"پلی‌لیست به پایان رسید",
-  msgNoChannelSwitch:"تعویض کانال فقط توسط مدیر.",msgNoAdmin:"فقط مدیر می‌تواند.",
-  msgRenamed:"عنوان تغییر کرد.",msgRenameEmpty:"عنوان نمی‌تواند خالی باشد.",
-  msgYtHandle:"برای کانال، لینک playlist رو کپی کن.",
-  confirmDelCh:"این کانال حذف شود؟",confirmDelRadioCh:"این کانال رادیو حذف شود؟",
-  promptPin:"ساعت پخش ثابت این برنامه (هر روز)، مثلاً 20:00\nخالی = حذف",
-  promptRename:"عنوان جدید برای این برنامه:",
-  cinema:"سینمایی",cinemaExit:"خروج از حالت سینمایی",
-  vhsLbl:"حالت ریترو / VHS",eventThemeLbl:"تم رویدادها (نوروز، یلدا و...)",
-  cast:"Cast",castActive:"در حال پخش روی تلویزیون",castNotSupported:"پشتیبانی نمی‌شود.",
-  castStarted:"اتصال برقرار شد.",castFailed:"اتصال ناموفق.",castYT:"برای یوتیوب، از اپ YouTube تلویزیون استفاده کن.",castDisconnected:"اتصال قطع شد.",
-  sleep:"خواب",sleepSet:"تایمر خواب: {n} دقیقه",sleepOff:"تایمر خواب خاموش شد",sleepDone:"تایمر خواب — پخش متوقف شد",
-  kidsBtn:"کودک",kidsOn:"حالت کودک روشن شد",kidsOff:"حالت کودک خاموش شد",exitKids:"خروج از حالت کودک",
-  pinTitle:"رمز والدین",pinHint:"رمز را وارد کنید.",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
-  pinInvalidFormat:"رمز باید ۴ تا ۶ رقم باشد.",pinMismatch:"رمزها یکسان نیستند.",
-  msgPinSaved:"رمز ذخیره شد.",msgPinCleared2:"رمز حذف شد.",
-  lockScreen:"قفل صفحه",unlockScreen:"برای بازکردن لمس کن",
-  kidsTag:"کودک",msgFbSaved:"ذخیره شد.",
-  repeatLbl:"تکرار",shuffleLbl:"تصادفی",partyLbl:"پارتی",pollsLbl:"نظرسنجی",feedbackLbl:"ایده/باگ",
-  partyTitle:"Watch Party",partyDesc:"با Watch Party می‌توانی همراه دوستانت همزمان ببینی و چت کنی.",
-  yourNameLbl:"نام شما",roomCodeInputLbl:"کد اتاق (ورود)",joinLbl:"ورود",orLbl:"— یا —",createRoomLbl:"ساخت اتاق جدید",
-  roomCodeLbl:"کد اتاق:",copyLbl:"کپی",leaveLbl:"خروج",membersLbl:"اعضا",chatLbl:"چت اتاق",sendLbl:"ارسال",
-  partyCreated:"اتاق ساخته شد",partyJoined:"به اتاق پیوستی",partyLeft:"از اتاق خارج شدی",
-  partyCodeCopied:"کد کپی شد",partyCodeCopyFail:"کپی نشد.",partyNeedCode:"کد اتاق را وارد کن.",
-  pollModalTitle:"نظرسنجی",fbModalTitle:"ارسال ایده / گزارش باگ",fbNameLbl:"نام (اختیاری)",fbTypeLbl:"نوع",
-  fbIdea:"ایده",fbBug:"باگ",fbFeature:"فیچر جدید",fbOther:"دیگر",fbSubjectLbl:"عنوان کوتاه",fbMessageLbl:"توضیحات",
-  sendLbl:"ارسال",fbSent:"ارسال شد",fbNeedMsg:"توضیحات لازم است.",
-  nextUpLbl:"برنامهٔ بعدی",secondsLeft:"تا {n} ثانیهٔ دیگر"
+ navTV:"تلویزیون",navRadio:"رادیو",navGuide:"برنامه",navAppear:"ظاهر",navAdmin:"مدیریت",navLogout:"خروج",
+ stationStatus:"وضعیت ایستگاه",stationLbl:"ایستگاه:",modeLbl:"حالت:",statusLbl:"وضعیت:",roleLbl:"دسترسی:",channelLbl:"کانال:",
+ viewersTitle:"بیننده‌ها",onlineLbl:" آنلاین الان:",onTVLbl:" روی TV:",onRadioLbl:" روی Radio:",viewerLbl:" بیننده:",adminLbl:" مدیر:",totalViewsLbl:" کل بازدید:",
+ channelsTitle:"کانال‌ها",guideTitle:"برنامهٔ پخش (EPG)",guideHint:"زمان‌ها بر اساس منطقهٔ زمانی انتخابی مدیر محاسبه می‌شوند.",
+ close:"بستن",preparing:"در حال آماده‌سازی پخش...",waiting:"کانال در انتظار برنامه است",notplaying:"در انتظار پخش",ready:"آماده",
+ tvMode:"تلویزیون",radioMode:"رادیو",kidsMode:"کودک",viewerRole:"بیننده",adminRole:"مدیر",
+ settingsTitle:"شخصی‌سازی نمایش",lblPreset:"رنگ آماده (فقط در اسپیشیال مود)",lblMode:"حالت نمایش",lblAccent:"رنگ اصلی دلخواه",lblBg:"رنگ پس‌زمینهٔ دلخواه",
+ modeDark:"دارک",modeLight:"لایت",modeSpecial:"اسپیشیال",modeDream:"دریم‌کور",
+ p_green:"سبز رترو",p_amber:"کهربایی",p_blue:"آبی",p_purple:"بنفش",p_red:"قرمز",
+ resetCustom:"بازنشانی رنگ‌ها",lblLang:"زبان",langAuto:"خودکار (زبان دستگاه)",emojiOnlyLbl:"فقط آیکون — بدون متن در دکمه‌ها",
+ lblSub:"زیرنویس و ترجمه (ویدیوهای یوتیوب)",subOff:"خاموش",subHint:"ترجمه خودکار است و فقط وقتی کار می‌کند که ویدیو زیرنویس داشته باشد.",
+ settingsHint:"این انتخاب‌ها فقط ظاهر همین مرورگر را تغییر می‌دهند.",
+ loginTitle:"ورود مدیر",emailLbl:"ایمیل مدیر",passLbl:"رمز عبور",signIn:"ورود به پنل مدیریت",loginHint:"حساب باید از قبل در Supabase ساخته شده باشد.",
+ adminTitle:"پنل مدیریت AM TV",
+ tabContent:"ویدیو و کانال",tabRadio:"مدیریت رادیو",tabKids:"کودک",tabWatermark:"واترمارک",tabYoutube:"یوتیوب",tabStation:"ایستگاه و پشتیبان",tabAnalytics:"آمار",tabPolls:"نظرسنجی",tabFeedback:"فیدبک",
+ addProgram:"افزودن برنامه به تلویزیون",lblTitleOpt:"نام برنامه (اختیاری)",lblUrl:"لینک یوتیوب یا ویدیوی مستقیم",lblFile:"یا فایل ویدیویی برای آپلود",
+ addBtn:"افزودن",clearBtn:"پاک‌کردن",deleteBtn:"حذف",deleteLbl:"حذف",createBtn:"ساخت",playSel:"پخش",playLbl:"پخش",
+ lblNewCh:"نام کانال جدید",lblColor:"رنگ کانال",
+ playlistTitle:"پلی‌لیست کانال فعلی",tzLbl:"منطقهٔ زمانی ساعت‌های ثابت",
+ radioChannelsTitle:"کانال‌های رادیو",lblNewRadioCh:"نام کانال رادیو جدید",addAudioTitle:"افزودن صوت به کانال فعلی",
+ lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست یوتیوب",lblAudioFile:"یا فایل‌های صوتی برای آپلود",
+ playlistRadioTitle:"پلی‌لیست کانال فعلی",
+ wmTitle:"متن یا لوگوی واترمارک",wmText:"متن دلخواه",wmImgFile:"تصویر لوگو",wmImgUrl:"یا لینک مستقیم تصویر",
+ wmSize:"اندازه متن (%)",wmOpacity:"شفافیت (%)",wmWidth:"عرض لوگو (px)",wmColor:"رنگ متن",
+ wmPosTitle:"جایگاه واترمارک",wmPos:"جایگاه",wmX:"افقی (%)",wmY:"عمودی (%)",
+ previewLbl:"پیش‌نمایش",saveAllLbl:"ذخیره برای همه",saveLbl:"ذخیره",
+ ytSubsTitle:"اتصال به حساب YouTube و دریافت سابسکریپشن‌ها",
+ ytSubsDesc:"با اتصال به حساب گوگل، تمام کانال‌هایی که ساب کرده‌اید اینجا نمایش داده می‌شوند. نیاز به Google OAuth Client ID دارید.",
+ googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"ذخیره Client ID",connectYtLbl:"اتصال به YouTube",refreshSubsLbl:"دریافت مجدد",addAllSubsLbl:"افزودن همه",
+ ytSubsNotConnected:"هنوز به YouTube متصل نشده‌اید.",
+ ytManualTitle:"همگام‌سازی خودکار YouTube (لینک دستی)",
+ ytManualDesc:"کانال‌های ساب‌شده رو با لینک زیر اضافه کن.",
+ feedChannelUrlLbl:"لینک کانال یوتیوب",feedChannelNameLbl:"نام نمایشی کانال",feedTargetSectionLbl:"بخش مقصد",
+ addChannelFeedLbl:"افزودن کانال",syncChannelFeedsLbl:"همگام‌سازی ۲۴ ساعت اخیر",syncAllFeedsLbl:"همگام‌سازی همه",noFeedsYet:"هنوز کانالی اضافه نشده.",
+ stationTitle:"تنظیمات ایستگاه",lblStationName:"نام ایستگاه",lblTagline:"شعار / زیرنویس برند",lblLogoMode:"حالت نمایش لوگو",
+ logoImg:"تصویر",logoText:"متن",logoHidden:"پنهان",livePreviewLbl:"پیش‌نمایش زنده",lblLogoUrl:"لینک لوگو",uploadImgLbl:"آپلود تصویر",removeImgLbl:"حذف تصویر",
+ backupTitle:"پشتیبان‌گیری",exportBtn:"خروجی JSON",importBtn:"واردکردن JSON",connStatus:"وضعیت اتصال",resync:"همگام‌سازی مجدد",
+ fallbackTitle:"تصویر یا ویدیوی جایگزین",fallbackDesc:"وقتی برنامه‌ای پخش نمی‌شود یا ویدیو خطا دارد، این نمایش داده می‌شود.",
+ typeLbl:"نوع",typeNone:"هیچ",typeImage:"تصویر",typeVideo:"ویدیوی کوتاه",directUrlLbl:"لینک مستقیم",orUploadLbl:"یا آپلود",
+ eventsTitle:"رویدادها و تم‌های مناسبتی",evThemeLbl:"تم رویدادها برای همه",onLbl:"روشن",offLbl:"خاموش",
+ evNameLbl:"نام / پیام رویداد",evDateLbl:"تاریخ شروع",evDaysLbl:"تعداد روز",evEmojiLbl:"ایموجی",evAccentLbl:"رنگ اصلی",evBgLbl:"رنگ پس‌زمینه",
+ evYearlyLbl:"هر سال تکرار شود",addEventLbl:"افزودن رویداد",
+ bumperTitle:"اینترو بین برنامه‌ها (Bumper)",lblBumperStatus:"وضعیت",lblBumperSec:"مدت (ثانیه)",lblBumperText:"متن دلخواه زیر نام شبکه",saveBumper:"ذخیره اینترو",
+ statsOverviewLbl:"آمار کلی",resetStatsLbl:"پاک‌کردن آمار",exportJsonLbl:"خروجی JSON",
+ hourChartLbl:"پربازدیدترین ساعات روز",topItemsLbl:"پربازدیدترین برنامه‌ها",dailyChartLbl:"بازدید ۱۴ روز اخیر",
+ createPollLbl:"ایجاد نظرسنجی جدید",pollQuestionLbl:"سؤال",pollOptionsLbl:"گزینه‌ها (هر خط یک گزینه)",pollDurationLbl:"مدت (ساعت، 0=بدون محدودیت)",
+ fbListLbl:"ایده‌ها و گزارش‌های دریافتی",clearAllLbl:"پاک‌کردن همه",
+ kidsSettingsTitle:"تنظیمات حالت کودک",kidsPinNewLbl:"رمز جدید خروج (۴ تا ۶ رقم)",kidsPinConfirmLbl:"تکرار رمز",clearPinLbl:"حذف رمز",
+ kidsPinHint:"رمز فعلی هرگز نمایش داده نمی‌شود. پیش‌فرض 1234 است.",
+ newKidsChannelLbl:"کانال کودک جدید",nameLbl:"نام کانال",colorLbl:"رنگ",
+ addKidsContentLbl:"افزودن محتوا به کانال کودک",programNameOptLbl:"نام برنامه (اختیاری)",linkYtOrDirectLbl:"لینک یوتیوب یا ویدیوی مستقیم",orVideoFileLbl:"یا فایل ویدیویی",clearFieldsLbl:"پاک‌کردن",
+ kidsPlaylistLbl:"پلی‌لیست کانال کودک فعلی",
+ cc:"زیرنویس",fullscreen:"تمام صفحه",exitfs:"خروج",rotate:"افقی / عمودی",unmute:"🔊 برای فعال‌سازی صدا لمس کنید",
+ untitled:"بدون عنوان",audioProgram:"برنامهٔ صوتی",nowOnAir:"برنامهٔ در حال پخش",emptySection:"هنوز برنامه‌ای اضافه نشده",
+ badYt:"شناسهٔ ویدیو قابل تشخیص نیست",loadingYt:"در حال بارگذاری...",syncing:"در حال هماهنگ‌سازی...",
+ videoErr:"این لینک قابل پخش نیست.",ytErr:"یوتیوب نتوانست پخش کند (کد {code}).",
+ bumperDefault:"برنامهٔ بعدی تا لحظاتی دیگر",bumperNext:"بعدی:",
+ guideNow:"اکنون",guideFixed:"ساعت ثابت",guideResume:"ادامه",guideCalc:"در حال محاسبه…",
+ lastSyncNever:"آخرین همگام‌سازی: هنوز انجام نشده",
+ msgAdded:"{n} مورد اضافه شد.",msgChannelCreated:"کانال ساخته شد.",msgRadioChannelCreated:"کانال رادیو ساخته شد.",
+ msgEmojiOn:"حالت فقط آیکون روشن",msgEmojiOff:"حالت عادی",msgLangChanged:"زبان تغییر کرد",
+ msgPinSet:"ساعت ثابت ثبت شد.",msgPinCleared:"ساعت ثابت حذف شد.",msgPinInvalid:"ساعت نامعتبر است؛ مثل 20:00 بنویس.",
+ msgPinNoDur:"طول این برنامه هنوز معلوم نیست.",msgReset:"رنگ‌ها بازنشانی شد.",msgPreviewUpd:"پیش‌نمایش به‌روزرسانی شد.",
+ msgWmSaved:"واترمارک ذخیره شد.",msgWmCleared:"واترمارک حذف شد.",msgStationSaved:"تنظیمات ذخیره شد.",
+ msgBumperSaved:"تنظیمات اینترو ذخیره شد.",msgBackupIn:"پشتیبان وارد شد.",msgBackupFail:"واردکردن ناموفق: ",
+ msgLoggedIn:"ورود انجام شد.",msgLoggedOut:"خارج شدی.",msgAddFail:"افزودن ناموفق: ",msgUploadFail:"آپلود ناموفق: ",
+ msgPlayVideoFail:"پخش ویدیو ممکن نشد.",msgPlayAudioFail:"پخش صوت ممکن نشد.",msgEndOfList:"پلی‌لیست به پایان رسید",
+ msgNoChannelSwitch:"تعویض کانال فقط توسط مدیر.",msgNoAdmin:"فقط مدیر می‌تواند.",
+ msgRenamed:"عنوان تغییر کرد.",msgRenameEmpty:"عنوان نمی‌تواند خالی باشد.",
+ msgYtHandle:"برای کانال، لینک playlist رو کپی کن.",
+ confirmDelCh:"این کانال حذف شود؟",confirmDelRadioCh:"این کانال رادیو حذف شود؟",
+ promptPin:"ساعت پخش ثابت این برنامه (هر روز)، مثلاً 20:00\nخالی = حذف",
+ promptRename:"عنوان جدید برای این برنامه:",
+ cinema:"سینمایی",cinemaExit:"خروج از حالت سینمایی",
+ vhsLbl:"حالت ریترو / VHS",eventThemeLbl:"تم رویدادها (نوروز، یلدا و...)",
+ cast:"Cast",castActive:"در حال پخش روی تلویزیون",castNotSupported:"پشتیبانی نمی‌شود.",
+ castStarted:"اتصال برقرار شد.",castFailed:"اتصال ناموفق.",castYT:"برای یوتیوب، از اپ YouTube تلویزیون استفاده کن.",castDisconnected:"اتصال قطع شد.",
+ sleep:"خواب",sleepSet:"تایمر خواب: {n} دقیقه",sleepOff:"تایمر خواب خاموش شد",sleepDone:"تایمر خواب — پخش متوقف شد",
+ kidsBtn:"کودک",kidsOn:"حالت کودک روشن شد",kidsOff:"حالت کودک خاموش شد",exitKids:"خروج از حالت کودک",
+ pinTitle:"رمز والدین",pinHint:"رمز را وارد کنید.",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
+ pinInvalidFormat:"رمز باید ۴ تا ۶ رقم باشد.",pinMismatch:"رمزها یکسان نیستند.",
+ msgPinSaved:"رمز ذخیره شد.",msgPinCleared2:"رمز حذف شد.",
+ lockScreen:"قفل صفحه",unlockScreen:"برای بازکردن لمس کن",
+ kidsTag:"کودک",msgFbSaved:"ذخیره شد.",
+ repeatLbl:"تکرار",shuffleLbl:"تصادفی",partyLbl:"پارتی",pollsLbl:"نظرسنجی",feedbackLbl:"ایده/باگ",
+ partyTitle:"Watch Party",partyDesc:"با Watch Party می‌توانی همراه دوستانت همزمان ببینی و چت کنی.",
+ yourNameLbl:"نام شما",roomCodeInputLbl:"کد اتاق (ورود)",joinLbl:"ورود",orLbl:"— یا —",createRoomLbl:"ساخت اتاق جدید",
+ roomCodeLbl:"کد اتاق:",copyLbl:"کپی",leaveLbl:"خروج",membersLbl:"اعضا",chatLbl:"چت اتاق",sendLbl:"ارسال",
+ partyCreated:"اتاق ساخته شد",partyJoined:"به اتاق پیوستی",partyLeft:"از اتاق خارج شدی",
+ partyCodeCopied:"کد کپی شد",partyCodeCopyFail:"کپی نشد.",partyNeedCode:"کد اتاق را وارد کن.",
+ pollModalTitle:"نظرسنجی",fbModalTitle:"ارسال ایده / گزارش باگ",fbNameLbl:"نام (اختیاری)",fbTypeLbl:"نوع",
+ fbIdea:"ایده",fbBug:"باگ",fbFeature:"فیچر جدید",fbOther:"دیگر",fbSubjectLbl:"عنوان کوتاه",fbMessageLbl:"توضیحات",
+ sendLbl:"ارسال",fbSent:"ارسال شد",fbNeedMsg:"توضیحات لازم است.",
+ nextUpLbl:"برنامهٔ بعدی",secondsLeft:"تا {n} ثانیهٔ دیگر"
 },
 "en":{
-  navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
-  stationStatus:"Station status",stationLbl:"Station:",modeLbl:"Mode:",statusLbl:"Status:",roleLbl:"Access:",channelLbl:"Channel:",
-  viewersTitle:"Viewers",onlineLbl:" Online now:",onTVLbl:" On TV:",onRadioLbl:" On Radio:",viewerLbl:" Viewers:",adminLbl:" Admins:",totalViewsLbl:" Total views:",
-  channelsTitle:"Channels",guideTitle:"Schedule (EPG)",guideHint:"Times are based on the admin's timezone.",
-  close:"Close",preparing:"Preparing...",waiting:"Channel is waiting for programs",notplaying:"Waiting to play",ready:"Ready",
-  tvMode:"TV",radioMode:"Radio",kidsMode:"Kids",viewerRole:"Viewer",adminRole:"Admin",
-  settingsTitle:"Display settings",lblPreset:"Preset color (only in Special mode)",lblMode:"Display mode",lblAccent:"Custom accent color",lblBg:"Custom background color",
-  modeDark:"Dark",modeLight:"Light",modeSpecial:"Special",modeDream:"Dreamcore",
-  p_green:"Retro green",p_amber:"Amber",p_blue:"Blue",p_purple:"Purple",p_red:"Red",
-  resetCustom:"Reset colors",lblLang:"Language",langAuto:"Auto (device language)",emojiOnlyLbl:"Icons only — no text on buttons",
-  lblSub:"Subtitles & translation (YouTube videos)",subOff:"Off",subHint:"Auto translation works only when captions exist.",
-  settingsHint:"These choices only affect this browser.",
-  loginTitle:"Admin login",emailLbl:"Admin email",passLbl:"Password",signIn:"Sign in to admin panel",loginHint:"Account must exist in Supabase.",
-  adminTitle:"AM TV Admin Panel",
-  tabContent:"Video & Channels",tabRadio:"Radio",tabKids:"Kids",tabWatermark:"Watermark",tabYoutube:"YouTube",tabStation:"Station & Backup",tabAnalytics:"Analytics",tabPolls:"Polls",tabFeedback:"Feedback",
-  addProgram:"Add TV program",lblTitleOpt:"Program title (optional)",lblUrl:"YouTube or direct video link",lblFile:"Or video file to upload",
-  addBtn:"Add",clearBtn:"Clear",deleteBtn:"Delete",deleteLbl:"Delete",createBtn:"Create",playSel:"Play",playLbl:"Play",
-  lblNewCh:"New channel name",lblColor:"Channel color",
-  playlistTitle:"Current channel playlist",tzLbl:"Timezone for fixed times",
-  radioChannelsTitle:"Radio channels",lblNewRadioCh:"New radio channel name",addAudioTitle:"Add audio to current channel",
-  lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube link",lblAudioFile:"Or audio files to upload",
-  playlistRadioTitle:"Current channel playlist",
-  wmTitle:"Watermark text or logo",wmText:"Custom text",wmImgFile:"Logo image",wmImgUrl:"Or direct image URL",
-  wmSize:"Text size (%)",wmOpacity:"Opacity (%)",wmWidth:"Logo width (px)",wmColor:"Text color",
-  wmPosTitle:"Watermark position",wmPos:"Position",wmX:"X (%)",wmY:"Y (%)",
-  previewLbl:"Preview",saveAllLbl:"Save for all",saveLbl:"Save",
-  ytSubsTitle:"Connect to YouTube account & fetch subscriptions",
-  ytSubsDesc:"By connecting your Google account, all channels you subscribed to will appear here, and you can assign each to TV / Radio / Kids. You need a Google OAuth Client ID.",
-  googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"Save Client ID",connectYtLbl:"Connect to YouTube",refreshSubsLbl:"Refresh",addAllSubsLbl:"Add all",
-  ytSubsNotConnected:"Not connected to YouTube yet.",
-  ytManualTitle:"Auto YouTube sync (manual link)",
-  ytManualDesc:"Add subscribed channels with the link below. Each channel is created in the chosen section (TV / Radio / Kids).",
-  feedChannelUrlLbl:"YouTube channel URL (@handle or /channel/UC...)",feedChannelNameLbl:"Display name",feedTargetSectionLbl:"Target section",
-  addChannelFeedLbl:"Add channel",syncChannelFeedsLbl:"Sync last 24 hours",syncAllFeedsLbl:"Sync all",noFeedsYet:"No channels added yet.",
-  stationTitle:"Station settings",lblStationName:"Station name",lblTagline:"Tagline / brand subtitle",lblLogoMode:"Logo display mode",
-  logoImg:"Image",logoText:"Text",logoHidden:"Hidden",livePreviewLbl:"Live preview",lblLogoUrl:"Logo URL",uploadImgLbl:"Upload image",removeImgLbl:"Remove image",
-  backupTitle:"Backup",exportBtn:"Export JSON",importBtn:"Import JSON",connStatus:"Connection status",resync:"Resync",
-  fallbackTitle:"Fallback image or video",fallbackDesc:"Shown when no program plays or the video fails.",
-  typeLbl:"Type",typeNone:"None",typeImage:"Image",typeVideo:"Short video",directUrlLbl:"Direct URL",orUploadLbl:"Or upload",
-  eventsTitle:"Events & seasonal themes",evThemeLbl:"Event theme for everyone",onLbl:"On",offLbl:"Off",
-  evNameLbl:"Event name / message",evDateLbl:"Start date",evDaysLbl:"Number of days",evEmojiLbl:"Emoji",evAccentLbl:"Accent color",evBgLbl:"Background color",
-  evYearlyLbl:"Repeat every year",addEventLbl:"Add event",
-  bumperTitle:"Bumper (intro between programs)",lblBumperStatus:"Status",lblBumperSec:"Duration (sec, 2–30)",lblBumperText:"Custom text under station name",saveBumper:"Save bumper",
-  statsOverviewLbl:"Overview",resetStatsLbl:"Clear stats",exportJsonLbl:"Export JSON",
-  hourChartLbl:"Busiest hours of the day",topItemsLbl:"Top programs",dailyChartLbl:"Last 14 days",
-  createPollLbl:"Create new poll",pollQuestionLbl:"Question",pollOptionsLbl:"Options (one per line)",pollDurationLbl:"Duration (hours, 0=unlimited)",
-  fbListLbl:"Ideas & reports received",clearAllLbl:"Clear all",
-  kidsSettingsTitle:"Kids mode settings",kidsPinNewLbl:"New exit PIN (4-6 digits)",kidsPinConfirmLbl:"Confirm PIN",clearPinLbl:"Clear PIN",
-  kidsPinHint:"Current PIN is never displayed. Default is 1234.",
-  newKidsChannelLbl:"New kids channel",nameLbl:"Channel name",colorLbl:"Color",
-  addKidsContentLbl:"Add content to kids channel",programNameOptLbl:"Program name (optional)",linkYtOrDirectLbl:"YouTube or direct video link",orVideoFileLbl:"Or video file",clearFieldsLbl:"Clear",
-  kidsPlaylistLbl:"Current kids channel playlist",
-  cc:"Subtitles",fullscreen:"Full screen",exitfs:"Exit",rotate:"Landscape / Portrait",unmute:"🔊 Tap to enable sound",
-  untitled:"Untitled",audioProgram:"Audio program",nowOnAir:"Now playing",emptySection:"Nothing added yet",
-  badYt:"Video ID not recognized",loadingYt:"Loading...",syncing:"Syncing...",
-  videoErr:"This link cannot be played.",ytErr:"YouTube couldn't play (code {code}).",
-  bumperDefault:"Next program in a moment",bumperNext:"Up next:",
-  guideNow:"Now",guideFixed:"Fixed time",guideResume:"Resumes",guideCalc:"Calculating...",
-  lastSyncNever:"Last sync: never",
-  msgAdded:"{n} item(s) added.",msgChannelCreated:"Channel created.",msgRadioChannelCreated:"Radio channel created.",
-  msgEmojiOn:"Icons-only mode on",msgEmojiOff:"Normal mode",msgLangChanged:"Language changed",
-  msgPinSet:"Fixed time saved.",msgPinCleared:"Fixed time cleared.",msgPinInvalid:"Invalid time; use 20:00.",
-  msgPinNoDur:"Duration unknown yet.",msgReset:"Colors reset.",msgPreviewUpd:"Preview updated.",
-  msgWmSaved:"Watermark saved.",msgWmCleared:"Watermark cleared.",msgStationSaved:"Settings saved.",
-  msgBumperSaved:"Bumper saved.",msgBackupIn:"Backup imported.",msgBackupFail:"Import failed: ",
-  msgLoggedIn:"Signed in.",msgLoggedOut:"Signed out.",msgAddFail:"Add failed: ",msgUploadFail:"Upload failed: ",
-  msgPlayVideoFail:"Video play failed.",msgPlayAudioFail:"Audio play failed.",msgEndOfList:"End of playlist",
-  msgNoChannelSwitch:"Only admin can switch channels.",msgNoAdmin:"Admin only.",
-  msgRenamed:"Title updated.",msgRenameEmpty:"Title cannot be empty.",
-  msgYtHandle:"For channels, copy the playlist URL.",
-  confirmDelCh:"Delete this channel?",confirmDelRadioCh:"Delete this radio channel?",
-  promptPin:"Fixed daily air time (e.g. 20:00)\nEmpty = remove pin",
-  promptRename:"New title:",
-  cinema:"Cinema",cinemaExit:"Exit cinema mode",
-  vhsLbl:"Retro / VHS mode",eventThemeLbl:"Event themes",
-  cast:"Cast",castActive:"Casting",castNotSupported:"Not supported.",
-  castStarted:"Connected.",castFailed:"Failed.",castYT:"Use TV YouTube app for YouTube.",castDisconnected:"Disconnected.",
-  sleep:"Sleep",sleepSet:"Sleep timer: {n} min",sleepOff:"Sleep timer off",sleepDone:"Sleep timer — stopped",
-  kidsBtn:"Kids",kidsOn:"Kids mode on",kidsOff:"Kids mode off",exitKids:"Exit kids mode",
-  pinTitle:"Parent PIN",pinHint:"Enter PIN.",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
-  pinInvalidFormat:"PIN must be 4-6 digits.",pinMismatch:"PINs don't match.",
-  msgPinSaved:"PIN saved.",msgPinCleared2:"PIN cleared.",
-  lockScreen:"Lock screen",unlockScreen:"Tap to unlock",
-  kidsTag:"Kids",msgFbSaved:"Saved.",
-  repeatLbl:"Repeat",shuffleLbl:"Shuffle",partyLbl:"Party",pollsLbl:"Polls",feedbackLbl:"Feedback",
-  partyTitle:"Watch Party",partyDesc:"With Watch Party you can watch together with friends and chat.",
-  yourNameLbl:"Your name",roomCodeInputLbl:"Room code (join)",joinLbl:"Join",orLbl:"— or —",createRoomLbl:"Create new room",
-  roomCodeLbl:"Room code:",copyLbl:"Copy",leaveLbl:"Leave",membersLbl:"Members",chatLbl:"Room chat",sendLbl:"Send",
-  partyCreated:"Room created",partyJoined:"Joined the room",partyLeft:"Left the room",
-  partyCodeCopied:"Code copied",partyCodeCopyFail:"Copy failed.",partyNeedCode:"Enter room code.",
-  pollModalTitle:"Poll",fbModalTitle:"Send idea / bug report",fbNameLbl:"Name (optional)",fbTypeLbl:"Type",
-  fbIdea:"Idea",fbBug:"Bug",fbFeature:"Feature",fbOther:"Other",fbSubjectLbl:"Short title",fbMessageLbl:"Description",
-  sendLbl:"Send",fbSent:"Sent",fbNeedMsg:"Description is required.",
-  nextUpLbl:"Up next",secondsLeft:"{n}s left"
+ navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
+ stationStatus:"Station status",stationLbl:"Station:",modeLbl:"Mode:",statusLbl:"Status:",roleLbl:"Access:",channelLbl:"Channel:",
+ viewersTitle:"Viewers",onlineLbl:" Online now:",onTVLbl:" On TV:",onRadioLbl:" On Radio:",viewerLbl:" Viewers:",adminLbl:" Admins:",totalViewsLbl:" Total views:",
+ channelsTitle:"Channels",guideTitle:"Schedule (EPG)",guideHint:"Times are based on the admin's timezone.",
+ close:"Close",preparing:"Preparing...",waiting:"Channel is waiting for programs",notplaying:"Waiting to play",ready:"Ready",
+ tvMode:"TV",radioMode:"Radio",kidsMode:"Kids",viewerRole:"Viewer",adminRole:"Admin",
+ settingsTitle:"Display settings",lblPreset:"Preset color (only in Special mode)",lblMode:"Display mode",lblAccent:"Custom accent color",lblBg:"Custom background color",
+ modeDark:"Dark",modeLight:"Light",modeSpecial:"Special",modeDream:"Dreamcore",
+ p_green:"Retro green",p_amber:"Amber",p_blue:"Blue",p_purple:"Purple",p_red:"Red",
+ resetCustom:"Reset colors",lblLang:"Language",langAuto:"Auto (device language)",emojiOnlyLbl:"Icons only — no text on buttons",
+ lblSub:"Subtitles & translation (YouTube videos)",subOff:"Off",subHint:"Auto translation works only when captions exist.",
+ settingsHint:"These choices only affect this browser.",
+ loginTitle:"Admin login",emailLbl:"Admin email",passLbl:"Password",signIn:"Sign in to admin panel",loginHint:"Account must exist in Supabase.",
+ adminTitle:"AM TV Admin Panel",
+ tabContent:"Video & Channels",tabRadio:"Radio",tabKids:"Kids",tabWatermark:"Watermark",tabYoutube:"YouTube",tabStation:"Station & Backup",tabAnalytics:"Analytics",tabPolls:"Polls",tabFeedback:"Feedback",
+ addProgram:"Add TV program",lblTitleOpt:"Program title (optional)",lblUrl:"YouTube or direct video link",lblFile:"Or video file to upload",
+ addBtn:"Add",clearBtn:"Clear",deleteBtn:"Delete",deleteLbl:"Delete",createBtn:"Create",playSel:"Play",playLbl:"Play",
+ lblNewCh:"New channel name",lblColor:"Channel color",
+ playlistTitle:"Current channel playlist",tzLbl:"Timezone for fixed times",
+ radioChannelsTitle:"Radio channels",lblNewRadioCh:"New radio channel name",addAudioTitle:"Add audio to current channel",
+ lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube link",lblAudioFile:"Or audio files to upload",
+ playlistRadioTitle:"Current channel playlist",
+ wmTitle:"Watermark text or logo",wmText:"Custom text",wmImgFile:"Logo image",wmImgUrl:"Or direct image URL",
+ wmSize:"Text size (%)",wmOpacity:"Opacity (%)",wmWidth:"Logo width (px)",wmColor:"Text color",
+ wmPosTitle:"Watermark position",wmPos:"Position",wmX:"X (%)",wmY:"Y (%)",
+ previewLbl:"Preview",saveAllLbl:"Save for all",saveLbl:"Save",
+ ytSubsTitle:"Connect to YouTube account & fetch subscriptions",
+ ytSubsDesc:"By connecting your Google account, all channels you subscribed to will appear here. You need a Google OAuth Client ID.",
+ googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"Save Client ID",connectYtLbl:"Connect to YouTube",refreshSubsLbl:"Refresh",addAllSubsLbl:"Add all",
+ ytSubsNotConnected:"Not connected to YouTube yet.",
+ ytManualTitle:"Auto YouTube sync (manual link)",ytManualDesc:"Add subscribed channels with the link below.",
+ feedChannelUrlLbl:"YouTube channel URL",feedChannelNameLbl:"Display name",feedTargetSectionLbl:"Target section",
+ addChannelFeedLbl:"Add channel",syncChannelFeedsLbl:"Sync last 24 hours",syncAllFeedsLbl:"Sync all",noFeedsYet:"No channels added yet.",
+ stationTitle:"Station settings",lblStationName:"Station name",lblTagline:"Tagline",lblLogoMode:"Logo display mode",
+ logoImg:"Image",logoText:"Text",logoHidden:"Hidden",livePreviewLbl:"Live preview",lblLogoUrl:"Logo URL",uploadImgLbl:"Upload image",removeImgLbl:"Remove image",
+ backupTitle:"Backup",exportBtn:"Export JSON",importBtn:"Import JSON",connStatus:"Connection status",resync:"Resync",
+ fallbackTitle:"Fallback image or video",fallbackDesc:"Shown when no program plays or the video fails.",
+ typeLbl:"Type",typeNone:"None",typeImage:"Image",typeVideo:"Short video",directUrlLbl:"Direct URL",orUploadLbl:"Or upload",
+ eventsTitle:"Events & seasonal themes",evThemeLbl:"Event theme for everyone",onLbl:"On",offLbl:"Off",
+ evNameLbl:"Event name",evDateLbl:"Start date",evDaysLbl:"Days",evEmojiLbl:"Emoji",evAccentLbl:"Accent color",evBgLbl:"Background color",
+ evYearlyLbl:"Repeat every year",addEventLbl:"Add event",
+ bumperTitle:"Bumper (intro between programs)",lblBumperStatus:"Status",lblBumperSec:"Duration (sec, 2–30)",lblBumperText:"Custom text under station name",saveBumper:"Save bumper",
+ statsOverviewLbl:"Overview",resetStatsLbl:"Clear stats",exportJsonLbl:"Export JSON",
+ hourChartLbl:"Busiest hours of the day",topItemsLbl:"Top programs",dailyChartLbl:"Last 14 days",
+ createPollLbl:"Create new poll",pollQuestionLbl:"Question",pollOptionsLbl:"Options (one per line)",pollDurationLbl:"Duration (hours, 0=unlimited)",
+ fbListLbl:"Ideas & reports received",clearAllLbl:"Clear all",
+ kidsSettingsTitle:"Kids mode settings",kidsPinNewLbl:"New exit PIN (4-6 digits)",kidsPinConfirmLbl:"Confirm PIN",clearPinLbl:"Clear PIN",
+ kidsPinHint:"Current PIN is never displayed. Default is 1234.",
+ newKidsChannelLbl:"New kids channel",nameLbl:"Channel name",colorLbl:"Color",
+ addKidsContentLbl:"Add content to kids channel",programNameOptLbl:"Program name (optional)",linkYtOrDirectLbl:"YouTube or direct video link",orVideoFileLbl:"Or video file",clearFieldsLbl:"Clear",
+ kidsPlaylistLbl:"Current kids channel playlist",
+ cc:"Subtitles",fullscreen:"Full screen",exitfs:"Exit",rotate:"Landscape / Portrait",unmute:"🔊 Tap to enable sound",
+ untitled:"Untitled",audioProgram:"Audio program",nowOnAir:"Now playing",emptySection:"Nothing added yet",
+ badYt:"Video ID not recognized",loadingYt:"Loading...",syncing:"Syncing...",
+ videoErr:"This link cannot be played.",ytErr:"YouTube couldn't play (code {code}).",
+ bumperDefault:"Next program in a moment",bumperNext:"Up next:",
+ guideNow:"Now",guideFixed:"Fixed time",guideResume:"Resumes",guideCalc:"Calculating...",
+ lastSyncNever:"Last sync: never",
+ msgAdded:"{n} item(s) added.",msgChannelCreated:"Channel created.",msgRadioChannelCreated:"Radio channel created.",
+ msgEmojiOn:"Icons-only mode on",msgEmojiOff:"Normal mode",msgLangChanged:"Language changed",
+ msgPinSet:"Fixed time saved.",msgPinCleared:"Fixed time cleared.",msgPinInvalid:"Invalid time; use 20:00.",
+ msgPinNoDur:"Duration unknown yet.",msgReset:"Colors reset.",msgPreviewUpd:"Preview updated.",
+ msgWmSaved:"Watermark saved.",msgWmCleared:"Watermark cleared.",msgStationSaved:"Settings saved.",
+ msgBumperSaved:"Bumper saved.",msgBackupIn:"Backup imported.",msgBackupFail:"Import failed: ",
+ msgLoggedIn:"Signed in.",msgLoggedOut:"Signed out.",msgAddFail:"Add failed: ",msgUploadFail:"Upload failed: ",
+ msgPlayVideoFail:"Video play failed.",msgPlayAudioFail:"Audio play failed.",msgEndOfList:"End of playlist",
+ msgNoChannelSwitch:"Only admin can switch channels.",msgNoAdmin:"Admin only.",
+ msgRenamed:"Title updated.",msgRenameEmpty:"Title cannot be empty.",
+ msgYtHandle:"For channels, copy the playlist URL.",
+ confirmDelCh:"Delete this channel?",confirmDelRadioCh:"Delete this radio channel?",
+ promptPin:"Fixed daily air time (e.g. 20:00)\nEmpty = remove pin",
+ promptRename:"New title:",
+ cinema:"Cinema",cinemaExit:"Exit cinema mode",
+ vhsLbl:"Retro / VHS mode",eventThemeLbl:"Event themes",
+ cast:"Cast",castActive:"Casting",castNotSupported:"Not supported.",
+ castStarted:"Connected.",castFailed:"Failed.",castYT:"Use TV YouTube app for YouTube.",castDisconnected:"Disconnected.",
+ sleep:"Sleep",sleepSet:"Sleep timer: {n} min",sleepOff:"Sleep timer off",sleepDone:"Sleep timer — stopped",
+ kidsBtn:"Kids",kidsOn:"Kids mode on",kidsOff:"Kids mode off",exitKids:"Exit kids mode",
+ pinTitle:"Parent PIN",pinHint:"Enter PIN.",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
+ pinInvalidFormat:"PIN must be 4-6 digits.",pinMismatch:"PINs don't match.",
+ msgPinSaved:"PIN saved.",msgPinCleared2:"PIN cleared.",
+ lockScreen:"Lock screen",unlockScreen:"Tap to unlock",
+ kidsTag:"Kids",msgFbSaved:"Saved.",
+ repeatLbl:"Repeat",shuffleLbl:"Shuffle",partyLbl:"Party",pollsLbl:"Polls",feedbackLbl:"Feedback",
+ partyTitle:"Watch Party",partyDesc:"Watch together with friends and chat.",
+ yourNameLbl:"Your name",roomCodeInputLbl:"Room code (join)",joinLbl:"Join",orLbl:"— or —",createRoomLbl:"Create new room",
+ roomCodeLbl:"Room code:",copyLbl:"Copy",leaveLbl:"Leave",membersLbl:"Members",chatLbl:"Room chat",sendLbl:"Send",
+ partyCreated:"Room created",partyJoined:"Joined the room",partyLeft:"Left the room",
+ partyCodeCopied:"Code copied",partyCodeCopyFail:"Copy failed.",partyNeedCode:"Enter room code.",
+ pollModalTitle:"Poll",fbModalTitle:"Send idea / bug report",fbNameLbl:"Name (optional)",fbTypeLbl:"Type",
+ fbIdea:"Idea",fbBug:"Bug",fbFeature:"Feature",fbOther:"Other",fbSubjectLbl:"Short title",fbMessageLbl:"Description",
+ sendLbl:"Send",fbSent:"Sent",fbNeedMsg:"Description is required.",
+ nextUpLbl:"Up next",secondsLeft:"{n}s left"
 },
 "ar":{
-  navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
-  stationStatus:"حالة المحطة",stationLbl:"المحطة:",modeLbl:"الوضع:",statusLbl:"الحالة:",roleLbl:"الصلاحية:",channelLbl:"القناة:",
-  viewersTitle:"المشاهدون",onlineLbl:" متصل الآن:",onTVLbl:" على TV:",onRadioLbl:" على Radio:",viewerLbl:" مشاهد:",adminLbl:" مشرف:",totalViewsLbl:" إجمالي:",
-  channelsTitle:"القنوات",guideTitle:"جدول البث",guideHint:"الأوقات حسب المنطقة الزمنية.",
-  close:"إغلاق",preparing:"جارٍ التجهيز...",waiting:"القناة بانتظار البرامج",notplaying:"بانتظار التشغيل",ready:"جاهز",
-  tvMode:"تلفزيون",radioMode:"راديو",kidsMode:"أطفال",viewerRole:"مشاهد",adminRole:"مشرف",
-  settingsTitle:"تخصيص العرض",lblPreset:"لون جاهز",lblMode:"وضع العرض",lblAccent:"اللون الرئيسي",lblBg:"لون الخلفية",
-  modeDark:"داكن",modeLight:"فاتح",modeSpecial:"خاص",modeDream:"دريم‌كور",
-  p_green:"أخضر",p_amber:"كهرماني",p_blue:"أزرق",p_purple:"بنفسجي",p_red:"أحمر",
-  resetCustom:"إعادة",lblLang:"اللغة",langAuto:"تلقائي",emojiOnlyLbl:"أيقونات فقط",
-  lblSub:"الترجمة",subOff:"إيقاف",subHint:"الترجمة تعمل فقط عند وجود ترجمة.",
-  settingsHint:"هذه الخيارات تغيّر هذا المتصفح فقط.",
-  loginTitle:"دخول المشرف",emailLbl:"البريد",passLbl:"كلمة المرور",signIn:"دخول",loginHint:"الحساب في Supabase.",
-  adminTitle:"لوحة إدارة AM TV",
-  tabContent:"فيديو وقنوات",tabRadio:"راديو",tabKids:"أطفال",tabWatermark:"واترمارك",tabYoutube:"يوتيوب",tabStation:"المحطة",tabAnalytics:"إحصاءات",tabPolls:"تصويت",tabFeedback:"ملاحظات",
-  addProgram:"إضافة برنامج",lblTitleOpt:"اسم البرنامج",lblUrl:"رابط يوتيوب أو فيديو",lblFile:"أو ملف",
-  addBtn:"إضافة",clearBtn:"مسح",deleteBtn:"حذف",deleteLbl:"حذف",createBtn:"إنشاء",playSel:"تشغيل",playLbl:"تشغيل",
-  lblNewCh:"اسم القناة",lblColor:"لون القناة",
-  playlistTitle:"قائمة القناة الحالية",tzLbl:"المنطقة الزمنية",
-  radioChannelsTitle:"قنوات الراديو",lblNewRadioCh:"اسم القناة",addAudioTitle:"إضافة صوت",
-  lblAudioName:"اسم البرنامج",lblAudioUrl:"رابط صوت",lblAudioFile:"ملفات صوتية",
-  playlistRadioTitle:"قائمة القناة الحالية",
-  wmTitle:"الواترمارك",wmText:"النص",wmImgFile:"صورة",wmImgUrl:"رابط",
-  wmSize:"حجم النص",wmOpacity:"الشفافية",wmWidth:"عرض الشعار",wmColor:"لون النص",
-  wmPosTitle:"الموضع",wmPos:"الموضع",wmX:"أفقي",wmY:"عمودي",
-  previewLbl:"معاينة",saveAllLbl:"حفظ للجميع",saveLbl:"حفظ",
-  ytSubsTitle:"الاتصال بحساب YouTube وجلب الاشتراكات",
-  ytSubsDesc:"بربط حسابك في Google، تظهر هنا كل القنوات التي اشتركت فيها، ويمكنك تعيين كل واحدة إلى TV / Radio / Kids. تحتاج إلى Google OAuth Client ID.",
-  googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"حفظ",connectYtLbl:"الاتصال بـ YouTube",refreshSubsLbl:"تحديث",addAllSubsLbl:"إضافة الكل",
-  ytSubsNotConnected:"لم تتصل بـ YouTube بعد.",
-  ytManualTitle:"مزامنة YouTube (رابط يدوي)",
-  ytManualDesc:"أضف القنوات بالرابط أدناه.",
-  feedChannelUrlLbl:"رابط قناة يوتيوب",feedChannelNameLbl:"الاسم المعروض",feedTargetSectionLbl:"القسم",
-  addChannelFeedLbl:"إضافة قناة",syncChannelFeedsLbl:"مزامنة آخر 24 ساعة",syncAllFeedsLbl:"مزامنة الكل",noFeedsYet:"لم تُضف قنوات بعد.",
-  stationTitle:"إعدادات المحطة",lblStationName:"اسم المحطة",lblTagline:"الشعار",lblLogoMode:"وضع الشعار",
-  logoImg:"صورة",logoText:"نص",logoHidden:"مخفي",livePreviewLbl:"معاينة حية",lblLogoUrl:"رابط الشعار",uploadImgLbl:"رفع صورة",removeImgLbl:"إزالة",
-  backupTitle:"نسخ احتياطي",exportBtn:"تصدير",importBtn:"استيراد",connStatus:"حالة الاتصال",resync:"إعادة",
-  fallbackTitle:"صورة أو فيديو بديل",fallbackDesc:"يظهر عند توقف البث.",
-  typeLbl:"النوع",typeNone:"لا شيء",typeImage:"صورة",typeVideo:"فيديو قصير",directUrlLbl:"رابط مباشر",orUploadLbl:"أو رفع",
-  eventsTitle:"المناسبات",evThemeLbl:"تفعيل للجميع",onLbl:"مفعّل",offLbl:"معطّل",
-  evNameLbl:"الاسم/الرسالة",evDateLbl:"تاريخ البداية",evDaysLbl:"الأيام",evEmojiLbl:"إيموجي",evAccentLbl:"اللون",evBgLbl:"الخلفية",
-  evYearlyLbl:"تتكرر كل سنة",addEventLbl:"إضافة",
-  bumperTitle:"فاصل بين البرامج",lblBumperStatus:"الحالة",lblBumperSec:"المدة",lblBumperText:"نص مخصص",saveBumper:"حفظ",
-  statsOverviewLbl:"إحصاءات",resetStatsLbl:"مسح",exportJsonLbl:"تصدير JSON",
-  hourChartLbl:"الساعات الأكثر مشاهدة",topItemsLbl:"أعلى البرامج",dailyChartLbl:"آخر 14 يوم",
-  createPollLbl:"تصويت جديد",pollQuestionLbl:"السؤال",pollOptionsLbl:"الخيارات (سطر لكل)",pollDurationLbl:"المدة",
-  fbListLbl:"الملاحظات الواردة",clearAllLbl:"مسح الكل",
-  kidsSettingsTitle:"إعدادات وضع الأطفال",kidsPinNewLbl:"رمز جديد (4-6)",kidsPinConfirmLbl:"تأكيد الرمز",clearPinLbl:"حذف الرمز",
-  kidsPinHint:"الرمز الافتراضي 1234.",
-  newKidsChannelLbl:"قناة أطفال جديدة",nameLbl:"الاسم",colorLbl:"اللون",
-  addKidsContentLbl:"إضافة محتوى",programNameOptLbl:"اسم البرنامج (اختياري)",linkYtOrDirectLbl:"رابط",orVideoFileLbl:"أو ملف",clearFieldsLbl:"مسح",
-  kidsPlaylistLbl:"قائمة القناة الحالية",
-  cc:"ترجمة",fullscreen:"ملء الشاشة",exitfs:"خروج",rotate:"أفقي / عمودي",unmute:"🔊 المس للصوت",
-  untitled:"بدون عنوان",audioProgram:"برنامج صوتي",nowOnAir:"يُبث الآن",emptySection:"لم يُضف بعد",
-  badYt:"معرّف غير معروف",loadingYt:"جارٍ التحميل...",syncing:"جارٍ المزامنة...",
-  videoErr:"تعذّر التشغيل.",ytErr:"تعذّر ({code}).",
-  bumperDefault:"التالى قريباً",bumperNext:"التالي:",
-  guideNow:"الآن",guideFixed:"وقت ثابت",guideResume:"يتابع",guideCalc:"جارٍ الحساب...",
-  lastSyncNever:"آخر مزامنة: أبدًا",
-  msgAdded:"تمت إضافة {n}.",msgChannelCreated:"تم الإنشاء.",msgRadioChannelCreated:"تم الإنشاء.",
-  msgEmojiOn:"وضع الأيقونات",msgEmojiOff:"عادي",msgLangChanged:"تم التغيير",
-  msgPinSet:"تم الحفظ.",msgPinCleared:"تم المسح.",msgPinInvalid:"وقت غير صالح.",
-  msgPinNoDur:"المدة غير معروفة.",msgReset:"تمت الإعادة.",msgPreviewUpd:"تم التحديث.",
-  msgWmSaved:"تم الحفظ.",msgWmCleared:"تم المسح.",msgStationSaved:"تم الحفظ.",
-  msgBumperSaved:"تم الحفظ.",msgBackupIn:"تم الاستيراد.",msgBackupFail:"فشل: ",
-  msgLoggedIn:"تم الدخول.",msgLoggedOut:"تم الخروج.",msgAddFail:"فشل: ",msgUploadFail:"فشل: ",
-  msgPlayVideoFail:"تعذّر.",msgPlayAudioFail:"تعذّر.",msgEndOfList:"النهاية",
-  msgNoChannelSwitch:"للمشرف فقط.",msgNoAdmin:"للمشرف فقط.",
-  msgRenamed:"تم التحديث.",msgRenameEmpty:"لا يمكن أن يكون فارغًا.",
-  msgYtHandle:"انسخ رابط القائمة.",
-  confirmDelCh:"حذف؟",confirmDelRadioCh:"حذف؟",
-  promptPin:"الوقت الثابت (20:00)\nفارغ = إزالة",promptRename:"العنوان الجديد:",
-  cinema:"سينمائي",cinemaExit:"خروج",vhsLbl:"VHS",eventThemeLbl:"المناسبات",
-  cast:"Cast",castActive:"يبث",castNotSupported:"غير مدعوم.",castStarted:"تم.",castFailed:"فشل.",castYT:"استخدم تطبيق التلفزيون.",castDisconnected:"قطع.",
-  sleep:"نوم",sleepSet:"مؤقّت: {n} د",sleepOff:"مغلق",sleepDone:"توقف",
-  kidsBtn:"أطفال",kidsOn:"مفعّل",kidsOff:"مغلق",exitKids:"خروج",
-  pinTitle:"رمز",pinHint:"أدخل الرمز.",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"خطأ",
-  pinInvalidFormat:"4-6 أرقام.",pinMismatch:"غير متطابق.",
-  msgPinSaved:"تم.",msgPinCleared2:"تم.",
-  lockScreen:"قفل",unlockScreen:"المس للفتح",
-  kidsTag:"أطفال",msgFbSaved:"تم.",
-  repeatLbl:"تكرار",shuffleLbl:"عشوائي",partyLbl:"حفلة",pollsLbl:"تصويت",feedbackLbl:"ملاحظات",
-  partyTitle:"Watch Party",partyDesc:"شاهد مع أصدقائك ودردش.",
-  yourNameLbl:"اسمك",roomCodeInputLbl:"رمز الغرفة",joinLbl:"انضم",orLbl:"— أو —",createRoomLbl:"غرفة جديدة",
-  roomCodeLbl:"الرمز:",copyLbl:"نسخ",leaveLbl:"خروج",membersLbl:"الأعضاء",chatLbl:"الدردشة",sendLbl:"إرسال",
-  partyCreated:"تم إنشاء الغرفة",partyJoined:"انضممت",partyLeft:"خرجت",
-  partyCodeCopied:"تم النسخ",partyCodeCopyFail:"فشل.",partyNeedCode:"أدخل الرمز.",
-  pollModalTitle:"تصويت",fbModalTitle:"إرسال ملاحظة",fbNameLbl:"الاسم",fbTypeLbl:"النوع",
-  fbIdea:"فكرة",fbBug:"خطأ",fbFeature:"ميزة",fbOther:"أخرى",fbSubjectLbl:"عنوان مختصر",fbMessageLbl:"الوصف",
-  sendLbl:"إرسال",fbSent:"تم الإرسال",fbNeedMsg:"الوصف مطلوب.",
-  nextUpLbl:"التالي",secondsLeft:"{n} ثانية"
+ navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
+ stationStatus:"حالة المحطة",stationLbl:"المحطة:",modeLbl:"الوضع:",statusLbl:"الحالة:",roleLbl:"الصلاحية:",channelLbl:"القناة:",
+ viewersTitle:"المشاهدون",onlineLbl:" متصل الآن:",onTVLbl:" على TV:",onRadioLbl:" على Radio:",viewerLbl:" مشاهد:",adminLbl:" مشرف:",totalViewsLbl:" إجمالي:",
+ channelsTitle:"القنوات",guideTitle:"جدول البث",guideHint:"الأوقات حسب المنطقة الزمنية.",
+ close:"إغلاق",preparing:"جارٍ التجهيز...",waiting:"القناة بانتظار البرامج",notplaying:"بانتظار التشغيل",ready:"جاهز",
+ tvMode:"تلفزيون",radioMode:"راديو",kidsMode:"أطفال",viewerRole:"مشاهد",adminRole:"مشرف",
+ settingsTitle:"تخصيص العرض",lblPreset:"لون جاهز",lblMode:"وضع العرض",lblAccent:"اللون الرئيسي",lblBg:"لون الخلفية",
+ modeDark:"داكن",modeLight:"فاتح",modeSpecial:"خاص",modeDream:"دريم‌كور",
+ p_green:"أخضر",p_amber:"كهرماني",p_blue:"أزرق",p_purple:"بنفسجي",p_red:"أحمر",
+ resetCustom:"إعادة",lblLang:"اللغة",langAuto:"تلقائي",emojiOnlyLbl:"أيقونات فقط",
+ lblSub:"الترجمة",subOff:"إيقاف",subHint:"الترجمة تعمل فقط عند وجود ترجمة.",
+ settingsHint:"هذه الخيارات تغيّر هذا المتصفح فقط.",
+ loginTitle:"دخول المشرف",emailLbl:"البريد",passLbl:"كلمة المرور",signIn:"دخول",loginHint:"الحساب في Supabase.",
+ adminTitle:"لوحة إدارة AM TV",
+ tabContent:"فيديو وقنوات",tabRadio:"راديو",tabKids:"أطفال",tabWatermark:"واترمارك",tabYoutube:"يوتيوب",tabStation:"المحطة",tabAnalytics:"إحصاءات",tabPolls:"تصويت",tabFeedback:"ملاحظات",
+ addProgram:"إضافة برنامج",lblTitleOpt:"اسم البرنامج",lblUrl:"رابط يوتيوب أو فيديو",lblFile:"أو ملف",
+ addBtn:"إضافة",clearBtn:"مسح",deleteBtn:"حذف",deleteLbl:"حذف",createBtn:"إنشاء",playSel:"تشغيل",playLbl:"تشغيل",
+ lblNewCh:"اسم القناة",lblColor:"لون القناة",
+ playlistTitle:"قائمة القناة الحالية",tzLbl:"المنطقة الزمنية",
+ radioChannelsTitle:"قنوات الراديو",lblNewRadioCh:"اسم القناة",addAudioTitle:"إضافة صوت",
+ lblAudioName:"اسم البرنامج",lblAudioUrl:"رابط صوت",lblAudioFile:"ملفات صوتية",
+ playlistRadioTitle:"قائمة القناة الحالية",
+ wmTitle:"الواترمارك",wmText:"النص",wmImgFile:"صورة",wmImgUrl:"رابط",
+ wmSize:"حجم النص",wmOpacity:"الشفافية",wmWidth:"عرض الشعار",wmColor:"لون النص",
+ wmPosTitle:"الموضع",wmPos:"الموضع",wmX:"أفقي",wmY:"عمودي",
+ previewLbl:"معاينة",saveAllLbl:"حفظ للجميع",saveLbl:"حفظ",
+ ytSubsTitle:"الاتصال بحساب YouTube وجلب الاشتراكات",
+ ytSubsDesc:"بربط حسابك في Google، تظهر هنا كل القنوات التي اشتركت فيها.",
+ googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"حفظ",connectYtLbl:"الاتصال بـ YouTube",refreshSubsLbl:"تحديث",addAllSubsLbl:"إضافة الكل",
+ ytSubsNotConnected:"لم تتصل بـ YouTube بعد.",
+ ytManualTitle:"مزامنة YouTube (رابط يدوي)",ytManualDesc:"أضف القنوات بالرابط أدناه.",
+ feedChannelUrlLbl:"رابط قناة يوتيوب",feedChannelNameLbl:"الاسم المعروض",feedTargetSectionLbl:"القسم",
+ addChannelFeedLbl:"إضافة قناة",syncChannelFeedsLbl:"مزامنة آخر 24 ساعة",syncAllFeedsLbl:"مزامنة الكل",noFeedsYet:"لم تُضف قنوات بعد.",
+ stationTitle:"إعدادات المحطة",lblStationName:"اسم المحطة",lblTagline:"الشعار",lblLogoMode:"وضع الشعار",
+ logoImg:"صورة",logoText:"نص",logoHidden:"مخفي",livePreviewLbl:"معاينة حية",lblLogoUrl:"رابط الشعار",uploadImgLbl:"رفع صورة",removeImgLbl:"إزالة",
+ backupTitle:"نسخ احتياطي",exportBtn:"تصدير",importBtn:"استيراد",connStatus:"حالة الاتصال",resync:"إعادة",
+ fallbackTitle:"صورة أو فيديو بديل",fallbackDesc:"يظهر عند توقف البث.",
+ typeLbl:"النوع",typeNone:"لا شيء",typeImage:"صورة",typeVideo:"فيديو قصير",directUrlLbl:"رابط مباشر",orUploadLbl:"أو رفع",
+ eventsTitle:"المناسبات",evThemeLbl:"تفعيل للجميع",onLbl:"مفعّل",offLbl:"معطّل",
+ evNameLbl:"الاسم",evDateLbl:"تاريخ البداية",evDaysLbl:"الأيام",evEmojiLbl:"إيموجي",evAccentLbl:"اللون",evBgLbl:"الخلفية",
+ evYearlyLbl:"تتكرر كل سنة",addEventLbl:"إضافة",
+ bumperTitle:"فاصل بين البرامج",lblBumperStatus:"الحالة",lblBumperSec:"المدة",lblBumperText:"نص مخصص",saveBumper:"حفظ",
+ statsOverviewLbl:"إحصاءات",resetStatsLbl:"مسح",exportJsonLbl:"تصدير JSON",
+ hourChartLbl:"الساعات الأكثر مشاهدة",topItemsLbl:"أعلى البرامج",dailyChartLbl:"آخر 14 يوم",
+ createPollLbl:"تصويت جديد",pollQuestionLbl:"السؤال",pollOptionsLbl:"الخيارات",pollDurationLbl:"المدة",
+ fbListLbl:"الملاحظات الواردة",clearAllLbl:"مسح الكل",
+ kidsSettingsTitle:"إعدادات وضع الأطفال",kidsPinNewLbl:"رمز جديد",kidsPinConfirmLbl:"تأكيد الرمز",clearPinLbl:"حذف الرمز",
+ kidsPinHint:"الرمز الافتراضي 1234.",
+ newKidsChannelLbl:"قناة أطفال جديدة",nameLbl:"الاسم",colorLbl:"اللون",
+ addKidsContentLbl:"إضافة محتوى",programNameOptLbl:"اسم البرنامج",linkYtOrDirectLbl:"رابط",orVideoFileLbl:"أو ملف",clearFieldsLbl:"مسح",
+ kidsPlaylistLbl:"قائمة القناة الحالية",
+ cc:"ترجمة",fullscreen:"ملء الشاشة",exitfs:"خروج",rotate:"أفقي / عمودي",unmute:"🔊 المس للصوت",
+ untitled:"بدون عنوان",audioProgram:"برنامج صوتي",nowOnAir:"يُبث الآن",emptySection:"لم يُضف بعد",
+ badYt:"معرّف غير معروف",loadingYt:"جارٍ التحميل...",syncing:"جارٍ المزامنة...",
+ videoErr:"تعذّر التشغيل.",ytErr:"تعذّر ({code}).",
+ bumperDefault:"التالى قريباً",bumperNext:"التالي:",
+ guideNow:"الآن",guideFixed:"وقت ثابت",guideResume:"يتابع",guideCalc:"جارٍ الحساب...",
+ lastSyncNever:"آخر مزامنة: أبدًا",
+ msgAdded:"تمت إضافة {n}.",msgChannelCreated:"تم الإنشاء.",msgRadioChannelCreated:"تم الإنشاء.",
+ msgEmojiOn:"وضع الأيقونات",msgEmojiOff:"عادي",msgLangChanged:"تم التغيير",
+ msgPinSet:"تم الحفظ.",msgPinCleared:"تم المسح.",msgPinInvalid:"وقت غير صالح.",
+ msgPinNoDur:"المدة غير معروفة.",msgReset:"تمت الإعادة.",msgPreviewUpd:"تم التحديث.",
+ msgWmSaved:"تم الحفظ.",msgWmCleared:"تم المسح.",msgStationSaved:"تم الحفظ.",
+ msgBumperSaved:"تم الحفظ.",msgBackupIn:"تم الاستيراد.",msgBackupFail:"فشل: ",
+ msgLoggedIn:"تم الدخول.",msgLoggedOut:"تم الخروج.",msgAddFail:"فشل: ",msgUploadFail:"فشل: ",
+ msgPlayVideoFail:"تعذّر.",msgPlayAudioFail:"تعذّر.",msgEndOfList:"النهاية",
+ msgNoChannelSwitch:"للمشرف فقط.",msgNoAdmin:"للمشرف فقط.",
+ msgRenamed:"تم التحديث.",msgRenameEmpty:"لا يمكن أن يكون فارغًا.",
+ msgYtHandle:"انسخ رابط القائمة.",
+ confirmDelCh:"حذف؟",confirmDelRadioCh:"حذف؟",
+ promptPin:"الوقت الثابت (20:00)\nفارغ = إزالة",promptRename:"العنوان الجديد:",
+ cinema:"سينمائي",cinemaExit:"خروج",vhsLbl:"VHS",eventThemeLbl:"المناسبات",
+ cast:"Cast",castActive:"يبث",castNotSupported:"غير مدعوم.",castStarted:"تم.",castFailed:"فشل.",castYT:"استخدم تطبيق التلفزيون.",castDisconnected:"قطع.",
+ sleep:"نوم",sleepSet:"مؤقّت: {n} د",sleepOff:"مغلق",sleepDone:"توقف",
+ kidsBtn:"أطفال",kidsOn:"مفعّل",kidsOff:"مغلق",exitKids:"خروج",
+ pinTitle:"رمز",pinHint:"أدخل الرمز.",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"خطأ",
+ pinInvalidFormat:"4-6 أرقام.",pinMismatch:"غير متطابق.",
+ msgPinSaved:"تم.",msgPinCleared2:"تم.",
+ lockScreen:"قفل",unlockScreen:"المس للفتح",
+ kidsTag:"أطفال",msgFbSaved:"تم.",
+ repeatLbl:"تكرار",shuffleLbl:"عشوائي",partyLbl:"حفلة",pollsLbl:"تصويت",feedbackLbl:"ملاحظات",
+ partyTitle:"Watch Party",partyDesc:"شاهد مع أصدقائك ودردش.",
+ yourNameLbl:"اسمك",roomCodeInputLbl:"رمز الغرفة",joinLbl:"انضم",orLbl:"— أو —",createRoomLbl:"غرفة جديدة",
+ roomCodeLbl:"الرمز:",copyLbl:"نسخ",leaveLbl:"خروج",membersLbl:"الأعضاء",chatLbl:"الدردشة",sendLbl:"إرسال",
+ partyCreated:"تم إنشاء الغرفة",partyJoined:"انضممت",partyLeft:"خرجت",
+ partyCodeCopied:"تم النسخ",partyCodeCopyFail:"فشل.",partyNeedCode:"أدخل الرمز.",
+ pollModalTitle:"تصويت",fbModalTitle:"إرسال ملاحظة",fbNameLbl:"الاسم",fbTypeLbl:"النوع",
+ fbIdea:"فكرة",fbBug:"خطأ",fbFeature:"ميزة",fbOther:"أخرى",fbSubjectLbl:"عنوان مختصر",fbMessageLbl:"الوصف",
+ sendLbl:"إرسال",fbSent:"تم الإرسال",fbNeedMsg:"الوصف مطلوب.",
+ nextUpLbl:"التالي",secondsLeft:"{n} ثانية"
 },
 "tr":{
-  navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
-  stationStatus:"İstasyon",stationLbl:"İstasyon:",modeLbl:"Mod:",statusLbl:"Durum:",roleLbl:"Erişim:",channelLbl:"Kanal:",
-  viewersTitle:"İzleyiciler",onlineLbl:" Çevrimiçi:",onTVLbl:" TV:",onRadioLbl:" Radyo:",viewerLbl:" İzleyici:",adminLbl:" Yönetici:",totalViewsLbl:" Toplam:",
-  channelsTitle:"Kanallar",guideTitle:"Yayın Akışı",guideHint:"Saatler yöneticinin dilimine göredir.",
-  close:"Kapat",preparing:"Hazırlanıyor...",waiting:"Program bekleniyor",notplaying:"Bekleniyor",ready:"Hazır",
-  tvMode:"TV",radioMode:"Radyo",kidsMode:"Çocuk",viewerRole:"İzleyici",adminRole:"Yönetici",
-  settingsTitle:"Görünüm",lblPreset:"Hazır renk",lblMode:"Mod",lblAccent:"Vurgu",lblBg:"Arka plan",
-  modeDark:"Koyu",modeLight:"Açık",modeSpecial:"Özel",modeDream:"Rüya",
-  p_green:"Yeşil",p_amber:"Kehribar",p_blue:"Mavi",p_purple:"Mor",p_red:"Kırmızı",
-  resetCustom:"Sıfırla",lblLang:"Dil",langAuto:"Otomatik",emojiOnlyLbl:"Yalnızca simge",
-  lblSub:"Altyazı",subOff:"Kapalı",subHint:"Altyazı varsa çalışır.",
-  settingsHint:"Yalnızca bu tarayıcı.",
-  loginTitle:"Giriş",emailLbl:"E-posta",passLbl:"Şifre",signIn:"Giriş",loginHint:"Supabase hesabı gerekli.",
-  adminTitle:"AM TV Yönetim",
-  tabContent:"Video & Kanallar",tabRadio:"Radyo",tabKids:"Çocuk",tabWatermark:"Filigran",tabYoutube:"YouTube",tabStation:"İstasyon",tabAnalytics:"İstatistik",tabPolls:"Anket",tabFeedback:"Geri bildirim",
-  addProgram:"Program ekle",lblTitleOpt:"Ad (isteğe bağlı)",lblUrl:"YouTube veya video",lblFile:"Veya dosya",
-  addBtn:"Ekle",clearBtn:"Temizle",deleteBtn:"Sil",deleteLbl:"Sil",createBtn:"Oluştur",playSel:"Oynat",playLbl:"Oynat",
-  lblNewCh:"Kanal adı",lblColor:"Renk",
-  playlistTitle:"Kanal listesi",tzLbl:"Saat dilimi",
-  radioChannelsTitle:"Radyo kanalları",lblNewRadioCh:"Yeni kanal",addAudioTitle:"Ses ekle",
-  lblAudioName:"Ad",lblAudioUrl:"Ses bağlantısı",lblAudioFile:"Ses dosyaları",
-  playlistRadioTitle:"Kanal listesi",
-  wmTitle:"Filigran",wmText:"Metin",wmImgFile:"Resim",wmImgUrl:"URL",
-  wmSize:"Boyut",wmOpacity:"Opaklık",wmWidth:"Genişlik",wmColor:"Renk",
-  wmPosTitle:"Konum",wmPos:"Konum",wmX:"X",wmY:"Y",
-  previewLbl:"Önizleme",saveAllLbl:"Herkese kaydet",saveLbl:"Kaydet",
-  ytSubsTitle:"YouTube hesabına bağlan ve abonelikleri al",
-  ytSubsDesc:"Google hesabını bağla, abone olduğun tüm kanallar burada görünür ve her birini TV / Radio / Kids bölümüne atayabilirsin. Google OAuth Client ID gerekir.",
-  googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"Kaydet",connectYtLbl:"YouTube'a bağlan",refreshSubsLbl:"Yenile",addAllSubsLbl:"Tümünü ekle",
-  ytSubsNotConnected:"YouTube'a bağlı değilsin.",
-  ytManualTitle:"Otomatik YouTube senkron (manuel link)",
-  ytManualDesc:"Abone olduğun kanalları aşağıdaki link ile ekle.",
-  feedChannelUrlLbl:"YouTube kanal URL",feedChannelNameLbl:"Görünen ad",feedTargetSectionLbl:"Hedef bölüm",
-  addChannelFeedLbl:"Kanal ekle",syncChannelFeedsLbl:"Son 24 saati senkronize et",syncAllFeedsLbl:"Tümünü senkronize et",noFeedsYet:"Henüz kanal eklenmedi.",
-  stationTitle:"İstasyon",lblStationName:"Ad",lblTagline:"Slogan",lblLogoMode:"Logo modu",
-  logoImg:"Resim",logoText:"Metin",logoHidden:"Gizli",livePreviewLbl:"Canlı önizleme",lblLogoUrl:"Logo URL",uploadImgLbl:"Resim yükle",removeImgLbl:"Kaldır",
-  backupTitle:"Yedek",exportBtn:"JSON Dışa",importBtn:"JSON İçe",connStatus:"Bağlantı",resync:"Yeniden",
-  fallbackTitle:"Yedek görsel veya video",fallbackDesc:"Program yokken gösterilir.",
-  typeLbl:"Tip",typeNone:"Yok",typeImage:"Resim",typeVideo:"Kısa video",directUrlLbl:"URL",orUploadLbl:"Veya yükle",
-  eventsTitle:"Etkinlik temaları",evThemeLbl:"Herkese açık",onLbl:"Açık",offLbl:"Kapalı",
-  evNameLbl:"Ad/mesaj",evDateLbl:"Başlangıç",evDaysLbl:"Gün",evEmojiLbl:"Emoji",evAccentLbl:"Renk",evBgLbl:"Arka plan",
-  evYearlyLbl:"Her yıl tekrar et",addEventLbl:"Etkinlik ekle",
-  bumperTitle:"Programlar arası bumper",lblBumperStatus:"Durum",lblBumperSec:"Süre",lblBumperText:"Özel metin",saveBumper:"Kaydet",
-  statsOverviewLbl:"Genel bakış",resetStatsLbl:"İstatistikleri temizle",exportJsonLbl:"JSON Dışa",
-  hourChartLbl:"En yoğun saatler",topItemsLbl:"En çok izlenen programlar",dailyChartLbl:"Son 14 gün",
-  createPollLbl:"Yeni anket",pollQuestionLbl:"Soru",pollOptionsLbl:"Seçenekler (her satırda bir)",pollDurationLbl:"Süre (saat, 0=sınırsız)",
-  fbListLbl:"Gelen fikir ve raporlar",clearAllLbl:"Tümünü temizle",
-  kidsSettingsTitle:"Çocuk modu ayarları",kidsPinNewLbl:"Yeni PIN (4-6)",kidsPinConfirmLbl:"PIN tekrar",clearPinLbl:"PIN sil",
-  kidsPinHint:"Varsayılan PIN 1234.",
-  newKidsChannelLbl:"Yeni çocuk kanalı",nameLbl:"Kanal adı",colorLbl:"Renk",
-  addKidsContentLbl:"Çocuk kanalına içerik ekle",programNameOptLbl:"Program adı (isteğe bağlı)",linkYtOrDirectLbl:"Link",orVideoFileLbl:"Veya dosya",clearFieldsLbl:"Temizle",
-  kidsPlaylistLbl:"Geçerli çocuk kanalı listesi",
-  cc:"Altyazı",fullscreen:"Tam ekran",exitfs:"Çıkış",rotate:"Yatay / Dikey",unmute:"🔊 Dokunun",
-  untitled:"Başlıksız",audioProgram:"Ses programı",nowOnAir:"Şimdi",emptySection:"Boş",
-  badYt:"ID tanınmadı",loadingYt:"Yükleniyor...",syncing:"Eşitleniyor...",
-  videoErr:"Oynatılamıyor.",ytErr:"({code})",
-  bumperDefault:"Sıradaki birazdan",bumperNext:"Sıradaki:",
-  guideNow:"Şimdi",guideFixed:"Sabit",guideResume:"Devam",guideCalc:"Hesaplanıyor...",
-  lastSyncNever:"Senkron: hiç",
-  msgAdded:"{n} eklendi.",msgChannelCreated:"Oluşturuldu.",msgRadioChannelCreated:"Oluşturuldu.",
-  msgEmojiOn:"Yalnız simge",msgEmojiOff:"Normal",msgLangChanged:"Dil değişti",
-  msgPinSet:"Kaydedildi.",msgPinCleared:"Silindi.",msgPinInvalid:"Geçersiz.",
-  msgPinNoDur:"Süre bilinmiyor.",msgReset:"Sıfırlandı.",msgPreviewUpd:"Güncellendi.",
-  msgWmSaved:"Kaydedildi.",msgWmCleared:"Silindi.",msgStationSaved:"Kaydedildi.",
-  msgBumperSaved:"Kaydedildi.",msgBackupIn:"Yüklendi.",msgBackupFail:"Başarısız: ",
-  msgLoggedIn:"Giriş.",msgLoggedOut:"Çıkış.",msgAddFail:"Başarısız: ",msgUploadFail:"Başarısız: ",
-  msgPlayVideoFail:"Oynatılamadı.",msgPlayAudioFail:"Oynatılamadı.",msgEndOfList:"Son",
-  msgNoChannelSwitch:"Yalnız yönetici.",msgNoAdmin:"Yalnız yönetici.",
-  msgRenamed:"Güncellendi.",msgRenameEmpty:"Boş olamaz.",
-  msgYtHandle:"Çalma listesi URL'sini kopyala.",
-  confirmDelCh:"Silinsin mi?",confirmDelRadioCh:"Silinsin mi?",
-  promptPin:"Saat (20:00)\nBoş = sil",promptRename:"Yeni başlık:",
-  cinema:"Sinema",cinemaExit:"Çık",vhsLbl:"VHS",eventThemeLbl:"Etkinlik",
-  cast:"Cast",castActive:"Yayında",castNotSupported:"Desteklenmiyor.",castStarted:"Bağlandı.",castFailed:"Başarısız.",castYT:"TV uygulamasını kullan.",castDisconnected:"Kesildi.",
-  sleep:"Uyku",sleepSet:"Uyku: {n} dk",sleepOff:"Kapalı",sleepDone:"Durduruldu",
-  kidsBtn:"Çocuk",kidsOn:"Açık",kidsOff:"Kapalı",exitKids:"Çık",
-  pinTitle:"PIN",pinHint:"PIN girin.",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış",
-  pinInvalidFormat:"4-6 hane.",pinMismatch:"Eşleşmiyor.",
-  msgPinSaved:"Kaydedildi.",msgPinCleared2:"Silindi.",
-  lockScreen:"Kilitle",unlockScreen:"Açmak için dokun",
-  kidsTag:"Çocuk",msgFbSaved:"Kaydedildi.",
-  repeatLbl:"Tekrar",shuffleLbl:"Karıştır",partyLbl:"Parti",pollsLbl:"Anket",feedbackLbl:"Geri bildirim",
-  partyTitle:"Watch Party",partyDesc:"Arkadaşlarınla birlikte izle ve sohbet et.",
-  yourNameLbl:"Adın",roomCodeInputLbl:"Oda kodu",joinLbl:"Katıl",orLbl:"— veya —",createRoomLbl:"Yeni oda",
-  roomCodeLbl:"Oda kodu:",copyLbl:"Kopyala",leaveLbl:"Çık",membersLbl:"Üyeler",chatLbl:"Sohbet",sendLbl:"Gönder",
-  partyCreated:"Oda oluşturuldu",partyJoined:"Katıldın",partyLeft:"Çıktın",
-  partyCodeCopied:"Kopyalandı",partyCodeCopyFail:"Kopyalanamadı.",partyNeedCode:"Oda kodunu gir.",
-  pollModalTitle:"Anket",fbModalTitle:"Fikir / hata gönder",fbNameLbl:"Ad (isteğe bağlı)",fbTypeLbl:"Tür",
-  fbIdea:"Fikir",fbBug:"Hata",fbFeature:"Özellik",fbOther:"Diğer",fbSubjectLbl:"Kısa başlık",fbMessageLbl:"Açıklama",
-  sendLbl:"Gönder",fbSent:"Gönderildi",fbNeedMsg:"Açıklama gerekli.",
-  nextUpLbl:"Sıradaki",secondsLeft:"{n} sn kaldı"
+ navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
+ stationStatus:"İstasyon",stationLbl:"İstasyon:",modeLbl:"Mod:",statusLbl:"Durum:",roleLbl:"Erişim:",channelLbl:"Kanal:",
+ viewersTitle:"İzleyiciler",onlineLbl:" Çevrimiçi:",onTVLbl:" TV:",onRadioLbl:" Radyo:",viewerLbl:" İzleyici:",adminLbl:" Yönetici:",totalViewsLbl:" Toplam:",
+ channelsTitle:"Kanallar",guideTitle:"Yayın Akışı",guideHint:"Saatler yöneticinin dilimine göredir.",
+ close:"Kapat",preparing:"Hazırlanıyor...",waiting:"Program bekleniyor",notplaying:"Bekleniyor",ready:"Hazır",
+ tvMode:"TV",radioMode:"Radyo",kidsMode:"Çocuk",viewerRole:"İzleyici",adminRole:"Yönetici",
+ settingsTitle:"Görünüm",lblPreset:"Hazır renk",lblMode:"Mod",lblAccent:"Vurgu",lblBg:"Arka plan",
+ modeDark:"Koyu",modeLight:"Açık",modeSpecial:"Özel",modeDream:"Rüya",
+ p_green:"Yeşil",p_amber:"Kehribar",p_blue:"Mavi",p_purple:"Mor",p_red:"Kırmızı",
+ resetCustom:"Sıfırla",lblLang:"Dil",langAuto:"Otomatik",emojiOnlyLbl:"Yalnızca simge",
+ lblSub:"Altyazı",subOff:"Kapalı",subHint:"Altyazı varsa çalışır.",
+ settingsHint:"Yalnızca bu tarayıcı.",
+ loginTitle:"Giriş",emailLbl:"E-posta",passLbl:"Şifre",signIn:"Giriş",loginHint:"Supabase hesabı gerekli.",
+ adminTitle:"AM TV Yönetim",
+ tabContent:"Video & Kanallar",tabRadio:"Radyo",tabKids:"Çocuk",tabWatermark:"Filigran",tabYoutube:"YouTube",tabStation:"İstasyon",tabAnalytics:"İstatistik",tabPolls:"Anket",tabFeedback:"Geri bildirim",
+ addProgram:"Program ekle",lblTitleOpt:"Ad (isteğe bağlı)",lblUrl:"YouTube veya video",lblFile:"Veya dosya",
+ addBtn:"Ekle",clearBtn:"Temizle",deleteBtn:"Sil",deleteLbl:"Sil",createBtn:"Oluştur",playSel:"Oynat",playLbl:"Oynat",
+ lblNewCh:"Kanal adı",lblColor:"Renk",
+ playlistTitle:"Kanal listesi",tzLbl:"Saat dilimi",
+ radioChannelsTitle:"Radyo kanalları",lblNewRadioCh:"Yeni kanal",addAudioTitle:"Ses ekle",
+ lblAudioName:"Ad",lblAudioUrl:"Ses bağlantısı",lblAudioFile:"Ses dosyaları",
+ playlistRadioTitle:"Kanal listesi",
+ wmTitle:"Filigran",wmText:"Metin",wmImgFile:"Resim",wmImgUrl:"URL",
+ wmSize:"Boyut",wmOpacity:"Opaklık",wmWidth:"Genişlik",wmColor:"Renk",
+ wmPosTitle:"Konum",wmPos:"Konum",wmX:"X",wmY:"Y",
+ previewLbl:"Önizleme",saveAllLbl:"Herkese kaydet",saveLbl:"Kaydet",
+ ytSubsTitle:"YouTube hesabına bağlan ve abonelikleri al",
+ ytSubsDesc:"Google hesabını bağla, abone olduğun tüm kanallar burada görünür.",
+ googleClientIdLbl:"Google OAuth Client ID",saveGoogleClientLbl:"Kaydet",connectYtLbl:"YouTube'a bağlan",refreshSubsLbl:"Yenile",addAllSubsLbl:"Tümünü ekle",
+ ytSubsNotConnected:"YouTube'a bağlı değilsin.",
+ ytManualTitle:"Otomatik YouTube senkron (manuel link)",ytManualDesc:"Abone olduğun kanalları link ile ekle.",
+ feedChannelUrlLbl:"YouTube kanal URL",feedChannelNameLbl:"Görünen ad",feedTargetSectionLbl:"Hedef bölüm",
+ addChannelFeedLbl:"Kanal ekle",syncChannelFeedsLbl:"Son 24 saati senkronize et",syncAllFeedsLbl:"Tümünü senkronize et",noFeedsYet:"Henüz kanal eklenmedi.",
+ stationTitle:"İstasyon",lblStationName:"Ad",lblTagline:"Slogan",lblLogoMode:"Logo modu",
+ logoImg:"Resim",logoText:"Metin",logoHidden:"Gizli",livePreviewLbl:"Canlı önizleme",lblLogoUrl:"Logo URL",uploadImgLbl:"Resim yükle",removeImgLbl:"Kaldır",
+ backupTitle:"Yedek",exportBtn:"JSON Dışa",importBtn:"JSON İçe",connStatus:"Bağlantı",resync:"Yeniden",
+ fallbackTitle:"Yedek görsel veya video",fallbackDesc:"Program yokken gösterilir.",
+ typeLbl:"Tip",typeNone:"Yok",typeImage:"Resim",typeVideo:"Kısa video",directUrlLbl:"URL",orUploadLbl:"Veya yükle",
+ eventsTitle:"Etkinlik temaları",evThemeLbl:"Herkese açık",onLbl:"Açık",offLbl:"Kapalı",
+ evNameLbl:"Ad",evDateLbl:"Başlangıç",evDaysLbl:"Gün",evEmojiLbl:"Emoji",evAccentLbl:"Renk",evBgLbl:"Arka plan",
+ evYearlyLbl:"Her yıl tekrar et",addEventLbl:"Etkinlik ekle",
+ bumperTitle:"Programlar arası bumper",lblBumperStatus:"Durum",lblBumperSec:"Süre",lblBumperText:"Özel metin",saveBumper:"Kaydet",
+ statsOverviewLbl:"Genel bakış",resetStatsLbl:"İstatistikleri temizle",exportJsonLbl:"JSON Dışa",
+ hourChartLbl:"En yoğun saatler",topItemsLbl:"En çok izlenen programlar",dailyChartLbl:"Son 14 gün",
+ createPollLbl:"Yeni anket",pollQuestionLbl:"Soru",pollOptionsLbl:"Seçenekler",pollDurationLbl:"Süre",
+ fbListLbl:"Gelen fikir ve raporlar",clearAllLbl:"Tümünü temizle",
+ kidsSettingsTitle:"Çocuk modu ayarları",kidsPinNewLbl:"Yeni PIN",kidsPinConfirmLbl:"PIN tekrar",clearPinLbl:"PIN sil",
+ kidsPinHint:"Varsayılan PIN 1234.",
+ newKidsChannelLbl:"Yeni çocuk kanalı",nameLbl:"Kanal adı",colorLbl:"Renk",
+ addKidsContentLbl:"Çocuk kanalına içerik ekle",programNameOptLbl:"Program adı",linkYtOrDirectLbl:"Link",orVideoFileLbl:"Veya dosya",clearFieldsLbl:"Temizle",
+ kidsPlaylistLbl:"Geçerli çocuk kanalı listesi",
+ cc:"Altyazı",fullscreen:"Tam ekran",exitfs:"Çıkış",rotate:"Yatay / Dikey",unmute:"🔊 Dokunun",
+ untitled:"Başlıksız",audioProgram:"Ses programı",nowOnAir:"Şimdi",emptySection:"Boş",
+ badYt:"ID tanınmadı",loadingYt:"Yükleniyor...",syncing:"Eşitleniyor...",
+ videoErr:"Oynatılamıyor.",ytErr:"({code})",
+ bumperDefault:"Sıradaki birazdan",bumperNext:"Sıradaki:",
+ guideNow:"Şimdi",guideFixed:"Sabit",guideResume:"Devam",guideCalc:"Hesaplanıyor...",
+ lastSyncNever:"Senkron: hiç",
+ msgAdded:"{n} eklendi.",msgChannelCreated:"Oluşturuldu.",msgRadioChannelCreated:"Oluşturuldu.",
+ msgEmojiOn:"Yalnız simge",msgEmojiOff:"Normal",msgLangChanged:"Dil değişti",
+ msgPinSet:"Kaydedildi.",msgPinCleared:"Silindi.",msgPinInvalid:"Geçersiz.",
+ msgPinNoDur:"Süre bilinmiyor.",msgReset:"Sıfırlandı.",msgPreviewUpd:"Güncellendi.",
+ msgWmSaved:"Kaydedildi.",msgWmCleared:"Silindi.",msgStationSaved:"Kaydedildi.",
+ msgBumperSaved:"Kaydedildi.",msgBackupIn:"Yüklendi.",msgBackupFail:"Başarısız: ",
+ msgLoggedIn:"Giriş.",msgLoggedOut:"Çıkış.",msgAddFail:"Başarısız: ",msgUploadFail:"Başarısız: ",
+ msgPlayVideoFail:"Oynatılamadı.",msgPlayAudioFail:"Oynatılamadı.",msgEndOfList:"Son",
+ msgNoChannelSwitch:"Yalnız yönetici.",msgNoAdmin:"Yalnız yönetici.",
+ msgRenamed:"Güncellendi.",msgRenameEmpty:"Boş olamaz.",
+ msgYtHandle:"Çalma listesi URL'sini kopyala.",
+ confirmDelCh:"Silinsin mi?",confirmDelRadioCh:"Silinsin mi?",
+ promptPin:"Saat (20:00)\nBoş = sil",promptRename:"Yeni başlık:",
+ cinema:"Sinema",cinemaExit:"Çık",vhsLbl:"VHS",eventThemeLbl:"Etkinlik",
+ cast:"Cast",castActive:"Yayında",castNotSupported:"Desteklenmiyor.",castStarted:"Bağlandı.",castFailed:"Başarısız.",castYT:"TV uygulamasını kullan.",castDisconnected:"Kesildi.",
+ sleep:"Uyku",sleepSet:"Uyku: {n} dk",sleepOff:"Kapalı",sleepDone:"Durduruldu",
+ kidsBtn:"Çocuk",kidsOn:"Açık",kidsOff:"Kapalı",exitKids:"Çık",
+ pinTitle:"PIN",pinHint:"PIN girin.",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış",
+ pinInvalidFormat:"4-6 hane.",pinMismatch:"Eşleşmiyor.",
+ msgPinSaved:"Kaydedildi.",msgPinCleared2:"Silindi.",
+ lockScreen:"Kilitle",unlockScreen:"Açmak için dokun",
+ kidsTag:"Çocuk",msgFbSaved:"Kaydedildi.",
+ repeatLbl:"Tekrar",shuffleLbl:"Karıştır",partyLbl:"Parti",pollsLbl:"Anket",feedbackLbl:"Geri bildirim",
+ partyTitle:"Watch Party",partyDesc:"Arkadaşlarınla birlikte izle ve sohbet et.",
+ yourNameLbl:"Adın",roomCodeInputLbl:"Oda kodu",joinLbl:"Katıl",orLbl:"— veya —",createRoomLbl:"Yeni oda",
+ roomCodeLbl:"Oda kodu:",copyLbl:"Kopyala",leaveLbl:"Çık",membersLbl:"Üyeler",chatLbl:"Sohbet",sendLbl:"Gönder",
+ partyCreated:"Oda oluşturuldu",partyJoined:"Katıldın",partyLeft:"Çıktın",
+ partyCodeCopied:"Kopyalandı",partyCodeCopyFail:"Kopyalanamadı.",partyNeedCode:"Oda kodunu gir.",
+ pollModalTitle:"Anket",fbModalTitle:"Fikir / hata gönder",fbNameLbl:"Ad (isteğe bağlı)",fbTypeLbl:"Tür",
+ fbIdea:"Fikir",fbBug:"Hata",fbFeature:"Özellik",fbOther:"Diğer",fbSubjectLbl:"Kısa başlık",fbMessageLbl:"Açıklama",
+ sendLbl:"Gönder",fbSent:"Gönderildi",fbNeedMsg:"Açıklama gerekli.",
+ nextUpLbl:"Sıradaki",secondsLeft:"{n} sn kaldı"
 }
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
@@ -1767,34 +1810,23 @@ function applyLang(init){
 }
 
 const DEFAULT_STATE = {
-  stationName:"AM TV 24/7",
-  tagline:"THE NEXT ERA · v1.0.2",
-  stationLogo:"",
-  mode:"tv",
-  channelIndex:0,
-  channels:[{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}],
+  stationName:"AM TV 24/7",tagline:"THE NEXT ERA · v1.0.2",stationLogo:"",mode:"tv",
+  channelIndex:0,channels:[{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}],
   radioChannels:[{id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]}],
-  radioChannelIndex:0,
-  radioIndex:0,
-  kidsChannels:[{id:"kids-main",name:"Kids World",color:"#ff9e3d",list:[]}],
-  kidsChannelIndex:0,
+  radioChannelIndex:0,radioIndex:0,
+  kidsChannels:[{id:"kids-main",name:"Kids World",color:"#ff9e3d",list:[]}],kidsChannelIndex:0,
   playback:{index:0,startedAt:0,nonce:0},
   radioPlayback:{index:0,startedAt:0,nonce:0},
   kidsPlayback:{index:0,startedAt:0,nonce:0},
-  repeat:false,
-  shuffle:false,
+  repeat:false,shuffle:false,
   bumper:{enabled:true,seconds:6,text:""},
-  schedule:{tz:210},
-  logoMode:"auto",
+  schedule:{tz:210},logoMode:"auto",
   fallback:{type:"none",url:""},
   events:{enabled:true,custom:[]},
-  lastSyncAt:0,
-  channelFeeds:[],
-  googleClientId:"",
+  lastSyncAt:0,channelFeeds:[],googleClientId:"",
   watermark:{text:"",image:"",size:100,opacity:85,width:110,color:"#ffffff",position:"top-left",x:3,y:4},
   analytics:{itemViews:{},itemWatchTime:{},hourViews:new Array(24).fill(0),totalWatchSeconds:0,dailyViews:{}},
-  polls:[],
-  feedback:[]
+  polls:[],feedback:[]
 };
 
 let state = clone(DEFAULT_STATE);
@@ -1841,6 +1873,19 @@ let kidsMode=false;
 let googleTokenClient=null;
 let googleAccessToken=null;
 let ytSubscriptions=[];
+
+/* ============ Party state ============ */
+let partyChannel=null;
+let partyRoom="";
+let partyName="";
+let partyIsHost=false;
+let partyMessages=[];
+let partyYTPlayer=null;
+let partyYTReady=false;
+let partyVideoEl=null;
+let partyLastItemKey="";
+let partySyncTimer=null;
+let partyApplying=false;
 
 function applyAudioState(){
   const mute = !isAdmin && !viewerSoundOn;
@@ -1965,20 +2010,12 @@ function fmtDur(sec){
   return m+":"+String(s).padStart(2,"0");
 }
 function anchorFor(kind){
-  if(kind==="radio"){
-    const p=state.radioPlayback||{};
-    return {index:Number(state.radioIndex)||0,startedAt:Number(p.startedAt)||0};
-  }
-  if(kind==="kids"){
-    const p=state.kidsPlayback||{};
-    return {index:Number(p.index)||0,startedAt:Number(p.startedAt)||0};
-  }
+  if(kind==="radio"){const p=state.radioPlayback||{};return {index:Number(state.radioIndex)||0,startedAt:Number(p.startedAt)||0};}
+  if(kind==="kids"){const p=state.kidsPlayback||{};return {index:Number(p.index)||0,startedAt:Number(p.startedAt)||0};}
   const p=state.playback||{};
   return {index:Number(p.index)||0,startedAt:Number(p.startedAt)||0};
 }
-function normDigits(str){
-  return String(str||"").replace(/[۰-۹]/g,c=>"۰۱۲۳۴۵۶۷۸۹".indexOf(c)).replace(/[٠-٩]/g,c=>"٠١٢٣٤٥٦٧٨٩".indexOf(c));
-}
+function normDigits(str){return String(str||"").replace(/[۰-۹]/g,c=>"۰۱۲۳۴۵۶۷۸۹".indexOf(c)).replace(/[٠-٩]/g,c=>"٠١٢٣٤٥٦٧٨٩".indexOf(c));}
 
 function bumperSecs(kind){
   if(kind!=="tv")return 0;
@@ -2010,10 +2047,7 @@ function showBumper(next,left){
   try{const fv=$("fallbackLayer").querySelector("video");if(fv)fv.pause()}catch(_){}
   try{if(ytReady&&ytPlayer&&ytPlayer.pauseVideo)ytPlayer.pauseVideo()}catch(_){}
 }
-function hideBumper(){
-  $("bumperScreen").classList.add("hidden");
-  bumperOn=false;
-}
+function hideBumper(){$("bumperScreen").classList.add("hidden");bumperOn=false;}
 
 function parsePin(str){
   const m=/^(\d{1,2}):(\d{2})$/.exec(String(str||"").trim());
@@ -2285,12 +2319,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId=""){
   clearTimeout(saveTimer);await saveRemoteState();
   if(showNotice)notify(errors.length?"!":"✓");
 }
-function renderLastSync(){
-  const el=$("lastSyncLabel");if(!el)return;
-  const tt=Number(state.lastSyncAt)||0;
-  if(!tt){el.textContent=t("lastSyncNever");return}
-  el.textContent=new Date(tt).toLocaleString(dateLocale());
-}
+function renderLastSync(){/* no-op without el */}
 
 let holdLive=false,holdUntil=0,holdStarted=false;
 let probeRunning=false,probePlayer=null,probeReady=false;
@@ -2497,7 +2526,6 @@ function updateMediaSessionMeta(){
   }catch(_){}
 }
 
-function firstKidsIndex(){const idx=currentKidsChannel().list.findIndex(()=>true);return idx;}
 function applyKidsFilter(){
   const list=currentKidsChannel().list;
   if(!list.length){notify("...");setTimeout(()=>setKidsMode(false),2500);return;}
@@ -2552,7 +2580,6 @@ function setupSleepAndKids(){
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("pinModal")?.classList.contains("show"))$("pinModal").classList.remove("show");});
 }
 
-/* ================== Supabase init (simplified — removed custom fetch wrapper that could break requests) ================== */
 try{
   if(window.supabase && window.supabase.createClient){
     sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
@@ -2561,21 +2588,59 @@ try{
   }
 }catch(e){console.error("Supabase init failed:",e)}
 
-/* Test connectivity to Supabase — used to show clear error to user */
-let supabaseReachable=null;
+/* ===== Connectivity diagnostics ===== */
 async function testSupabaseConnection(){
-  if(!sbClient)return false;
-  try{
-    const ctrl=new AbortController();
-    const t=setTimeout(()=>ctrl.abort(),8000);
-    const res=await fetch(SUPABASE_URL+"/auth/v1/health",{signal:ctrl.signal,headers:{apikey:SUPABASE_ANON_KEY}});
-    clearTimeout(t);
-    supabaseReachable=res.ok||res.status<500;
-    return supabaseReachable;
-  }catch(e){
-    supabaseReachable=false;
-    return false;
+  if(!sbClient){
+    const body=$("connDiagBody"),box=$("connDiag");
+    if(box)box.style.display="block";
+    if(body)body.innerHTML='<div class="cdRow bad">❌ Supabase SDK لود نشد</div>';
+    return {ok:false,netOk:false};
   }
+  const probes=[
+    ["Google","https://www.google.com/generate_204",{}],
+    ["Cloudflare","https://1.1.1.1/cdn-cgi/trace",{}],
+    ["Supabase Auth",SUPABASE_URL+"/auth/v1/health",{}],
+    ["Supabase REST",SUPABASE_URL+"/rest/v1/amtv_state?select=id&limit=1",{apikey:SUPABASE_ANON_KEY}]
+  ];
+  const results=[];
+  let netOk=false,sbOk=false;
+  await Promise.all(probes.map(async ([name,url,headers])=>{
+    const t0=Date.now();
+    try{
+      const c=new AbortController();
+      const to=setTimeout(()=>c.abort(),8000);
+      const r=await fetch(url,{headers,signal:c.signal});
+      clearTimeout(to);
+      results.push({name,ok:true,status:r.status,ms:Date.now()-t0});
+      if(name==="Google"||name==="Cloudflare") netOk=true;
+      if(name.startsWith("Supabase") && r.status<500) sbOk=true;
+    }catch(e){
+      results.push({name,ok:false,error:String(e.message||e).slice(0,80)});
+    }
+  }));
+  const box=$("connDiag"),body=$("connDiagBody");
+  if(box&&body){
+    box.style.display="block";
+    body.innerHTML="";
+    results.forEach(r=>{
+      const row=document.createElement("div");
+      row.className="cdRow "+(r.ok?"ok":"bad");
+      const detail=r.ok?("HTTP "+r.status+" · "+r.ms+"ms"):r.error;
+      row.textContent=(r.ok?"✅":"❌")+" "+r.name+" → "+detail;
+      body.appendChild(row);
+    });
+    const hint=document.createElement("div");
+    hint.className="cdHint";
+    if(!netOk){
+      hint.innerHTML="⚠️ <b>اینترنت به هیچ سروری وصل نمی‌شه.</b><br>اتصال Wi-Fi/داده را بررسی کن.";
+    }else if(!sbOk){
+      hint.innerHTML="⚠️ <b>Supabase مسدوده ولی اینترنت OK هست.</b><br>راه‌حل‌ها:<br>• VPN را روی حالت <b>Global / Full</b> بگذار (نه Split)<br>• DNS را به <code>1.1.1.1</code> تغییر بده<br>• یا در داشبورد Supabase مطمئن شو پروژه <b>Paused</b> نیست";
+    }else{
+      hint.innerHTML="✅ اتصال برقرار است. اگر باز خطا داری، AdBlocker را خاموش کن.";
+    }
+    body.appendChild(hint);
+  }
+  return {ok:sbOk,netOk,results};
 }
 
 async function loadRemoteState(){
@@ -2596,7 +2661,7 @@ async function loadRemoteState(){
     console.error("loadRemoteState failed:",err);
     $("supabaseStatus").value="net err";
     if(/failed to fetch|networkerror|load failed/i.test(String(err&&err.message||err))){
-      showAmTvError("اتصال به Supabase برقرار نشد. اتصال اینترنت / فیلترشکن را بررسی کن.");
+      showAmTvError("اتصال به Supabase برقرار نشد. اتصال اینترنت / VPN را بررسی کن.");
     }
   }
 }
@@ -2608,8 +2673,7 @@ async function saveRemoteState(){
     if(error){$("supabaseStatus").value="save err: "+error.message;return false}
     $("supabaseStatus").value="synced";return true;
   }catch(err){
-    $("supabaseStatus").value="save net err";
-    return false;
+    $("supabaseStatus").value="save net err";return false;
   }
 }
 function scheduleSave(){
@@ -2626,7 +2690,6 @@ async function initAuth(){
     sbClient.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>applySession(session),0);});
   }catch(err){
     console.error("initAuth failed:",err);
-    /* Still allow anonymous view */
     applySession(null);
   }
 }
@@ -2652,25 +2715,27 @@ async function signIn(){
   const originalText=button.innerHTML;
   button.innerHTML='<i class="ic ic-sync"></i> ...';
   try{
-    /* Pre-check connectivity */
-    const reachable=await testSupabaseConnection();
-    if(reachable===false){
-      notify("اتصال به Supabase برقرار نشد. اینترنت/VPN را بررسی کن.");
-      showAmTvError("سرور Supabase در دسترس نیست. احتمالاً اتصال اینترنت یا DNS مشکل دارد. اگر از VPN/فیلترشکن استفاده می‌کنی، آن را روشن/خاموش کن.");
+    const diag=await testSupabaseConnection();
+    if(diag.netOk===false){
+      notify("اینترنت به سرور وصل نمی‌شود.");
+      showAmTvError("مرورگر شما نمی‌تواند به اینترنت وصل شود. VPN را روشن/خاموش کن.");
+      return;
+    }
+    if(diag.ok===false){
+      notify("Supabase در دسترس نیست.");
+      showAmTvError("Supabase از IP شما مسدود است. VPN روی حالت Global بگذار یا DNS را عوض کن. اگر پروژه Paused است آن را Restore کن.");
       return;
     }
     const {data,error}=await sbClient.auth.signInWithPassword({email,password});
     if(error){
       if(/invalid login|invalid credentials/i.test(error.message)){
         notify("ایمیل یا رمز عبور اشتباه است.");
-      }else{
-        notify("Sign in failed: "+error.message);
-      }
+      }else{notify("Sign in failed: "+error.message);}
       return;
     }
     if(data?.user?.app_metadata?.role!=="admin"){
       await sbClient.auth.signOut();
-      notify("این حساب دسترسی ادمین ندارد. در Supabase برای user نقش admin تنظیم کن.");
+      notify("این حساب دسترسی ادمین ندارد.");
       return;
     }
     await applySession(data.session);
@@ -2680,11 +2745,9 @@ async function signIn(){
     console.error("signIn error:",err);
     const message=String(err?.message||err);
     if(/failed to fetch|networkerror|load failed|aborted|abort/i.test(message)){
-      notify("عدم دسترسی به سرور. اتصال اینترنت را بررسی کن.");
-      showAmTvError("خطای شبکه هنگام ورود. لطفاً اتصال اینترنت / DNS / VPN را بررسی کن.");
-    }else{
-      notify("Sign in error: "+message);
-    }
+      notify("عدم دسترسی به سرور.");
+      showAmTvError("خطای شبکه هنگام ورود. اتصال اینترنت / VPN / DNS را بررسی کن.");
+    }else{notify("Sign in error: "+message);}
   }finally{
     button.disabled=false;
     button.innerHTML=originalText;
@@ -2752,12 +2815,7 @@ function watchTotalViewsRealtime(){
   }catch(_){}
 }
 
-let partyChannel=null;
-let partyRoom="";
-let partyName="";
-let partyIsHost=false;
-let partyMessages=[];
-
+/* ================== PARTY (with player) ================== */
 function partyMyName(){return partyName||("User-"+VISITOR_ID.slice(-4));}
 function partyOpenModal(){
   $("partyModal").classList.add("show");
@@ -2768,6 +2826,34 @@ function partyOpenModal(){
 function partyCloseModal(){$("partyModal").classList.remove("show");}
 function partyGenCode(){return Math.random().toString(36).slice(2,8).toUpperCase();}
 
+/* Party mini YT player */
+function initPartyYT(){
+  if(partyYTPlayer||!window.YT||!window.YT.Player)return;
+  try{
+    partyYTPlayer=new YT.Player("partyYouTubePlayer",{
+      width:"100%",height:"100%",videoId:"",
+      playerVars:{autoplay:1,controls:1,rel:0,playsinline:1,modestbranding:1,fs:1},
+      events:{
+        onReady:()=>{partyYTReady=true;partyLoadCurrentItem(true);},
+        onStateChange:(e)=>{
+          if(partyIsHost && (e.data===YT.PlayerState.PLAYING||e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED)){
+            partyBroadcastPlayback();
+          }
+        }
+      }
+    });
+  }catch(e){console.warn("Party YT init failed",e);}
+}
+
+/* Party video element events */
+function setupPartyVideoEvents(){
+  partyVideoEl=$("partyVideo");
+  if(!partyVideoEl)return;
+  partyVideoEl.addEventListener("play",()=>{if(partyIsHost)partyBroadcastPlayback();});
+  partyVideoEl.addEventListener("pause",()=>{if(partyIsHost)partyBroadcastPlayback();});
+  partyVideoEl.addEventListener("seeked",()=>{if(partyIsHost)partyBroadcastPlayback();});
+}
+
 async function partyEnsureChannel(room){
   if(!sbClient){notify("Supabase required.");return null;}
   if(partyChannel){try{await sbClient.removeChannel(partyChannel);}catch(_){}partyChannel=null;}
@@ -2776,9 +2862,14 @@ async function partyEnsureChannel(room){
     .on("presence",{event:"sync"},partyRenderPresence)
     .on("broadcast",{event:"chat"},({payload})=>{partyPushMsg(payload);})
     .on("broadcast",{event:"playback"},({payload})=>{partyApplyRemotePlayback(payload);})
+    .on("broadcast",{event:"request"},({payload})=>{if(partyIsHost)setTimeout(()=>partyBroadcastPlayback(),100);})
     .subscribe(async(status)=>{
       if(status==="SUBSCRIBED"){
         await partyChannel.track({name:partyMyName(),joinedAt:Date.now()});
+        /* new joiner asks host for current state */
+        if(!partyIsHost){
+          setTimeout(()=>{try{partyChannel.send({type:"broadcast",event:"request",payload:{by:partyMyName()}})}catch(_){}},500);
+        }
       }
     });
   return partyChannel;
@@ -2790,6 +2881,7 @@ function partyRenderPresence(){
   Object.values(st).forEach(arr=>{if(Array.isArray(arr))arr.forEach(m=>users.push(m.name||"?"));});
   const root=$("partyUsers");if(!root)return;
   root.innerHTML="";
+  const cnt=$("partyUserCount");if(cnt)cnt.textContent=users.length;
   users.forEach(n=>{
     const el=document.createElement("span");
     el.className="partyUser"+(n===partyMyName()?" me":"");
@@ -2826,45 +2918,157 @@ async function partyJoin(room,host=false){
   $("partyBtn")?.classList.add("live");
   try{localStorage.setItem("amtv-party-name",partyName);}catch(_){}
   notify(host?t("partyCreated"):t("partyJoined"));
-  if(host)setTimeout(()=>partyBroadcastPlayback(),1500);
+  /* init party players */
+  if(!partyYTPlayer) initPartyYT();
+  if(!partyVideoEl) setupPartyVideoEvents();
+  /* Start periodic sync (host broadcasts every 3s, guest applies) */
+  clearInterval(partySyncTimer);
+  partySyncTimer=setInterval(()=>{
+    if(!partyRoom)return;
+    if(partyIsHost){ partyBroadcastPlayback(); }
+  },3000);
+  /* Load current item for both */
+  setTimeout(()=>partyLoadCurrentItem(true),400);
 }
 async function partyLeave(){
+  clearInterval(partySyncTimer);partySyncTimer=null;
   try{if(partyChannel&&sbClient)await sbClient.removeChannel(partyChannel);}catch(_){}
   partyChannel=null;partyRoom="";partyMessages=[];partyIsHost=false;
+  partyLastItemKey="";
   $("partyBtn")?.classList.remove("live");
   $("partyRoomCode").textContent="——";
   $("partyUsers").innerHTML="";$("partyChat").innerHTML="";
+  $("partyEmpty").style.display="flex";
+  $("partyVideo").style.display="none";
+  $("partyYouTubePlayer").style.display="none";
+  try{$("partyVideo").pause();$("partyVideo").src="";}catch(_){}
+  try{if(partyYTReady&&partyYTPlayer)partyYTPlayer.stopVideo();}catch(_){}
   partyOpenModal();
   notify(t("partyLeft"));
 }
-function partyBroadcastPlayback(){
-  if(!partyChannel||!partyRoom)return;
-  const mode=activeMode();
-  const item=activeItem();
-  if(!item)return;
-  partyChannel.send({type:"broadcast",event:"playback",payload:{
-    mode,itemId:item.id,index:currentIndex(),at:Date.now(),by:partyMyName()
-  }});
+
+/* Load item into party modal player */
+function partyLoadItemPayload(p){
+  const empty=$("partyEmpty");
+  const vid=$("partyVideo");
+  const ytWrap=$("partyYouTubePlayer");
+  if(!p||!p.url){empty.style.display="flex";vid.style.display="none";ytWrap.style.display="none";return;}
+  empty.style.display="none";
+  if(p.isYT){
+    vid.style.display="none";
+    vid.pause();
+    ytWrap.style.display="block";
+    if(!partyYTReady){
+      initPartyYT();
+      setTimeout(()=>partyLoadItemPayload(p),600);
+      return;
+    }
+    const cur=partyYTPlayer.getVideoData?partyYTPlayer.getVideoData():null;
+    const curId=cur&&cur.video_id;
+    const targetTime=Number(p.time||0);
+    if(curId!==p.ytId){
+      try{
+        partyYTPlayer.loadVideoById({videoId:p.ytId,startSeconds:targetTime});
+        if(!p.playing){setTimeout(()=>{try{partyYTPlayer.pauseVideo()}catch(_){}},400);}
+      }catch(_){}
+    }else{
+      try{
+        const curTime=partyYTPlayer.getCurrentTime()||0;
+        if(Math.abs(curTime-targetTime)>2.5)partyYTPlayer.seekTo(targetTime,true);
+        if(p.playing){if(partyYTPlayer.getPlayerState()!==YT.PlayerState.PLAYING)partyYTPlayer.playVideo();}
+        else{if(partyYTPlayer.getPlayerState()!==YT.PlayerState.PAUSED)partyYTPlayer.pauseVideo();}
+      }catch(_){}
+    }
+  }else{
+    ytWrap.style.display="none";
+    if(partyYTReady&&partyYTPlayer){try{partyYTPlayer.stopVideo()}catch(_){}}
+    vid.style.display="block";
+    const targetTime=Number(p.time||0);
+    if(vid.src!==p.url){
+      vid.src=p.url;
+      vid.currentTime=targetTime;
+      if(p.playing)vid.play().catch(()=>{});
+      else setTimeout(()=>vid.pause(),100);
+    }else{
+      if(Math.abs((vid.currentTime||0)-targetTime)>2.5){try{vid.currentTime=targetTime}catch(_){}}
+      if(p.playing){if(vid.paused)vid.play().catch(()=>{});}
+      else{if(!vid.paused)vid.pause();}
+    }
+  }
 }
+
+/* Host: build current payload from active item + current mini player state */
+function buildPartyPayload(){
+  const item=activeItem();
+  if(!item)return null;
+  const url=mediaUrl(item);
+  if(!url)return null;
+  const isYt=isYouTube(url);
+  const ytId=isYt?(item.ytId||youtubeId(url)):"";
+  let time=0,playing=false;
+  if(isYt && partyYTReady && partyYTPlayer){
+    try{
+      time=partyYTPlayer.getCurrentTime()||0;
+      const st=partyYTPlayer.getPlayerState();
+      playing=(st===YT.PlayerState.PLAYING||st===YT.PlayerState.BUFFERING);
+    }catch(_){}
+  }else if(!isYt && partyVideoEl){
+    try{time=partyVideoEl.currentTime||0;playing=!partyVideoEl.paused;}catch(_){}
+  }
+  /* If mini player hasn't started yet (e.g., host just opened party), fallback to current time of main player */
+  if(!time){
+    if(isYt && ytReady && ytPlayer){try{time=ytPlayer.getCurrentTime()||0;playing=ytPlayer.getPlayerState()===YT.PlayerState.PLAYING;}catch(_){}}
+    else if(!isYt){const mainV=$("videoElement");if(mainV){try{time=mainV.currentTime||0;playing=!mainV.paused;}catch(_){}}}
+  }
+  return {
+    mode:activeMode(),
+    itemId:item.id,
+    title:item.title||"",
+    url,isYT:isYt,ytId,
+    time:Number(time)||0,
+    playing:!!playing,
+    at:Date.now(),
+    by:partyMyName(),
+    nonce:makeId()
+  };
+}
+
+/* Host broadcasts playback state */
+function partyBroadcastPlayback(){
+  if(!partyChannel||!partyRoom||!partyIsHost)return;
+  const p=buildPartyPayload();
+  if(!p)return;
+  try{partyChannel.send({type:"broadcast",event:"playback",payload:p});}catch(_){}
+}
+
+/* Guest receives state and applies to mini player */
 function partyApplyRemotePlayback(payload){
   if(!payload||payload.by===partyMyName())return;
-  if(isAdmin)return;
-  const mode=payload.mode;
-  if(mode&&mode!==activeMode()){
-    if(mode==="tv"||mode==="radio")setMode(mode);
-  }
-  setTimeout(()=>{
-    try{
-      const list=payload.mode==="radio"?currentRadioChannel().list:(payload.mode==="kids"?currentKidsChannel().list:currentChannel().list);
-      const idx=Math.max(0,Math.min(Number(payload.index)||0,list.length-1));
-      if(payload.mode==="radio"){state.radioIndex=idx;}
-      else if(payload.mode==="kids"){state.kidsPlayback={index:idx,startedAt:serverNow(),nonce:(state.kidsPlayback?.nonce||0)+1};}
-      else{state.playback={index:idx,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};}
-      activeMediaKey="";
-      renderPlayer(true);
-    }catch(_){}
-  },200);
+  if(partyIsHost)return;
+  /* sync time to account for network delay */
+  const delay=(Date.now()-(payload.at||Date.now()))/1000;
+  const adjusted={...payload,time:Math.max(0,(Number(payload.time)||0)+ (payload.playing?delay:0))};
+  partyLoadItemPayload(adjusted);
 }
+
+/* Load whatever is currently active (used on join and when host changes) */
+function partyLoadCurrentItem(force=false){
+  if(!partyRoom)return;
+  if(partyIsHost){
+    /* Host sets mini player to mirror main player */
+    const item=activeItem();
+    if(!item)return;
+    const p=buildPartyPayload();
+    if(!p)return;
+    const k=p.url+"|"+p.ytId+"|"+p.itemId;
+    if(!force && k===partyLastItemKey)return;
+    partyLastItemKey=k;
+    /* For host, mini player should reflect main player but time from main */
+    partyLoadItemPayload({...p,time:p.time,playing:p.playing});
+  }
+  /* Guest's load happens via broadcast (either initial request or host's periodic broadcast) */
+}
+
 function partySendMsg(){
   if(!partyChannel||!partyRoom)return;
   const input=$("partyMsgInput");
@@ -2875,6 +3079,25 @@ function partySendMsg(){
   input.value="";
 }
 
+/* When host changes active item while party is open, push immediately */
+function partyOnHostItemChange(){
+  if(!partyRoom||!partyIsHost)return;
+  partyLastItemKey="";
+  setTimeout(()=>{
+    partyLoadCurrentItem(true);
+    partyBroadcastPlayback();
+  },300);
+}
+
+/* Fullscreen for party player */
+function partyToggleFullscreen(){
+  const wrap=$("partyPlayerWrap");
+  if(!wrap)return;
+  if(document.fullscreenElement){try{document.exitFullscreen();}catch(_){}return;}
+  try{wrap.requestFullscreen();}catch(_){}
+}
+
+/* ================== CAST ================== */
 function hasRemotePlaybackAPI(){const v=$("videoElement");return !!(v && v.remote && typeof v.remote.prompt==="function");}
 function loadCastSDK(){
   if(window.cast && window.cast.framework){initCast();return;}
@@ -2999,9 +3222,11 @@ window.onYouTubeIframeAPIReady=function(){
             setTimeout(()=>{tryOnceSubtitles();},500);
             localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>';
             try{updateMediaSessionMeta();}catch(_){}
+            if(partyIsHost)partyBroadcastPlayback();
           }else if(e.data===YT.PlayerState.PAUSED){
             localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>';
             try{updateMediaSessionMeta();}catch(_){}
+            if(partyIsHost)partyBroadcastPlayback();
           }
         },
         onError:function(e){notify(t("ytErr",{code:e.data}));showEmpty(t("ytErr",{code:e.data}));}
@@ -3078,6 +3303,7 @@ function renderPlayer(force=false){
   hideAllMedia();
   const off=Math.floor(startOffsetFor(mode,item));
   if(isCastingActive()){setTimeout(function(){castCurrentMedia();},200);}
+  if(partyIsHost)setTimeout(partyOnHostItemChange,300);
 
   if(mode==="radio"){
     $("radioScreen").style.display="flex";
@@ -3134,11 +3360,13 @@ function togglePlay(){
       if(!ytReady||!ytPlayer)return;
       const rs=ytPlayer.getPlayerState();
       if(rs===YT.PlayerState.PLAYING)ytPlayer.pauseVideo();else ytPlayer.playVideo();
+      if(partyIsHost)partyBroadcastPlayback();
       return;
     }
     const a=$("audioElement");
     if(a.paused)a.play().then(()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>';try{updateMediaSessionMeta()}catch(_){}}).catch(()=>notify(t("msgPlayAudioFail")));
     else{a.pause();localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>';try{updateMediaSessionMeta()}catch(_){}}
+    if(partyIsHost)partyBroadcastPlayback();
     return;
   }
   const item=activeItem();if(!item)return;
@@ -3146,10 +3374,12 @@ function togglePlay(){
     if(!ytReady||!ytPlayer)return;
     const s=ytPlayer.getPlayerState();
     if(s===YT.PlayerState.PLAYING)ytPlayer.pauseVideo();else ytPlayer.playVideo();
+    if(partyIsHost)setTimeout(partyBroadcastPlayback,200);
   }else{
     const v=$("videoElement");
     if(v.paused)v.play().then(()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>';try{updateMediaSessionMeta()}catch(_){}}).catch(()=>notify(t("msgPlayVideoFail")));
     else{v.pause();localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>';try{updateMediaSessionMeta()}catch(_){}}
+    if(partyIsHost)setTimeout(partyBroadcastPlayback,200);
   }
 }
 function chooseIndex(index,kind=activeMode()){
@@ -3167,7 +3397,7 @@ function chooseIndex(index,kind=activeMode()){
   scheduleSave();activeMediaKey="";
   renderPlayer(true);
   setTimeout(function(){if(isCastingActive())castCurrentMedia();},300);
-  if(partyChannel)setTimeout(()=>partyBroadcastPlayback(),300);
+  if(partyIsHost)setTimeout(()=>{partyLoadCurrentItem(true);partyBroadcastPlayback();},500);
 }
 function nextItem(){
   if(!isAdmin && !kidsMode)return;
@@ -3490,9 +3720,6 @@ function renderPollModal(){
     }
     body.appendChild(row);
   });
-  const info=document.createElement("div");info.className="viewerhint";info.style.marginTop="10px";
-  info.textContent=String(poll.options.reduce((s,o)=>s+(o.votes||0),0));
-  body.appendChild(info);
 }
 function renderPollList(){
   const root=$("pollList");if(!root)return;root.innerHTML="";
@@ -3781,7 +4008,7 @@ function renderAll(){
   loadWatermarkFields();loadBumperFields();loadScheduleFields();loadLogoFields();
   const ek=eventKey();
   if(ek!==lastEventKey){lastEventKey=ek;applyPrefs();renderEventBanner();}
-  renderEventList();renderGuide();renderLastSync();renderChannelFeedsList();updateViewerUI();
+  renderEventList();renderGuide();renderChannelFeedsList();updateViewerUI();
   renderAnalytics();renderPollList();renderFeedbackList();
   const hasPoll=!!activePoll();
   const pv=$("pollsViewerBtn");
@@ -3792,9 +4019,7 @@ function renderAll(){
   enhanceAllSelects(document);
 }
 function syncLogoModeUI(){
-  document.querySelectorAll("input[name='logoModeRad']").forEach(r=>{
-    r.checked=(r.value===(state.logoMode||"auto"));
-  });
+  document.querySelectorAll("input[name='logoModeRad']").forEach(r=>{r.checked=(r.value===(state.logoMode||"auto"));});
   updateLogoPreview();
 }
 function updateLogoPreview(){
@@ -4025,6 +4250,9 @@ async function toggleFullscreen(){
   catch(_){el.classList.add("pagecover");document.body.style.overflow="hidden";}
   setTimeout(applyWatermark,200);
 }
+function toggleCinemaOrientation(){
+  document.body.classList.toggle("portrait");
+}
 
 function setMode(mode){
   if(mode!=="tv"&&mode!=="radio")return;
@@ -4034,6 +4262,7 @@ function setMode(mode){
   activeMediaKey="";renderAll();
   if(isAdmin)syncPlayback(true);
   trackPresence();
+  if(partyIsHost)setTimeout(()=>{partyLoadCurrentItem(true);partyBroadcastPlayback();},300);
 }
 function openTab(tabId){
   document.querySelectorAll(".tabcontent").forEach(el=>el.classList.add("hidden"));
@@ -4048,7 +4277,6 @@ function openTab(tabId){
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
 
-/* ===== Fixed dropdown menus (mobile-friendly) ===== */
 function closeAllMenus(){
   document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));
   const bd=$("menuBackdrop");
@@ -4060,10 +4288,8 @@ function setupMenu(btnId, wrapId){
   const backdrop=$("menuBackdrop");
   const isMobile=()=>window.matchMedia("(max-width:600px)").matches;
   const isTopMenu=()=>wrap.classList.contains("menu-wrap");
-
   btn.addEventListener("click", function(e){
-    e.preventDefault();
-    e.stopPropagation();
+    e.preventDefault();e.stopPropagation();
     const isOpen = wrap.classList.contains("open");
     closeAllMenus();
     if(!isOpen){
@@ -4071,31 +4297,18 @@ function setupMenu(btnId, wrapId){
       if(backdrop && isMobile() && isTopMenu()) backdrop.classList.add("show");
     }
   });
-
   wrap.addEventListener("click", function(e){
     const clickedAction = e.target.closest(".menu-dropdown button, .more-panel button, .more-panel label");
-    if(clickedAction){
-      setTimeout(closeAllMenus,30);
-    }
+    if(clickedAction) setTimeout(closeAllMenus,30);
     e.stopPropagation();
   });
-
-  if(backdrop){
-    backdrop.addEventListener("click", closeAllMenus);
-  }
+  if(backdrop) backdrop.addEventListener("click", closeAllMenus);
 }
 document.addEventListener("click", function(e){
-  if(!e.target.closest(".menu-wrap") && !e.target.closest(".more-wrap")){
-    closeAllMenus();
-  }
+  if(!e.target.closest(".menu-wrap") && !e.target.closest(".more-wrap")) closeAllMenus();
 });
-document.addEventListener("keydown", e=>{
-  if(e.key==="Escape"){
-    closeAllMenus();
-  }
-});
+document.addEventListener("keydown", e=>{if(e.key==="Escape") closeAllMenus();});
 
-/* ============ Google / YouTube subscriptions ============ */
 async function loadGIS(){
   if(window.google?.accounts?.oauth2)return true;
   return new Promise((resolve)=>{
@@ -4122,10 +4335,7 @@ async function initGoogleOAuth(){
   }catch(e){console.warn(e);return false;}
 }
 function onGoogleToken(resp){
-  if(resp.error){
-    notify("Google: "+resp.error);
-    return;
-  }
+  if(resp.error){notify("Google: "+resp.error);return;}
   googleAccessToken=resp.access_token;
   try{sessionStorage.setItem("amtv-yt-token",googleAccessToken);}catch(_){}
   fetchYouTubeSubscriptions();
@@ -4282,9 +4492,15 @@ $("emojiOnlyMode").addEventListener("change",e=>{const p=getPrefs();p.emojiOnly=
 $("vhsMode").addEventListener("change",e=>{const p=getPrefs();p.vhs=!!e.target.checked;savePrefs(p);applyPrefs();});
 $("eventThemeOn").addEventListener("change",e=>{const p=getPrefs();p.eventTheme=!!e.target.checked;savePrefs(p);applyPrefs();renderEventBanner();});
 $("eventBannerClose").addEventListener("click",()=>{const ev=activeEvent();try{if(ev)sessionStorage.setItem("evdismiss-"+ev.id,"1");}catch(_){}$("eventBanner").classList.add("hidden");});
-function setCinema(on){document.body.classList.toggle("cinema",!!on);$("cinemaExit").classList.toggle("hidden",!on);if(on){try{window.scrollTo(0,0)}catch(_){}}}
+function setCinema(on){
+  document.body.classList.toggle("cinema",!!on);
+  $("cinemaExit").classList.toggle("hidden",!on);
+  if(!on) document.body.classList.remove("portrait");
+  if(on){try{window.scrollTo(0,0)}catch(_){}}
+}
 $("cinemaButton").addEventListener("click",()=>setCinema(!document.body.classList.contains("cinema")));
 $("cinemaExit").addEventListener("click",()=>setCinema(false));
+$("cinemaRotate").addEventListener("click",toggleCinemaOrientation);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("cinema"))setCinema(false);});
 $("subSelect").addEventListener("change",e=>setSubLang(e.target.value));
 $("ccButton").addEventListener("click",toggleSubs);
@@ -4293,16 +4509,13 @@ $("loginToggle").addEventListener("click",async()=>{
   $("loginBox").classList.toggle("hidden");
   if(!$("loginBox").classList.contains("hidden")){
     $("adminEmail").focus();
-    /* Quick connectivity test — user will see a hint if Supabase is unreachable */
-    const ok=await testSupabaseConnection();
-    if(ok===false){
-      showAmTvError("سرور Supabase در دسترس نیست. اگر از VPN/فیلترشکن استفاده می‌کنی، آن را روشن/خاموش کن یا اتصال اینترنت را بررسی کن.");
-    }
+    await testSupabaseConnection();
   }
 });
 $("closeLogin").addEventListener("click",()=>$("loginBox").classList.add("hidden"));
 $("signInButton").addEventListener("click",signIn);
 $("adminPassword").addEventListener("keydown",e=>{if(e.key==="Enter")signIn();});
+$("connRetryBtn")?.addEventListener("click",()=>testSupabaseConnection());
 $("logoutButton").addEventListener("click",signOut);
 $("prevButton").addEventListener("click",previousItem);
 $("nextButton").addEventListener("click",nextItem);
@@ -4337,6 +4550,8 @@ $("volumeSlider").addEventListener("input",e=>{
   const v=Number(e.target.value)||0;
   $("videoElement").volume=v/100;$("audioElement").volume=v/100;
   if(ytReady&&ytPlayer)try{ytPlayer.setVolume(v)}catch(_){}
+  if(partyYTReady&&partyYTPlayer)try{partyYTPlayer.setVolume(v)}catch(_){}
+  if(partyVideoEl)try{partyVideoEl.volume=v/100}catch(_){}
 });
 $("addVideoButton").addEventListener("click",addVideos);
 $("clearVideoFields").addEventListener("click",()=>{$("videoTitle").value="";$("videoURL").value="";$("videoFiles").value="";});
@@ -4505,8 +4720,9 @@ $("previewBumperButton").addEventListener("click",()=>{
 });
 $("videoElement").addEventListener("ended",handleEnded);
 $("audioElement").addEventListener("ended",handleEnded);
-$("videoElement").addEventListener("play",()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>';try{updateMediaSessionMeta()}catch(_){}});
-$("videoElement").addEventListener("pause",()=>{localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>';try{updateMediaSessionMeta()}catch(_){}});
+$("videoElement").addEventListener("play",()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>';try{updateMediaSessionMeta()}catch(_){}if(partyIsHost)setTimeout(partyBroadcastPlayback,300);});
+$("videoElement").addEventListener("pause",()=>{localPlaying=false;$("playButton").innerHTML='<i class="ic ic-play"></i>';try{updateMediaSessionMeta()}catch(_){}if(partyIsHost)setTimeout(partyBroadcastPlayback,300);});
+$("videoElement").addEventListener("seeked",()=>{if(partyIsHost)partyBroadcastPlayback();});
 $("videoElement").addEventListener("loadedmetadata",()=>{
   const v=$("videoElement");
   recordDuration(activeItem(),v.duration);
@@ -4662,6 +4878,7 @@ $("exportFeedbackBtn")?.addEventListener("click",()=>{
   const a=document.createElement("a");a.href=url;a.download="amtv-feedback.json";a.click();URL.revokeObjectURL(url);
 });
 
+/* Party listeners */
 $("partyBtn")?.addEventListener("click",partyOpenModal);
 $("partyClose")?.addEventListener("click",partyCloseModal);
 $("partyCreateBtn")?.addEventListener("click",()=>{const code=partyGenCode();partyJoin(code,true);});
@@ -4677,15 +4894,16 @@ $("partyCopyBtn")?.addEventListener("click",()=>{
   try{navigator.clipboard.writeText(partyRoom);notify(t("partyCodeCopied"));}catch(_){notify(t("partyCodeCopyFail"));}
 });
 $("partyModal")?.addEventListener("click",e=>{if(e.target.id==="partyModal")partyCloseModal();});
+$("partyFullBtn")?.addEventListener("click",partyToggleFullscreen);
 
 $("nextUpClose")?.addEventListener("click",()=>$("nextUpToast").classList.remove("show"));
 setInterval(checkNextUp,2000);
 
 loadCastSDK();setupAirPlay();setupRemotePlayback();setupSleepAndKids();
+setupPartyVideoEvents();
 if($("castButton"))$("castButton").addEventListener("click",handleCastClick);
 setTimeout(updateCastUI,1500);setTimeout(setupAirPlay,800);setTimeout(updateCastUI,3000);
 
-/* Init dropdown menus */
 setupMenu("topMenuBtn","topMenuWrap");
 setupMenu("moreBtn","moreWrap");
 
@@ -4790,7 +5008,6 @@ setInterval(()=>{
 setInterval(syncServerTime,300000);
 setInterval(startProbing,5000);
 setInterval(()=>{if(holdLive)checkHold();},1000);
-setInterval(renderLastSync,30000);
 setInterval(()=>{if(!$("guidePanel").classList.contains("hidden"))renderGuide();},15000);
 setInterval(()=>{const k=eventKey();if(k!==lastEventKey){lastEventKey=k;applyPrefs();renderEventBanner();}},60000);
 setInterval(()=>{
@@ -4822,7 +5039,7 @@ setInterval(()=>{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.0.4 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.textContent="v1.0.5 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | yt="+(ytReady?"ok":"no")+
       " | kids="+(kidsMode?"ON":"off")+" | polls="+(state.polls||[]).length+
@@ -4832,4 +5049,4 @@ setInterval(()=>{
 },1000);
 </script>
 </body>
-  </html>
+        </html>
