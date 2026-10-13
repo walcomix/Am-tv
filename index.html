@@ -554,6 +554,31 @@ body.viewerMode #videoElement{controls:none!important}
 .topbar.menu-open{position:relative;z-index:90;backdrop-filter:none;-webkit-backdrop-filter:none}
 .topbar .menu-wrap.open,.topbar .menu-wrap.open .menu-dropdown{z-index:91}
 @media(max-width:600px){.topbar.menu-open{z-index:90}.topbar .menu-wrap.open .menu-dropdown{max-width:min(92vw,360px)}}
+
+/* AM TV fix: make the player three-dot menu fully visible on mobile */
+.playerpanel:has(.more-wrap.open){overflow:visible}
+.more-wrap.open .more-panel{z-index:150}
+@media(max-width:600px){
+  .more-wrap.open .more-panel{
+    position:fixed;
+    left:12px;
+    right:12px;
+    bottom:12px;
+    width:auto;
+    min-width:0;
+    max-width:none;
+    max-height:70vh;
+    overflow-y:auto;
+    border:1px solid var(--accent);
+    border-radius:16px;
+    padding:10px;
+    gap:4px;
+    z-index:150;
+    box-shadow:0 12px 40px #000c;
+  }
+  .more-wrap.open .more-panel button{padding:14px 16px;font-size:15px}
+}
+
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
@@ -2601,25 +2626,27 @@ async function testSupabaseConnection(){
     if(body)body.innerHTML='<div class="cdRow bad">❌ Supabase SDK لود نشد</div>';
     return {ok:false,netOk:false};
   }
+  // Only probe the actual backend. Browser CORS policies can block Google/Cloudflare
+  // probes even when the internet works, so they must not prevent an admin sign-in.
   const probes=[
-    ["Google","https://www.google.com/generate_204",{}],
-    ["Cloudflare","https://1.1.1.1/cdn-cgi/trace",{}],
-    ["Supabase Auth",SUPABASE_URL+"/auth/v1/health",{}],
+    ["Supabase Auth",SUPABASE_URL+"/auth/v1/health",{apikey:SUPABASE_ANON_KEY}],
     ["Supabase REST",SUPABASE_URL+"/rest/v1/amtv_state?select=id&limit=1",{apikey:SUPABASE_ANON_KEY}]
   ];
   const results=[];
   let netOk=false,sbOk=false;
   await Promise.all(probes.map(async ([name,url,headers])=>{
     const t0=Date.now();
+    let to;
     try{
       const c=new AbortController();
-      const to=setTimeout(()=>c.abort(),8000);
+      to=setTimeout(()=>c.abort(),8000);
       const r=await fetch(url,{headers,signal:c.signal});
       clearTimeout(to);
       results.push({name,ok:true,status:r.status,ms:Date.now()-t0});
-      if(name==="Google"||name==="Cloudflare") netOk=true;
-      if(name.startsWith("Supabase") && r.status<500) sbOk=true;
+      netOk=true;
+      if(r.status<500) sbOk=true;
     }catch(e){
+      if(to)clearTimeout(to);
       results.push({name,ok:false,error:String(e.message||e).slice(0,80)});
     }
   }));
