@@ -25,9 +25,6 @@ body{line-height:1.5;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
 ::-webkit-scrollbar-track{background:transparent}
 .topbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.topbar,.brand,.topright{min-width:0}
-.brand{max-width:100%}
-.brandname,.tagline{overflow-wrap:anywhere}
 .logo{border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.25)}
 .logo.has-img{background:transparent;box-shadow:none}
 button{transition:background .15s,border-color .15s,transform .1s,box-shadow .15s,filter .15s}
@@ -44,8 +41,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 .sideheading{letter-spacing:.2px}
 .playerfoot{background:linear-gradient(to bottom,transparent,rgba(0,0,0,.08))}
 @media(max-width:600px){
- .topbar{gap:8px;flex-wrap:wrap}
- .topright{width:100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-inline-start:0}
+ .topbar{gap:8px}
+ .topright{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
  .topright::-webkit-scrollbar{display:none}
  .topright button{flex-shrink:0}
  .clock{display:none}
@@ -98,6 +95,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 .ic-kids{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='4'/><path d='M4 21c0-4 3-7 8-7s8 3 8 7'/><circle cx='10' cy='7' r='.5' fill='black'/><circle cx='14' cy='7' r='.5' fill='black'/><path d='M10 9.5c1 .8 3 .8 4 0'/></svg>")}
 .ic-lock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>")}
 .ic-unlock{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 7-2.6'/></svg>")}
+.ic-party{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2l1.5 4.5H18l-3.7 2.7 1.4 4.3L12 11.1l-3.7 2.4 1.4-4.3L6 6.5h4.5z'/><path d='M5 22h14M8 18h8'/></svg>")}
+.ic-bell{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8'/><path d='M10 21a2 2 0 0 0 4 0'/></svg>")}
 body.emoji-only button .lbl,body.emoji-only .btnlabel{display:none!important}
 body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px;min-width:38px}
 #castButton{position:relative}
@@ -109,6 +108,8 @@ body.casting-on #castButton{background:#1e3a24}
 #sleepBadge{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:200;background:#0d1712ee;border:1px solid var(--accent);color:var(--accent);padding:7px 14px;border-radius:20px;font-size:12px;font-weight:bold;display:none;box-shadow:0 4px 16px #000a}
 #sleepBadge.show{display:block}
 #sleepButton.active{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+
+/* ===== Kids theme ===== */
 body.kids-mode{--accent:#ff9e3d;--bg:#1a1035;--panel:#2a1a50;--panel2:#3a2660;--text:#fff9e6;--muted:#c7b8e0;--line:#5c4a8c;--onaccent:#1a1035}
 body.kids-mode::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 20% 20%,rgba(255,158,61,.3),transparent 40%),radial-gradient(circle at 80% 30%,rgba(82,232,121,.25),transparent 45%),radial-gradient(circle at 50% 80%,rgba(255,110,199,.3),transparent 50%);pointer-events:none}
 body.kids-mode .panel,body.kids-mode .playerpanel{background:rgba(42,26,80,.85);backdrop-filter:blur(10px)}
@@ -122,7 +123,7 @@ body.kids-mode .playerpanel{box-shadow:0 0 80px rgba(255,158,61,.25)}
 body.kids-mode .dot{background:#52e879;box-shadow:0 0 9px #52e879}
 body.kids-mode .onair{color:#52e879}
 
-/* ===== KIDS SPECIAL ===== */
+/* Kids Special */
 body.kids-special{
   --accent:#ff8f3a;--bg:#0f0a25;--panel:#1e1545;--panel2:#2d2260;
   --text:#fff9e6;--muted:#c7b8e0;--line:#5c4a8c;--onaccent:#1a1035;
@@ -137,8 +138,14 @@ body.kids-special::before{
   animation:kidsBubbles 12s ease-in-out infinite alternate;
 }
 @keyframes kidsBubbles{0%{transform:scale(1) rotate(0)}100%{transform:scale(1.15) rotate(3deg)}}
-body.kids-special .topbar{background:linear-gradient(90deg,#ff8f3a 0%,#ff5fae 50%,#5fd8ff 100%);border-bottom:none;box-shadow:0 6px 30px rgba(255,95,174,.35)}
-body.kids-special .brandname{color:#fff;text-shadow:2px 2px 0 #1a1035,4px 4px 0 rgba(0,0,0,.25);font-size:26px;letter-spacing:2px}
+body.kids-special .topbar{
+  background:linear-gradient(90deg,#ff8f3a 0%,#ff5fae 50%,#5fd8ff 100%);
+  border-bottom:none;box-shadow:0 6px 30px rgba(255,95,174,.35);
+  padding:12px 16px;flex-wrap:wrap;row-gap:10px;
+}
+body.kids-special .brand{flex-shrink:0}
+body.kids-special .topright{margin-inline-start:auto;flex-wrap:wrap;gap:8px;min-width:0}
+body.kids-special .brandname{color:#fff;text-shadow:2px 2px 0 #1a1035,4px 4px 0 rgba(0,0,0,.25);font-size:22px;letter-spacing:2px}
 body.kids-special .tagline{color:#1a1035;font-weight:bold;opacity:.85}
 body.kids-special .logo{box-shadow:0 6px 20px rgba(0,0,0,.35);transform:rotate(-4deg)}
 body.kids-special .topright button{background:#fff;color:#1a1035;border:3px solid #1a1035;border-radius:20px;font-weight:bold;box-shadow:3px 3px 0 #1a1035;transform:rotate(-2deg)}
@@ -160,6 +167,11 @@ body.kids-special .emptylogo{background:linear-gradient(90deg,#ff8f3a,#ff5fae,#5
 body.kids-special .footer{color:#ff8f3a;font-weight:bold}
 body.kids-special .sidepanel,body.kids-special #adminPanel,body.kids-special #channelSelector,body.kids-special #viewerSettings,body.kids-special #guidePanel,body.kids-special #loginToggle{display:none!important}
 body.kids-special .hero{grid-template-columns:minmax(0,1fr)}
+@media(max-width:600px){
+  body.kids-special .brandname{font-size:18px !important}
+  body.kids-special .logo{width:38px;height:38px}
+  body.kids-special .tagline{font-size:9px}
+}
 
 #kidsExitBtn{position:fixed;top:12px;left:12px;z-index:200;background:#ff9e3d;color:#1a1035;border:0;border-radius:999px;padding:10px 16px;font-size:13px;font-weight:bold;display:none;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;align-items:center;gap:7px}
 body.kids-mode #kidsExitBtn{display:inline-flex}
@@ -207,9 +219,12 @@ main{max-width:1450px;margin:auto;padding:18px}
 #emptyScreen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:20px;background:radial-gradient(ellipse at center,var(--screen1) 0,var(--screen2) 85%)}
 .emptylogo{font-size:clamp(30px,6vw,65px);font-weight:900;color:var(--screenaccent);letter-spacing:4px}
 .emptyhint{font-size:12px;color:var(--screenmuted)}
-#watermark{position:absolute;z-index:5;left:3%;top:4%;display:none;pointer-events:none;user-select:none;transform:translate(0,0)}
+
+/* Watermark بالای lock overlay */
+#watermark{position:absolute;z-index:24;left:3%;top:4%;display:none;pointer-events:none;user-select:none;transform:translate(0,0)}
 #watermark img{display:block;max-width:100%;max-height:100%;object-fit:contain}
 #watermarkText{font-weight:900;text-shadow:0 1px 5px #000,0 0 3px #000;white-space:pre-wrap;overflow-wrap:anywhere}
+
 .playerfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid var(--line)}
 .nowlabel{font-size:12px;color:var(--muted)}
 .playercontrols{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -248,7 +263,7 @@ input[type=checkbox]{width:auto;accent-color:var(--accent)}
 #playerShell.pagecover{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;aspect-ratio:auto;z-index:1000;border-radius:0}
 #playerShell.pagecover #coverExit{display:block}
 #rotateButton{display:none;position:absolute;top:10px;left:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
-#ccFs{display:none;position:absolute;top:54px;left:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
+#ccFs{display:none;position:absolute;top:56px;left:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
 #playerShell:fullscreen #rotateButton,#playerShell.pagecover #rotateButton,#playerShell:fullscreen #ccFs,#playerShell.pagecover #ccFs{display:block}
 #playerShell.pagecover.rotated{inset:auto;top:0;left:100vw;width:100vh;height:100vw;transform-origin:0 0;transform:rotate(90deg)}
 #fallbackLayer{position:absolute;inset:0;z-index:0}
@@ -287,12 +302,14 @@ body.cinema .hero{grid-template-columns:minmax(0,1fr)}
 body.cinema .playerpanel{border:0;border-radius:0;box-shadow:none;background:#000;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
 body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
-#screenLockBtn{display:none;position:absolute;top:54px;right:10px;z-index:22;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+
+/* ===== Lock Screen اصلاح شد ===== */
+#screenLockBtn{display:none;position:absolute;top:10px;right:10px;z-index:23;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 #playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
 #screenLockBtn:hover{background:rgba(0,0,0,.9)}
-#lockOverlay{display:none;position:absolute;inset:0;z-index:21;align-items:center;justify-content:center;background:rgba(0,0,0,.12);backdrop-filter:none;-webkit-backdrop-filter:none;padding:16px;box-sizing:border-box;touch-action:none;cursor:pointer}
+#lockOverlay{display:none;position:absolute;inset:0;z-index:22;align-items:flex-end;justify-content:center;padding-bottom:20px;background:transparent;touch-action:none;pointer-events:none}
 #playerShell.screen-locked #lockOverlay{display:flex}
-#lockOverlay button{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:999px;padding:14px 22px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;max-width:90%;flex-wrap:wrap;text-align:center;box-shadow:0 6px 26px #000a;pointer-events:auto}
+#lockOverlay button{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:999px;padding:12px 20px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 26px #000a;pointer-events:auto;backdrop-filter:blur(10px)}
 #lockOverlay button:hover{filter:brightness(1.1)}
 #playerShell.screen-locked #screenLockBtn{display:none}
 body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
@@ -324,7 +341,6 @@ body.viewerMode .playercontrols.admin-only{display:none!important}
 body.viewerMode #youtubePlayer,body.viewerMode #videoElement{pointer-events:none!important}
 body.viewerMode #videoElement{controls:none!important}
 
-/* ===== NEW: Logo mode radio buttons ===== */
 .logoModeRadios{display:flex;gap:8px;flex-wrap:wrap}
 .logoModeOpt{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:12px}
 .logoModeOpt input{width:auto;margin:0}
@@ -333,7 +349,6 @@ body.viewerMode #videoElement{controls:none!important}
 .logoPreview{width:60px;height:60px;display:grid;place-items:center;font-weight:900;font-size:22px;border-radius:12px;background:var(--accent);color:#111;overflow:hidden}
 .logoPreview img{width:100%;height:100%;object-fit:contain}
 
-/* ===== NEW: Theme mode cards ===== */
 .modeGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .modeCard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;background:var(--panel2);border:2px solid var(--line);border-radius:12px;cursor:pointer;color:var(--text);transition:all .15s;font-size:11px}
 .modeCard:hover{border-color:var(--accent);transform:translateY(-2px)}
@@ -341,7 +356,7 @@ body.viewerMode #videoElement{controls:none!important}
 .modeIcon{width:26px;height:26px}
 .modeCard span{font-weight:bold}
 
-/* ===== NEW: Analytics ===== */
+/* Analytics */
 .statsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .statCard{padding:16px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;text-align:center}
 .statValue{font-size:32px;font-weight:900;color:var(--accent);line-height:1}
@@ -355,16 +370,67 @@ body.viewerMode #videoElement{controls:none!important}
 .barChart.horizontal .barLabel{position:static;transform:none;font-size:11px;color:var(--text);font-weight:bold}
 .barChart.horizontal .barValue{font-size:11px;color:var(--muted);margin-inline-start:auto}
 
-/* ===== NEW: Polls viewer modal, feedback modal ===== */
 .pollOption{position:relative;margin-bottom:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel2);transition:border-color .15s}
 .pollOption.clickable{cursor:pointer}
 .pollOption.clickable:hover{border-color:var(--accent)}
 .pollFill{position:absolute;inset:0;background:color-mix(in srgb,var(--accent) 25%,transparent);width:0;z-index:0;transition:width .4s}
 .pollRow{position:relative;z-index:1;display:flex;justify-content:space-between;font-size:13px}
 .pollPct{color:var(--accent);font-weight:bold}
-.ratingStars{display:flex;gap:6px;font-size:26px;user-select:none}
-.ratingStars span{cursor:pointer;color:var(--muted);transition:transform .1s}
-.ratingStars span:hover{transform:scale(1.15)}
+
+/* ===== Custom Select (UI بومی سایت) ===== */
+.cs{position:relative;width:100%;user-select:none}
+.cs-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--input);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;font-size:13px;min-height:42px;width:100%;text-align:start}
+.cs-trigger:hover{border-color:var(--accent)}
+.cs.open .cs-trigger{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 25%,transparent)}
+.cs-arrow{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--muted);transition:transform .15s;flex-shrink:0}
+.cs.open .cs-arrow{transform:rotate(180deg)}
+.cs-panel{position:absolute;z-index:80;top:calc(100% + 4px);left:0;right:0;background:var(--panel2);border:1px solid var(--accent);border-radius:10px;box-shadow:0 10px 32px #000a;max-height:280px;overflow-y:auto;padding:4px;display:none}
+.cs.open .cs-panel{display:block}
+.cs-opt{padding:9px 12px;border-radius:7px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cs-opt:hover,.cs-opt.active{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.cs-opt.selected{color:var(--accent);font-weight:bold}
+
+/* ===== Next Up Toast ===== */
+#nextUpToast{position:fixed;right:14px;bottom:80px;z-index:180;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--accent);border-radius:14px;padding:14px 16px;min-width:230px;max-width:320px;box-shadow:0 12px 40px #000a;display:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#nextUpToast.show{display:block;animation:nextUpIn .35s ease}
+@keyframes nextUpIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+#nextUpToast .nu-tag{font-size:10px;color:var(--accent);font-weight:bold;letter-spacing:1px}
+#nextUpToast .nu-title{font-size:14px;font-weight:bold;margin-top:6px;overflow-wrap:anywhere}
+#nextUpToast .nu-time{font-size:11px;color:var(--muted);margin-top:6px}
+#nextUpToast .nu-close{position:absolute;top:6px;left:6px;background:transparent;border:0;color:var(--muted);cursor:pointer;padding:2px;font-size:14px}
+
+/* ===== Watch Party ===== */
+#partyBtn{position:relative}
+#partyBtn.live{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
+#partyBtn.live::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#52e879;box-shadow:0 0 7px #52e879;animation:castPulse 1.6s ease-in-out infinite}
+#partyModal{position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+#partyModal.show{display:flex}
+.partyBox{background:var(--panel);border:1px solid var(--accent);border-radius:18px;width:min(560px,94vw);max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+.partyHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.partyHead h3{margin:0;color:var(--accent);font-size:16px;flex:1}
+.partyBody{padding:14px 16px;overflow-y:auto;flex:1;min-height:180px}
+.partyRoom{display:flex;gap:8px;align-items:center;background:var(--panel2);border:1px dashed var(--accent);border-radius:10px;padding:10px 12px;margin-bottom:12px;flex-wrap:wrap}
+.partyCode{font-family:monospace;font-size:18px;letter-spacing:4px;color:var(--accent);font-weight:bold}
+.partyUsers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.partyUser{font-size:11px;padding:4px 9px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
+.partyUser.me{border-color:var(--accent);color:var(--accent)}
+.partyChat{max-height:280px;overflow-y:auto;padding:8px;background:var(--input);border:1px solid var(--line);border-radius:10px;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;min-height:140px}
+.pcMsg{font-size:12px;line-height:1.5;padding:6px 10px;border-radius:10px;background:var(--panel2);max-width:88%;overflow-wrap:anywhere}
+.pcMsg.me{align-self:flex-end;background:color-mix(in srgb,var(--accent) 26%,var(--panel2))}
+.pcMsg .pcWho{font-size:10px;color:var(--accent);font-weight:bold;display:block;margin-bottom:2px}
+.pcMsg .pcTime{font-size:9px;color:var(--muted);display:block;text-align:end;margin-top:3px}
+.partyInputRow{display:flex;gap:8px}
+.partyInputRow input{flex:1}
+
+/* Feedback redesign */
+.fbTypeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.fbTypeBtn{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:13px;cursor:pointer;transition:all .15s}
+.fbTypeBtn:hover{border-color:var(--accent)}
+.fbTypeBtn.active{background:var(--accent);color:var(--onaccent);border-color:var(--accent);font-weight:bold}
+.fbCard{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);margin-bottom:8px}
+.fbCard .fbCat{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--line);margin-inline-end:6px}
+.fbCard .fbSubject{font-weight:bold;font-size:13px;margin:6px 0}
+.fbCard .fbMsg{font-size:12px;color:var(--muted);white-space:pre-wrap;line-height:1.7}
 
 @media(max-width:850px){
  main{padding:10px}.hero{grid-template-columns:minmax(0,1fr)}
@@ -374,24 +440,26 @@ body.viewerMode #videoElement{controls:none!important}
  .modeGrid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:460px){
- .topbar{align-items:flex-start}
- .brand{min-width:0;flex:1}
- .brandname{font-size:16px;overflow-wrap:anywhere}
- .tagline{font-size:10px;overflow-wrap:anywhere}
- .topright{width:100%;min-width:0;margin-inline-start:0;gap:6px}
- .topright button{padding:8px 10px;font-size:12px}
+ .topright{width:100%;margin-inline-start:0}
  .clock{margin-inline-start:auto}
  .playerfoot{align-items:flex-start}
  .rowfields{grid-template-columns:minmax(0,1fr)}
 }
+
+#amtvErrorNotice{position:fixed;z-index:999999;inset:auto 12px 12px 12px;max-width:680px;margin-inline:auto;
+  display:none;background:#241c10;color:#fff0d1;border:1px solid #ffbd4a;border-radius:12px;
+  padding:12px 14px;box-shadow:0 8px 28px #0008;font-size:14px;line-height:1.65;direction:rtl}
+#amtvErrorNotice.show{display:block}
+#amtvErrorNotice strong{display:block;margin-bottom:4px}
 </style>
 </head><body class="booting">
+<div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا در بارگذاری</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
 <header class="topbar">
   <div class="brand">
     <div class="logo" id="brandLogo">AM</div>
     <div>
       <div class="brandname" id="brandName">AM TV 24/7</div>
-      <div class="tagline">THE NEXT ERA · v1.0.2</div>
+      <div class="tagline" id="brandTagline">THE NEXT ERA · v1.0.2</div>
     </div>
   </div>
   <div class="topright">
@@ -475,8 +543,9 @@ body.viewerMode #videoElement{controls:none!important}
           <button id="fullscreenButton" title="full"><i class="ic ic-full"></i></button>
         </div>
         <div class="playercontrols">
+          <button id="partyBtn" title="Watch Party"><i class="ic ic-party"></i><span class="lbl">Party</span></button>
           <button id="pollsViewerBtn" class="hidden"><i class="ic ic-people"></i><span>نظرسنجی</span></button>
-          <button id="feedbackBtn"><i class="ic ic-mic"></i><span>فیدبک</span></button>
+          <button id="feedbackBtn"><i class="ic ic-mic"></i><span>ایده/باگ</span></button>
           <button id="castButton" class="hidden" title="Cast"><i class="ic ic-cast"></i><span class="lbl" data-i18n="cast">Cast</span></button>
           <button id="sleepButton" title="Sleep timer"><i class="ic ic-snooze"></i><span class="lbl" data-i18n="sleep">خواب</span></button>
           <button id="cinemaButton"><i class="ic ic-cinema"></i><span class="lbl" data-i18n="cinema">سینمایی</span></button>
@@ -806,21 +875,17 @@ body.viewerMode #videoElement{controls:none!important}
       <div class="adminGrid">
         <div class="section" style="grid-column:1/-1">
           <h3><i class="ic ic-yt"></i><span data-i18n="ytTitle">همگام‌سازی خودکار YouTube</span></h3>
-          <p class="viewerhint" data-i18n="ytHint">ویدیوهای جدید کانال‌ها شناسایی می‌شوند. ویدیوهای قدیمی‌تر از ۲۴ ساعت حذف می‌شوند.</p>
-          <div class="actions">
-            <button id="youtubeConnectButton" class="primary"><i class="ic ic-yt"></i><span>اتصال حساب YouTube</span></button>
-            <button id="youtubeSyncButton"><i class="ic ic-sync"></i><span>همگام‌سازی</span></button>
-          </div>
-          <div class="statusbox" id="youtubeSyncStatus" style="margin-top:12px">وضعیت: هنوز بررسی نشده</div>
-          <div class="viewerhint" id="lastSyncLabel" style="margin-top:8px">—</div>
-          <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
-          <h3>همگام‌سازی کانال با لینک</h3>
-          <div class="field"><label for="feedChannelUrl">لینک کانال یوتیوب</label><input id="feedChannelUrl" type="url" placeholder="https://www.youtube.com/@channel یا /channel/UC..."></div>
+          <p class="viewerhint">کانال‌های ساب‌شده رو با لینک زیر اضافه کن. هر کانال در بخش دلخواه (TV / Radio / Kids) ساخته می‌شود و به‌عنوان کانال مستقل قابل انتخاب و پخش است.</p>
+          <div class="field"><label for="feedChannelUrl">لینک کانال یوتیوب (@handle یا /channel/UC...)</label><input id="feedChannelUrl" type="url" placeholder="https://www.youtube.com/@channel"></div>
           <div class="rowfields">
-            <div class="field"><label for="feedChannelName">نام نمایشی کانال (اختیاری)</label><input id="feedChannelName" placeholder="—"></div>
-            <div class="field"><label for="feedTargetSection">بخش مقصد</label><select id="feedTargetSection"><option value="tv">TV</option><option value="radio">Radio</option><option value="kids">Kids</option></select></div>
+            <div class="field"><label for="feedChannelName">نام نمایشی کانال</label><input id="feedChannelName" placeholder="—"></div>
+            <div class="field"><label for="feedTargetSection">بخش مقصد</label><select id="feedTargetSection"><option value="tv">📺 TV</option><option value="radio">📻 Radio</option><option value="kids">🧒 Kids</option></select></div>
           </div>
-          <div class="actions"><button id="addChannelFeedButton" class="primary">＋ افزودن کانال</button><button id="syncChannelFeedsButton">⟳ همگام‌سازی ۲۴ ساعت اخیر</button></div>
+          <div class="actions">
+            <button id="addChannelFeedButton" class="primary">＋ افزودن کانال</button>
+            <button id="syncChannelFeedsButton">⟳ همگام‌سازی ۲۴ ساعت اخیر</button>
+            <button id="syncAllFeedsButton">🔄 همگام‌سازی همه</button>
+          </div>
           <div class="statusbox" id="channelFeedStatus" style="margin-top:12px">هنوز کانالی اضافه نشده.</div>
           <div id="channelFeedsList" class="itemlist"></div>
         </div>
@@ -832,6 +897,7 @@ body.viewerMode #videoElement{controls:none!important}
         <div class="section">
           <h3><i class="ic ic-appear"></i><span>تنظیمات ایستگاه</span></h3>
           <div class="field"><label for="stationNameInput">نام ایستگاه</label><input id="stationNameInput" value="AM TV 24/7"></div>
+          <div class="field"><label for="stationTaglineInput">شعار / زیرنویس برند</label><input id="stationTaglineInput" placeholder="THE NEXT ERA · v1.0.2"></div>
           <div class="field">
             <label>حالت نمایش لوگو</label>
             <div class="logoModeRadios" id="logoModeRadios">
@@ -966,7 +1032,7 @@ body.viewerMode #videoElement{controls:none!important}
     <div id="feedbackTab" class="tabcontent hidden">
       <div class="adminGrid">
         <div class="section" style="grid-column:1/-1">
-          <h3><i class="ic ic-mic"></i><span>فیدبک‌های دریافتی</span></h3>
+          <h3><i class="ic ic-mic"></i><span>ایده‌ها و گزارش‌های دریافتی</span></h3>
           <div class="actions">
             <button id="clearFeedbackBtn" class="danger"><i class="ic ic-trash"></i> پاک‌کردن همه</button>
             <button id="exportFeedbackBtn"><i class="ic ic-export"></i> خروجی JSON</button>
@@ -983,6 +1049,12 @@ body.viewerMode #videoElement{controls:none!important}
 
 <div aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;opacity:0;pointer-events:none"><div id="probePlayer"></div></div>
 <div id="toast" role="status"></div>
+<div id="nextUpToast">
+  <button class="nu-close" id="nextUpClose">✕</button>
+  <div class="nu-tag">⏭ برنامهٔ بعدی</div>
+  <div class="nu-title" id="nextUpTitle">—</div>
+  <div class="nu-time" id="nextUpTime"></div>
+</div>
 <button id="cinemaExit" class="hidden"><i class="ic ic-close"></i><span class="lbl" data-i18n="cinemaExit">خروج از حالت سینمایی</span></button>
 <div id="sleepBadge">😴 <span id="sleepTime">--:--</span></div>
 <button id="kidsExitBtn"><i class="ic ic-lock"></i><span data-i18n="exitKids">خروج از حالت کودک</span></button>
@@ -1009,32 +1081,105 @@ body.viewerMode #videoElement{controls:none!important}
 </div>
 
 <div id="feedbackModal" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)">
-  <div style="background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:440px;width:92%">
+  <div style="background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;max-width:460px;width:92%;max-height:90vh;overflow-y:auto">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <h3 style="margin:0;color:var(--accent)">ارسال فیدبک</h3>
+      <h3 style="margin:0;color:var(--accent)">ارسال ایده / گزارش باگ</h3>
       <button id="feedbackClose" style="background:transparent;border:0;color:var(--muted);cursor:pointer;padding:4px">✕</button>
     </div>
     <div class="field"><label>نام (اختیاری)</label><input id="fbName" maxlength="60" placeholder="—"></div>
     <div class="field">
-      <label for="fbType">نوع پیام</label>
-      <select id="fbType">
-        <option value="suggestion">پیشنهاد</option>
-        <option value="bug">گزارش باگ / مشکل</option>
-        <option value="design">ایده برای ظاهر و رابط کاربری</option>
-        <option value="content">پیشنهاد محتوا یا برنامه</option>
-        <option value="other">سایر</option>
-      </select>
+      <label>نوع</label>
+      <div class="fbTypeGrid" id="fbTypeGrid">
+        <button type="button" class="fbTypeBtn active" data-cat="idea">💡 ایده</button>
+        <button type="button" class="fbTypeBtn" data-cat="bug">🐞 باگ</button>
+        <button type="button" class="fbTypeBtn" data-cat="feature">✨ فیچر جدید</button>
+        <button type="button" class="fbTypeBtn" data-cat="other">📝 دیگر</button>
+      </div>
     </div>
     <div class="field">
-      <label for="fbMessage">توضیحات</label>
-      <textarea id="fbMessage" rows="4" maxlength="800" placeholder="پیشنهادت یا مشکلی که در AM TV دیدی را بنویس…"></textarea>
+      <label>عنوان کوتاه</label>
+      <input id="fbSubject" maxlength="120" placeholder="مثلاً: پخش ویدیو قطع می‌شود">
+    </div>
+    <div class="field">
+      <label>توضیحات</label>
+      <textarea id="fbMessage" rows="5" maxlength="1200" placeholder="مشکل/ایده را کامل توضیح بده…"></textarea>
     </div>
     <button id="fbSubmit" class="primary" style="width:100%"><i class="ic ic-save"></i> ارسال</button>
   </div>
 </div>
 
+<div id="partyModal">
+  <div class="partyBox">
+    <div class="partyHead">
+      <h3>🎉 Watch Party</h3>
+      <button id="partyClose" class="small"><i class="ic ic-close"></i></button>
+    </div>
+    <div class="partyBody" id="partyBody">
+      <div id="partyLobby">
+        <div class="viewerhint" style="margin-bottom:12px">با Watch Party می‌توانی همراه دوستانت همزمان ببینی و چت کنی.</div>
+        <div class="field"><label>نام شما</label><input id="partyName" maxlength="24" placeholder="مثلاً علی"></div>
+        <div class="rowfields">
+          <div class="field"><label>کد اتاق (ورود)</label><input id="partyJoinCode" maxlength="8" placeholder="ABC123" style="text-transform:uppercase;letter-spacing:3px;font-family:monospace"></div>
+          <div class="field" style="justify-content:end"><button id="partyJoinBtn" class="primary">ورود</button></div>
+        </div>
+        <div style="text-align:center;margin:14px 0;color:var(--muted);font-size:11px">— یا —</div>
+        <button id="partyCreateBtn" class="primary" style="width:100%"><i class="ic ic-plus"></i> ساخت اتاق جدید</button>
+      </div>
+      <div id="partyRoom" class="hidden">
+        <div class="partyRoom">
+          <span style="font-size:12px;color:var(--muted)">کد اتاق:</span>
+          <span class="partyCode" id="partyRoomCode">——</span>
+          <button id="partyCopyBtn" class="small" style="margin-inline-start:auto">📋 کپی</button>
+          <button id="partyLeaveBtn" class="small danger">خروج</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:6px">👥 اعضا:</div>
+        <div class="partyUsers" id="partyUsers"></div>
+        <div style="font-size:12px;color:var(--muted);margin:14px 0 6px">💬 چت اتاق:</div>
+        <div class="partyChat" id="partyChat"></div>
+        <div class="partyInputRow">
+          <input id="partyMsgInput" maxlength="400" placeholder="پیامت را بنویس…">
+          <button id="partySendBtn" class="primary">ارسال</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js&quot;><\/script>')"></script>
+<script>
+/* AM TV diagnostics */
+(function(){
+  function showAmTvError(message){
+    try{
+      var box=document.getElementById("amtvErrorNotice");
+      var text=document.getElementById("amtvErrorText");
+      if(box&&text){
+        text.textContent=message||"بخشی از برنامه درست بارگذاری نشده است.";
+        box.classList.add("show");
+      }
+      document.body.classList.remove("booting");
+    }catch(_){}
+  }
+  window.showAmTvError=showAmTvError;
+  window.addEventListener("error",function(event){
+    if(event && (event.error || event.message)){
+      var detail=(event.error&&event.error.message)||event.message||"خطای جاوااسکریپت";
+      showAmTvError("خطای اجرای برنامه: "+String(detail).slice(0,220));
+    }
+  });
+  window.addEventListener("unhandledrejection",function(event){
+    var reason=event&&event.reason;
+    var detail=(reason&&reason.message)||String(reason||"خطای ارتباط");
+    showAmTvError("یک درخواست کامل نشد: "+detail.slice(0,220));
+  });
+  setTimeout(function(){
+    if(document.body&&document.body.classList.contains("booting")){
+      showAmTvError("بارگذاری بیش از حد طول کشید. اتصال اینترنت را بررسی کن.");
+    }
+  },4500);
+})();
+</script>
 <script>
 /* ============ Constants ============ */
 const SUPABASE_URL = "https://nxcttzqubdlpfqqdzhpp.supabase.co";
@@ -1059,6 +1204,49 @@ const VISITOR_ID = getVisitorId();
 function getVoterId(){let id=localStorage.getItem("amtv-voter-id");if(!id){id="vt-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);localStorage.setItem("amtv-voter-id",id);}return id;}
 const VOTER_ID = getVoterId();
 
+/* ============ Custom Select ============ */
+function enhanceSelect(sel){
+  if(!sel || sel.dataset.csEnhanced==="1") return;
+  sel.dataset.csEnhanced="1";
+  sel.style.display="none";
+  const wrap=document.createElement("div");wrap.className="cs";
+  const trig=document.createElement("button");trig.type="button";trig.className="cs-trigger";
+  const val=document.createElement("span");val.className="cs-val";
+  const arr=document.createElement("i");arr.className="cs-arrow";
+  trig.append(val,arr);
+  const panel=document.createElement("div");panel.className="cs-panel";
+  function render(){
+    const cur=sel.options[sel.selectedIndex];
+    val.textContent=cur?cur.textContent:"—";
+    panel.innerHTML="";
+    [...sel.options].forEach((o,i)=>{
+      const d=document.createElement("div");
+      d.className="cs-opt"+(o.selected?" selected":"");
+      d.textContent=o.textContent;
+      d.onclick=e=>{
+        e.stopPropagation();
+        sel.selectedIndex=i;
+        sel.dispatchEvent(new Event("change",{bubbles:true}));
+        sel.dispatchEvent(new Event("input",{bubbles:true}));
+        render();wrap.classList.remove("open");
+      };
+      panel.appendChild(d);
+    });
+  }
+  trig.onclick=e=>{e.stopPropagation();wrap.classList.toggle("open");};
+  document.addEventListener("click",()=>wrap.classList.remove("open"));
+  wrap.append(trig,panel);
+  sel.parentNode.insertBefore(wrap,sel.nextSibling);
+  sel._csRender=render;
+  render();
+}
+function enhanceAllSelects(root){
+  (root||document).querySelectorAll("select").forEach(enhanceSelect);
+}
+function refreshSelects(){
+  document.querySelectorAll("select").forEach(s=>{if(s._csRender)s._csRender();});
+}
+
 /* ============ i18n ============ */
 const I18N = {
 "fa":{
@@ -1070,36 +1258,33 @@ const I18N = {
   tvMode:"تلویزیون",radioMode:"رادیو",kidsMode:"کودک",viewerRole:"بیننده",adminRole:"مدیر",
   settingsTitle:"شخصی‌سازی نمایش",lblPreset:"رنگ آماده",lblMode:"حالت نمایش",lblAccent:"رنگ اصلی",lblBg:"رنگ پس‌زمینه",
   p_green:"سبز رترو",p_amber:"کهربایی",p_blue:"آبی",p_purple:"بنفش",p_red:"قرمز",
-  resetCustom:"بازنشانی",lblLang:"زبان",langAuto:"خودکار",emojiOnlyLbl:"فقط آیکون — بدون متن در دکمه‌ها",
-  lblSub:"زیرنویس و ترجمه",subOff:"خاموش",subHint:"ترجمه خودکار است و فقط وقتی کار می‌کند که ویدیو زیرنویس داشته باشد.",
+  resetCustom:"بازنشانی",lblLang:"زبان",langAuto:"خودکار",emojiOnlyLbl:"فقط آیکون",
+  lblSub:"زیرنویس و ترجمه",subOff:"خاموش",subHint:"ترجمه خودکار است.",
   settingsHint:"این انتخاب‌ها فقط ظاهر همین مرورگر را تغییر می‌دهند.",
   loginTitle:"ورود مدیر",emailLbl:"ایمیل مدیر",passLbl:"رمز عبور",signIn:"ورود",loginHint:"حساب باید از قبل در Supabase ساخته شده باشد.",
   adminTitle:"پنل مدیریت AM TV",
   tabContent:"ویدیو و کانال",tabRadio:"مدیریت رادیو",tabWatermark:"Watermark",tabYoutube:"YouTube Sync",tabStation:"ایستگاه و پشتیبان",
   addProgram:"افزودن برنامه به تلویزیون",lblTitleOpt:"نام برنامه (اختیاری)",lblUrl:"لینک یوتیوب یا ویدیوی مستقیم",lblFile:"یا فایل ویدیویی",
-  addBtn:"افزودن",clearBtn:"پاک‌کردن",deleteBtn:"حذف",createBtn:"ساخت",playSel:"پخش",saveBtn:"ذخیره",preview:"پیش‌نمایش",
+  addBtn:"افزودن",clearBtn:"پاک‌کردن",deleteBtn:"حذف",createBtn:"ساخت",playSel:"پخش",
   lblNewCh:"نام کانال جدید",lblColor:"رنگ کانال",
   playlistTitle:"پلی‌لیست کانال فعلی",tzLbl:"منطقهٔ زمانی ساعت‌های ثابت",
-  tzHint:"با دکمهٔ ⏰ کنار هر برنامه می‌توانی یک ساعت پخش ثابت (هر روز) تعیین کنی.",
   radioChannelsTitle:"کانال‌های رادیو",lblNewRadioCh:"نام کانال رادیو جدید",addAudioTitle:"افزودن صوت به کانال فعلی",
-  lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست یوتیوب",lblAudioFile:"یا فایل‌های صوتی برای آپلود",
-  playlistRadioTitle:"پلی‌لیست کانال فعلی",
+  lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست",lblAudioFile:"یا فایل‌های صوتی",
   wmTitle:"متن یا لوگوی واترمارک",wmText:"متن دلخواه",wmImgFile:"تصویر لوگو",wmImgUrl:"یا لینک تصویر",
   wmSize:"اندازه متن (%)",wmOpacity:"شفافیت (%)",wmWidth:"عرض لوگو (px)",wmColor:"رنگ متن",
-  wmPosTitle:"جایگاه واترمارک",wmPos:"جایگاه",posTL:"بالا چپ",posTR:"بالا راست",posBL:"پایین چپ",posBR:"پایین راست",posC:"وسط",posCustom:"دلخواه",wmX:"افقی (%)",wmY:"عمودی (%)",
-  saveAll:"ذخیره برای همه",
+  wmPosTitle:"جایگاه واترمارک",wmPos:"جایگاه",wmX:"افقی (%)",wmY:"عمودی (%)",
   ytTitle:"همگام‌سازی خودکار YouTube",ytHint:"ویدیوهای جدید کانال‌ها شناسایی می‌شوند.",
   ytConnect:"اتصال حساب YouTube",ytSync:"همگام‌سازی",ytStatus:"وضعیت: هنوز بررسی نشده",
   stationTitle:"تنظیمات ایستگاه",lblStationName:"نام ایستگاه",lblLogoUrl:"لینک لوگو",lblLogoFile:"یا آپلود لوگو",
   backupTitle:"پشتیبان‌گیری",exportBtn:"خروجی JSON",importBtn:"واردکردن JSON",connStatus:"وضعیت اتصال",resync:"همگام‌سازی مجدد",
-  bumperTitle:"اینترو بین برنامه‌ها (Bumper)",bumperHint:"بین دو برنامهٔ تلویزیون، یک صفحهٔ کوتاه نمایش داده می‌شود.",
-  lblBumperStatus:"وضعیت",lblBumperSec:"مدت (ثانیه)",lblBumperText:"متن دلخواه زیر نام شبکه",saveBumper:"ذخیره اینترو",
+  bumperTitle:"اینترو بین برنامه‌ها",bumperHint:"بین دو برنامه نمایش داده می‌شود.",
+  lblBumperStatus:"وضعیت",lblBumperSec:"مدت (ثانیه)",lblBumperText:"متن دلخواه",saveBumper:"ذخیره اینترو",
   onLbl:"روشن",offLbl:"خاموش",
   cc:"زیرنویس",fullscreen:"تمام صفحه",exitfs:"خروج",rotate:"افقی / عمودی",unmute:"🔊 برای فعال‌سازی صدا لمس کنید",
   untitled:"بدون عنوان",audioProgram:"برنامهٔ صوتی",nowOnAir:"برنامهٔ در حال پخش",emptySection:"هنوز برنامه‌ای اضافه نشده",
   badYt:"شناسهٔ ویدیو قابل تشخیص نیست",loadingYt:"در حال بارگذاری...",syncing:"در حال هماهنگ‌سازی...",
   videoErr:"این لینک قابل پخش نیست.",ytErr:"یوتیوب نتوانست پخش کند (کد {code}).",
-  noSubs:"این ویدیو زیرنویس ندارد.",bumperDefault:"برنامهٔ بعدی تا لحظاتی دیگر",bumperNext:"بعدی:",
+  bumperDefault:"برنامهٔ بعدی تا لحظاتی دیگر",bumperNext:"بعدی:",
   guideNow:"اکنون",guideFixed:"ساعت ثابت",guideResume:"ادامه",guideCalc:"در حال محاسبه…",
   lastSyncNever:"آخرین همگام‌سازی: هنوز انجام نشده",
   msgAdded:"{n} مورد اضافه شد.",msgChannelCreated:"کانال ساخته شد.",msgRadioChannelCreated:"کانال رادیو ساخته شد.",
@@ -1112,18 +1297,12 @@ const I18N = {
   msgPlayVideoFail:"پخش ویدیو ممکن نشد.",msgPlayAudioFail:"پخش صوت ممکن نشد.",msgEndOfList:"پلی‌لیست به پایان رسید",
   msgNoChannelSwitch:"تعویض کانال فقط توسط مدیر.",msgNoAdmin:"فقط مدیر می‌تواند.",
   msgRenamed:"عنوان تغییر کرد.",msgRenameEmpty:"عنوان نمی‌تواند خالی باشد.",
-  msgYtHandle:"برای کانال، لینک playlist رو کپی کن (playlist?list=...).",
+  msgYtHandle:"برای کانال، لینک playlist رو کپی کن.",
   confirmDelCh:"این کانال حذف شود؟",confirmDelRadioCh:"این کانال رادیو حذف شود؟",
-  promptPin:"ساعت پخش ثابت این برنامه (هر روز)، مثلاً 20:00\nخالی = حذف ثابت‌بودن",
+  promptPin:"ساعت پخش ثابت این برنامه (هر روز)، مثلاً 20:00\nخالی = حذف",
   promptRename:"عنوان جدید برای این برنامه:",
   cinema:"سینمایی",cinemaExit:"خروج از حالت سینمایی",
   vhsLbl:"حالت ریترو / VHS",eventThemeLbl:"تم رویدادها (نوروز، یلدا و...)",
-  lblLogoMode:"نمایش لوگو در سربرگ",logoAuto:"تصویر (اگر باشد)",logoText:"متن",logoHidden:"پنهان",removeLogo:"حذف تصویر لوگو",
-  fbTitle:"تصویر یا ویدیوی جایگزین",fbHint:"وقتی برنامه‌ای پخش نمی‌شود یا ویدیو خطا دارد نمایش داده می‌شود.",
-  fbType:"نوع",fbNone:"هیچ",fbImage:"تصویر",fbVideo:"ویدیوی کوتاه",fbUrl:"لینک مستقیم",fbFile:"یا آپلود",
-  evTitle:"رویدادها و تم‌های مناسبتی",evHint:"در مناسبت‌های مهم سایت خودکار رنگ و پیام مخصوص می‌گیرد.",evEnabled:"تم رویدادها برای همه",
-  evName:"نام / پیام رویداد",evDate:"تاریخ شروع",evDays:"تعداد روز",evEmoji:"ایموجی",evAccent:"رنگ اصلی",evBg:"رنگ پس‌زمینه",evYearly:"هر سال تکرار شود",evAdd:"افزودن رویداد",
-  msgFbSaved:"ذخیره شد.",msgLogoRemoved:"لوگو حذف شد.",msgEvAdded:"رویداد اضافه شد.",msgEvInvalid:"نام و تاریخ را کامل وارد کن.",
   cast:"پخش به تلویزیون",castActive:"در حال پخش روی تلویزیون",castNotSupported:"پشتیبانی نمی‌شود.",
   castStarted:"اتصال برقرار شد.",castFailed:"اتصال ناموفق.",castYT:"برای یوتیوب، از اپ YouTube تلویزیون استفاده کن.",
   castDisconnected:"اتصال قطع شد.",
@@ -1132,7 +1311,8 @@ const I18N = {
   pinTitle:"رمز والدین",pinHint:"رمز را وارد کنید.",cancel:"انصراف",confirm:"تأیید",pinWrong:"رمز اشتباه است",
   pinInvalidFormat:"رمز باید ۴ تا ۶ رقم باشد.",pinMismatch:"رمزها یکسان نیستند.",
   msgPinSaved:"رمز ذخیره شد.",msgPinCleared2:"رمز حذف شد.",
-  lockScreen:"قفل صفحه",unlockScreen:"برای بازکردن لمس کن"
+  lockScreen:"قفل صفحه",unlockScreen:"برای بازکردن لمس کن",
+  kidsTag:"کودک"
 },
 "en":{
   navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
@@ -1150,29 +1330,26 @@ const I18N = {
   adminTitle:"AM TV Admin Panel",
   tabContent:"Video & Channels",tabRadio:"Radio",tabWatermark:"Watermark",tabYoutube:"YouTube Sync",tabStation:"Station & Backup",
   addProgram:"Add TV program",lblTitleOpt:"Program title (optional)",lblUrl:"YouTube or direct video link",lblFile:"Or video file",
-  addBtn:"Add",clearBtn:"Clear",deleteBtn:"Delete",createBtn:"Create",playSel:"Play",saveBtn:"Save",preview:"Preview",
+  addBtn:"Add",clearBtn:"Clear",deleteBtn:"Delete",createBtn:"Create",playSel:"Play",
   lblNewCh:"New channel name",lblColor:"Channel color",
   playlistTitle:"Current channel playlist",tzLbl:"Timezone for fixed times",
-  tzHint:"Use ⏰ next to each item to set a daily fixed time.",
   radioChannelsTitle:"Radio channels",lblNewRadioCh:"New radio channel name",addAudioTitle:"Add audio to current channel",
-  lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube / YouTube playlist link",lblAudioFile:"Or audio files to upload",
-  playlistRadioTitle:"Current channel playlist",
+  lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube link",lblAudioFile:"Or audio files",
   wmTitle:"Watermark",wmText:"Text",wmImgFile:"Logo image",wmImgUrl:"Or image URL",
   wmSize:"Text size (%)",wmOpacity:"Opacity (%)",wmWidth:"Logo width (px)",wmColor:"Text color",
-  wmPosTitle:"Watermark position",wmPos:"Position",posTL:"Top left",posTR:"Top right",posBL:"Bottom left",posBR:"Bottom right",posC:"Center",posCustom:"Custom",wmX:"X (%)",wmY:"Y (%)",
-  saveAll:"Save for everyone",
+  wmPosTitle:"Watermark position",wmPos:"Position",wmX:"X (%)",wmY:"Y (%)",
   ytTitle:"Auto YouTube sync",ytHint:"New videos from channels are detected.",
   ytConnect:"Connect YouTube account",ytSync:"Sync",ytStatus:"Status: not checked yet",
   stationTitle:"Station settings",lblStationName:"Station name",lblLogoUrl:"Logo URL",lblLogoFile:"Or upload logo",
   backupTitle:"Backup",exportBtn:"Export JSON",importBtn:"Import JSON",connStatus:"Connection status",resync:"Resync",
-  bumperTitle:"Bumper (intro between programs)",bumperHint:"A short intro between two TV programs.",
-  lblBumperStatus:"Status",lblBumperSec:"Duration (sec)",lblBumperText:"Custom text below station name",saveBumper:"Save bumper",
+  bumperTitle:"Bumper (intro between programs)",bumperHint:"A short intro between two programs.",
+  lblBumperStatus:"Status",lblBumperSec:"Duration (sec)",lblBumperText:"Custom text",saveBumper:"Save bumper",
   onLbl:"On",offLbl:"Off",
   cc:"Subtitles",fullscreen:"Full screen",exitfs:"Exit",rotate:"Landscape / Portrait",unmute:"🔊 Tap to enable sound",
   untitled:"Untitled",audioProgram:"Audio program",nowOnAir:"Now playing",emptySection:"Nothing added yet",
   badYt:"Video ID not recognized",loadingYt:"Loading...",syncing:"Syncing...",
   videoErr:"This link cannot be played.",ytErr:"YouTube couldn't play (code {code}).",
-  noSubs:"No captions for this video.",bumperDefault:"Next program in a moment",bumperNext:"Up next:",
+  bumperDefault:"Next program in a moment",bumperNext:"Up next:",
   guideNow:"Now",guideFixed:"Fixed time",guideResume:"Resumes",guideCalc:"Calculating...",
   lastSyncNever:"Last sync: never",
   msgAdded:"{n} item(s) added.",msgChannelCreated:"Channel created.",msgRadioChannelCreated:"Radio channel created.",
@@ -1191,12 +1368,6 @@ const I18N = {
   promptRename:"New title:",
   cinema:"Cinema",cinemaExit:"Exit cinema mode",
   vhsLbl:"Retro / VHS mode",eventThemeLbl:"Event themes",
-  lblLogoMode:"Header logo display",logoAuto:"Image if set",logoText:"Text",logoHidden:"Hidden",removeLogo:"Remove logo",
-  fbTitle:"Fallback image / video",fbHint:"Shown when nothing plays or video fails.",
-  fbType:"Type",fbNone:"None",fbImage:"Image",fbVideo:"Short video",fbUrl:"Direct link",fbFile:"Or upload",
-  evTitle:"Events & seasonal themes",evHint:"On big days the site gets special colors.",evEnabled:"Event themes for everyone",
-  evName:"Event name / message",evDate:"Start date",evDays:"Days",evEmoji:"Emoji",evAccent:"Accent color",evBg:"Background color",evYearly:"Repeat yearly",evAdd:"Add event",
-  msgFbSaved:"Saved.",msgLogoRemoved:"Logo removed.",msgEvAdded:"Event added.",msgEvInvalid:"Enter name and date.",
   cast:"Cast to TV",castActive:"Casting",castNotSupported:"Not supported.",
   castStarted:"Connected.",castFailed:"Failed.",castYT:"Use TV YouTube app for YouTube.",
   castDisconnected:"Disconnected.",
@@ -1205,7 +1376,8 @@ const I18N = {
   pinTitle:"Parent PIN",pinHint:"Enter PIN.",cancel:"Cancel",confirm:"OK",pinWrong:"Wrong PIN",
   pinInvalidFormat:"PIN must be 4-6 digits.",pinMismatch:"PINs don't match.",
   msgPinSaved:"PIN saved.",msgPinCleared2:"PIN cleared.",
-  lockScreen:"Lock screen",unlockScreen:"Tap to unlock"
+  lockScreen:"Lock screen",unlockScreen:"Tap to unlock",
+  kidsTag:"Kids"
 },
 "ar":{
   navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
@@ -1223,17 +1395,14 @@ const I18N = {
   adminTitle:"لوحة إدارة AM TV",
   tabContent:"فيديو وقنوات",tabRadio:"راديو",tabWatermark:"واترمارك",tabYoutube:"YouTube",tabStation:"المحطة والنسخ",
   addProgram:"إضافة برنامج",lblTitleOpt:"اسم البرنامج",lblUrl:"رابط يوتيوب أو فيديو",lblFile:"أو ملف",
-  addBtn:"إضافة",clearBtn:"مسح",deleteBtn:"حذف",createBtn:"إنشاء",playSel:"تشغيل",saveBtn:"حفظ",preview:"معاينة",
+  addBtn:"إضافة",clearBtn:"مسح",deleteBtn:"حذف",createBtn:"إنشاء",playSel:"تشغيل",
   lblNewCh:"اسم القناة",lblColor:"لون القناة",
   playlistTitle:"قائمة القناة الحالية",tzLbl:"المنطقة الزمنية",
-  tzHint:"استخدم ⏰ للوقت الثابت.",
   radioChannelsTitle:"قنوات الراديو",lblNewRadioCh:"اسم القناة",addAudioTitle:"إضافة صوت",
   lblAudioName:"اسم البرنامج",lblAudioUrl:"رابط صوت",lblAudioFile:"ملفات صوتية",
-  playlistRadioTitle:"قائمة القناة",
   wmTitle:"الواترمارك",wmText:"النص",wmImgFile:"صورة",wmImgUrl:"رابط",
   wmSize:"حجم النص",wmOpacity:"الشفافية",wmWidth:"عرض الشعار",wmColor:"لون النص",
-  wmPosTitle:"الموضع",wmPos:"الموضع",posTL:"أعلى يسار",posTR:"أعلى يمين",posBL:"أسفل يسار",posBR:"أسفل يمين",posC:"وسط",posCustom:"مخصص",wmX:"أفقي",wmY:"عمودي",
-  saveAll:"حفظ للجميع",
+  wmPosTitle:"الموضع",wmPos:"الموضع",wmX:"أفقي",wmY:"عمودي",
   ytTitle:"مزامنة YouTube",ytHint:"يتم اكتشاف الفيديوهات الجديدة.",
   ytConnect:"ربط الحساب",ytSync:"مزامنة",ytStatus:"لم يتم الفحص",
   stationTitle:"إعدادات المحطة",lblStationName:"اسم المحطة",lblLogoUrl:"رابط الشعار",lblLogoFile:"أو ارفع",
@@ -1245,7 +1414,7 @@ const I18N = {
   untitled:"بدون عنوان",audioProgram:"برنامج صوتي",nowOnAir:"يُبث الآن",emptySection:"لم يُضف بعد",
   badYt:"معرّف غير معروف",loadingYt:"جارٍ التحميل...",syncing:"جارٍ المزامنة...",
   videoErr:"تعذّر التشغيل.",ytErr:"تعذّر ({code}).",
-  noSubs:"لا ترجمة.",bumperDefault:"التالى قريباً",bumperNext:"التالي:",
+  bumperDefault:"التالى قريباً",bumperNext:"التالي:",
   guideNow:"الآن",guideFixed:"وقت ثابت",guideResume:"يتابع",guideCalc:"جارٍ الحساب...",
   lastSyncNever:"آخر مزامنة: أبدًا",
   msgAdded:"تمت إضافة {n}.",msgChannelCreated:"تم الإنشاء.",msgRadioChannelCreated:"تم الإنشاء.",
@@ -1262,18 +1431,14 @@ const I18N = {
   confirmDelCh:"حذف؟",confirmDelRadioCh:"حذف؟",
   promptPin:"الوقت الثابت (20:00)\nفارغ = إزالة",promptRename:"العنوان الجديد:",
   cinema:"سينمائي",cinemaExit:"خروج",vhsLbl:"VHS",eventThemeLbl:"المناسبات",
-  lblLogoMode:"عرض الشعار",logoAuto:"صورة",logoText:"نص",logoHidden:"مخفي",removeLogo:"حذف",
-  fbTitle:"بديل",fbHint:"عند الفشل.",fbType:"النوع",fbNone:"لا شيء",fbImage:"صورة",fbVideo:"فيديو",fbUrl:"رابط",fbFile:"أو ارفع",
-  evTitle:"المناسبات",evHint:"يتغير المظهر تلقائيًا.",evEnabled:"للجميع",
-  evName:"الاسم",evDate:"التاريخ",evDays:"أيام",evEmoji:"رمز",evAccent:"اللون",evBg:"الخلفية",evYearly:"سنوي",evAdd:"إضافة",
-  msgFbSaved:"تم.",msgLogoRemoved:"تم.",msgEvAdded:"تم.",msgEvInvalid:"أدخل الاسم والتاريخ.",
   cast:"Cast",castActive:"يبث",castNotSupported:"غير مدعوم.",castStarted:"تم.",castFailed:"فشل.",castYT:"استخدم تطبيق التلفزيون.",castDisconnected:"قطع.",
   sleep:"نوم",sleepSet:"مؤقّت: {n} د",sleepOff:"مغلق",sleepDone:"توقف",
   kidsBtn:"أطفال",kidsOn:"مفعّل",kidsOff:"مغلق",exitKids:"خروج",
   pinTitle:"رمز",pinHint:"أدخل الرمز.",cancel:"إلغاء",confirm:"تأكيد",pinWrong:"خطأ",
   pinInvalidFormat:"4-6 أرقام.",pinMismatch:"غير متطابق.",
   msgPinSaved:"تم.",msgPinCleared2:"تم.",
-  lockScreen:"قفل",unlockScreen:"المس للفتح"
+  lockScreen:"قفل",unlockScreen:"المس للفتح",
+  kidsTag:"أطفال"
 },
 "tr":{
   navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
@@ -1291,17 +1456,14 @@ const I18N = {
   adminTitle:"AM TV Yönetim",
   tabContent:"Video & Kanallar",tabRadio:"Radyo",tabWatermark:"Filigran",tabYoutube:"YouTube",tabStation:"İstasyon",
   addProgram:"Program ekle",lblTitleOpt:"Ad (isteğe bağlı)",lblUrl:"YouTube veya video",lblFile:"Veya dosya",
-  addBtn:"Ekle",clearBtn:"Temizle",deleteBtn:"Sil",createBtn:"Oluştur",playSel:"Oynat",saveBtn:"Kaydet",preview:"Önizle",
+  addBtn:"Ekle",clearBtn:"Temizle",deleteBtn:"Sil",createBtn:"Oluştur",playSel:"Oynat",
   lblNewCh:"Kanal adı",lblColor:"Renk",
   playlistTitle:"Kanal listesi",tzLbl:"Saat dilimi",
-  tzHint:"⏰ ile sabit saat ayarla.",
   radioChannelsTitle:"Radyo kanalları",lblNewRadioCh:"Yeni kanal",addAudioTitle:"Ses ekle",
   lblAudioName:"Ad",lblAudioUrl:"Ses bağlantısı",lblAudioFile:"Ses dosyaları",
-  playlistRadioTitle:"Kanal listesi",
   wmTitle:"Filigran",wmText:"Metin",wmImgFile:"Resim",wmImgUrl:"URL",
   wmSize:"Boyut",wmOpacity:"Opaklık",wmWidth:"Genişlik",wmColor:"Renk",
-  wmPosTitle:"Konum",wmPos:"Konum",posTL:"Sol üst",posTR:"Sağ üst",posBL:"Sol alt",posBR:"Sağ alt",posC:"Merkez",posCustom:"Özel",wmX:"X",wmY:"Y",
-  saveAll:"Kaydet",
+  wmPosTitle:"Konum",wmPos:"Konum",wmX:"X",wmY:"Y",
   ytTitle:"YouTube senkron",ytHint:"Yeni videolar algılanır.",
   ytConnect:"Bağlan",ytSync:"Senkronize et",ytStatus:"Kontrol edilmedi",
   stationTitle:"İstasyon",lblStationName:"Ad",lblLogoUrl:"Logo URL",lblLogoFile:"Veya yükle",
@@ -1313,7 +1475,7 @@ const I18N = {
   untitled:"Başlıksız",audioProgram:"Ses programı",nowOnAir:"Şimdi",emptySection:"Boş",
   badYt:"ID tanınmadı",loadingYt:"Yükleniyor...",syncing:"Eşitleniyor...",
   videoErr:"Oynatılamıyor.",ytErr:"({code})",
-  noSubs:"Altyazı yok.",bumperDefault:"Sıradaki birazdan",bumperNext:"Sıradaki:",
+  bumperDefault:"Sıradaki birazdan",bumperNext:"Sıradaki:",
   guideNow:"Şimdi",guideFixed:"Sabit",guideResume:"Devam",guideCalc:"Hesaplanıyor...",
   lastSyncNever:"Senkron: hiç",
   msgAdded:"{n} eklendi.",msgChannelCreated:"Oluşturuldu.",msgRadioChannelCreated:"Oluşturuldu.",
@@ -1330,18 +1492,14 @@ const I18N = {
   confirmDelCh:"Silinsin mi?",confirmDelRadioCh:"Silinsin mi?",
   promptPin:"Saat (20:00)\nBoş = sil",promptRename:"Yeni başlık:",
   cinema:"Sinema",cinemaExit:"Çık",vhsLbl:"VHS",eventThemeLbl:"Etkinlik",
-  lblLogoMode:"Logo",logoAuto:"Resim",logoText:"Metin",logoHidden:"Gizli",removeLogo:"Kaldır",
-  fbTitle:"Yedek",fbHint:"Hata durumunda.",fbType:"Tür",fbNone:"Yok",fbImage:"Resim",fbVideo:"Video",fbUrl:"Bağlantı",fbFile:"Yükle",
-  evTitle:"Etkinlikler",evHint:"Otomatik.",evEnabled:"Herkes için",
-  evName:"Ad",evDate:"Tarih",evDays:"Gün",evEmoji:"Emoji",evAccent:"Renk",evBg:"Arka plan",evYearly:"Yıllık",evAdd:"Ekle",
-  msgFbSaved:"Tamam.",msgLogoRemoved:"Tamam.",msgEvAdded:"Tamam.",msgEvInvalid:"Ad ve tarih gerekli.",
   cast:"Cast",castActive:"Yayında",castNotSupported:"Desteklenmiyor.",castStarted:"Bağlandı.",castFailed:"Başarısız.",castYT:"TV uygulamasını kullan.",castDisconnected:"Kesildi.",
   sleep:"Uyku",sleepSet:"Uyku: {n} dk",sleepOff:"Kapalı",sleepDone:"Durduruldu",
   kidsBtn:"Çocuk",kidsOn:"Açık",kidsOff:"Kapalı",exitKids:"Çık",
   pinTitle:"PIN",pinHint:"PIN girin.",cancel:"İptal",confirm:"Tamam",pinWrong:"Yanlış",
   pinInvalidFormat:"4-6 hane.",pinMismatch:"Eşleşmiyor.",
   msgPinSaved:"Kaydedildi.",msgPinCleared2:"Silindi.",
-  lockScreen:"Kilitle",unlockScreen:"Açmak için dokun"
+  lockScreen:"Kilitle",unlockScreen:"Açmak için dokun",
+  kidsTag:"Çocuk"
 }
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
@@ -1383,11 +1541,13 @@ function applyLang(init){
   try{const p=getPrefs();$("langSelect").value=(p.lang&&SUPPORTED_LANGS.includes(p.lang))?p.lang:"auto";}catch(_){}
   if(!init){try{renderAll()}catch(_){}}
   try{tickClock()}catch(_){}
+  setTimeout(refreshSelects,50);
 }
 
 /* ============ State ============ */
 const DEFAULT_STATE = {
   stationName:"AM TV 24/7",
+  tagline:"THE NEXT ERA · v1.0.2",
   stationLogo:"",
   mode:"tv",
   channelIndex:0,
@@ -1805,51 +1965,15 @@ function pruneOldSynced(){
   return removed;
 }
 
-/* ============ YouTube sync ============ */
-async function callYouTubeSync(action){
-  if(!isAdmin||!sbClient){notify(t("msgNoAdmin"));return}
-  const status=$("youtubeSyncStatus");
-  const connectButton=$("youtubeConnectButton");
-  const syncButton=$("youtubeSyncButton");
-  connectButton.disabled=true;syncButton.disabled=true;
-  status.textContent="...";
-  try{
-    const {data:sessionData,error:sessionError}=await sbClient.auth.getSession();
-    if(sessionError)throw sessionError;
-    const token=sessionData?.session?.access_token;
-    if(!token)throw new Error("No session");
-    const response=await fetch(YOUTUBE_FUNCTION_URL,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,"apikey":SUPABASE_ANON_KEY},body:JSON.stringify({action})});
-    const result=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(result.error||"Service error");
-    if(action==="connect"){
-      if(!result.url)throw new Error("No URL");
-      window.location.assign(result.url);return;
-    }
-    status.textContent=result.message||"OK";
-    state.lastSyncAt=Date.now();renderLastSync();
-    if(Array.isArray(result.videos)&&result.videos.length){
-      let added=0;
-      const list=currentChannel().list;
-      const existingIds=new Set(list.map(i=>i.youtubeId).filter(Boolean));
-      for(const video of result.videos){
-        if(!video.id||existingIds.has(video.id))continue;
-        list.push({id:makeId(),youtubeId:video.id,title:video.title||"YouTube",url:"https://www.youtube.com/watch?v="+video.id,addedAt:Date.now()});
-        existingIds.add(video.id);added++;
-      }
-      if(added){clearTimeout(saveTimer);renderAll();await saveRemoteState();notify(t("msgAdded",{n:added}));}
-    }
-    const pruned=pruneOldSynced();
-    if(pruned){clearTimeout(saveTimer);renderAll();await saveRemoteState();}
-    else{clearTimeout(saveTimer);await saveRemoteState();}
-  }catch(error){console.error(error);status.textContent="Error: "+error.message;notify(t("msgAddFail")+error.message);}
-  finally{connectButton.disabled=false;syncButton.disabled=false;}
-}
+/* ============ YouTube feed sync ============ */
 function parseYouTubeChannelIdFromUrl(channelUrl){
-  const u=new URL(channelUrl);
-  const direct=u.pathname.match(/\/channel\/(UC[\w-]+)/);
-  if(direct)return direct[1];
-  const query=u.searchParams.get("channel_id");
-  return query&&/^UC[\w-]+$/.test(query)?query:"";
+  try{
+    const u=new URL(channelUrl);
+    const direct=u.pathname.match(/\/channel\/(UC[\w-]+)/);
+    if(direct)return direct[1];
+    const query=u.searchParams.get("channel_id");
+    return query&&/^UC[\w-]+$/.test(query)?query:"";
+  }catch(_){return ""}
 }
 async function resolveYouTubeChannelId(channelUrl){
   const direct=parseYouTubeChannelIdFromUrl(channelUrl);
@@ -1879,44 +2003,55 @@ async function addChannelFeed(){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const url=$("feedChannelUrl").value.trim(),name=$("feedChannelName").value.trim(),section=$("feedTargetSection").value;
   if(!url||!/^https?:\/\//i.test(url)){notify("لینک معتبر وارد کن.");return}
-  const feed={id:makeId(),url,name:name||"کانال YouTube",section,createdAt:Date.now(),targetId:""};
+  const feed={id:makeId(),url,name:name||"YouTube Channel",section,createdAt:Date.now(),targetId:""};
   if(section==="radio"){
-    const channel={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[]};
+    const channel={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
     state.radioChannels.push(channel);state.radioChannelIndex=state.radioChannels.length-1;feed.targetId=channel.id;
   }else if(section==="kids"){
-    const channel={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[]};
+    const channel={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
     state.kidsChannels.push(channel);state.kidsChannelIndex=state.kidsChannels.length-1;feed.targetId=channel.id;
   }else{
-    const channel={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[]};
+    const channel={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
     state.channels.push(channel);state.channelIndex=state.channels.length-1;feed.targetId=channel.id;
   }
   state.channelFeeds.push(feed);$("feedChannelUrl").value="";$("feedChannelName").value="";
   $("channelFeedStatus").textContent="در حال دریافت…";
-  try{await syncChannelFeeds(false,feed.id)}catch(error){$("channelFeedStatus").textContent="خطا: "+error.message;renderChannelFeedsList();clearTimeout(saveTimer);await saveRemoteState()}
+  try{await syncChannelFeeds(false,feed.id)}catch(error){
+    $("channelFeedStatus").textContent="خطا: "+error.message;renderChannelFeedsList();
+    clearTimeout(saveTimer);await saveRemoteState();
+  }
 }
 function renderChannelFeedsList(){
   const root=$("channelFeedsList");if(!root)return;root.innerHTML="";
+  if(!(state.channelFeeds||[]).length){root.innerHTML='<div class="viewerhint">هنوز کانالی اضافه نشده.</div>';return;}
   (state.channelFeeds||[]).forEach(feed=>{
     const row=document.createElement("div");row.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
-    const title=document.createElement("div");title.className="itemname";title.textContent=feed.name||"";
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(feed.section||"").toUpperCase()+" · "+String(feed.url||"");
+    const title=document.createElement("div");title.className="itemname";
+    const badge=feed.section==="radio"?"📻":feed.section==="kids"?"🧒":"📺";
+    title.textContent=badge+" "+(feed.name||"");
+    const meta=document.createElement("div");meta.className="itemmeta";
+    meta.textContent=(feed.section||"").toUpperCase()+" · "+String(feed.url||"");
     info.append(title,meta);
-    const del=document.createElement("button");del.className="small danger";del.textContent="حذف";
+    const syncOne=document.createElement("button");syncOne.className="small";syncOne.textContent="⟳";
+    syncOne.onclick=()=>syncChannelFeeds(true,feed.id);
+    const del=document.createElement("button");del.className="small danger";del.innerHTML='<i class="ic ic-trash"></i>';
     del.onclick=async()=>{if(!confirm("حذف شود؟"))return;
       state.channelFeeds=state.channelFeeds.filter(x=>x.id!==feed.id);
       state.channels=state.channels.filter(c=>c.id!==feed.targetId);
       state.radioChannels=state.radioChannels.filter(c=>c.id!==feed.targetId);
       state.kidsChannels=state.kidsChannels.filter(c=>c.id!==feed.targetId);
       activeMediaKey="";renderAll();clearTimeout(saveTimer);await saveRemoteState();
-    };row.append(info,del);root.appendChild(row);
+    };
+    row.append(info,syncOne,del);root.appendChild(row);
   });
 }
 async function syncChannelFeeds(showNotice=true,onlyFeedId=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
-  const status=$("channelFeedStatus");if(status)status.textContent="در حال همگام‌سازی…";
+  const status=$("channelFeedStatus");
   const feeds=(state.channelFeeds||[]).filter(f=>!onlyFeedId||f.id===onlyFeedId);
   if(!feeds.length){if(status)status.textContent="اول کانال اضافه کن.";return}
+  if(status)status.textContent="در حال همگام‌سازی…";
   let total=0,errors=[];
   for(const feed of feeds){
     try{
@@ -2047,6 +2182,7 @@ function ensureState(){
   if(!state.schedule)state.schedule=clone(DEFAULT_STATE.schedule);
   if(!state.fallback)state.fallback=clone(DEFAULT_STATE.fallback);
   if(!state.logoMode)state.logoMode="auto";
+  if(!state.tagline)state.tagline="THE NEXT ERA · v1.0.2";
   if(!state.events||!Array.isArray(state.events.custom))state.events={enabled:!(state.events&&state.events.enabled===false),custom:[]};
   if(!state.analytics||typeof state.analytics!=="object")state.analytics=clone(DEFAULT_STATE.analytics);
   if(!Array.isArray(state.analytics.hourViews)||state.analytics.hourViews.length!==24)state.analytics.hourViews=new Array(24).fill(0);
@@ -2056,6 +2192,7 @@ function ensureState(){
   if(!Array.isArray(state.polls))state.polls=[];
   if(!Array.isArray(state.feedback))state.feedback=[];
   if(!state.stationName)state.stationName="AM TV 24/7";
+  if(!Array.isArray(state.channelFeeds))state.channelFeeds=[];
   state.channelIndex=Math.max(0,Math.min(Number(state.channelIndex)||0,state.channels.length-1));
 }
 function effectiveItemKey(item){
@@ -2063,7 +2200,7 @@ function effectiveItemKey(item){
   return [activeMode(),item.id||mediaUrl(item),state.channelIndex,state.radioChannelIndex,state.kidsChannelIndex].join("|");
 }
 
-/* ============ Analytics tracking ============ */
+/* ============ Analytics ============ */
 let lastTrackedKey="";
 let viewStartTime=0;
 function trackView(item,mode){
@@ -2088,7 +2225,7 @@ function trackView(item,mode){
   trackView._t=setTimeout(()=>{if(!isAdmin)return;scheduleSave();},5000);
 }
 
-/* ============ Sleep Timer ============ */
+/* ============ Sleep ============ */
 function setupSleepTimer(){
   if(!$("sleepButton"))return;
   $("sleepButton").addEventListener("click",()=>{
@@ -2147,18 +2284,7 @@ function updateMediaSessionMeta(){
 }
 
 /* ============ Kids Mode ============ */
-function firstKidsIndex(){
-  const list=currentKidsChannel().list;
-  const idx=list.findIndex(v=>true);
-  return idx;
-}
-function skipToKids(step){
-  const list=currentKidsChannel().list;
-  if(!list.length)return;
-  let i=currentIndex();
-  i=(i+step+list.length)%list.length;
-  chooseIndex(i,"kids");
-}
+function firstKidsIndex(){const idx=currentKidsChannel().list.findIndex(()=>true);return idx;}
 function applyKidsFilter(){
   const list=currentKidsChannel().list;
   if(!list.length){notify("هنوز برای کودک برنامه‌ای اضافه نشده.");setTimeout(()=>setKidsMode(false),2500);return;}
@@ -2273,64 +2399,30 @@ async function applySession(session){
   $("loginBox").classList.add("hidden");
   document.body.classList.toggle("viewerMode",!isAdmin);
   renderAll();trackPresence();
+  setTimeout(refreshSelects,50);
 }
-
-async function signIn() {
-  if (!sbClient) {
-    notify("اتصال Supabase آماده نیست.");
-    return;
-  }
-
-  const email = $("adminEmail").value.trim();
-  const password = $("adminPassword").value;
-  const button = $("signInButton");
-
-  if (!email || !password) {
-    notify("ایمیل و رمز عبور را وارد کن.");
-    return;
-  }
-
-  button.disabled = true;
-
-  try {
-    const { data, error } =
-      await sbClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    if (error) {
-      notify("ورود ناموفق: " + error.message);
-      return;
-    }
-
-    if (data?.user?.app_metadata?.role !== "admin") {
-      await sbClient.auth.signOut();
-      notify("این حساب دسترسی ادمین ندارد.");
-      return;
-    }
-
+async function signIn(){
+  if(!sbClient){notify("اتصال Supabase آماده نیست.");return;}
+  const email=$("adminEmail").value.trim();
+  const password=$("adminPassword").value;
+  const button=$("signInButton");
+  if(!email||!password){notify("ایمیل و رمز عبور را وارد کن.");return;}
+  button.disabled=true;
+  try{
+    const {data,error}=await sbClient.auth.signInWithPassword({email,password});
+    if(error){notify("ورود ناموفق: "+error.message);return;}
+    if(data?.user?.app_metadata?.role!=="admin"){await sbClient.auth.signOut();notify("این حساب دسترسی ادمین ندارد.");return;}
     await applySession(data.session);
     await loadRemoteState();
-
-  } catch (err) {
-    console.error("AM TV sign-in error:", err);
-
-    const message = String(err?.message || err);
-
-    if (/failed to fetch|networkerror|load failed/i.test(message)) {
-      notify(
-        "ارتباط با سرور برقرار نشد. اینترنت، دسترسی به Supabase و وضعیت پروژه را بررسی کن."
-      );
-    } else {
-      notify("خطای ورود: " + message);
-    }
-
-  } finally {
-    button.disabled = false;
-  }
+  }catch(err){
+    console.error("AM TV sign-in error:",err);
+    const message=String(err?.message||err);
+    if(/failed to fetch|networkerror|load failed/i.test(message)){
+      notify("ارتباط با سرور برقرار نشد. اینترنت را بررسی کن.");
+    }else{notify("خطای ورود: "+message);}
+  }finally{button.disabled=false;}
 }
-
+async function signOut(){if(!sbClient)return;await sbClient.auth.signOut();currentUser=null;isAdmin=false;applySession(null);notify(t("msgLoggedOut"));}
 
 /* ============ Presence ============ */
 async function setupPresence(){
@@ -2388,6 +2480,130 @@ function watchTotalViewsRealtime(){
   sbClient.channel("amtv-views-live").on("postgres_changes",{event:"UPDATE",schema:"public",table:VIEWS_TABLE,filter:"id=eq.1"},payload=>{
     if(payload?.new?.total!=null)renderTotalViews(payload.new.total);
   }).subscribe();
+}
+
+/* ============ Watch Party ============ */
+let partyChannel=null;
+let partyRoom="";
+let partyName="";
+let partyIsHost=false;
+let partyMessages=[];
+
+function partyMyName(){return partyName||("User-"+VISITOR_ID.slice(-4));}
+function partyOpenModal(){
+  $("partyModal").classList.add("show");
+  if(partyRoom){$("partyLobby").classList.add("hidden");$("partyRoom").classList.remove("hidden");}
+  else{$("partyLobby").classList.remove("hidden");$("partyRoom").classList.add("hidden");}
+  if(!$("partyName").value)try{$("partyName").value=localStorage.getItem("amtv-party-name")||"";}catch(_){}
+}
+function partyCloseModal(){$("partyModal").classList.remove("show");}
+function partyGenCode(){return Math.random().toString(36).slice(2,8).toUpperCase();}
+
+async function partyEnsureChannel(room){
+  if(!sbClient){notify("اتصال Supabase لازم است.");return null;}
+  if(partyChannel){try{await sbClient.removeChannel(partyChannel);}catch(_){}partyChannel=null;}
+  partyChannel=sbClient.channel("amtv-party-"+room,{config:{broadcast:{self:true},presence:{key:VISITOR_ID}}});
+  partyChannel
+    .on("presence",{event:"sync"},partyRenderPresence)
+    .on("broadcast",{event:"chat"},({payload})=>{partyPushMsg(payload);})
+    .on("broadcast",{event:"playback"},({payload})=>{partyApplyRemotePlayback(payload);})
+    .subscribe(async(status)=>{
+      if(status==="SUBSCRIBED"){
+        await partyChannel.track({name:partyMyName(),joinedAt:Date.now()});
+      }
+    });
+  return partyChannel;
+}
+function partyRenderPresence(){
+  if(!partyChannel)return;
+  const st=partyChannel.presenceState()||{};
+  const users=[];
+  Object.values(st).forEach(arr=>{if(Array.isArray(arr))arr.forEach(m=>users.push(m.name||"مهمان"));});
+  const root=$("partyUsers");if(!root)return;
+  root.innerHTML="";
+  users.forEach(n=>{
+    const el=document.createElement("span");
+    el.className="partyUser"+(n===partyMyName()?" me":"");
+    el.textContent=n+(n===partyMyName()?" (شما)":"");
+    root.appendChild(el);
+  });
+}
+function partyPushMsg(m){
+  partyMessages.push(m);
+  if(partyMessages.length>200)partyMessages=partyMessages.slice(-200);
+  partyRenderChat();
+}
+function partyRenderChat(){
+  const root=$("partyChat");if(!root)return;
+  root.innerHTML="";
+  partyMessages.forEach(m=>{
+    const d=document.createElement("div");
+    d.className="pcMsg"+(m.who===partyMyName()?" me":"");
+    const who=document.createElement("span");who.className="pcWho";who.textContent=m.who;
+    const txt=document.createTextNode(m.text);
+    const tm=document.createElement("span");tm.className="pcTime";tm.textContent=new Date(m.at).toLocaleTimeString(dateLocale(),{hour:"2-digit",minute:"2-digit"});
+    d.append(who,txt,tm);
+    root.appendChild(d);
+  });
+  root.scrollTop=root.scrollHeight;
+}
+async function partyJoin(room,host=false){
+  partyName=($("partyName").value||"").trim().slice(0,24)||partyMyName();
+  partyRoom=room;partyIsHost=host;
+  await partyEnsureChannel(room);
+  $("partyLobby").classList.add("hidden");
+  $("partyRoom").classList.remove("hidden");
+  $("partyRoomCode").textContent=room;
+  $("partyBtn")?.classList.add("live");
+  try{localStorage.setItem("amtv-party-name",partyName);}catch(_){}
+  notify(host?"اتاق ساخته شد 🎉":"به اتاق پیوستی 🎉");
+  if(host)setTimeout(()=>partyBroadcastPlayback(),1500);
+}
+async function partyLeave(){
+  try{if(partyChannel&&sbClient)await sbClient.removeChannel(partyChannel);}catch(_){}
+  partyChannel=null;partyRoom="";partyMessages=[];partyIsHost=false;
+  $("partyBtn")?.classList.remove("live");
+  $("partyRoomCode").textContent="——";
+  $("partyUsers").innerHTML="";$("partyChat").innerHTML="";
+  partyOpenModal();
+  notify("از اتاق خارج شدی.");
+}
+function partyBroadcastPlayback(){
+  if(!partyChannel||!partyRoom)return;
+  const mode=activeMode();
+  const item=activeItem();
+  if(!item)return;
+  partyChannel.send({type:"broadcast",event:"playback",payload:{
+    mode,itemId:item.id,index:currentIndex(),at:Date.now(),by:partyMyName()
+  }});
+}
+function partyApplyRemotePlayback(payload){
+  if(!payload||payload.by===partyMyName())return;
+  if(isAdmin)return;
+  const mode=payload.mode;
+  if(mode&&mode!==activeMode()){
+    if(mode==="tv"||mode==="radio")setMode(mode);
+  }
+  setTimeout(()=>{
+    try{
+      const list=payload.mode==="radio"?currentRadioChannel().list:(payload.mode==="kids"?currentKidsChannel().list:currentChannel().list);
+      const idx=Math.max(0,Math.min(Number(payload.index)||0,list.length-1));
+      if(payload.mode==="radio"){state.radioIndex=idx;}
+      else if(payload.mode==="kids"){state.kidsPlayback={index:idx,startedAt:serverNow(),nonce:(state.kidsPlayback?.nonce||0)+1};}
+      else{state.playback={index:idx,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};}
+      activeMediaKey="";
+      renderPlayer(true);
+    }catch(_){}
+  },200);
+}
+function partySendMsg(){
+  if(!partyChannel||!partyRoom)return;
+  const input=$("partyMsgInput");
+  const text=(input.value||"").trim().slice(0,400);
+  if(!text)return;
+  const payload={who:partyMyName(),text,at:Date.now()};
+  partyChannel.send({type:"broadcast",event:"chat",payload});
+  input.value="";
 }
 
 /* ============ Cast ============ */
@@ -2619,7 +2835,6 @@ function renderPlayer(force=false){
     $("statusPlayback").textContent=t("radioMode");return;
   }
 
-  // TV & Kids mode - video/youtube
   if(isYouTube(url)){
     $("youtubePlayer").style.display="block";
     const id=item.ytId||youtubeId(url);
@@ -2686,6 +2901,7 @@ function chooseIndex(index,kind=activeMode()){
   scheduleSave();activeMediaKey="";
   renderPlayer(true);
   setTimeout(function(){if(isCastingActive())castCurrentMedia();},300);
+  if(partyChannel)setTimeout(()=>partyBroadcastPlayback(),300);
 }
 function nextItem(){
   if(!isAdmin && !kidsMode)return;
@@ -2769,21 +2985,24 @@ function applyWatermark(){
   if(!image&&!text){root.style.display="none";return}
   root.style.display="block";
   img.classList.toggle("hidden",!image);
-  if(image && img.src!==image)img.src=image;
+  if(image && img.getAttribute("src")!==image) img.src=image;
   txt.textContent=text;
   txt.style.color=w.color||"#fff";
   txt.style.fontSize=(Number(w.size)||100)*0.16+"px";
   root.style.opacity=Math.max(0.1,Math.min(1,(Number(w.opacity)||85)/100));
   img.style.width=Math.max(20,Math.min(700,Number(w.width)||110))+"px";
-  img.style.maxWidth="40vw";
+  img.style.maxWidth="38vw";
   root.style.left="auto";root.style.right="auto";root.style.top="auto";root.style.bottom="auto";root.style.transform="none";
   const pos=w.position||"top-left";
-  if(pos==="top-left"){root.style.left="3%";root.style.top="4%"}
-  else if(pos==="top-right"){root.style.right="3%";root.style.top="4%"}
-  else if(pos==="bottom-left"){root.style.left="3%";root.style.bottom="4%"}
-  else if(pos==="bottom-right"){root.style.right="3%";root.style.bottom="4%"}
+  const rotated=$("playerShell").classList.contains("rotated");
+  // در حالت چرخیده مختصات جابجا می‌شوند
+  if(pos==="top-left"){root.style.left="3%";root.style.top=rotated?"14%":"4%"}
+  else if(pos==="top-right"){root.style.right="3%";root.style.top=rotated?"14%":"4%"}
+  else if(pos==="bottom-left"){root.style.left="3%";root.style.bottom=rotated?"14%":"4%"}
+  else if(pos==="bottom-right"){root.style.right="3%";root.style.bottom=rotated?"14%":"4%"}
   else if(pos==="center"){root.style.left="50%";root.style.top="50%";root.style.transform="translate(-50%,-50%)"}
-  else{root.style.left=(Number(w.x)||0)+"%";root.style.top=(Number(w.y)||0)+"%"}
+  else{root.style.left=(Number(w.x)||0)+"%";root.style.top=rotated?((Number(w.y)||0)+10)+"%":(Number(w.y)||0)+"%"};
+  void root.offsetWidth;
 }
 function readWatermarkFields(){
   return {
@@ -2808,6 +3027,7 @@ function loadWatermarkFields(){
   $("wmColor").value=w.color||"#ffffff";
   $("wmPosition").value=w.position||"top-left";
   $("wmX").value=w.x??3;$("wmY").value=w.y??4;
+  setTimeout(refreshSelects,0);
 }
 function loadBumperFields(){
   const b=state.bumper||DEFAULT_STATE.bumper;
@@ -2815,12 +3035,14 @@ function loadBumperFields(){
   set("bumperEnabled",b.enabled===false?"off":"on");
   set("bumperSeconds",Number(b.seconds)||6);
   set("bumperTextInput",b.text||"");
+  setTimeout(refreshSelects,0);
 }
 function loadScheduleFields(){
   const el=$("scheduleTz");if(!el||document.activeElement===el)return;
   const raw=state.schedule?state.schedule.tz:undefined;
   const z=(raw===undefined||raw===null||!isFinite(Number(raw)))?210:Number(raw);
   el.value=String(z);
+  setTimeout(refreshSelects,0);
 }
 function loadLogoFields(){
   const ft=$("fbType"),fu=$("fbURL");
@@ -2828,14 +3050,15 @@ function loadLogoFields(){
   if(ft&&document.activeElement!==ft)ft.value=f.type||"none";
   if(fu&&document.activeElement!==fu)fu.value=f.url||"";
   document.querySelectorAll("input[name='logoModeRad']").forEach(r=>{r.checked=(r.value===(state.logoMode||"auto"));});
+  setTimeout(refreshSelects,0);
 }
 
-/* ============ Events ============ */
+/* ============ Events / themes ============ */
 const BUILTIN_EVENTS=[
  {id:"newyear",start:"12-30",days:4,emoji:"🎆",accent:"#ffd54a",bg:"#0b1030",msg:{fa:"سال نو مبارک!",en:"Happy New Year!",ar:"كل عام وأنتم بخير!",tr:"Mutlu yıllar!"}},
  {id:"valentine",start:"02-13",days:3,emoji:"💝",accent:"#ff6b8b",bg:"#1d0d16",msg:{fa:"روز عشق مبارک",en:"Happy Valentine's Day",ar:"عيد حب سعيد",tr:"Sevgililer Günü"}},
  {id:"nowruz",start:"03-20",days:14,emoji:"🌱",accent:"#7bd86b",bg:"#0e1a12",msg:{fa:"نوروز مبارک",en:"Happy Nowruz",ar:"نوروز مبارك",tr:"Nevruz"}},
- {id:"halloween",start:"10-29",days:3,emoji:"🎃",accent:"#ff8a1f",bg:"#140a05",msg:{fa:"هالووین",en:"Happy Halloween",ar:"هالووين",tr:"Cadılar"}},
+ {id:"halloween",start:"10-29",days:3,emoji:"🎃",accent:"#ff8a1f",bg:"#140a05",msg:{fa:"هالووین",en:"Happy Halloween",ar:"هالوووين",tr:"Cadılar"}},
  {id:"yalda",start:"12-20",days:2,emoji:"🍉",accent:"#e0405a",bg:"#170a12",msg:{fa:"شب یلدا مبارک",en:"Happy Yalda",ar:"ليلة يلدا",tr:"Yalda"}},
  {id:"christmas",start:"12-24",days:3,emoji:"🎄",accent:"#ff5252",bg:"#0b1a10",msg:{fa:"کریسمس مبارک",en:"Merry Christmas",ar:"عيد ميلاد",tr:"Noel"}}
 ];
@@ -2889,6 +3112,7 @@ function renderEventList(){
     del.onclick=()=>{state.events.custom.splice(i,1);lastEventKey="__";scheduleSave();};
     item.append(info,del);root.appendChild(item);
   });
+  setTimeout(refreshSelects,0);
 }
 
 /* ============ Analytics UI ============ */
@@ -2896,7 +3120,6 @@ function renderAnalytics(){
   const root=$("analyticsTab");
   if(!root||root.classList.contains("hidden"))return;
   const a=state.analytics||clone(DEFAULT_STATE.analytics);
-
   const ov=$("statsOverview");
   if(ov){
     const totalViews=Object.values(a.itemViews||{}).reduce((s,v)=>s+(v||0),0);
@@ -2940,8 +3163,9 @@ function renderAnalytics(){
       ranked.forEach(r=>{
         const bar=document.createElement("div");bar.className="bar";
         bar.style.width=Math.max(8,r.views/max*100)+"%";
-        bar.innerHTML=`<span class="barLabel">${esc(r.item.title||"بدون عنوان")} · ${esc(r.item.ch)}</span><span class="barValue">${r.views}</span>`;
-        tc.appendChild(bar);
+        const lb=document.createElement("span");lb.className="barLabel";lb.textContent=(r.item.title||"بدون عنوان")+" · "+r.item.ch;
+        const bv=document.createElement("span");bv.className="barValue";bv.textContent=r.views;
+        bar.append(lb,bv);tc.appendChild(bar);
       });
     }
   }
@@ -2981,7 +3205,9 @@ function renderPollModal(){
   const voted=hasVoted(poll.id);
   const my=myVote(poll.id);
   const total=poll.options.reduce((s,o)=>s+(o.votes||0),0)||1;
-  body.innerHTML=`<h4 style="margin:0 0 12px;color:var(--text)">${esc(poll.question)}</h4>`;
+  body.innerHTML="";
+  const h=document.createElement("h4");h.style.cssText="margin:0 0 12px;color:var(--text)";h.textContent=poll.question;
+  body.appendChild(h);
   poll.options.forEach((opt,i)=>{
     const pct=Math.round((opt.votes||0)/total*100);
     const row=document.createElement("div");
@@ -2991,8 +3217,9 @@ function renderPollModal(){
       row.appendChild(fill);
     }
     const label=document.createElement("div");label.className="pollRow";
-    label.innerHTML=`<span>${esc(opt.text)}${my===String(i)?" ✓":""}</span><span class="pollPct">${voted?pct+"%":""}</span>`;
-    row.appendChild(label);
+    const t1=document.createElement("span");t1.textContent=opt.text+(my===String(i)?" ✓":"");
+    const t2=document.createElement("span");t2.className="pollPct";t2.textContent=voted?pct+"%":"";
+    label.append(t1,t2);row.appendChild(label);
     if(!voted){
       row.onclick=()=>{
         opt.votes=(opt.votes||0)+1;
@@ -3025,27 +3252,57 @@ function renderPollList(){
   });
 }
 
-/* ============ Feedback ============ */
+/* ============ Feedback (redesigned) ============ */
+let fbCategory="idea";
+const FB_CAT_LABEL={idea:"💡 ایده",bug:"🐞 باگ",feature:"✨ فیچر",other:"📝 دیگر"};
 function renderFeedbackList(){
   const root=$("feedbackList");if(!root)return;root.innerHTML="";
   const list=state.feedback||[];
   if(!list.length){root.innerHTML='<div class="viewerhint">هنوز فیدبکی نیامده.</div>';return;}
   list.forEach(f=>{
-    const row=document.createElement("div");row.className="listitem";
-    const info=document.createElement("div");info.className="iteminfo";
-    const name=document.createElement("div");name.className="itemname";
-    const feedbackTypes={suggestion:"پیشنهاد",bug:"گزارش باگ / مشکل",design:"ایدهٔ طراحی",content:"پیشنهاد محتوا",other:"سایر"};
-    name.textContent=(f.name||"ناشناس")+" · "+(feedbackTypes[f.type]||"فیدبک قدیمی");
-    const meta=document.createElement("div");meta.className="itemmeta";
-    meta.textContent=new Date(f.createdAt).toLocaleString(dateLocale());
-    const msg=document.createElement("div");
-    msg.style.cssText="margin-top:8px;font-size:12px;color:var(--text);white-space:pre-wrap;line-height:1.6";
-    msg.textContent=f.message;
-    info.append(name,meta,msg);
-    const del=document.createElement("button");del.className="small danger";del.innerHTML='<i class="ic ic-trash"></i>';
-    del.onclick=()=>{state.feedback=state.feedback.filter(x=>x.id!==f.id);scheduleSave();renderFeedbackList();};
-    row.append(info,del);root.appendChild(row);
+    const card=document.createElement("div");card.className="fbCard";
+    const head=document.createElement("div");head.style.cssText="display:flex;align-items:center;gap:6px;flex-wrap:wrap";
+    const cat=document.createElement("span");cat.className="fbCat";cat.textContent=FB_CAT_LABEL[f.category]||FB_CAT_LABEL.other;
+    const who=document.createElement("span");who.style.cssText="font-size:12px;color:var(--muted)";
+    who.textContent=(f.name||"ناشناس")+" · "+new Date(f.createdAt).toLocaleString(dateLocale());
+    head.append(cat,who);
+    const sub=document.createElement("div");sub.className="fbSubject";sub.textContent=f.subject||"(بدون عنوان)";
+    const msg=document.createElement("div");msg.className="fbMsg";msg.textContent=f.message||"";
+    card.append(head,sub,msg);
+    if(isAdmin){
+      const del=document.createElement("button");del.className="small danger";del.style.marginTop="8px";
+      del.innerHTML='<i class="ic ic-trash"></i> حذف';
+      del.onclick=()=>{state.feedback=state.feedback.filter(x=>x.id!==f.id);scheduleSave();renderFeedbackList();};
+      card.appendChild(del);
+    }
+    root.appendChild(card);
   });
+}
+
+/* ============ Next Up notification ============ */
+let nextUpShownFor="";
+function checkNextUp(){
+  const el=$("nextUpToast");if(!el)return;
+  if(kidsMode||activeMode()!=="tv"){el.classList.remove("show");return;}
+  const list=currentChannel().list;
+  if(list.length<2)return;
+  const li=liveInfo("tv");
+  if(!li.known)return;
+  const item=list[li.index];
+  if(!item)return;
+  const remain=li.endsIn!=null?li.endsIn:null;
+  if(remain==null||remain>30||remain<3)return;
+  const key=item.id+"|"+li.index;
+  if(nextUpShownFor===key)return;
+  nextUpShownFor=key;
+  const nextIdx=(li.index+1)%list.length;
+  const next=list[nextIdx];
+  if(!next)return;
+  $("nextUpTitle").textContent=next.title||t("untitled");
+  $("nextUpTime").textContent="تا "+Math.round(remain)+" ثانیهٔ دیگر";
+  el.classList.add("show");
+  clearTimeout(checkNextUp._t);
+  checkNextUp._t=setTimeout(()=>el.classList.remove("show"),12000);
 }
 
 /* ============ Render UI ============ */
@@ -3057,6 +3314,7 @@ function initialsOf(name){
 }
 function renderBrand(){
   $("brandName").textContent=state.stationName||"AM TV 24/7";
+  const tl=$("brandTagline");if(tl)tl.textContent=state.tagline||"THE NEXT ERA · v1.0.2";
   $("statusStation").textContent=state.stationName||"AM TV 24/7";
   $("radioStationName").textContent=state.stationName||"AM RADIO";
   const el=$("brandLogo");
@@ -3170,7 +3428,7 @@ function renderRadioList(){
       const item=document.createElement("div");item.className="listitem";
       const info=document.createElement("div");info.className="iteminfo";
       const name=document.createElement("div");name.className="itemname";
-      name.innerHTML='<i class="ic ic-radio"></i> '+esc(c.name||"");
+      name.innerHTML='<i class="ic ic-radio"></i> '+esc(c.name||"")+(c.feedId?' <span style="font-size:10px;color:var(--accent)">YT</span>':'');
       const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •";
       info.append(name,meta);
       const select=document.createElement("button");select.className="small";
@@ -3201,7 +3459,7 @@ function renderKidsAdmin(){
     const row=document.createElement("div");row.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const name=document.createElement("div");name.className="itemname";
-    name.innerHTML='<i class="ic ic-kids"></i> '+esc(c.name||"");
+    name.innerHTML='<i class="ic ic-kids"></i> '+esc(c.name||"")+(c.feedId?' <span style="font-size:10px;color:var(--accent)">YT</span>':'');
     const meta=document.createElement("div");meta.className="itemmeta";
     meta.textContent=(c.list?.length||0)+" برنامه";
     info.append(name,meta);
@@ -3256,6 +3514,7 @@ function renderAll(){
   $("kidsToggle").classList.remove("hidden");
   document.body.classList.toggle("viewerMode",!isAdmin && !kidsMode);
   $("stationNameInput").value=state.stationName||"AM TV 24/7";
+  const tagIn=$("stationTaglineInput");if(tagIn)tagIn.value=state.tagline||"THE NEXT ERA · v1.0.2";
   $("stationLogoURL").value=state.stationLogo||"";
   loadWatermarkFields();loadBumperFields();loadScheduleFields();loadLogoFields();
   const ek=eventKey();
@@ -3267,6 +3526,8 @@ function renderAll(){
   if(pv)pv.classList.toggle("hidden",!hasPoll);
   syncLogoModeUI();
   renderPlayer();
+  setTimeout(refreshSelects,0);
+  enhanceAllSelects(document);
 }
 function syncLogoModeUI(){
   document.querySelectorAll("input[name='logoModeRad']").forEach(r=>{
@@ -3306,6 +3567,16 @@ function renameItem(v){
   if(!tt){notify(t("msgRenameEmpty"));return;}
   v.title=tt.slice(0,200);
   scheduleSave();renderAll();notify(t("msgRenamed"));
+}
+
+/* ============ Upload ============ */
+async function uploadFile(file,prefix){
+  if(!sbClient)throw new Error("no client");
+  const path=prefix+"/"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"-"+(file.name||"file");
+  const {error}=await sbClient.storage.from(STORAGE_BUCKET).upload(path,file,{cacheControl:"3600",upsert:false});
+  if(error)throw error;
+  const {data}=sbClient.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
 }
 
 /* ============ Add content ============ */
@@ -3439,6 +3710,7 @@ function applyPrefs(){
     $("playerShell").classList.toggle("vhs",!!p.vhs);
     $("vhsOverlay").classList.toggle("hidden",!p.vhs);
   }catch(_){}
+  setTimeout(refreshSelects,0);
 }
 function applyTheme(name){const p=getPrefs();p.preset=THEMES[name]?name:"green";delete p.accent;delete p.bg;savePrefs(p);applyPrefs();}
 function initPrefs(){const p=getPrefs();if(!p.preset){p.preset="green";p.mode="dark";savePrefs(p);}applyPrefs();}
@@ -3474,7 +3746,7 @@ function tryOnceSubtitles(){
     else{ytPlayer.setOption("captions","track",{languageCode:lang});ytPlayer.setOption("cc","track",{languageCode:lang});}
   }catch(_){}
 }
-function syncSubUI(){const lang=getPrefs().subLang||"off";try{$("subSelect").value=lang;}catch(_){}["ccButton","ccFs"].forEach(id=>{const b=$(id);if(b)b.classList.toggle("primary",lang!=="off");});}
+function syncSubUI(){const lang=getPrefs().subLang||"off";try{$("subSelect").value=lang;}catch(_){}["ccButton","ccFs"].forEach(id=>{const b=$(id);if(b)b.classList.toggle("primary",lang!=="off");});setTimeout(refreshSelects,0);}
 function setSubLang(lang){const p=getPrefs();p.subLang=lang;if(lang!=="off")p.subLast=lang;savePrefs(p);syncSubUI();applySubtitles();}
 function toggleSubs(){const p=getPrefs();if((p.subLang||"off")!=="off")setSubLang("off");else setSubLang(p.subLast||(SUPPORTED_LANGS.includes(curLang)?curLang:"en"));}
 
@@ -3486,14 +3758,16 @@ async function toggleOrientation(){
   if(document.fullscreenElement&&screen.orientation&&screen.orientation.lock){
     try{await screen.orientation.lock(wantLandscape?"landscape":"portrait");return;}catch(_){}
   }
-  if(shell.classList.contains("pagecover")){shell.classList.toggle("rotated");return;}
+  if(shell.classList.contains("pagecover")){shell.classList.toggle("rotated");}
+  setTimeout(applyWatermark,100);
 }
 async function toggleFullscreen(){
   const el=$("playerShell");
-  if(el.classList.contains("pagecover")){el.classList.remove("pagecover","rotated");document.body.style.overflow="";return;}
+  if(el.classList.contains("pagecover")){el.classList.remove("pagecover","rotated");document.body.style.overflow="";setTimeout(applyWatermark,100);return;}
   if(document.fullscreenElement){try{await document.exitFullscreen();}catch(_){}return;}
   try{if(!el.requestFullscreen)throw new Error("no-fullscreen");await el.requestFullscreen();}
   catch(_){el.classList.add("pagecover");document.body.style.overflow="hidden";}
+  setTimeout(applyWatermark,200);
 }
 
 /* ============ Mode / Tabs ============ */
@@ -3514,6 +3788,7 @@ function openTab(tabId){
   if(tabId==="pollsTab")renderPollList();
   if(tabId==="feedbackTab")renderFeedbackList();
   if(tabId==="kidsTab")renderKidsAdmin();
+  setTimeout(refreshSelects,0);
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
 
@@ -3529,6 +3804,7 @@ $("closeGuide").addEventListener("click",()=>$("guidePanel").classList.add("hidd
 $("settingsToggle").addEventListener("click",()=>{
   $("viewerSettings").classList.toggle("hidden");
   if(!$("viewerSettings").classList.contains("hidden"))$("viewerSettings").scrollIntoView({behavior:"smooth",block:"nearest"});
+  setTimeout(refreshSelects,0);
 });
 $("themeSelect").addEventListener("change",e=>applyTheme(e.target.value));
 document.querySelectorAll(".modeCard").forEach(card=>{
@@ -3560,18 +3836,20 @@ $("prevButton").addEventListener("click",previousItem);
 $("nextButton").addEventListener("click",nextItem);
 $("playButton").addEventListener("click",togglePlay);
 $("fullscreenButton").addEventListener("click",toggleFullscreen);
-$("screenLockBtn").addEventListener("click",()=>{$("playerShell").classList.add("screen-locked");});
+$("screenLockBtn").addEventListener("click",e=>{e.stopPropagation();$("playerShell").classList.add("screen-locked");});
 $("screenUnlockBtn").addEventListener("click",e=>{e.stopPropagation();e.preventDefault();$("playerShell").classList.remove("screen-locked");});
 $("lockOverlay").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();});
 $("lockOverlay").addEventListener("touchstart",e=>e.preventDefault(),{passive:false});
 $("screenUnlockBtn").addEventListener("touchstart",e=>{e.preventDefault();$("playerShell").classList.remove("screen-locked");},{passive:false});
 $("addChannelFeedButton").addEventListener("click",addChannelFeed);
 $("syncChannelFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
+$("syncAllFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
 $("viewerFullscreen").addEventListener("click",toggleFullscreen);
 $("coverExit").addEventListener("click",toggleFullscreen);
-$("rotateButton").addEventListener("click",toggleOrientation);
+$("rotateButton").addEventListener("click",()=>{toggleOrientation();setTimeout(applyWatermark,100);});
 document.addEventListener("fullscreenchange",()=>{
   if(!document.fullscreenElement){try{if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock();}catch(_){}$("playerShell").classList.remove("rotated");}
+  setTimeout(applyWatermark,150);
 });
 $("repeatButton").addEventListener("click",()=>{
   if(!isAdmin)return;
@@ -3667,6 +3945,8 @@ $("saveStationButton").addEventListener("click",async()=>{
   if(!isAdmin)return;
   const name=$("stationNameInput").value.trim();
   if(name)state.stationName=name;
+  const tag=$("stationTaglineInput").value.trim();
+  state.tagline=tag||"THE NEXT ERA · v1.0.2";
   const logoURL=$("stationLogoURL").value.trim();
   if(logoURL)state.stationLogo=logoURL;
   const file=$("stationLogoFile").files?.[0];
@@ -3771,7 +4051,7 @@ $("audioElement").addEventListener("loadedmetadata",()=>{
   pendingSeekAudio=0;
 });
 
-/* Kids PIN management */
+/* Kids PIN */
 $("saveKidsPinButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   const p1=normDigits(($("kidsPinNew").value||"").trim());
@@ -3792,7 +4072,6 @@ $("clearKidsPinButton").addEventListener("click",()=>{
   scheduleSave();notify(t("msgPinCleared2"));
 });
 
-/* Kids admin tab */
 $("createKidsChannelButton")?.addEventListener("click",()=>{
   if(!isAdmin)return;
   const name=$("kidsChannelName").value.trim();
@@ -3835,7 +4114,6 @@ $("deleteSelectedKids")?.addEventListener("click",()=>{
   list.splice(selectedKidsIndex,1);selectedKidsIndex=-1;scheduleSave();renderKidsAdmin();
 });
 
-/* Analytics buttons */
 $("resetAnalyticsBtn")?.addEventListener("click",()=>{
   if(!isAdmin)return;
   if(!confirm("همهٔ آمار حذف شود؟"))return;
@@ -3849,7 +4127,6 @@ $("exportAnalyticsBtn")?.addEventListener("click",()=>{
   const a=document.createElement("a");a.href=url;a.download="amtv-analytics.json";a.click();URL.revokeObjectURL(url);
 });
 
-/* Polls */
 $("createPollButton")?.addEventListener("click",()=>{
   if(!isAdmin)return;
   const q=$("pollQuestion").value.trim();
@@ -3870,18 +4147,28 @@ $("pollModalClose")?.addEventListener("click",()=>$("pollModal").style.display="
 $("pollModal")?.addEventListener("click",e=>{if(e.target.id==="pollModal")$("pollModal").style.display="none";});
 
 /* Feedback */
+document.querySelectorAll("#fbTypeGrid .fbTypeBtn").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#fbTypeGrid .fbTypeBtn").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    fbCategory=b.dataset.cat;
+  });
+});
 $("feedbackBtn")?.addEventListener("click",()=>{$("feedbackModal").style.display="flex";});
 $("feedbackClose")?.addEventListener("click",()=>$("feedbackModal").style.display="none");
 $("feedbackModal")?.addEventListener("click",e=>{if(e.target.id==="feedbackModal")$("feedbackModal").style.display="none";});
 $("fbSubmit")?.addEventListener("click",()=>{
   const name=$("fbName").value.trim().slice(0,60);
-  const message=$("fbMessage").value.trim().slice(0,800);
-  if(!message){notify("متن پیام لازم است.");return;}
+  const subject=$("fbSubject").value.trim().slice(0,120);
+  const message=$("fbMessage").value.trim().slice(0,1200);
+  if(!message){notify("توضیحات لازم است.");return;}
   state.feedback=state.feedback||[];
-  state.feedback.unshift({id:"fb-"+Date.now(),name:name||"ناشناس",type:$("fbType")?.value||"suggestion",message,createdAt:Date.now(),mode:activeMode()});
-  state.feedback=state.feedback.slice(0,200);
-  $("fbName").value="";$("fbMessage").value="";if($("fbType"))$("fbType").value="suggestion";
-  $("feedbackModal").style.display="none";scheduleSave();notify("فیدبک ارسال شد ✓");
+  state.feedback.unshift({id:"fb-"+Date.now(),name:name||"ناشناس",subject,message,category:fbCategory,createdAt:Date.now(),mode:activeMode()});
+  state.feedback=state.feedback.slice(0,300);
+  $("fbName").value="";$("fbSubject").value="";$("fbMessage").value="";
+  fbCategory="idea";
+  document.querySelectorAll("#fbTypeGrid .fbTypeBtn").forEach(x=>x.classList.toggle("active",x.dataset.cat==="idea"));
+  $("feedbackModal").style.display="none";scheduleSave();notify("ارسال شد ✓");
 });
 $("clearFeedbackBtn")?.addEventListener("click",()=>{
   if(!isAdmin)return;
@@ -3894,6 +4181,30 @@ $("exportFeedbackBtn")?.addEventListener("click",()=>{
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");a.href=url;a.download="amtv-feedback.json";a.click();URL.revokeObjectURL(url);
 });
+
+/* Watch Party listeners */
+$("partyBtn")?.addEventListener("click",partyOpenModal);
+$("partyClose")?.addEventListener("click",partyCloseModal);
+$("partyCreateBtn")?.addEventListener("click",()=>{
+  const code=partyGenCode();
+  partyJoin(code,true);
+});
+$("partyJoinBtn")?.addEventListener("click",()=>{
+  const code=($("partyJoinCode").value||"").trim().toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);
+  if(!code){notify("کد اتاق را وارد کن.");return;}
+  partyJoin(code,false);
+});
+$("partyLeaveBtn")?.addEventListener("click",partyLeave);
+$("partySendBtn")?.addEventListener("click",partySendMsg);
+$("partyMsgInput")?.addEventListener("keydown",e=>{if(e.key==="Enter")partySendMsg();});
+$("partyCopyBtn")?.addEventListener("click",()=>{
+  try{navigator.clipboard.writeText(partyRoom);notify("کد کپی شد ✓");}catch(_){notify("کپی نشد.");}
+});
+$("partyModal")?.addEventListener("click",e=>{if(e.target.id==="partyModal")partyCloseModal();});
+
+/* Next Up close */
+$("nextUpClose")?.addEventListener("click",()=>$("nextUpToast").classList.remove("show"));
+setInterval(checkNextUp,2000);
 
 /* ============ Cast init ============ */
 loadCastSDK();setupAirPlay();setupRemotePlayback();setupSleepAndKids();
@@ -3932,6 +4243,7 @@ document.body.classList.toggle("viewerMode",!isAdmin);
 
 (async function boot(){
   ensureState();renderAll();
+  enhanceAllSelects(document);
   if(!sbClient){$("supabaseStatus").value="no client";document.body.classList.remove("booting");return;}
   try{
     await syncServerTime();
@@ -3945,7 +4257,12 @@ document.body.classList.toggle("viewerMode",!isAdmin);
     try{if(localStorage.getItem("amtv-kids")==="1")kidsMode=true;}catch(_){}
     if(kidsMode){document.body.classList.add("kids-mode");document.body.classList.add("kids-special");}
     renderAll();
-  }catch(e){console.error(e);}
+  }catch(e){
+    console.error("AM TV startup error:",e);
+    if(typeof window.showAmTvError==="function"){
+      window.showAmTvError("بارگذاری کامل نشد: "+String(e&&e.message||e).slice(0,220));
+    }
+  }
   finally{document.body.classList.remove("booting");}
 })();
 setTimeout(()=>{document.body.classList.remove("booting");},3000);
@@ -4005,7 +4322,7 @@ setInterval(()=>{
 },1000);
 setInterval(()=>{try{updateMediaSessionMeta();}catch(_){}},3000);
 
-/* ============ Fallback polling ============ */
+/* Fallback polling */
 let lastRemoteJson="";
 setInterval(async()=>{
   if(isAdmin||!sbClient)return;
@@ -4022,7 +4339,7 @@ setInterval(async()=>{
   }catch(e){}
 },8000);
 
-/* ============ Diagnostics ============ */
+/* Diagnostics */
 setInterval(()=>{
   try{
     const el=$("diag");if(!el)return;
@@ -4032,7 +4349,8 @@ setInterval(()=>{
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | yt="+(ytReady?"ok":"no")+
       " | kids="+(kidsMode?"ON":"off")+" | polls="+(state.polls||[]).length+
-      " | fb="+(state.feedback||[]).length+" | online="+presenceOnline+" | "+$("supabaseStatus").value;
+      " | fb="+(state.feedback||[]).length+" | party="+(partyRoom||"—")+
+      " | online="+presenceOnline+" | "+$("supabaseStatus").value;
   }catch(e){}
 },1000);
 
