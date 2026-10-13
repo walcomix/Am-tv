@@ -89,6 +89,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 .ic-chart{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 21h18M6 17V9M12 17V4M18 17v-9'/></svg>")}
 .ic-pencil{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 20h4l10-10-4-4-10 10z'/><path d='M14 6l4 4'/></svg>")}
 .ic-list{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'><path d='M4 6h16M4 12h16M4 18h16'/></svg>")}
+.ic-menu{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round'><circle cx='5' cy='12' r='1.6' fill='black'/><circle cx='12' cy='12' r='1.6' fill='black'/><circle cx='19' cy='12' r='1.6' fill='black'/></svg>")}
 .ic-cinema{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='7' width='18' height='13' rx='2'/><path d='M3 11h18M7 7l3 4M13 7l3 4M5 3l14 3'/></svg>")}
 .ic-cast{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-8'/><path d='M2 12a8 8 0 0 1 8 8'/><path d='M2 16a4 4 0 0 1 4 4'/><circle cx='2.5' cy='19.5' r='1' fill='black'/></svg>")}
 .ic-snooze{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='13' r='8'/><path d='M12 9v4l3 2M5 3l2 2M19 3l-2 2'/></svg>")}
@@ -220,16 +221,16 @@ main{max-width:1450px;margin:auto;padding:18px}
 .emptylogo{font-size:clamp(30px,6vw,65px);font-weight:900;color:var(--screenaccent);letter-spacing:4px}
 .emptyhint{font-size:12px;color:var(--screenmuted)}
 
-/* Watermark بالای lock overlay */
 #watermark{position:absolute;z-index:24;left:3%;top:4%;display:none;pointer-events:none;user-select:none;transform:translate(0,0)}
 #watermark img{display:block;max-width:100%;max-height:100%;object-fit:contain}
 #watermarkText{font-weight:900;text-shadow:0 1px 5px #000,0 0 3px #000;white-space:pre-wrap;overflow-wrap:anywhere}
 
-.playerfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid var(--line)}
-.nowlabel{font-size:12px;color:var(--muted)}
-.playercontrols{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.playerfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;border-top:1px solid var(--line);position:relative}
+.nowlabel{font-size:12px;color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.playercontrols{display:flex;align-items:center;gap:7px;flex-wrap:wrap;position:relative}
 .playercontrols button{min-width:38px}
-.playercontrols input[type=range]{width:90px;accent-color:var(--accent)}
+#adminPlayerControls{display:flex;gap:7px;align-items:center}
+body.viewerMode #adminPlayerControls{display:none!important}
 .sidepanel{padding:14px}
 .sideheading{font-size:14px;font-weight:bold;margin-bottom:12px;display:flex;align-items:center;gap:7px}
 .statusbox{padding:12px;background:var(--panel2);border-radius:9px;font-size:12px;color:var(--muted);line-height:1.9;overflow-wrap:anywhere}
@@ -303,17 +304,20 @@ body.cinema .playerpanel{border:0;border-radius:0;box-shadow:none;background:#00
 body.cinema .playerhead{border:0;background:transparent;opacity:.55}
 body.cinema #playerShell{width:min(100vw,calc((100vh - 110px)*16/9));margin:0 auto;box-shadow:0 0 120px color-mix(in srgb,var(--accent) 22%,transparent)}
 
-/* ===== Lock Screen اصلاح شد ===== */
+/* ===== Lock Screen (اصلاح‌شده) ===== */
 #screenLockBtn{display:none;position:absolute;top:10px;right:10px;z-index:23;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 #playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
 #screenLockBtn:hover{background:rgba(0,0,0,.9)}
-#lockOverlay{display:none;position:absolute;inset:0;z-index:22;align-items:flex-end;justify-content:center;padding-bottom:20px;background:transparent;touch-action:none;pointer-events:none}
+#lockOverlay{display:none;position:absolute;inset:0;z-index:26;align-items:flex-end;justify-content:center;padding-bottom:20px;background:transparent;touch-action:none}
 #playerShell.screen-locked #lockOverlay{display:flex}
+#playerShell.screen-locked #screenLockBtn,
+#playerShell.screen-locked #coverExit,
+#playerShell.screen-locked #rotateButton,
+#playerShell.screen-locked #ccFs,
+#playerShell.screen-locked #viewerStart{display:none!important}
 #lockOverlay button{background:var(--panel);color:var(--text);border:1px solid var(--accent);border-radius:999px;padding:12px 20px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 6px 26px #000a;pointer-events:auto;backdrop-filter:blur(10px)}
 #lockOverlay button:hover{filter:brightness(1.1)}
-#playerShell.screen-locked #screenLockBtn{display:none}
-body.cinema .playerfoot{border:0;opacity:.3;transition:opacity .2s;background:transparent}
-body.cinema .playerfoot:hover{opacity:1}
+
 body.dream{background:linear-gradient(160deg,#140b2e 0%,#2a1650 45%,#0d1a3d 100%) fixed}
 body.dream::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 15% 20%,rgba(255,154,213,.16),transparent 40%),radial-gradient(circle at 85% 30%,rgba(140,170,255,.14),transparent 45%),radial-gradient(circle at 50% 90%,rgba(190,140,255,.14),transparent 50%);animation:dreamDrift 18s ease-in-out infinite alternate}
 @keyframes dreamDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(2%,-2%) scale(1.08)}}
@@ -336,8 +340,8 @@ body.dream .section,body.dream .listitem{background:rgba(255,255,255,.05)}
 #viewerSettings .section{margin-top:10px}
 body.viewerMode .hero{grid-template-columns:minmax(0,1fr)}
 body.viewerMode .sidepanel{display:none!important}
-body.viewerMode #adminPanel,body.viewerMode #channelSelector,body.viewerMode #adminPlayerControls{display:none!important}
-body.viewerMode .playercontrols.admin-only{display:none!important}
+body.viewerMode #adminPanel,body.viewerMode #channelSelector{display:none!important}
+body.viewerMode .admin-only{display:none!important}
 body.viewerMode #youtubePlayer,body.viewerMode #videoElement{pointer-events:none!important}
 body.viewerMode #videoElement{controls:none!important}
 
@@ -377,7 +381,7 @@ body.viewerMode #videoElement{controls:none!important}
 .pollRow{position:relative;z-index:1;display:flex;justify-content:space-between;font-size:13px}
 .pollPct{color:var(--accent);font-weight:bold}
 
-/* ===== Custom Select (UI بومی سایت) ===== */
+/* ===== Custom Select ===== */
 .cs{position:relative;width:100%;user-select:none}
 .cs-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--input);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;font-size:13px;min-height:42px;width:100%;text-align:start}
 .cs-trigger:hover{border-color:var(--accent)}
@@ -389,6 +393,26 @@ body.viewerMode #videoElement{controls:none!important}
 .cs-opt{padding:9px 12px;border-radius:7px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cs-opt:hover,.cs-opt.active{background:color-mix(in srgb,var(--accent) 22%,transparent)}
 .cs-opt.selected{color:var(--accent);font-weight:bold}
+
+/* ===== Dropdown Menus (شلوغی‌زدایی) ===== */
+.menu-wrap{position:relative;display:inline-block}
+.menu-dropdown{position:absolute;top:calc(100% + 6px);right:0;min-width:190px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 14px 40px #000b;display:none;z-index:80;flex-direction:column;gap:2px}
+.menu-wrap.open .menu-dropdown{display:flex}
+.menu-dropdown button{display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;border-radius:8px;text-align:start;justify-content:flex-start;background:transparent;border:0;font-size:13px}
+.menu-dropdown button:hover{background:var(--panel);border-color:transparent}
+.menu-dropdown button.hidden{display:none!important}
+
+.more-wrap{position:relative;display:inline-block}
+.more-panel{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px;display:none;flex-direction:column;gap:3px;min-width:200px;max-height:min(70vh,420px);overflow-y:auto;box-shadow:0 -10px 40px #000b;z-index:80}
+.more-wrap.open .more-panel{display:flex}
+.more-panel button,
+.more-panel label{display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;border-radius:8px;text-align:start;justify-content:flex-start;background:transparent;border:0;font-size:13px;color:var(--text)}
+.more-panel button:hover{background:var(--panel)}
+.more-panel button.hidden{display:none!important}
+.more-panel button.primary{background:var(--accent);color:var(--onaccent)}
+.more-panel label{cursor:default;flex-wrap:wrap}
+.more-panel label input[type=range]{flex:1;min-width:80px}
+#moreBtn{font-weight:bold;letter-spacing:2px}
 
 /* ===== Next Up Toast ===== */
 #nextUpToast{position:fixed;right:14px;bottom:80px;z-index:180;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--accent);border-radius:14px;padding:14px 16px;min-width:230px;max-width:320px;box-shadow:0 12px 40px #000a;display:none;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
@@ -422,7 +446,7 @@ body.viewerMode #videoElement{controls:none!important}
 .partyInputRow{display:flex;gap:8px}
 .partyInputRow input{flex:1}
 
-/* Feedback redesign */
+/* Feedback */
 .fbTypeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .fbTypeBtn{padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:13px;cursor:pointer;transition:all .15s}
 .fbTypeBtn:hover{border-color:var(--accent)}
@@ -431,6 +455,12 @@ body.viewerMode #videoElement{controls:none!important}
 .fbCard .fbCat{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--line);margin-inline-end:6px}
 .fbCard .fbSubject{font-weight:bold;font-size:13px;margin:6px 0}
 .fbCard .fbMsg{font-size:12px;color:var(--muted);white-space:pre-wrap;line-height:1.7}
+
+/* ===== YT Subscriptions ===== */
+.yt-sub-row{display:flex;align-items:center;gap:8px;padding:8px;background:var(--panel2);border:1px solid var(--line);border-radius:9px}
+.yt-sub-row .yt-sub-info{flex:1;min-width:0}
+.yt-sub-row select{max-width:120px;padding:7px;font-size:12px}
+.yt-sub-badge{font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 7px}
 
 @media(max-width:850px){
  main{padding:10px}.hero{grid-template-columns:minmax(0,1fr)}
@@ -467,10 +497,15 @@ body.viewerMode #videoElement{controls:none!important}
     <button id="modeTV" class="active"><i class="ic ic-tv"></i><span class="lbl" data-i18n="navTV">TV</span></button>
     <button id="modeRadio"><i class="ic ic-radio"></i><span class="lbl" data-i18n="navRadio">Radio</span></button>
     <button id="guideToggle"><i class="ic ic-guide"></i><span class="lbl" data-i18n="navGuide">برنامه</span></button>
-    <button id="settingsToggle"><i class="ic ic-appear"></i><span class="lbl" data-i18n="navAppear">ظاهر</span></button>
-    <button id="loginToggle"><i class="ic ic-admin"></i><span class="lbl" data-i18n="navAdmin">مدیریت</span></button>
-    <button id="kidsToggle" class="hidden" title="Kids"><i class="ic ic-kids"></i><span class="lbl" data-i18n="kidsBtn">کودک</span></button>
-    <button id="logoutButton" class="hidden"><i class="ic ic-signin"></i><span class="lbl" data-i18n="navLogout">خروج</span></button>
+    <div class="menu-wrap" id="topMenuWrap">
+      <button id="topMenuBtn" title="منو"><i class="ic ic-menu"></i></button>
+      <div class="menu-dropdown">
+        <button id="settingsToggle"><i class="ic ic-appear"></i><span class="lbl" data-i18n="navAppear">ظاهر</span></button>
+        <button id="kidsToggle" class="hidden"><i class="ic ic-kids"></i><span class="lbl" data-i18n="kidsBtn">کودک</span></button>
+        <button id="loginToggle"><i class="ic ic-admin"></i><span class="lbl" data-i18n="navAdmin">مدیریت</span></button>
+        <button id="logoutButton" class="hidden"><i class="ic ic-signin"></i><span class="lbl" data-i18n="navLogout">خروج</span></button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -531,26 +566,28 @@ body.viewerMode #videoElement{controls:none!important}
 
       <div class="playerfoot">
         <div class="nowlabel" id="nowPlaying" data-i18n="notplaying">در انتظار پخش</div>
-        <div class="playercontrols admin-only" id="adminPlayerControls">
-          <button id="prevButton" title="prev"><i class="ic ic-prev"></i></button>
-          <button id="playButton" title="play"><i class="ic ic-play"></i></button>
-          <button id="nextButton" title="next"><i class="ic ic-next"></i></button>
-          <button id="repeatButton" title="repeat"><i class="ic ic-repeat"></i></button>
-          <button id="shuffleButton" title="shuffle"><i class="ic ic-shuffle"></i></button>
-          <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)">
-            <i class="ic ic-vol"></i><input id="volumeSlider" type="range" min="0" max="100" value="80">
-          </label>
-          <button id="fullscreenButton" title="full"><i class="ic ic-full"></i></button>
-        </div>
         <div class="playercontrols">
-          <button id="partyBtn" title="Watch Party"><i class="ic ic-party"></i><span class="lbl">Party</span></button>
-          <button id="pollsViewerBtn" class="hidden"><i class="ic ic-people"></i><span>نظرسنجی</span></button>
-          <button id="feedbackBtn"><i class="ic ic-mic"></i><span>ایده/باگ</span></button>
-          <button id="castButton" class="hidden" title="Cast"><i class="ic ic-cast"></i><span class="lbl" data-i18n="cast">Cast</span></button>
-          <button id="sleepButton" title="Sleep timer"><i class="ic ic-snooze"></i><span class="lbl" data-i18n="sleep">خواب</span></button>
-          <button id="cinemaButton"><i class="ic ic-cinema"></i><span class="lbl" data-i18n="cinema">سینمایی</span></button>
-          <button id="ccButton"><i class="ic ic-cc"></i><span class="lbl" data-i18n="cc">زیرنویس</span></button>
-          <button id="viewerFullscreen"><i class="ic ic-full"></i><span class="lbl" data-i18n="fullscreen">تمام صفحه</span></button>
+          <div id="adminPlayerControls" class="admin-only">
+            <button id="prevButton" title="prev"><i class="ic ic-prev"></i></button>
+            <button id="playButton" title="play"><i class="ic ic-play"></i></button>
+            <button id="nextButton" title="next"><i class="ic ic-next"></i></button>
+          </div>
+          <button id="fullscreenButton" title="تمام صفحه"><i class="ic ic-full"></i></button>
+          <div class="more-wrap" id="moreWrap">
+            <button id="moreBtn" title="بیشتر"><i class="ic ic-menu"></i></button>
+            <div class="more-panel" id="morePanel">
+              <button id="repeatButton" class="admin-only" title="تکرار"><i class="ic ic-repeat"></i><span>تکرار</span></button>
+              <button id="shuffleButton" class="admin-only" title="تصادفی"><i class="ic ic-shuffle"></i><span>تصادفی</span></button>
+              <label id="volumeLabel" class="admin-only"><i class="ic ic-vol"></i><input id="volumeSlider" type="range" min="0" max="100" value="80"></label>
+              <button id="partyBtn" title="Watch Party"><i class="ic ic-party"></i><span>Watch Party</span></button>
+              <button id="pollsViewerBtn" class="hidden"><i class="ic ic-people"></i><span>نظرسنجی</span></button>
+              <button id="feedbackBtn"><i class="ic ic-mic"></i><span>ایده/باگ</span></button>
+              <button id="castButton" class="hidden" title="Cast"><i class="ic ic-cast"></i><span data-i18n="cast">Cast</span></button>
+              <button id="sleepButton" title="Sleep timer"><i class="ic ic-snooze"></i><span data-i18n="sleep">خواب</span></button>
+              <button id="cinemaButton"><i class="ic ic-cinema"></i><span data-i18n="cinema">سینمایی</span></button>
+              <button id="ccButton"><i class="ic ic-cc"></i><span data-i18n="cc">زیرنویس</span></button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -757,7 +794,7 @@ body.viewerMode #videoElement{controls:none!important}
           <h3><i class="ic ic-radio"></i><span data-i18n="radioChannelsTitle">کانال‌های رادیو</span></h3>
           <div class="rowfields">
             <div class="field"><label for="radioChannelName" data-i18n="lblNewRadioCh">نام کانال رادیو جدید</label><input id="radioChannelName" placeholder="—"></div>
-            <div class="field" style="justify-content:end"><button id="createRadioChannelButton" class="primary"><i class="ic ic-plus"></i><span data-i18n="createBtn">ساخت</span></button></div>
+            <div class="field" style="justify-content:end"><button id="createRadioChannelButton" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="createBtn">ساخت</span></button></div>
           </div>
           <div id="radioChannelList" class="itemlist"></div>
         </div>
@@ -874,7 +911,31 @@ body.viewerMode #videoElement{controls:none!important}
     <div id="youtubeTab" class="tabcontent hidden">
       <div class="adminGrid">
         <div class="section" style="grid-column:1/-1">
-          <h3><i class="ic ic-yt"></i><span data-i18n="ytTitle">همگام‌سازی خودکار YouTube</span></h3>
+          <h3><i class="ic ic-yt"></i><span>اتصال به حساب YouTube و دریافت سابسکریپشن‌ها</span></h3>
+          <p class="viewerhint">
+            با اتصال به حساب گوگل، تمام کانال‌هایی که ساب کرده‌اید اینجا نمایش داده می‌شوند و می‌توانید هرکدام را به یکی از بخش‌های <b>TV</b> / <b>Radio</b> / <b>Kids</b> اضافه کنید.
+            برای این کار نیاز به یک <b>Google OAuth Client ID</b> دارید. در
+            <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console</a>
+            یک OAuth 2.0 Client ID از نوع Web Application بسازید و
+            <code>Authorized JavaScript origins</code> را به آدرس همین سایت تنظیم کنید.
+            سپس YouTube Data API v3 را فعال کنید.
+          </p>
+          <div class="field">
+            <label for="googleClientId">Google OAuth Client ID</label>
+            <input id="googleClientId" placeholder="xxxxxxxx.apps.googleusercontent.com">
+          </div>
+          <div class="actions">
+            <button id="saveGoogleClientBtn"><i class="ic ic-save"></i><span>ذخیره Client ID</span></button>
+            <button id="connectYouTubeBtn" class="primary"><i class="ic ic-yt"></i><span>اتصال به YouTube</span></button>
+            <button id="refreshSubsBtn"><i class="ic ic-sync"></i><span>دریافت مجدد</span></button>
+            <button id="addAllSubsBtn"><i class="ic ic-plus"></i><span>افزودن همه (بر اساس انتخاب)</span></button>
+          </div>
+          <div class="statusbox" id="ytSubsStatus" style="margin-top:12px">هنوز به YouTube متصل نشده‌اید.</div>
+          <div id="ytSubsList" class="itemlist"></div>
+        </div>
+
+        <div class="section" style="grid-column:1/-1">
+          <h3><i class="ic ic-yt"></i><span data-i18n="ytTitle">همگام‌سازی خودکار YouTube (لینک دستی)</span></h3>
           <p class="viewerhint">کانال‌های ساب‌شده رو با لینک زیر اضافه کن. هر کانال در بخش دلخواه (TV / Radio / Kids) ساخته می‌شود و به‌عنوان کانال مستقل قابل انتخاب و پخش است.</p>
           <div class="field"><label for="feedChannelUrl">لینک کانال یوتیوب (@handle یا /channel/UC...)</label><input id="feedChannelUrl" type="url" placeholder="https://www.youtube.com/@channel"></div>
           <div class="rowfields">
@@ -1145,6 +1206,7 @@ body.viewerMode #videoElement{controls:none!important}
   </div>
 </div>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="document.write('<script src=&quot;https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js&quot;><\/script>')"></script>
 <script>
@@ -1187,18 +1249,15 @@ const SUPABASE_ANON_KEY = "sb_publishable_HZ47UxckVEESAOSO1Muv1w_fsheHSYG";
 const STORAGE_BUCKET = "amtv-media";
 const STATE_TABLE = "amtv_state";
 const VIEWS_TABLE = "amtv_views";
-const YOUTUBE_FUNCTION_URL = SUPABASE_URL + "/functions/v1/youtube-sync";
 
 const $ = id => document.getElementById(id);
 const clone = v => JSON.parse(JSON.stringify(v));
 const makeId = () => "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2,9);
 const DAY = 86400000;
 
-/* ============ Escape helpers ============ */
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function escUrl(u){try{const x=String(u||"");if(!/^(https?:|blob:|data:)/i.test(x))return "";return esc(x);}catch(_){return ""}}
 
-/* ============ Visitor IDs ============ */
 function getVisitorId(){let id=localStorage.getItem("amtv-visitor-id");if(!id){id="v-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9);localStorage.setItem("amtv-visitor-id",id);}return id;}
 const VISITOR_ID = getVisitorId();
 function getVoterId(){let id=localStorage.getItem("amtv-voter-id");if(!id){id="vt-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7);localStorage.setItem("amtv-voter-id",id);}return id;}
@@ -1312,7 +1371,7 @@ const I18N = {
   pinInvalidFormat:"رمز باید ۴ تا ۶ رقم باشد.",pinMismatch:"رمزها یکسان نیستند.",
   msgPinSaved:"رمز ذخیره شد.",msgPinCleared2:"رمز حذف شد.",
   lockScreen:"قفل صفحه",unlockScreen:"برای بازکردن لمس کن",
-  kidsTag:"کودک"
+  kidsTag:"کودک",msgFbSaved:"ذخیره شد."
 },
 "en":{
   navTV:"TV",navRadio:"Radio",navGuide:"Guide",navAppear:"Look",navAdmin:"Admin",navLogout:"Logout",
@@ -1377,7 +1436,7 @@ const I18N = {
   pinInvalidFormat:"PIN must be 4-6 digits.",pinMismatch:"PINs don't match.",
   msgPinSaved:"PIN saved.",msgPinCleared2:"PIN cleared.",
   lockScreen:"Lock screen",unlockScreen:"Tap to unlock",
-  kidsTag:"Kids"
+  kidsTag:"Kids",msgFbSaved:"Saved."
 },
 "ar":{
   navTV:"تلفزيون",navRadio:"راديو",navGuide:"الجدول",navAppear:"المظهر",navAdmin:"المشرف",navLogout:"خروج",
@@ -1438,7 +1497,7 @@ const I18N = {
   pinInvalidFormat:"4-6 أرقام.",pinMismatch:"غير متطابق.",
   msgPinSaved:"تم.",msgPinCleared2:"تم.",
   lockScreen:"قفل",unlockScreen:"المس للفتح",
-  kidsTag:"أطفال"
+  kidsTag:"أطفال",msgFbSaved:"تم."
 },
 "tr":{
   navTV:"TV",navRadio:"Radyo",navGuide:"Rehber",navAppear:"Görünüm",navAdmin:"Yönetici",navLogout:"Çıkış",
@@ -1499,7 +1558,7 @@ const I18N = {
   pinInvalidFormat:"4-6 hane.",pinMismatch:"Eşleşmiyor.",
   msgPinSaved:"Kaydedildi.",msgPinCleared2:"Silindi.",
   lockScreen:"Kilitle",unlockScreen:"Açmak için dokun",
-  kidsTag:"Çocuk"
+  kidsTag:"Çocuk",msgFbSaved:"Kaydedildi."
 }
 };
 const SUPPORTED_LANGS=["fa","en","ar","tr"];
@@ -1569,6 +1628,7 @@ const DEFAULT_STATE = {
   events:{enabled:true,custom:[]},
   lastSyncAt:0,
   channelFeeds:[],
+  googleClientId:"",
   watermark:{text:"",image:"",size:100,opacity:85,width:110,color:"#ffffff",position:"top-left",x:3,y:4},
   analytics:{itemViews:{},itemWatchTime:{},hourViews:new Array(24).fill(0),totalWatchSeconds:0,dailyViews:{}},
   polls:[],
@@ -1615,6 +1675,11 @@ let sleepTimer=null, sleepEnd=0, sleepTick=null;
 const SLEEP_STEPS=[15,30,60,90,0];
 let sleepStepIdx=4;
 let kidsMode=false;
+
+/* Google / YouTube subscriptions */
+let googleTokenClient=null;
+let googleAccessToken=null;
+let ytSubscriptions=[];
 
 /* ============ Utils ============ */
 function applyAudioState(){
@@ -2183,6 +2248,7 @@ function ensureState(){
   if(!state.fallback)state.fallback=clone(DEFAULT_STATE.fallback);
   if(!state.logoMode)state.logoMode="auto";
   if(!state.tagline)state.tagline="THE NEXT ERA · v1.0.2";
+  if(typeof state.googleClientId!=="string")state.googleClientId="";
   if(!state.events||!Array.isArray(state.events.custom))state.events={enabled:!(state.events&&state.events.enabled===false),custom:[]};
   if(!state.analytics||typeof state.analytics!=="object")state.analytics=clone(DEFAULT_STATE.analytics);
   if(!Array.isArray(state.analytics.hourViews)||state.analytics.hourViews.length!==24)state.analytics.hourViews=new Array(24).fill(0);
@@ -2995,13 +3061,12 @@ function applyWatermark(){
   root.style.left="auto";root.style.right="auto";root.style.top="auto";root.style.bottom="auto";root.style.transform="none";
   const pos=w.position||"top-left";
   const rotated=$("playerShell").classList.contains("rotated");
-  // در حالت چرخیده مختصات جابجا می‌شوند
   if(pos==="top-left"){root.style.left="3%";root.style.top=rotated?"14%":"4%"}
   else if(pos==="top-right"){root.style.right="3%";root.style.top=rotated?"14%":"4%"}
   else if(pos==="bottom-left"){root.style.left="3%";root.style.bottom=rotated?"14%":"4%"}
   else if(pos==="bottom-right"){root.style.right="3%";root.style.bottom=rotated?"14%":"4%"}
   else if(pos==="center"){root.style.left="50%";root.style.top="50%";root.style.transform="translate(-50%,-50%)"}
-  else{root.style.left=(Number(w.x)||0)+"%";root.style.top=rotated?((Number(w.y)||0)+10)+"%":(Number(w.y)||0)+"%"};
+  else{root.style.left=(Number(w.x)||0)+"%";root.style.top=rotated?((Number(w.y)||0)+10)+"%":(Number(w.y)||0)+"%"}
   void root.offsetWidth;
 }
 function readWatermarkFields(){
@@ -3252,7 +3317,7 @@ function renderPollList(){
   });
 }
 
-/* ============ Feedback (redesigned) ============ */
+/* ============ Feedback ============ */
 let fbCategory="idea";
 const FB_CAT_LABEL={idea:"💡 ایده",bug:"🐞 باگ",feature:"✨ فیچر",other:"📝 دیگر"};
 function renderFeedbackList(){
@@ -3279,7 +3344,7 @@ function renderFeedbackList(){
   });
 }
 
-/* ============ Next Up notification ============ */
+/* ============ Next Up ============ */
 let nextUpShownFor="";
 function checkNextUp(){
   const el=$("nextUpToast");if(!el)return;
@@ -3516,6 +3581,7 @@ function renderAll(){
   $("stationNameInput").value=state.stationName||"AM TV 24/7";
   const tagIn=$("stationTaglineInput");if(tagIn)tagIn.value=state.tagline||"THE NEXT ERA · v1.0.2";
   $("stationLogoURL").value=state.stationLogo||"";
+  const gc=$("googleClientId");if(gc&&document.activeElement!==gc)gc.value=state.googleClientId||"";
   loadWatermarkFields();loadBumperFields();loadScheduleFields();loadLogoFields();
   const ek=eventKey();
   if(ek!==lastEventKey){lastEventKey=ek;applyPrefs();renderEventBanner();}
@@ -3788,9 +3854,188 @@ function openTab(tabId){
   if(tabId==="pollsTab")renderPollList();
   if(tabId==="feedbackTab")renderFeedbackList();
   if(tabId==="kidsTab")renderKidsAdmin();
+  if(tabId==="youtubeTab")renderYouTubeSubscriptions();
   setTimeout(refreshSelects,0);
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
+
+/* ============ Dropdown menus ============ */
+function setupMenu(btnId,wrapId){
+  const btn=$(btnId),wrap=$(wrapId);
+  if(!btn||!wrap)return;
+  btn.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>{if(el!==wrap)el.classList.remove("open")});
+    wrap.classList.toggle("open");
+  });
+  wrap.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    if(e.target.closest("button") && !e.target.closest("#"+btnId)) wrap.classList.remove("open");
+  });
+}
+document.addEventListener("click",()=>{
+  document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".menu-wrap.open, .more-wrap.open").forEach(el=>el.classList.remove("open"));});
+
+/* ============ Google / YouTube subscriptions ============ */
+async function loadGIS(){
+  if(window.google?.accounts?.oauth2)return true;
+  return new Promise((resolve)=>{
+    let tries=0;
+    const iv=setInterval(()=>{
+      tries++;
+      if(window.google?.accounts?.oauth2){clearInterval(iv);resolve(true);return;}
+      if(tries>40){clearInterval(iv);resolve(false);}
+    },200);
+  });
+}
+async function initGoogleOAuth(){
+  const clientId=(state.googleClientId||"").trim();
+  if(!clientId)return false;
+  const ok=await loadGIS();
+  if(!ok)return false;
+  try{
+    googleTokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:clientId,
+      scope:"https://www.googleapis.com/auth/youtube.readonly",
+      callback:onGoogleToken
+    });
+    return true;
+  }catch(e){console.warn(e);return false;}
+}
+function onGoogleToken(resp){
+  if(resp.error){
+    notify("خطای Google: "+resp.error);
+    return;
+  }
+  googleAccessToken=resp.access_token;
+  try{sessionStorage.setItem("amtv-yt-token",googleAccessToken);}catch(_){}
+  fetchYouTubeSubscriptions();
+}
+async function connectYouTube(){
+  if(!isAdmin){notify(t("msgNoAdmin"));return;}
+  if(!state.googleClientId){notify("ابتدا Google Client ID را ذخیره کنید.");return;}
+  if(!googleTokenClient){
+    const ok=await initGoogleOAuth();
+    if(!ok){notify("اتصال به Google ممکن نشد.");return;}
+  }
+  try{googleTokenClient.requestAccessToken();}catch(e){notify("خطا: "+e.message);}
+}
+async function fetchYouTubeSubscriptions(){
+  if(!googleAccessToken){notify("ابتدا روی «اتصال به YouTube» بزنید.");return;}
+  const status=$("ytSubsStatus");
+  if(status)status.textContent="در حال دریافت کانال‌ها…";
+  try{
+    let all=[];let pageToken="";let pages=0;
+    do{
+      const url="https://www.googleapis.com/youtube/v3/subscriptions?part=snippet&mine=true&maxResults=50"+(pageToken?"&pageToken="+encodeURIComponent(pageToken):"");
+      const res=await fetch(url,{headers:{Authorization:"Bearer "+googleAccessToken}});
+      if(res.status===401||res.status===403){
+        googleAccessToken=null;
+        try{sessionStorage.removeItem("amtv-yt-token");}catch(_){}
+        throw new Error("دسترسی منقضی شده — دوباره متصل شوید.");
+      }
+      const data=await res.json();
+      if(data.error)throw new Error(data.error.message||"YouTube API error");
+      all=all.concat(data.items||[]);
+      pageToken=data.nextPageToken||"";
+      pages++;
+    }while(pageToken&&pages<10);
+    ytSubscriptions=all.map(item=>({
+      channelId:item.snippet.resourceId.channelId,
+      title:item.snippet.title,
+      thumb:item.snippet.thumbnails?.default?.url||"",
+      section:"tv"
+    }));
+    if(status)status.textContent=all.length+" کانال دریافت شد.";
+    renderYouTubeSubscriptions();
+    notify(all.length+" کانال ساب‌شده پیدا شد.");
+  }catch(e){
+    console.error(e);
+    if(status)status.textContent="خطا: "+e.message;
+    notify("خطا: "+e.message);
+  }
+}
+function renderYouTubeSubscriptions(){
+  const root=$("ytSubsList");
+  if(!root)return;
+  if(!ytSubscriptions.length){
+    root.innerHTML='<div class="viewerhint">هنوز کانالی دریافت نشده. روی «اتصال به YouTube» بزنید.</div>';
+    return;
+  }
+  root.innerHTML="";
+  ytSubscriptions.forEach((sub,i)=>{
+    const row=document.createElement("div");
+    row.className="yt-sub-row";
+    const info=document.createElement("div");info.className="yt-sub-info";
+    const name=document.createElement("div");name.className="itemname";name.textContent=sub.title;
+    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=sub.channelId;
+    info.append(name,meta);
+    const sel=document.createElement("select");
+    sel.innerHTML='<option value="tv">📺 TV</option><option value="radio">📻 Radio</option><option value="kids">🧒 Kids</option>';
+    sel.value=sub.section;
+    sel.onchange=()=>{sub.section=sel.value;};
+    const add=document.createElement("button");
+    add.className="small primary";add.textContent="افزودن";
+    add.onclick=()=>addSubscriptionAsFeed(sub,add);
+    row.append(info,sel,add);
+    root.appendChild(row);
+  });
+}
+async function addSubscriptionAsFeed(sub,btn){
+  if(!isAdmin){notify(t("msgNoAdmin"));return;}
+  const channelUrl="https://www.youtube.com/channel/"+sub.channelId;
+  // اگر قبلاً اضافه شده
+  if((state.channelFeeds||[]).some(f=>f.url===channelUrl)){
+    notify("قبلاً اضافه شده.");
+    return;
+  }
+  const feed={id:makeId(),url:channelUrl,name:sub.title,section:sub.section,createdAt:Date.now(),targetId:""};
+  if(sub.section==="radio"){
+    const ch={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
+    state.radioChannels.push(ch);feed.targetId=ch.id;
+  }else if(sub.section==="kids"){
+    const ch={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
+    state.kidsChannels.push(ch);feed.targetId=ch.id;
+  }else{
+    const ch={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
+    state.channels.push(ch);feed.targetId=ch.id;
+  }
+  state.channelFeeds.push(feed);
+  if(btn){btn.disabled=true;btn.textContent="…";}
+  scheduleSave();
+  try{
+    await syncChannelFeeds(false,feed.id);
+    if(btn)btn.textContent="✓";
+  }catch(e){
+    if(btn){btn.disabled=false;btn.textContent="افزودن";}
+    notify("خطا در همگام‌سازی: "+e.message);
+  }
+}
+async function addAllSubscriptions(){
+  if(!isAdmin||!ytSubscriptions.length){notify("لیست خالی است.");return;}
+  notify("در حال افزودن همه…");
+  for(const sub of ytSubscriptions){
+    const channelUrl="https://www.youtube.com/channel/"+sub.channelId;
+    if((state.channelFeeds||[]).some(f=>f.url===channelUrl))continue;
+    const feed={id:makeId(),url:channelUrl,name:sub.title,section:sub.section,createdAt:Date.now(),targetId:""};
+    if(sub.section==="radio"){
+      const ch={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
+      state.radioChannels.push(ch);feed.targetId=ch.id;
+    }else if(sub.section==="kids"){
+      const ch={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
+      state.kidsChannels.push(ch);feed.targetId=ch.id;
+    }else{
+      const ch={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
+      state.channels.push(ch);feed.targetId=ch.id;
+    }
+    state.channelFeeds.push(feed);
+  }
+  clearTimeout(saveTimer);await saveRemoteState();
+  renderAll();renderChannelFeedsList();
+  notify("همه کانال‌ها اضافه شدند. برای دریافت ویدیوها روی «همگام‌سازی همه» بزنید.");
+}
 
 /* ============ Event listeners ============ */
 $("modeTV").addEventListener("click",()=>setMode("tv"));
@@ -3844,7 +4089,6 @@ $("screenUnlockBtn").addEventListener("touchstart",e=>{e.preventDefault();$("pla
 $("addChannelFeedButton").addEventListener("click",addChannelFeed);
 $("syncChannelFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
 $("syncAllFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
-$("viewerFullscreen").addEventListener("click",toggleFullscreen);
 $("coverExit").addEventListener("click",toggleFullscreen);
 $("rotateButton").addEventListener("click",()=>{toggleOrientation();setTimeout(applyWatermark,100);});
 document.addEventListener("fullscreenchange",()=>{
@@ -3965,7 +4209,7 @@ $("logoRemoveBtn")?.addEventListener("click",()=>{
   if(!isAdmin)return;
   state.stationLogo="";
   $("stationLogoURL").value="";
-  scheduleSave();renderBrand();updateLogoPreview();notify(t("msgLogoRemoved"));
+  scheduleSave();renderBrand();updateLogoPreview();
 });
 $("stationLogoFile")?.addEventListener("change",async e=>{
   const file=e.target.files?.[0];if(!file||!isAdmin)return;
@@ -3995,9 +4239,9 @@ $("evAddButton").addEventListener("click",()=>{
   const name=$("evName").value.trim();
   const date=$("evDate").value;
   const days=Math.max(1,Math.min(60,Number($("evDays").value)||1));
-  if(!name||!/^\d{4}-\d{2}-\d{2}$/.test(date)){notify(t("msgEvInvalid"));return;}
+  if(!name||!/^\d{4}-\d{2}-\d{2}$/.test(date)){notify("تاریخ یا نام نامعتبر.");return;}
   state.events.custom.push({id:"ev-"+makeId(),custom:true,name,msg:name,date,days,emoji:$("evEmoji").value.trim().slice(0,4),accent:$("evAccent").value,bg:$("evBg").value,yearly:$("evYearly").checked});
-  $("evName").value="";lastEventKey="__";scheduleSave();notify(t("msgEvAdded"));
+  $("evName").value="";lastEventKey="__";scheduleSave();
 });
 $("exportButton").addEventListener("click",()=>{
   if(!isAdmin)return;
@@ -4032,8 +4276,6 @@ $("previewBumperButton").addEventListener("click",()=>{
   showBumper(nxt,4);
   adminBumperTimer=setTimeout(()=>{adminBumperTimer=null;hideBumper();renderPlayer(true);},4000);
 });
-$("youtubeConnectButton")?.addEventListener("click",()=>callYouTubeSync("connect"));
-$("youtubeSyncButton")?.addEventListener("click",()=>callYouTubeSync("sync"));
 $("videoElement").addEventListener("ended",handleEnded);
 $("audioElement").addEventListener("ended",handleEnded);
 $("videoElement").addEventListener("play",()=>{localPlaying=true;$("playButton").innerHTML='<i class="ic ic-pause"></i>';try{updateMediaSessionMeta()}catch(_){}});
@@ -4050,6 +4292,20 @@ $("audioElement").addEventListener("loadedmetadata",()=>{
   if(pendingSeekAudio>0&&isFinite(a.duration)&&pendingSeekAudio<a.duration-1){try{a.currentTime=pendingSeekAudio}catch(_){}}
   pendingSeekAudio=0;
 });
+
+/* Google / YouTube listeners */
+$("saveGoogleClientBtn")?.addEventListener("click",()=>{
+  if(!isAdmin)return;
+  state.googleClientId=$("googleClientId").value.trim();
+  googleTokenClient=null;
+  scheduleSave();notify("ذخیره شد.");
+});
+$("connectYouTubeBtn")?.addEventListener("click",connectYouTube);
+$("refreshSubsBtn")?.addEventListener("click",()=>{
+  if(googleAccessToken)fetchYouTubeSubscriptions();
+  else connectYouTube();
+});
+$("addAllSubsBtn")?.addEventListener("click",addAllSubscriptions);
 
 /* Kids PIN */
 $("saveKidsPinButton").addEventListener("click",()=>{
@@ -4146,7 +4402,6 @@ $("pollsViewerBtn")?.addEventListener("click",()=>{renderPollModal();$("pollModa
 $("pollModalClose")?.addEventListener("click",()=>$("pollModal").style.display="none");
 $("pollModal")?.addEventListener("click",e=>{if(e.target.id==="pollModal")$("pollModal").style.display="none";});
 
-/* Feedback */
 document.querySelectorAll("#fbTypeGrid .fbTypeBtn").forEach(b=>{
   b.addEventListener("click",()=>{
     document.querySelectorAll("#fbTypeGrid .fbTypeBtn").forEach(x=>x.classList.remove("active"));
@@ -4182,13 +4437,9 @@ $("exportFeedbackBtn")?.addEventListener("click",()=>{
   const a=document.createElement("a");a.href=url;a.download="amtv-feedback.json";a.click();URL.revokeObjectURL(url);
 });
 
-/* Watch Party listeners */
 $("partyBtn")?.addEventListener("click",partyOpenModal);
 $("partyClose")?.addEventListener("click",partyCloseModal);
-$("partyCreateBtn")?.addEventListener("click",()=>{
-  const code=partyGenCode();
-  partyJoin(code,true);
-});
+$("partyCreateBtn")?.addEventListener("click",()=>{const code=partyGenCode();partyJoin(code,true);});
 $("partyJoinBtn")?.addEventListener("click",()=>{
   const code=($("partyJoinCode").value||"").trim().toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);
   if(!code){notify("کد اتاق را وارد کن.");return;}
@@ -4202,7 +4453,6 @@ $("partyCopyBtn")?.addEventListener("click",()=>{
 });
 $("partyModal")?.addEventListener("click",e=>{if(e.target.id==="partyModal")partyCloseModal();});
 
-/* Next Up close */
 $("nextUpClose")?.addEventListener("click",()=>$("nextUpToast").classList.remove("show"));
 setInterval(checkNextUp,2000);
 
@@ -4210,6 +4460,10 @@ setInterval(checkNextUp,2000);
 loadCastSDK();setupAirPlay();setupRemotePlayback();setupSleepAndKids();
 if($("castButton"))$("castButton").addEventListener("click",handleCastClick);
 setTimeout(updateCastUI,1500);setTimeout(setupAirPlay,800);setTimeout(updateCastUI,3000);
+
+/* ============ Dropdown setup ============ */
+setupMenu("topMenuBtn","topMenuWrap");
+setupMenu("moreBtn","moreWrap");
 
 /* ============ Realtime ============ */
 async function setupRealtime(){
@@ -4256,6 +4510,10 @@ document.body.classList.toggle("viewerMode",!isAdmin);
     if(isAdmin){const p=pruneOldSynced();if(p){await saveRemoteState();}}
     try{if(localStorage.getItem("amtv-kids")==="1")kidsMode=true;}catch(_){}
     if(kidsMode){document.body.classList.add("kids-mode");document.body.classList.add("kids-special");}
+    try{
+      const tok=sessionStorage.getItem("amtv-yt-token");
+      if(tok){googleAccessToken=tok;}
+    }catch(_){}
     renderAll();
   }catch(e){
     console.error("AM TV startup error:",e);
@@ -4285,7 +4543,6 @@ setTimeout(()=>{document.body.classList.remove("booting");},3000);
     $("viewerStart").classList.toggle("hidden",isAdmin||kidsMode||viewerSoundOn||!activeItem());
     if("mediaSession" in navigator){actions.forEach(a=>{try{navigator.mediaSession.setActionHandler(a,null)}catch(_){}});}
     $("adminPlayerControls").classList.toggle("hidden",viewer);
-    ["prevButton","playButton","nextButton"].forEach(id=>{$(id).disabled=false;});
     $("videoElement").disablePictureInPicture=viewer;
     $("videoElement").setAttribute("controlslist","nodownload noplaybackrate nofullscreen noremoteplayback");
   }
@@ -4345,7 +4602,7 @@ setInterval(()=>{
     const el=$("diag");if(!el)return;
     el.style.display=location.search.includes("debug")?"block":"none";
     const l=liveInfo(activeMode());
-    el.textContent="v1.0.2 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
+    el.textContent="v1.0.3 | "+(isAdmin?"admin":"viewer")+" | mode="+activeMode()+
       " | idx="+l.index+"@"+Math.round(l.offset)+(l.known?"":"?")+
       " | items="+currentList().length+" | yt="+(ytReady?"ok":"no")+
       " | kids="+(kidsMode?"ON":"off")+" | polls="+(state.polls||[]).length+
@@ -4356,4 +4613,4 @@ setInterval(()=>{
 
 </script>
 </body>
-  </html>
+                                                                                           </html>
