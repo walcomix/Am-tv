@@ -270,7 +270,7 @@ input[type=checkbox]{width:auto;accent-color:var(--accent)}
 #playerShell.pagecover #coverExit{display:block}
 #rotateButton{display:none;position:absolute;top:10px;left:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
 #ccFs{display:none;position:absolute;top:56px;left:10px;z-index:7;background:rgba(0,0,0,.72);color:#fff;border:0;border-radius:999px;padding:9px 14px;font-size:13px}
-#playerShell:fullscreen #rotateButton,#playerShell.pagecover #rotateButton,#playerShell:fullscreen #ccFs,#playerShell.pagecover #ccFs{display:block}
+#playerShell:fullscreen #rotateButton,#playerShell.pagecover #rotateButton,body.cinema #rotateButton,#playerShell:fullscreen #ccFs,#playerShell.pagecover #ccFs,body.cinema #ccFs{display:block}
 #playerShell.pagecover.rotated{inset:auto;top:0;left:100vw;width:100vh;height:100vw;transform-origin:0 0;transform:rotate(90deg)}
 #fallbackLayer{position:absolute;inset:0;z-index:0}
 #fallbackLayer img,#fallbackLayer video{width:100%;height:100%;object-fit:cover;display:block}
@@ -330,7 +330,7 @@ body.cinema.portrait .playerfoot{position:absolute;bottom:12px;left:12px;right:1
 
 /* ===== Lock Screen ===== */
 #screenLockBtn{display:none;position:absolute;top:10px;right:10px;z-index:23;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-#playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn{display:inline-flex}
+#playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn,body.cinema #screenLockBtn{display:inline-flex}
 #screenLockBtn:hover{background:rgba(0,0,0,.9)}
 #lockOverlay{display:none;position:absolute;inset:0;z-index:26;align-items:flex-end;justify-content:center;padding-bottom:20px;background:transparent;touch-action:none}
 #playerShell.screen-locked #lockOverlay{display:flex}
@@ -1216,7 +1216,7 @@ body.viewerMode #videoElement{controls:none!important}
   <div class="nu-time" id="nextUpTime"></div>
 </div>
 <button id="cinemaExit" type="button" class="hidden"><i class="ic ic-close"></i><span class="lbl" data-i18n="cinemaExit">خروج از حالت سینمایی</span></button>
-<button id="cinemaRotate" type="button" title="Portrait/Landscape"><i class="ic ic-sync"></i> افقی / عمودی</button>
+<button id="cinemaRotate" type="button" title="Portrait/Landscape"><i class="ic ic-sync"></i> <span data-i18n="rotate">افقی / عمودی</span></button>
 <div id="sleepBadge"><i class="ic ic-snooze"></i> <span id="sleepTime">--:--</span></div>
 <button id="kidsExitBtn" type="button"><i class="ic ic-lock"></i><span data-i18n="exitKids">خروج از حالت کودک</span></button>
 <div id="pinModal">
@@ -1903,6 +1903,12 @@ let kidsMode=false;
 let googleTokenClient=null;
 let googleAccessToken=null;
 let ytSubscriptions=[];
+const YT_SUBS_STORAGE_KEY="amtv-youtube-subscriptions-v1";
+try{
+  const savedYtSubs=JSON.parse(localStorage.getItem(YT_SUBS_STORAGE_KEY)||"[]");
+  if(Array.isArray(savedYtSubs))ytSubscriptions=savedYtSubs.filter(x=>x&&x.channelId&&x.title).map(x=>({channelId:String(x.channelId),title:String(x.title),thumb:String(x.thumb||""),section:["tv","radio","kids"].includes(x.section)?x.section:"tv"}));
+}catch(_){}
+function saveYouTubeSubscriptions(){try{localStorage.setItem(YT_SUBS_STORAGE_KEY,JSON.stringify(ytSubscriptions));}catch(e){console.warn("Could not persist YouTube subscriptions",e);}}
 
 /* ============ Party state ============ */
 let partyChannel=null;
@@ -4282,8 +4288,14 @@ async function toggleFullscreen(){
   catch(_){el.classList.add("pagecover");document.body.style.overflow="hidden";}
   setTimeout(applyWatermark,200);
 }
-function toggleCinemaOrientation(){
-  document.body.classList.toggle("portrait");
+async function toggleCinemaOrientation(){
+  const portrait=!document.body.classList.contains("portrait");
+  document.body.classList.toggle("portrait",portrait);
+  try{
+    if(screen.orientation&&typeof screen.orientation.lock==="function"){
+      await screen.orientation.lock(portrait?"portrait":"landscape");
+    }
+  }catch(_){/* Browsers may deny orientation locking; the visual layout toggle still works. */}
 }
 
 function setMode(mode){
@@ -4407,12 +4419,14 @@ async function fetchYouTubeSubscriptions(){
       pageToken=data.nextPageToken||"";
       pages++;
     }while(pageToken&&pages<10);
+    const previousSections=new Map(ytSubscriptions.map(sub=>[sub.channelId,sub.section]));
     ytSubscriptions=all.map(item=>({
       channelId:item.snippet.resourceId.channelId,
       title:item.snippet.title,
       thumb:item.snippet.thumbnails?.default?.url||"",
-      section:"tv"
+      section:previousSections.get(item.snippet.resourceId.channelId)||"tv"
     }));
+    saveYouTubeSubscriptions();
     if(status)status.textContent=all.length+" channels";
     renderYouTubeSubscriptions();
     notify(all.length+" subscriptions found.");
@@ -4440,7 +4454,7 @@ function renderYouTubeSubscriptions(){
     const sel=document.createElement("select");
     sel.innerHTML='<option value="tv">TV</option><option value="radio">Radio</option><option value="kids">Kids</option>';
     sel.value=sub.section;
-    sel.onchange=()=>{sub.section=sel.value;};
+    sel.onchange=()=>{sub.section=sel.value;saveYouTubeSubscriptions();};
     const add=document.createElement("button");
     add.type="button";
     add.className="small primary";add.textContent="+";
@@ -4502,6 +4516,9 @@ async function addAllSubscriptions(){
   notify("Done. Use Sync to fetch videos.");
 }
 
+/* Restore the locally saved subscription list without requiring a fresh API request. */
+try{if(ytSubscriptions.length)renderYouTubeSubscriptions();}catch(_){}
+
 /* ============ Event listeners ============ */
 $("modeTV").addEventListener("click",()=>setMode("tv"));
 $("modeRadio").addEventListener("click",()=>setMode("radio"));
@@ -4536,7 +4553,14 @@ function setCinema(on){
   if(!on) document.body.classList.remove("portrait");
   if(on){try{window.scrollTo(0,0)}catch(_){}}
 }
-$("cinemaButton").addEventListener("click",()=>setCinema(!document.body.classList.contains("cinema")));
+$("cinemaButton").addEventListener("click",async()=>{
+  const entering=!document.body.classList.contains("cinema");
+  setCinema(entering);
+  if(entering){
+    const shell=$("playerShell");
+    try{if(!document.fullscreenElement&&shell.requestFullscreen)await shell.requestFullscreen();}catch(_){/* Keep Cinema Mode active if fullscreen is unavailable. */}
+  }else if(document.fullscreenElement){try{await document.exitFullscreen();}catch(_){}}
+});
 $("cinemaExit").addEventListener("click",()=>setCinema(false));
 $("cinemaRotate").addEventListener("click",toggleCinemaOrientation);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("cinema"))setCinema(false);});
