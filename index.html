@@ -766,6 +766,16 @@ body.remote-suppressed #remoteDock{display:none!important}
 #eventSkinTestPage[data-animation="glow"] .test-event-copy h2{animation:evGlow 2s ease-in-out infinite alternate}
 @media(max-width:700px){#eventSkinTestPage .test-main{grid-template-columns:1fr}#eventSkinTestPage .test-event img.character{max-width:32%}#eventSkinTestPage .test-event-copy{max-width:75%}}
 
+/* AM TV label restoration: override mobile/compact rules that hide button names. */
+body .topright .lbl,
+body .topright button .lbl,
+body .mode-sync-btn .lbl,
+body #quickRefreshBtn .lbl,
+body #virtualRemoteBtn .lbl,
+body #reminderBtn .lbl,
+body button .btnlabel,
+body.emoji-only button .lbl,
+body.emoji-only .btnlabel{display:inline!important;visibility:visible!important;opacity:1!important}
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
