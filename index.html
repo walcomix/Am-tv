@@ -19,7 +19,7 @@ button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled{opacity:.4;cursor:not-allowed}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-html{scroll-behavior:smooth}
+html{scroll-behavior:auto}
 body{line-height:1.5;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
@@ -328,6 +328,12 @@ body.cinema.portrait #playerShell #radioScreen{
 }
 body.cinema.portrait .playerfoot{position:absolute;bottom:12px;left:12px;right:12px;background:transparent;border:0}
 
+
+#playerShell:fullscreen.portrait{width:min(100vw,calc(100vh * 9 / 16));height:100vh;aspect-ratio:9/16;margin:0 auto;display:flex;flex-direction:column;justify-content:center;background:#000}
+#playerShell:fullscreen.portrait #videoElement,#playerShell:fullscreen.portrait #youtubePlayer,#playerShell:fullscreen.portrait #radioScreen{width:100%;height:100%;object-fit:contain}
+#playerShell:fullscreen.portrait .playerhead{position:absolute;top:0;left:0;right:0;z-index:20}
+#playerShell:fullscreen.portrait .playerfoot{position:absolute;bottom:8px;left:8px;right:8px;z-index:20;background:transparent}
+
 /* ===== Lock Screen ===== */
 #screenLockBtn{display:none;position:absolute;top:10px;right:10px;z-index:23;background:rgba(0,0,0,.72);color:#fff;border:1px solid #ffffff40;border-radius:999px;padding:10px 14px;font-size:13px;align-items:center;gap:6px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 #playerShell:fullscreen #screenLockBtn,#playerShell.pagecover #screenLockBtn,body.cinema #screenLockBtn{display:inline-flex}
@@ -477,6 +483,13 @@ body.viewerMode #videoElement{controls:none!important}
 /* ===== Party modal (redesigned with player) ===== */
 #partyModal{position:fixed;inset:0;z-index:450;background:var(--bg,#080b12);display:none;align-items:stretch;justify-content:stretch;backdrop-filter:none;padding:0;overflow:auto}
 #partyModal.show{display:flex}
+/* Party mode portrait/full-screen layout */
+#partyModal.party-portrait .partyBox{width:100vw;height:100dvh;min-height:100dvh;max-height:none;display:flex;flex-direction:column}
+#partyModal.party-portrait .partyBody{display:flex;flex-direction:column;overflow-y:auto}
+#partyModal.party-portrait #partyPlayerWrap{width:100%;aspect-ratio:9/16;max-height:62dvh;align-self:center}
+#partyModal.party-portrait #partyVideo,#partyModal.party-portrait #partyYouTubePlayer{object-fit:contain}
+#partyModal.party-fullscreen{padding:0}
+#partyModal.party-fullscreen .partyBox{width:100vw;height:100dvh;min-height:100dvh;max-height:none;border-radius:0}
 .partyBox{background:var(--panel);border:0;border-radius:0;width:100%;min-height:100dvh;height:100dvh;max-height:none;display:flex;flex-direction:column;overflow:hidden}
 .partyHead{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-shrink:0}
 .partyHead h3{margin:0;color:var(--accent);font-size:15px;flex:1;display:flex;align-items:center;gap:8px}
@@ -704,7 +717,9 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
 #reminderTools{max-height:55dvh;overflow:auto}.reminder-entry{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #ffffff20}.reminder-entry>div{flex:1;min-width:0}.reminder-entry strong{display:block;overflow-wrap:anywhere}.reminder-entry small{opacity:.75}.reminder-entry button{padding:5px 9px}
 @media(max-width:520px){.remote-dock{right:10px;bottom:92px}.remote-control{width:205px}.remote-dock-toggle{padding:10px 13px}}
 .topright #syncTVBtn,.topright #syncRadioBtn,.topright #syncKidsBtn{display:none!important}
-.feed-sync-actions{display:flex;flex-wrap:wrap;gap:8px}.feed-sync-actions button{max-width:100%}
+.feed-sync-actions{display:flex;flex-wrap:wrap;gap:8px}
+#channelFeedsList~.unused{display:none!important}
+#syncChannelFeedsButton,#syncAllFeedsButton{display:inline-flex}.feed-sync-actions button{max-width:100%}
 .party-home-controls{border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:10px;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
 .party-home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.party-home-toolbar strong{color:var(--accent);font-size:13px}
 .party-home-actions{display:flex;gap:6px;flex-wrap:wrap}.party-home-actions button,.party-home-list button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:7px 10px;font-size:11px;cursor:pointer}
@@ -713,6 +728,42 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
 .party-home-list{display:flex;gap:6px;flex-wrap:wrap;max-height:112px;overflow:auto}.party-home-list button{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 body.remote-suppressed #remoteDock{display:none!important}
 @media(max-width:600px){.party-home-columns{grid-template-columns:minmax(0,1fr)}.party-home-list{max-height:85px}.feed-sync-actions button{flex:1 1 42%}}
+
+
+/* Stability and responsiveness patch */
+.topbar{align-items:center;}
+.topright{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;min-width:0;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;}
+.topright::-webkit-scrollbar{display:none}
+.topright>button,.topright>.menu-wrap{flex:0 0 auto;}
+.topright>button{white-space:nowrap;min-height:38px;}
+@media(max-width:600px){.topbar{align-items:flex-start}.topright{max-width:100%;padding-bottom:3px}.topright>button{min-width:38px;padding:7px 9px}.topright .lbl{display:none!important}.topright .clock{flex:0 0 auto;font-size:11px}}
+.admin-sync-inline{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.admin-sync-inline button{flex:0 1 auto}
+#eventSkinTestPage{position:fixed;inset:0;z-index:100500;display:none;overflow:auto;background:#080a10;color:#fff;padding:clamp(10px,2vw,24px);}
+#eventSkinTestPage.show{display:block}
+#eventSkinTestPage .test-shell{position:relative;min-height:calc(100dvh - 2*clamp(10px,2vw,24px));overflow:hidden;border-radius:18px;border:1px solid #ffffff30;background:#10131b;box-shadow:0 20px 80px #000b;isolation:isolate}
+#eventSkinTestPage .test-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.55}
+#eventSkinTestPage .test-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(140deg,#090b13d9,#090b1399 45%,#080a10e8)}
+#eventSkinTestPage .test-top{position:relative;z-index:2;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:16px;border-bottom:1px solid #ffffff24;background:#111722b8;backdrop-filter:blur(12px)}
+#eventSkinTestPage .test-logo{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--test-accent,#e8b85b);color:#111;font-weight:900}
+#eventSkinTestPage .test-brand{font-weight:900;margin-right:auto}
+#eventSkinTestPage .test-top button,#eventSkinTestPage .test-action{border:1px solid #ffffff38;background:#ffffff12;color:white;border-radius:10px;padding:9px 12px;font-weight:700}
+#eventSkinTestPage .test-main{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(220px,.8fr);gap:16px;padding:clamp(12px,2vw,24px)}
+#eventSkinTestPage .test-player{aspect-ratio:16/9;display:grid;place-items:center;border:1px solid #ffffff35;border-radius:16px;background:linear-gradient(135deg,#20283a,#090b11);text-align:center;padding:18px;box-shadow:0 12px 35px #0008}
+#eventSkinTestPage .test-play{width:64px;height:64px;display:grid;place-items:center;border-radius:50%;background:var(--test-accent,#e8b85b);color:#111;font-size:25px;margin:0 auto 12px}
+#eventSkinTestPage .test-card{border:1px solid #ffffff24;border-radius:14px;background:#111722b8;padding:14px;margin-bottom:12px;backdrop-filter:blur(8px)}
+#eventSkinTestPage .test-channel{display:flex;align-items:center;gap:8px;padding:9px;border-radius:9px;background:#ffffff0b;margin-top:7px}
+#eventSkinTestPage .test-dot{width:8px;height:8px;border-radius:50%;background:var(--test-accent,#e8b85b)}
+#eventSkinTestPage .test-event{position:relative;z-index:2;overflow:hidden;border:1px solid var(--test-accent,#e8b85b);border-radius:16px;padding:22px;margin:0 16px 16px;background:color-mix(in srgb,var(--test-accent,#e8b85b) 24%,#111722);}
+#eventSkinTestPage .test-event img.character{position:absolute;right:0;bottom:0;height:100%;max-width:35%;object-fit:contain;filter:drop-shadow(0 5px 12px #000b)}
+#eventSkinTestPage .test-event-copy{position:relative;z-index:2;text-shadow:0 2px 8px #000b;max-width:80%}
+#eventSkinTestPage .test-event-copy h2{margin:0 0 6px;font-size:clamp(20px,3vw,34px)}
+#eventSkinTestPage .test-close{position:sticky;top:8px;float:right;z-index:5;background:#a32636!important;border-color:#ffb5be!important}
+#eventSkinTestPage[data-animation="float"] .character{animation:evFloat 3s ease-in-out infinite}
+#eventSkinTestPage[data-animation="pulse"] .character{animation:evPulse 2s ease-in-out infinite}
+#eventSkinTestPage[data-animation="slide"] .character{animation:evSlide 1s ease-out both}
+#eventSkinTestPage[data-animation="glow"] .test-event-copy h2{animation:evGlow 2s ease-in-out infinite alternate}
+@media(max-width:700px){#eventSkinTestPage .test-main{grid-template-columns:1fr}#eventSkinTestPage .test-event img.character{max-width:32%}#eventSkinTestPage .test-event-copy{max-width:75%}}
 
 </style>
 </head><body class="booting">
@@ -1018,7 +1069,7 @@ body.remote-suppressed #remoteDock{display:none!important}
           </div>
         </div>
         <div class="section">
-          <h3><i class="ic ic-tv"></i><span data-i18n="channelsTitle">کانال‌ها</span></h3>
+          <h3><i class="ic ic-tv"></i><span data-i18n="channelsTitle">کانال‌ها</span></h3><div id="syncTVMount" class="admin-sync-inline"></div>
           <div class="field"><label for="channelNameInput" data-i18n="lblNewCh">نام کانال جدید</label><input id="channelNameInput" placeholder="—"></div>
           <div class="rowfields">
             <div class="field"><label for="channelColorInput" data-i18n="lblColor">رنگ کانال</label><input id="channelColorInput" type="color" value="#e8b85b"></div>
@@ -1053,7 +1104,7 @@ body.remote-suppressed #remoteDock{display:none!important}
     <div id="radioTab" class="tabcontent hidden">
       <div class="adminGrid">
         <div class="section" style="grid-column:1/-1">
-          <h3><i class="ic ic-radio"></i><span data-i18n="radioChannelsTitle">کانال‌های رادیو</span></h3>
+          <h3><i class="ic ic-radio"></i><span data-i18n="radioChannelsTitle">کانال‌های رادیو</span></h3><div id="syncRadioMount" class="admin-sync-inline"></div>
           <div class="rowfields">
             <div class="field"><label for="radioChannelName" data-i18n="lblNewRadioCh">نام کانال رادیو جدید</label><input id="radioChannelName" placeholder="—"></div>
             <div class="field" style="justify-content:end"><button id="createRadioChannelButton" type="button" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="createBtn">ساخت</span></button></div>
@@ -1079,7 +1130,7 @@ body.remote-suppressed #remoteDock{display:none!important}
     </div>
 
     <div id="kidsTab" class="tabcontent hidden">
-      <div class="panel kids-radio-panel"><h3>رادیوی کودک</h3><p class="viewerhint">نشانی فایل صوتی مستقیم یا جریان رادیویی مجاز را وارد کن.</p><div class="field"><label for="kidsRadioUrl">نشانی پخش صوتی</label><input id="kidsRadioUrl" type="url" placeholder="https://example.com/radio.mp3"></div><div class="field"><label for="kidsRadioName">نام ایستگاه</label><input id="kidsRadioName" type="text" placeholder="AM Kids Radio"></div><button id="saveKidsRadio" type="button" class="primary">ذخیرهٔ ایستگاه</button><button id="playKidsRadio" type="button">پخش رادیوی کودک</button><audio id="kidsRadioAudio" controls preload="none" class="kids-radio-audio"></audio><div id="kidsRadioStatus" class="viewerhint"></div><h4 style="margin-top:16px">کانال‌های منتقل‌شده به رادیوی کودک</h4><div id="kidsRadioChannelsList" class="itemlist"></div></div>
+      <div class="panel kids-radio-panel"><h3>رادیوی کودک</h3><div id="syncKidsMount" class="admin-sync-inline"></div><p class="viewerhint">نشانی فایل صوتی مستقیم یا جریان رادیویی مجاز را وارد کن.</p><div class="field"><label for="kidsRadioUrl">نشانی پخش صوتی</label><input id="kidsRadioUrl" type="url" placeholder="https://example.com/radio.mp3"></div><div class="field"><label for="kidsRadioName">نام ایستگاه</label><input id="kidsRadioName" type="text" placeholder="AM Kids Radio"></div><button id="saveKidsRadio" type="button" class="primary">ذخیرهٔ ایستگاه</button><button id="playKidsRadio" type="button">پخش رادیوی کودک</button><audio id="kidsRadioAudio" controls preload="none" class="kids-radio-audio"></audio><div id="kidsRadioStatus" class="viewerhint"></div><h4 style="margin-top:16px">کانال‌های منتقل‌شده به رادیوی کودک</h4><div id="kidsRadioChannelsList" class="itemlist"></div></div>
       <div class="adminGrid">
         <div class="section">
           <h3><i class="ic ic-kids"></i><span data-i18n="kidsSettingsTitle">تنظیمات حالت کودک</span></h3>
@@ -1212,9 +1263,6 @@ body.remote-suppressed #remoteDock{display:none!important}
           </div>
           <div class="actions feed-sync-actions">
             <button id="addChannelFeedButton" type="button" class="primary"><i class="ic ic-plus"></i><span data-i18n="addChannelFeedLbl">افزودن کانال</span></button>
-            <button id="syncTVBtn" type="button" title="همگام‌سازی فقط TV"><i class="ic ic-sync"></i><span class="lbl">همگام‌سازی TV</span></button>
-            <button id="syncRadioBtn" type="button" title="همگام‌سازی فقط Radio"><i class="ic ic-sync"></i><span class="lbl">همگام‌سازی Radio</span></button>
-            <button id="syncKidsBtn" type="button" title="همگام‌سازی فقط Kids"><i class="ic ic-sync"></i><span class="lbl">همگام‌سازی کودک</span></button>
             <button id="syncChannelFeedsButton" type="button"><i class="ic ic-sync"></i><span data-i18n="syncChannelFeedsLbl">همگام‌سازی ۲۴ ساعت اخیر</span></button>
             <button id="syncAllFeedsButton" type="button"><i class="ic ic-sync"></i><span data-i18n="syncAllFeedsLbl">همگام‌سازی همه</span></button>
           </div>
@@ -1405,6 +1453,17 @@ body.remote-suppressed #remoteDock{display:none!important}
   <div class="nu-title" id="nextUpTitle">—</div>
   <div class="nu-time" id="nextUpTime"></div>
 </div>
+
+<div id="eventSkinTestPage" role="dialog" aria-modal="true" aria-label="پیش‌نمایش کامل پوسته" data-animation="none">
+  <button id="eventSkinTestClose" class="test-close" type="button">✕ بستن پیش‌نمایش</button>
+  <div class="test-shell" id="eventSkinTestShell">
+    <div class="test-shade"></div>
+    <header class="test-top"><div class="test-logo">AM</div><div class="test-brand">AM TV <small style="display:block;font-size:10px;opacity:.7">THE NEXT ERA · LIVE TEST</small></div><button type="button">TV</button><button type="button">Radio</button><button type="button">برنامه</button><button type="button">↻ تازه‌سازی</button><button type="button">ریموت</button><button type="button">⋯</button></header>
+    <section class="test-event"><div class="test-event-copy"><h2 id="eventSkinTestTitle">پیش‌نمایش پوسته</h2><div id="eventSkinTestSubtitle">این صفحه نمای کلی پوسته و اجزای صفحهٔ اصلی را نشان می‌دهد.</div></div></section>
+    <div class="test-main"><div><div class="test-player"><div><div class="test-play">▶</div><strong>AM TV · پخش زنده</strong><p style="opacity:.7;margin:8px 0 0">پیش‌نمایش ظاهر پخش‌کننده</p></div></div><div class="test-card" style="margin-top:12px"><strong>کنترل‌های پخش</strong><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="test-action" type="button">قبلی</button><button class="test-action" type="button">پخش / توقف</button><button class="test-action" type="button">بعدی</button><button class="test-action" type="button">تمام‌صفحه</button><button class="test-action" type="button">زیرنویس</button></div></div></div><aside><div class="test-card"><strong>کانال‌ها</strong><div class="test-channel"><i class="test-dot"></i> کانال نمونهٔ تلویزیون</div><div class="test-channel"><i class="test-dot"></i> کانال نمونهٔ رادیو</div><div class="test-channel"><i class="test-dot"></i> کانال کودک</div></div><div class="test-card"><strong>برنامه‌های بعدی</strong><div class="test-channel">▶ برنامهٔ نمونه ۱</div><div class="test-channel">▶ برنامهٔ نمونه ۲</div><div class="test-channel">▶ برنامهٔ نمونه ۳</div></div></aside></div>
+  </div>
+</div>
+
 <button id="cinemaExit" type="button" class="hidden"><i class="ic ic-close"></i><span class="lbl" data-i18n="cinemaExit">خروج از حالت سینمایی</span></button>
 <button id="cinemaRotate" type="button" title="Portrait/Landscape"><i class="ic ic-sync"></i> <span data-i18n="rotate">افقی / عمودی</span></button>
 <div id="sleepBadge"><i class="ic ic-snooze"></i> <span id="sleepTime">--:--</span></div>
@@ -1497,6 +1556,7 @@ body.remote-suppressed #remoteDock{display:none!important}
           <div id="partyYouTubePlayer"></div>
           <video id="partyVideo" playsinline></video>
           <button id="partyFullBtn" type="button"><i class="ic ic-full"></i> تمام صفحه</button>
+          <button id="partyPortraitBtn" type="button" title="نمای عمودی پارتی مود" aria-pressed="false">عمودی</button>
         </div>
 
         <div class="partyLabel"><i class="ic ic-people"></i><span data-i18n="membersLbl">اعضا</span> (<span id="partyUserCount">0</span>)</div>
@@ -3110,12 +3170,14 @@ function partyOpenModal(){
 function partyCloseModal(){$("partyModal").classList.remove("show");}
 function renderPartyHomeControls(){
   const cr=$("partyHomeChannels"),pr=$("partyHomePrograms");if(!cr||!pr)return;
-  const mode=activeMode(),channels=mode==="kids"?state.kidsChannels:mode==="radio"?state.radioChannels:state.channels;
+  const mode=activeMode(),allChannels=mode==="kids"?state.kidsChannels:mode==="radio"?state.radioChannels:state.channels;
+  // Party channel picker shows channels created in AM TV, not raw YouTube feed/subscription channels.
+  const channels=(allChannels||[]).map((ch,index)=>({ch,index})).filter(x=>!x.ch.feedId&&!/^((rad|kids)?-?feed-)/i.test(String(x.ch.id||"")));
   cr.textContent="";pr.textContent="";
   document.querySelectorAll("[data-party-home-mode]").forEach(b=>b.classList.toggle("active",b.dataset.partyHomeMode===mode));
-  (channels||[]).forEach((ch,i)=>{const b=document.createElement("button");b.type="button";b.textContent=ch.name||("کانال "+(i+1));b.title=b.textContent;b.classList.toggle("active",i===(mode==="kids"?state.kidsChannelIndex:mode==="radio"?state.radioChannelIndex:state.channelIndex));b.addEventListener("click",()=>{if(mode==="kids")state.kidsChannelIndex=i;else if(mode==="radio")state.radioChannelIndex=i;else state.channelIndex=i;activeMediaKey="";renderPlayer(true);renderPartyHomeControls();if(isAdmin)scheduleSave();if(partyIsHost)setTimeout(()=>{partyLoadCurrentItem(true);partyBroadcastPlayback()},250)});cr.append(b)});
+  channels.forEach(({ch,index},visibleIndex)=>{const b=document.createElement("button");b.type="button";b.textContent=ch.name||("کانال "+(visibleIndex+1));b.title=b.textContent;b.classList.toggle("active",index===(mode==="kids"?state.kidsChannelIndex:mode==="radio"?state.radioChannelIndex:state.channelIndex));b.addEventListener("click",()=>{if(mode==="kids")state.kidsChannelIndex=index;else if(mode==="radio")state.radioChannelIndex=index;else state.channelIndex=index;activeMediaKey="";renderPlayer(true);renderPartyHomeControls();if(isAdmin)scheduleSave();if(partyIsHost)setTimeout(()=>{partyLoadCurrentItem(true);partyBroadcastPlayback()},250)});cr.append(b)});
   const list=currentList();list.forEach((item,i)=>{const b=document.createElement("button");b.type="button";b.textContent=item.title||item.name||item.label||mediaUrl(item)||("برنامه "+(i+1));b.title=b.textContent;b.classList.toggle("active",i===currentIndex());b.addEventListener("click",()=>{chooseIndex(i,mode);renderPartyHomeControls()});pr.append(b)});
-  if(!channels?.length)cr.textContent="هنوز کانالی نیست";if(!list.length)pr.textContent="برای این کانال هنوز برنامه‌ای ثبت نشده";
+  if(!channels.length)cr.textContent="هنوز کانال تلویزیونیِ ساخته‌شده در AM TV اضافه نشده";if(!list.length)pr.textContent="برای این کانال هنوز برنامه‌ای ثبت نشده";
 }
 document.querySelectorAll("[data-party-home-mode]").forEach(b=>b.addEventListener("click",()=>{const m=b.dataset.partyHomeMode;if(m==="kids")setKidsMode(true);else{if(kidsMode)setKidsMode(false);setMode(m)}renderPartyHomeControls()}));
 $("partyHomeRefresh")?.addEventListener("click",async()=>{try{if(isAdmin)await syncChannelFeeds(true,"",activeMode());else{await loadRemoteState();notify("فهرست صفحهٔ اصلی تازه شد.")}}catch(e){notify("تازه‌سازی ناموفق بود: "+(e?.message||e))}renderPartyHomeControls()});
@@ -3385,12 +3447,31 @@ function partyOnHostItemChange(){
   },300);
 }
 
-/* Fullscreen for party player */
-function partyToggleFullscreen(){
-  const wrap=$("partyPlayerWrap");
-  if(!wrap)return;
-  if(document.fullscreenElement){try{document.exitFullscreen();}catch(_){}return;}
-  try{wrap.requestFullscreen();}catch(_){}
+/* Fullscreen for the entire Party Mode, with a portrait layout option. */
+async function partyToggleFullscreen(){
+  const modal=$("partyModal"), box=modal?.querySelector(".partyBox");
+  if(!modal||!box)return;
+  if(document.fullscreenElement){
+    try{await document.exitFullscreen();}catch(_){}
+    modal.classList.remove("party-fullscreen");
+    return;
+  }
+  try{
+    if(box.requestFullscreen) await box.requestFullscreen();
+    else modal.classList.add("party-fullscreen");
+    modal.classList.add("party-fullscreen");
+    if(modal.classList.contains("party-portrait") && screen.orientation?.lock){
+      try{await screen.orientation.lock("portrait");}catch(_){}
+    }
+  }catch(_){modal.classList.add("party-fullscreen");}
+}
+function partyTogglePortrait(){
+  const modal=$("partyModal"), btn=$("partyPortraitBtn");
+  if(!modal)return;
+  const enabled=modal.classList.toggle("party-portrait");
+  if(btn){btn.setAttribute("aria-pressed",String(enabled));btn.classList.toggle("active",enabled);btn.textContent=enabled?"عمودی ✓":"عمودی";}
+  if(enabled && document.fullscreenElement && screen.orientation?.lock){screen.orientation.lock("portrait").catch(()=>{});}
+  else if(!enabled && screen.orientation?.unlock){try{screen.orientation.unlock();}catch(_){}}
 }
 
 /* ================== CAST ================== */
@@ -3906,24 +3987,29 @@ function renderEventBanner(){
   el.classList.remove("hidden");
 }
 let editingEventId=null;
+function openEventSkinTest(d){
+  const page=$("eventSkinTestPage"),shell=$("eventSkinTestShell");if(!page||!shell)return;
+  page.dataset.animation=d.animation||"none";page.style.setProperty("--test-accent",d.accent||"#e8b85b");
+  const eventCard=page.querySelector(".test-event");if(eventCard)eventCard.style.backgroundColor=d.bg||"";
+  const old=page.querySelector(".test-bg");if(old)old.remove();
+  const oldChar=page.querySelector(".test-event img.character");if(oldChar)oldChar.remove();
+  if(d.mediaUrl){let bg;if(d.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(d.mediaUrl)){bg=document.createElement("video");bg.autoplay=true;bg.loop=true;bg.muted=true;bg.playsInline=true;}else{bg=document.createElement("img");bg.alt="";}bg.className="test-bg";bg.src=d.mediaUrl;bg.onerror=()=>bg.remove();shell.prepend(bg);}
+  if(d.characterUrl){const ch=document.createElement("img");ch.className="character";ch.src=d.characterUrl;ch.alt="";ch.onerror=()=>ch.remove();page.querySelector(".test-event").appendChild(ch);}
+  $("eventSkinTestTitle").textContent=(d.custom&&d.emoji?d.emoji+" ":"")+(d.name||d.msg||"پیش‌نمایش پوسته");
+  $("eventSkinTestSubtitle").textContent=d.subtitle||"این صفحه نمای کلی پوسته و اجزای صفحهٔ اصلی را نشان می‌دهد.";
+  page.classList.add("show");document.body.style.overflow="hidden";
+}
+function closeEventSkinTest(){const page=$("eventSkinTestPage");if(page)page.classList.remove("show");document.body.style.overflow="";}
+$("eventSkinTestClose")?.addEventListener("click",closeEventSkinTest);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("eventSkinTestPage")?.classList.contains("show"))closeEventSkinTest()});
 function previewEventData(d,shouldScroll=false){
   const preview=$("evPreview");if(!preview)return;
-  preview.style.backgroundColor=d.bg||"#101510";
-  preview.style.setProperty("--ev-accent",d.accent||"#e8b85b");
-  preview.dataset.animation=d.animation||"none";
+  preview.style.backgroundColor=d.bg||"#101510";preview.style.setProperty("--ev-accent",d.accent||"#e8b85b");preview.dataset.animation=d.animation||"none";
   preview.querySelectorAll(".ev-preview-bg,.ev-preview-character").forEach(n=>n.remove());
-  preview.style.borderColor=d.accent||"var(--line)";
-  if(d.mediaUrl){
-    let el;
-    if(d.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(d.mediaUrl)){
-      el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;el.setAttribute("playsinline","");
-    }else{el=document.createElement("img");el.alt="";el.onerror=()=>{el.style.display="none";};}
-    el.src=d.mediaUrl;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);
-  }
+  if(d.mediaUrl){let el;if(d.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(d.mediaUrl)){el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;el.setAttribute("playsinline","");}else{el=document.createElement("img");el.alt="";el.onerror=()=>{el.style.display="none";};}el.src=d.mediaUrl;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);}
   if(d.characterUrl){const ch=document.createElement("img");ch.className="ev-preview-character";ch.src=d.characterUrl;ch.alt="";ch.onerror=()=>ch.remove();preview.appendChild(ch);}
-  $("evPreviewTitle").textContent=(d.custom&&d.emoji?d.emoji+" ":"")+(d.name||d.msg||"پیش‌نمایش رویداد");
-  $("evPreviewSubtitle").textContent=d.subtitle||"ظاهر رویداد اینجا نمایش داده می‌شود";
-  if(shouldScroll)preview.scrollIntoView({behavior:"smooth",block:"center"});
+  $("evPreviewTitle").textContent=(d.custom&&d.emoji?d.emoji+" ":"")+(d.name||d.msg||"پیش‌نمایش رویداد");$("evPreviewSubtitle").textContent=d.subtitle||"ظاهر رویداد اینجا نمایش داده می‌شود";
+  if(shouldScroll)openEventSkinTest(d);
 }
 function renderEventList(){
   const root=$("evList");if(!root)return;root.innerHTML="";
@@ -3938,7 +4024,7 @@ function renderEventList(){
     const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.date||"")+" · "+(c.days||1)+" روز"+(c.yearly?" · هر سال":"")+(c.mediaUrl?" · پس‌زمینهٔ سفارشی":"")+(c.characterUrl?" · شخصیت":"");
     info.append(name,meta);
     const actions=document.createElement("div");actions.className="ev-list-actions";
-    const preview=document.createElement("button");preview.type="button";preview.className="small";preview.textContent="پیش‌نمایش";preview.onclick=()=>{fillEventForm(c);updateEventPreview();$("evPreview").scrollIntoView({behavior:"smooth",block:"center"});};
+    const preview=document.createElement("button");preview.type="button";preview.className="small";preview.textContent="پیش‌نمایش";preview.onclick=()=>{fillEventForm(c);const d=eventFormObject();previewEventData({...d,...c,name:c.name||c.msg||d.name||"پیش‌نمایش پوسته"});openEventSkinTest({...d,...c,name:c.name||c.msg||d.name||"پیش‌نمایش پوسته"});};
     const edit=document.createElement("button");edit.type="button";edit.className="small primary";edit.textContent="ویرایش";edit.onclick=()=>fillEventForm(c);
     const del=document.createElement("button");del.type="button";del.className="small danger";del.textContent="حذف";del.onclick=()=>{if(!confirm("این رویداد حذف شود؟"))return;state.events.custom.splice(i,1);if(editingEventId===c.id)resetEventForm();lastEventKey="__";scheduleSave();renderEventList();};
     actions.append(preview,edit,del);item.append(info,actions);root.appendChild(item);
@@ -4624,12 +4710,13 @@ function toggleSubs(){const p=getPrefs();if((p.subLang||"off")!=="off")setSubLan
 
 async function toggleOrientation(){
   const shell=$("playerShell");
-  const type=(screen.orientation&&screen.orientation.type)||(innerWidth>innerHeight?"landscape-primary":"portrait-primary");
-  const wantLandscape=!type.startsWith("landscape");
-  if(document.fullscreenElement&&screen.orientation&&screen.orientation.lock){
-    try{await screen.orientation.lock(wantLandscape?"landscape":"portrait");return;}catch(_){}
-  }
-  if(shell.classList.contains("pagecover")){shell.classList.toggle("rotated");}
+  const inFullscreen=!!document.fullscreenElement;
+  const inPagecover=shell.classList.contains("pagecover");
+  if(inFullscreen){
+    shell.classList.toggle("portrait");
+    if(screen.orientation&&screen.orientation.lock){try{await screen.orientation.lock(shell.classList.contains("portrait")?"portrait":"landscape");}catch(_){}}
+  }else if(inPagecover){shell.classList.toggle("rotated");}
+  else{document.body.classList.toggle("portrait");}
   setTimeout(applyWatermark,100);
 }
 async function toggleFullscreen(){
@@ -5508,9 +5595,18 @@ async function syncFeedsForSection(section,button){
   catch(e){notify("همگام‌سازی ناموفق بود: "+(e?.message||e));}
   finally{if(button)button.disabled=false;if(label&&oldLabel)label.textContent=oldLabel;}
 }
-$("syncTVBtn")?.addEventListener("click",()=>syncFeedsForSection("tv",$("syncTVBtn")));
-$("syncRadioBtn")?.addEventListener("click",()=>syncFeedsForSection("radio",$("syncRadioBtn")));
-$("syncKidsBtn")?.addEventListener("click",()=>syncFeedsForSection("kids",$("syncKidsBtn")));
+// Section-specific sync controls live inside each admin section, never in the public/top navigation.
+function mountSectionSyncButtons(){
+  const defs=[
+    ["syncTVBtn","syncTVMount","همگام‌سازی ۲۴ ساعت اخیر TV","tv"],
+    ["syncRadioBtn","syncRadioMount","همگام‌سازی ۲۴ ساعت اخیر رادیو","radio"],
+    ["syncKidsBtn","syncKidsMount","همگام‌سازی ۲۴ ساعت اخیر کودک","kids"]
+  ];
+  defs.forEach(([id,mount,label,section])=>{let b=$(id);const target=$(mount);if(!target)return;if(!b){b=document.createElement("button");b.id=id;b.type="button";b.innerHTML='<i class="ic ic-sync"></i><span class="lbl"></span>';b.querySelector(".lbl").textContent=label;}else{b.innerHTML='<i class="ic ic-sync"></i><span class="lbl"></span>';b.querySelector(".lbl").textContent=label;}b.classList.add("admin-only");b.title=label;b.onclick=()=>syncFeedsForSection(section,b);target.appendChild(b);});
+}
+mountSectionSyncButtons();
+// The generic all-feeds buttons remain only inside the admin YouTube feed manager.
+/* Each section button has one direct handler assigned in mountSectionSyncButtons(). */
 $("coverExit").addEventListener("click",toggleFullscreen);
 $("rotateButton").addEventListener("click",()=>{toggleOrientation();setTimeout(applyWatermark,100);});
 document.addEventListener("fullscreenchange",()=>{
@@ -5674,7 +5770,7 @@ $("evAddButton").addEventListener("click",async()=>{
   }catch(err){notify("آپلود یا ذخیره ناموفق بود: "+(err.message||err));}
   finally{btn.disabled=false;}
 });
-$("evPreviewButton")?.addEventListener("click",updateEventPreview);
+$("evPreviewButton")?.addEventListener("click",()=>{const d=eventFormObject();previewEventData({...d,name:d.name||"پیش‌نمایش پوسته"});openEventSkinTest({...d,name:d.name||"پیش‌نمایش پوسته"});});
 $("evCancelEditButton")?.addEventListener("click",resetEventForm);
 ["evName","evEmoji","evAccent","evBg","evMediaURL","evCharacterURL","evAnimation","evSubtitle"].forEach(id=>$(id)?.addEventListener("input",updateEventPreview));
 $("evMediaFile")?.addEventListener("change",e=>{const f=e.target.files?.[0];if(!f)return;const url=URL.createObjectURL(f);$("evMediaURL").value=url;const preview=$("evPreview");preview.dataset.localMedia="1";let old=preview.querySelector(".ev-preview-bg");if(old)old.remove();let el;if(f.type.startsWith("video/")){el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.alt="";}el.src=url;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);});
@@ -5930,6 +6026,12 @@ $("partyCopyBtn")?.addEventListener("click",()=>{
 });
 $("partyModal")?.addEventListener("click",e=>{if(e.target.id==="partyModal")partyCloseModal();});
 $("partyFullBtn")?.addEventListener("click",partyToggleFullscreen);
+$("partyPortraitBtn")?.addEventListener("click",partyTogglePortrait);
+document.addEventListener("fullscreenchange",()=>{
+  const modal=$("partyModal");
+  if(!modal)return;
+  if(!document.fullscreenElement)modal.classList.remove("party-fullscreen");
+});
 
 $("nextUpClose")?.addEventListener("click",()=>$("nextUpToast").classList.remove("show"));
 setInterval(checkNextUp,2000);
