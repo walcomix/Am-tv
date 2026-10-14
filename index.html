@@ -1942,7 +1942,10 @@ let googleTokenClient=null;
 let googleAccessToken=null;
 let ytSubscriptions=[];
 const YT_SUBS_STORAGE_KEY="amtv-youtube-subscriptions-v1";
-const ytSelectedChannels=new Set();
+const YT_SELECTED_STORAGE_KEY="amtv-youtube-selected-channels-v1";
+function ytLoadSelectedChannels(){try{const a=JSON.parse(localStorage.getItem(YT_SELECTED_STORAGE_KEY)||"[]");return Array.isArray(a)?a.map(String):[];}catch(_){return [];}}
+const ytSelectedChannels=new Set(ytLoadSelectedChannels());
+function saveYtSelectedChannels(){try{localStorage.setItem(YT_SELECTED_STORAGE_KEY,JSON.stringify([...ytSelectedChannels]));}catch(e){console.warn("Could not persist selected YouTube channels",e);}}
 let ytSubscriptionsPage=0;
 const YT_SUBS_PAGE_SIZE=50;
 try{
@@ -4512,12 +4515,19 @@ async function fetchYouTubeSubscriptions(){
         channelId:id,
         title:item.snippet.title,
         thumb:(item.snippet.thumbnails&&((item.snippet.thumbnails.high&&item.snippet.thumbnails.high.url)||(item.snippet.thumbnails.default&&item.snippet.thumbnails.default.url)))||"",
-        description:item.snippet.description||prev.description||"",
+        description:item.snippet.description||prev.description||(ytLoadDetailsCache()[id]||{}).desc||"",
         section:prev.section||"tv",
         tvGroup:prev.tvGroup||"",liveTargetId:prev.liveTargetId||"",
-        subs:prev.subs==null?null:prev.subs,views:prev.views==null?null:prev.views,videos:prev.videos==null?null:prev.videos,playlists:prev.playlists==null?null:prev.playlists,statsAt:prev.statsAt||0
+        subs:prev.subs==null?((ytLoadDetailsCache()[id]||{}).subs??null):prev.subs,
+        views:prev.views==null?((ytLoadDetailsCache()[id]||{}).views??null):prev.views,
+        videos:prev.videos==null?((ytLoadDetailsCache()[id]||{}).videos??null):prev.videos,
+        playlists:prev.playlists==null?(((ytLoadDetailsCache()[id]||{}).playlists||[]).length||null):prev.playlists,
+        statsAt:prev.statsAt||(ytLoadDetailsCache()[id]||{}).at||0
       };
     });
+    const validIds=new Set(ytSubscriptions.map(sub=>sub.channelId));
+    [...ytSelectedChannels].forEach(id=>{if(!validIds.has(id))ytSelectedChannels.delete(id);});
+    saveYtSelectedChannels();
     ytSubscriptionsPage=0;
     saveYouTubeSubscriptions();
     if(status)status.textContent=all.length+" channels";
@@ -4562,7 +4572,7 @@ function renderYouTubeSubscriptions(){
   const pageItems=sorted.slice(ytSubscriptionsPage*YT_SUBS_PAGE_SIZE,(ytSubscriptionsPage+1)*YT_SUBS_PAGE_SIZE);
   pageItems.forEach((sub)=>{
     const row=document.createElement("div");row.className="yt-sub-row";
-    const check=document.createElement("input");check.type="checkbox";check.checked=ytSelectedChannels.has(sub.channelId);check.setAttribute("aria-label","انتخاب "+sub.title);check.onchange=()=>{check.checked?ytSelectedChannels.add(sub.channelId):ytSelectedChannels.delete(sub.channelId);};
+    const check=document.createElement("input");check.type="checkbox";check.checked=ytSelectedChannels.has(sub.channelId);check.setAttribute("aria-label","انتخاب "+sub.title);check.onchange=()=>{check.checked?ytSelectedChannels.add(sub.channelId):ytSelectedChannels.delete(sub.channelId);saveYtSelectedChannels();};
     const info=document.createElement("div");info.className="yt-sub-info";
     const name=document.createElement("div");name.className="itemname";name.textContent=sub.title;
     const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=ytSubStatsText(sub);
@@ -4715,7 +4725,7 @@ async function scanSelectedLiveStreams(){
   scheduleSave();renderAll();
   notify('لایوهای اضافه‌شده: '+added+' · کانال‌های بررسی‌شده: '+checked+(errors?' · موارد ردشده/بدون مقصد: '+errors:'')+(quota?' · سهمیهٔ API تمام شد':''));
 }
-$("ytSelectAllBtn")?.addEventListener("click",()=>{const all=ytSubscriptions.length&&ytSubscriptions.every(x=>ytSelectedChannels.has(x.channelId));ytSubscriptions.forEach(x=>all?ytSelectedChannels.delete(x.channelId):ytSelectedChannels.add(x.channelId));renderYouTubeSubscriptions();$("ytSelectAllBtn").textContent=all?"انتخاب همه":"لغو انتخاب همه";});
+$("ytSelectAllBtn")?.addEventListener("click",()=>{const all=ytSubscriptions.length&&ytSubscriptions.every(x=>ytSelectedChannels.has(x.channelId));ytSubscriptions.forEach(x=>all?ytSelectedChannels.delete(x.channelId):ytSelectedChannels.add(x.channelId));saveYtSelectedChannels();renderYouTubeSubscriptions();$("ytSelectAllBtn").textContent=all?"انتخاب همه":"لغو انتخاب همه";});
 $("ytBulkMoveBtn")?.addEventListener("click",()=>{
   const selected=ytSubscriptions.filter(x=>ytSelectedChannels.has(x.channelId));if(!selected.length){notify("اول کانال‌ها را انتخاب کن.");return;}
   const section=$("ytBulkSection").value,group=$("ytBulkGroup").value.trim(),L=secLists();
