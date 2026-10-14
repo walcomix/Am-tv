@@ -607,6 +607,54 @@ body.viewerMode #videoElement{controls:none!important}
 #ytChannelDetails .yt-playlist-info small{color:var(--muted)}
 @media(max-width:520px){.yt-sub-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.yt-sub-row select{flex:1 1 100%}}
 
+/* Clear YouTube channel details and seasonal-event designer */
+.yt-detail-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.yt-detail-section{margin:14px 0;padding:13px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--panel2) 38%,transparent)}
+.yt-detail-section h3{margin:0 0 10px;font-size:14px;display:flex;align-items:center;gap:8px}
+.yt-detail-head{padding:12px;background:var(--panel2);border-radius:12px}
+.yt-detail-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.yt-detail-stat{padding:10px 8px;text-align:center;border:1px solid var(--line);border-radius:10px;min-width:0;background:var(--panel)}
+.yt-detail-stat .yt-stat-emoji{font-size:21px;display:block;margin-bottom:3px}
+.yt-detail-stat b{display:block;font-size:16px;color:var(--accent);overflow-wrap:anywhere}
+.yt-detail-stat span:last-child{font-size:11px;color:var(--muted)}
+.yt-detail-desc{max-height:190px;overflow:auto;padding:10px;background:var(--panel);border-radius:9px}
+.yt-playlist-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.yt-playlist-row{border:1px solid var(--line);border-radius:10px;padding:9px!important;align-items:flex-start!important;min-width:0}
+.yt-playlist-row img{width:100px!important;flex-shrink:0}
+.yt-playlist-info b{line-height:1.5;margin-bottom:4px}
+.yt-playlist-info .actions{gap:5px;flex-wrap:wrap}
+.yt-playlist-info .actions button{font-size:11px;padding:6px 8px}
+.ev-preview{position:relative;isolation:isolate;overflow:hidden;min-height:170px;border-radius:14px;border:1px solid var(--line);background:#101510;color:#fff;padding:20px;display:flex;align-items:center;justify-content:center;text-align:center;margin:12px 0}
+.ev-preview-bg,.ev-preview-character{position:absolute;pointer-events:none}
+.ev-preview-bg{inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.7}
+.ev-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,#0008,#0003);z-index:-1}
+.ev-preview-content{position:relative;z-index:2;text-shadow:0 2px 8px #000b;max-width:80%}
+.ev-preview-content strong{display:block;font-size:21px;margin-bottom:6px}
+.ev-preview-content small{display:block;opacity:.9}
+.ev-preview-character{height:90%;max-width:42%;object-fit:contain;right:0;bottom:0;z-index:1;filter:drop-shadow(0 4px 8px #0008)}
+.ev-preview[data-animation="float"] .ev-preview-character{animation:evFloat 3s ease-in-out infinite}
+.ev-preview[data-animation="pulse"] .ev-preview-character{animation:evPulse 2s ease-in-out infinite}
+.ev-preview[data-animation="slide"] .ev-preview-character{animation:evSlide 1s ease-out both}
+.ev-preview[data-animation="glow"] .ev-preview-content strong{animation:evGlow 2s ease-in-out infinite alternate}
+@keyframes evFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes evPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes evSlide{from{transform:translateX(70px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes evGlow{from{text-shadow:0 0 5px var(--ev-accent,#e8b85b)}to{text-shadow:0 0 20px var(--ev-accent,#e8b85b),0 2px 8px #000b}}
+.ev-editor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ev-editor-grid .field{min-width:0}
+.ev-list-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#eventBanner{position:relative;isolation:isolate;overflow:hidden;min-height:38px}
+#eventBanner .event-banner-media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.38;pointer-events:none}
+#eventBanner .event-banner-character{position:absolute;right:8px;bottom:0;height:100%;max-width:72px;object-fit:contain;z-index:0;pointer-events:none}
+#eventBanner #eventBannerText,#eventBanner #eventBannerClose{position:relative;z-index:2}
+#eventBanner.event-float .event-banner-character{animation:evFloat 3s ease-in-out infinite}
+#eventBanner.event-pulse .event-banner-character{animation:evPulse 2s ease-in-out infinite}
+#eventBanner.event-glow #eventBannerText{animation:evGlow 2s ease-in-out infinite alternate}
+#eventBanner.event-slide .event-banner-character{animation:evSlide 1s ease-out both}
+#eventBanner .event-banner-subtitle{position:relative;z-index:2;font-size:11px;opacity:.88;margin-inline-start:8px}
+@media(max-width:520px){.yt-detail-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.yt-playlist-list{grid-template-columns:1fr}.ev-editor-grid{grid-template-columns:1fr}.ev-preview-character{max-width:38%}.yt-playlist-row img{width:86px!important}}
+
+
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
@@ -1161,10 +1209,28 @@ body.viewerMode #videoElement{controls:none!important}
             <div class="field"><label for="evAccent" data-i18n="evAccentLbl">رنگ اصلی</label><input id="evAccent" type="color" value="#e8b85b"></div>
             <div class="field"><label for="evBg" data-i18n="evBgLbl">رنگ پس‌زمینه</label><input id="evBg" type="color" value="#101510"></div>
           </div>
+          <div class="section" style="margin-top:12px">
+            <h4 style="margin:0 0 8px">🎨 طراحی اختصاصی رویداد</h4>
+            <p class="viewerhint">بدون کدنویسی، برای هر رویداد تصویر پس‌زمینه، ویدیو، تصویر شخصیت و انیمیشن را انتخاب کن. فایل‌ها در فضای ذخیره‌سازی سایت آپلود می‌شوند.</p>
+            <div class="ev-editor-grid">
+              <div class="field"><label for="evMediaURL">لینک تصویر یا ویدیوی پس‌زمینه</label><input id="evMediaURL" type="url" placeholder="https://..."></div>
+              <div class="field"><label for="evMediaFile">یا آپلود پس‌زمینه</label><input id="evMediaFile" type="file" accept="image/*,video/mp4,video/webm,video/ogg"></div>
+              <div class="field"><label for="evCharacterURL">لینک تصویر شخصیت / کاراکتر (PNG شفاف بهتر است)</label><input id="evCharacterURL" type="url" placeholder="https://..."></div>
+              <div class="field"><label for="evCharacterFile">یا آپلود تصویر شخصیت</label><input id="evCharacterFile" type="file" accept="image/*"></div>
+            </div>
+            <div class="rowfields">
+              <div class="field"><label for="evAnimation">انیمیشن</label><select id="evAnimation"><option value="none">بدون انیمیشن</option><option value="float">شناور</option><option value="pulse">ضربان / بزرگ‌وکوچک</option><option value="slide">ورود از کنار</option><option value="glow">درخشش متن</option></select></div>
+              <div class="field"><label for="evSubtitle">متن فرعی (اختیاری)</label><input id="evSubtitle" placeholder="مثلاً جشن نوروز در AM TV"></div>
+            </div>
+            <div id="evPreview" class="ev-preview" data-animation="none" aria-label="پیش‌نمایش رویداد">
+              <div class="ev-preview-content"><strong id="evPreviewTitle">🎉 پیش‌نمایش رویداد</strong><small id="evPreviewSubtitle">ظاهر رویداد اینجا نمایش داده می‌شود</small></div>
+            </div>
+            <div class="actions"><button id="evPreviewButton" type="button"><i class="ic ic-eye"></i> پیش‌نمایش</button><button id="evCancelEditButton" type="button" class="small" style="display:none">لغو ویرایش</button></div>
+          </div>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--muted);margin-bottom:10px">
             <input type="checkbox" id="evYearly"><span data-i18n="evYearlyLbl">هر سال تکرار شود</span>
           </label>
-          <div class="actions"><button id="evAddButton" type="button" class="primary"><i class="ic ic-plus"></i> <span data-i18n="addEventLbl">افزودن رویداد</span></button></div>
+          <div class="actions"><button id="evAddButton" type="button" class="primary"><i class="ic ic-plus"></i> <span id="evAddButtonText" data-i18n="addEventLbl">افزودن رویداد</span></button></div>
           <div id="evList" class="itemlist"></div>
         </div>
         <div class="section" style="grid-column:1/-1">
@@ -3698,9 +3764,27 @@ function renderEventBanner(){
   let dismissed=false;
   try{dismissed=!!(ev&&sessionStorage.getItem("evdismiss-"+ev.id))}catch(_){}
   if(!ev||dismissed){el.classList.add("hidden");return;}
+  el.querySelectorAll(".event-banner-media,.event-banner-character").forEach(n=>n.remove());
+  el.classList.remove("event-float","event-pulse","event-glow","event-slide");
+  const media=ev.mediaUrl||"";
+  if(media){
+    let node;
+    if(ev.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(media)){
+      node=document.createElement("video");node.autoplay=true;node.loop=true;node.muted=true;node.playsInline=true;
+      node.src=media;
+    }else{node=document.createElement("img");node.src=media;node.alt="";}
+    node.className="event-banner-media";el.insertBefore(node,el.firstChild);
+  }
+  if(ev.characterUrl){const ch=document.createElement("img");ch.className="event-banner-character";ch.src=ev.characterUrl;ch.alt="";el.insertBefore(ch,$("eventBannerText"));}
+  if(["float","pulse","glow","slide"].includes(ev.animation))el.classList.add("event-"+ev.animation);
+  let subtitle=el.querySelector(".event-banner-subtitle");if(subtitle)subtitle.remove();
+  if(ev.subtitle){subtitle=document.createElement("small");subtitle.className="event-banner-subtitle";subtitle.textContent=ev.subtitle;el.insertBefore(subtitle,$("eventBannerClose"));}
+  el.style.backgroundColor=ev.accent||"var(--accent)";
+  el.style.color=lumOf(ev.accent||"#e8b85b")>0.62?"#15150e":"#ffffff";
   $("eventBannerText").textContent=(ev.emoji?ev.emoji+" ":"")+eventMsg(ev);
   el.classList.remove("hidden");
 }
+let editingEventId=null;
 function renderEventList(){
   const root=$("evList");if(!root)return;root.innerHTML="";
   const ev=state.events||{custom:[]};
@@ -3710,15 +3794,43 @@ function renderEventList(){
     const item=document.createElement("div");item.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const name=document.createElement("div");name.className="itemname";name.textContent=(c.emoji?c.emoji+" ":"")+(c.name||"");
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.date||"")+" · "+(c.days||1)+"d"+(c.yearly?" · ↻":"");
+    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.date||"")+" · "+(c.days||1)+" روز"+(c.yearly?" · هر سال":"")+(c.mediaUrl?" · پس‌زمینهٔ سفارشی":"")+(c.characterUrl?" · شخصیت":"");
     info.append(name,meta);
-    const del=document.createElement("button");del.type="button";del.className="small danger";del.innerHTML='<i class="ic ic-trash"></i>';
-    del.onclick=()=>{state.events.custom.splice(i,1);lastEventKey="__";scheduleSave();};
-    item.append(info,del);root.appendChild(item);
+    const actions=document.createElement("div");actions.className="ev-list-actions";
+    const preview=document.createElement("button");preview.type="button";preview.className="small";preview.textContent="پیش‌نمایش";preview.onclick=()=>{fillEventForm(c);updateEventPreview();$("evPreview").scrollIntoView({behavior:"smooth",block:"center"});};
+    const edit=document.createElement("button");edit.type="button";edit.className="small primary";edit.textContent="ویرایش";edit.onclick=()=>fillEventForm(c);
+    const del=document.createElement("button");del.type="button";del.className="small danger";del.textContent="حذف";del.onclick=()=>{if(!confirm("این رویداد حذف شود؟"))return;state.events.custom.splice(i,1);if(editingEventId===c.id)resetEventForm();lastEventKey="__";scheduleSave();renderEventList();};
+    actions.append(preview,edit,del);item.append(info,actions);root.appendChild(item);
   });
   setTimeout(refreshSelects,0);
 }
-
+function eventFormObject(){
+  return {name:$("evName").value.trim(),msg:$("evName").value.trim(),date:$("evDate").value,days:Math.max(1,Math.min(60,Number($("evDays").value)||1)),emoji:$("evEmoji").value.trim().slice(0,4),accent:$("evAccent").value,bg:$("evBg").value,yearly:$("evYearly").checked,mediaUrl:$("evMediaURL").value.trim(),mediaType:((($("evMediaFile").files?.[0]?.type)||"").startsWith("video/") || /\.(mp4|webm|ogg)(?:[?#]|$)/i.test($("evMediaURL").value.trim())) ? "video" : "image",characterUrl:$("evCharacterURL").value.trim(),animation:$("evAnimation").value,subtitle:$("evSubtitle").value.trim()};
+}
+function updateEventPreview(){
+  const preview=$("evPreview");if(!preview)return;
+  const d=eventFormObject();preview.style.backgroundColor=d.bg||"#101510";preview.style.setProperty("--ev-accent",d.accent||"#e8b85b");preview.dataset.animation=d.animation||"none";
+  preview.querySelectorAll(".ev-preview-bg,.ev-preview-character").forEach(n=>n.remove());
+  if(d.mediaUrl){let el;if(d.mediaType==="video"){el=document.createElement("video");el.src=d.mediaUrl;el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.src=d.mediaUrl;el.alt="";}el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);}
+  if(d.characterUrl){const ch=document.createElement("img");ch.className="ev-preview-character";ch.src=d.characterUrl;ch.alt="";preview.appendChild(ch);}
+  $("evPreviewTitle").textContent=(d.emoji?d.emoji+" ":"")+(d.name||"پیش‌نمایش رویداد");
+  $("evPreviewSubtitle").textContent=d.subtitle||"ظاهر رویداد اینجا نمایش داده می‌شود";
+  preview.style.borderColor=d.accent||"var(--line)";
+}
+function fillEventForm(c){
+  editingEventId=c.id||null;
+  $("evName").value=c.name||c.msg||"";$("evDate").value=c.date||"";$("evDays").value=c.days||3;$("evEmoji").value=c.emoji||"";
+  $("evAccent").value=c.accent||"#e8b85b";$("evBg").value=c.bg||"#101510";$("evYearly").checked=!!c.yearly;
+  $("evMediaURL").value=c.mediaUrl||"";$("evCharacterURL").value=c.characterUrl||"";$("evAnimation").value=c.animation||"none";$("evSubtitle").value=c.subtitle||"";
+  $("evMediaFile").value="";$("evCharacterFile").value="";
+  $("evAddButtonText").textContent=editingEventId?"ذخیرهٔ تغییرات":"افزودن رویداد";$("evCancelEditButton").style.display=editingEventId?"inline-flex":"none";
+  updateEventPreview();
+}
+function resetEventForm(){
+  editingEventId=null;["evName","evDate","evEmoji","evMediaURL","evCharacterURL","evSubtitle"].forEach(id=>$(id).value="");
+  $("evDays").value=3;$("evAccent").value="#e8b85b";$("evBg").value="#101510";$("evYearly").checked=false;$("evAnimation").value="none";$("evMediaFile").value="";$("evCharacterFile").value="";
+  $("evAddButtonText").textContent="افزودن رویداد";$("evCancelEditButton").style.display="none";updateEventPreview();
+}
 function renderAnalytics(){
   const root=$("analyticsTab");
   if(!root||root.classList.contains("hidden"))return;
@@ -4304,6 +4416,11 @@ function applyPrefs(){
   }catch(_){}
   document.body.classList.toggle("emoji-only",!!p.emojiOnly);
   document.body.classList.toggle("dream",mode==="dream");
+  const eventBackdrop=(p.eventTheme!==false)?activeEvent():null;
+  if(eventBackdrop&&eventBackdrop.mediaUrl&&eventBackdrop.mediaType!=="video"){
+    document.body.style.backgroundImage='linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.58)),url('+JSON.stringify(eventBackdrop.mediaUrl)+')';
+    document.body.style.backgroundSize="cover";document.body.style.backgroundPosition="center center";document.body.style.backgroundAttachment="fixed";
+  }else{document.body.style.backgroundImage="";document.body.style.backgroundSize="";document.body.style.backgroundPosition="";document.body.style.backgroundAttachment="";}
   try{
     $("playerShell").classList.toggle("vhs",!!p.vhs);
     $("vhsOverlay").classList.toggle("hidden",!p.vhs);
@@ -4779,7 +4896,7 @@ async function ytApi(url){
 }
 function ytFmt(n){if(n==null)return "—";if(n<0)return "پنهان";try{return Number(n).toLocaleString();}catch(_){return String(n);}}
 function ytCompact(n){if(n==null)return "—";if(n<0)return "پنهان";try{return new Intl.NumberFormat(undefined,{notation:"compact",maximumFractionDigits:1}).format(n);}catch(_){return String(n);}}
-function ytSubStatsText(s){return "👥 "+ytCompact(s.subs)+" · 👁 "+ytCompact(s.views)+" · ▶ "+ytCompact(s.videos)+" · 📁 "+ytCompact(s.playlists);}
+function ytSubStatsText(s){return "👥 "+ytCompact(s.subs)+" مشترک · 👁️ "+ytCompact(s.views)+" بازدید · 🎬 "+ytCompact(s.videos)+" ویدئو · 📚 "+ytCompact(s.playlists)+" پلی‌لیست";}
 
 /* ===== sorting ===== */
 const YT_SORTS=[["default","ترتیب اصلی"],["name","نام (الف‌بایی)"],["subs:desc","ساب: بیشترین"],["subs:asc","ساب: کمترین"],["views:desc","بازدید: بیشترین"],["views:asc","بازدید: کمترین"],["videos:desc","ویدیو: بیشترین"],["videos:asc","ویدیو: کمترین"],["playlists:desc","پلی‌لیست: بیشترین"],["playlists:asc","پلی‌لیست: کمترین"]];
@@ -5067,13 +5184,13 @@ async function ytFetchDetails(sub){
   do{
     const pd=await ytApi("https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails&channelId="+encodeURIComponent(sub.channelId)+"&maxResults=50"+(token?"&pageToken="+encodeURIComponent(token):""));
     playlists=playlists.concat(pd.items||[]);token=pd.nextPageToken||"";pages++;
-  }while(token&&pages<5);
+  }while(token&&pages<1000);
   const data={
     at:Date.now(),title:sn.title||sub.title,desc:sn.description||sub.description||"",
     avatar:(sn.thumbnails&&(sn.thumbnails.high&&sn.thumbnails.high.url||sn.thumbnails.medium&&sn.thumbnails.medium.url||sn.thumbnails.default&&sn.thumbnails.default.url))||sub.thumb||"",
     subs:st.hiddenSubscriberCount?-1:(st.subscriberCount!=null?Number(st.subscriberCount):null),
     views:st.viewCount!=null?Number(st.viewCount):null,videos:st.videoCount!=null?Number(st.videoCount):null,
-    playlists:playlists.map(pl=>({id:pl.id,title:(pl.snippet&&pl.snippet.title)||"Playlist",thumb:(pl.snippet&&pl.snippet.thumbnails&&(pl.snippet.thumbnails.medium&&pl.snippet.thumbnails.medium.url||pl.snippet.thumbnails.default&&pl.snippet.thumbnails.default.url))||"",count:Number(pl.contentDetails&&pl.contentDetails.itemCount||0)}))
+    playlists:playlists.map(pl=>({id:pl.id,title:(pl.snippet&&pl.snippet.title)||"Playlist",thumb:(pl.snippet&&pl.snippet.thumbnails&&(pl.snippet.thumbnails.medium&&pl.snippet.thumbnails.medium.url||pl.snippet.thumbnails.default&&pl.snippet.thumbnails.default.url))||"",count:Number(pl.contentDetails&&pl.contentDetails.itemCount||0)})),complete:!token,playlistPages:pages
   };
   const cache=ytLoadDetailsCache();cache[sub.channelId]=data;ytSaveDetailsCache(cache);
   sub.subs=data.subs;sub.views=data.views;sub.videos=data.videos;sub.playlists=data.playlists.length;sub.statsAt=data.at;
@@ -5085,19 +5202,20 @@ function ytRenderDetails(sub,data,note){
   const content=$("ytDetailContent");if(!content)return;
   const channelUrl="https://www.youtube.com/channel/"+sub.channelId;
   const pls=data.playlists||[];
+  const stat=(emoji,label,value)=>'<div class="yt-detail-stat"><span class="yt-stat-emoji">'+emoji+'</span><b>'+esc(ytFmt(value))+'</b><span>'+label+'</span></div>';
   const plMarkup=pls.length?pls.map(pl=>{
     const id=esc(pl.id),title=esc(pl.title),thumb=esc(pl.thumb||"");
-    return '<div class="yt-playlist-row"><img src="'+thumb+'" alt=""><div class="yt-playlist-info"><b>'+title+'</b><small>'+Number(pl.count||0)+' ویدئو</small><div class="actions" style="margin-top:6px"><button type="button" class="small" data-pl-section="tv" data-pl-id="'+id+'" data-pl-title="'+title+'">افزودن به TV</button><button type="button" class="small" data-pl-section="kids" data-pl-id="'+id+'" data-pl-title="'+title+'">Kids</button><button type="button" class="small" data-pl-section="radio" data-pl-id="'+id+'" data-pl-title="'+title+'">Radio</button></div></div></div>';
-  }).join(""):'<div class="viewerhint">پلی‌لیست عمومی پیدا نشد.</div>';
+    return '<div class="yt-playlist-row">'+(thumb?'<img src="'+thumb+'" alt="" loading="lazy">':'<div style="width:100px;aspect-ratio:16/9;border-radius:7px;background:var(--panel2);display:grid;place-items:center">📚</div>')+'<div class="yt-playlist-info"><b>'+title+'</b><small>🎬 '+Number(pl.count||0).toLocaleString()+' ویدئو</small><div class="actions" style="margin-top:7px"><button type="button" class="small" data-pl-section="tv" data-pl-id="'+id+'" data-pl-title="'+title+'">افزودن به TV</button><button type="button" class="small" data-pl-section="kids" data-pl-id="'+id+'" data-pl-title="'+title+'">Kids</button><button type="button" class="small" data-pl-section="radio" data-pl-id="'+id+'" data-pl-title="'+title+'">Radio</button></div></div></div>';
+  }).join(""):'<div class="viewerhint">پلی‌لیست عمومی پیدا نشد یا دسترسی آن محدود است.</div>';
   let when="";try{when=new Date(data.at).toLocaleString(dateLocale());}catch(_){when=new Date(data.at).toLocaleString();}
   const noteHtml=note?'<div class="viewerhint" style="margin:10px 0">'+esc(note)+'</div>':'<div class="viewerhint" style="margin:10px 0">آخرین به‌روزرسانی: '+esc(when)+'</div>';
   content.innerHTML=
     '<div class="yt-detail-head">'+(data.avatar?'<img class="yt-detail-avatar" src="'+esc(data.avatar)+'" alt="">':'<div class="yt-detail-avatar"></div>')+
-    '<div style="min-width:0"><div class="yt-detail-title">'+esc(data.title||sub.title)+'</div><div class="itemmeta">'+esc(sub.channelId)+'</div>'+
-    '<div class="itemmeta">دنبال‌کننده: '+esc(ytFmt(data.subs))+' · بازدید: '+esc(ytFmt(data.views))+' · ویدئوها: '+esc(ytFmt(data.videos))+' · پلی‌لیست: '+pls.length+'</div>'+
-    '<a href="'+channelUrl+'" target="_blank" rel="noopener">باز کردن کانال در YouTube</a></div></div>'+
-    noteHtml+'<div class="actions" style="margin-bottom:8px"><button type="button" id="ytDetailRefresh" class="small primary">تازه‌سازی از YouTube</button></div>'+
-    '<div class="yt-detail-desc">'+esc(data.desc||"توضیحی ثبت نشده است.")+'</div><h3>پلی‌لیست‌های عمومی ('+pls.length+')</h3>'+plMarkup;
+    '<div style="min-width:0;flex:1"><div class="yt-detail-title">'+esc(data.title||sub.title)+'</div><div class="itemmeta" style="overflow-wrap:anywhere">'+esc(sub.channelId)+'</div><a href="'+channelUrl+'" target="_blank" rel="noopener">باز کردن کانال در YouTube ↗</a></div></div>'+
+    '<div class="yt-detail-stats">'+stat('👥','مشترک‌ها',data.subs)+stat('👁️','بازدید کل',data.views)+stat('🎬','تعداد ویدئوها',data.videos)+stat('📚','پلی‌لیست عمومی',pls.length)+'</div>'+noteHtml+
+    '<div class="actions" style="margin:12px 0"><button type="button" id="ytDetailRefresh" class="small primary">↻ تازه‌سازی از YouTube</button></div>'+
+    '<section class="yt-detail-section"><h3>📝 دربارهٔ کانال</h3><div class="yt-detail-desc">'+esc(data.desc||"توضیحی ثبت نشده است.")+'</div></section>'+
+    '<section class="yt-detail-section"><h3>📚 پلی‌لیست‌های عمومی <span style="color:var(--accent)">('+pls.length.toLocaleString()+')</span></h3><div class="viewerhint" style="margin-bottom:8px">تعداد بالا مربوط به پلی‌لیست‌های عمومی‌ای است که API توانسته دریافت کند؛ پلی‌لیست خصوصی یا پنهان نمایش داده نمی‌شود.</div><div class="yt-playlist-list">'+plMarkup+'</div></section>';
   content.querySelectorAll("[data-pl-id]").forEach(b=>b.onclick=()=>addYouTubePlaylistToSection(b.dataset.plId,b.dataset.plTitle,b.dataset.plSection));
   const rf=$("ytDetailRefresh");if(rf)rf.onclick=()=>showYouTubeChannelDetails(sub,true);
 }
@@ -5113,7 +5231,7 @@ async function showYouTubeChannelDetails(sub,force){
   const cached=ytLoadDetailsCache()[sub.channelId]||null;
   if(cached)ytRenderDetails(sub,cached,"در حال به‌روزرسانی…");
   else content.innerHTML='<div class="viewerhint">در حال دریافت اطلاعات کانال…</div>';
-  if(!ytTokenValid()&&(force||!cached))await ytEnsureToken();
+  if(!ytTokenValid()&&(force||!cached||!cached.complete))await ytEnsureToken();
   if(!ytTokenValid()){
     if(cached)ytRenderDetails(sub,cached,"اتصال YouTube منقضی شده؛ داده‌های ذخیره‌شده نمایش داده می‌شود. برای به‌روزرسانی روی «تازه‌سازی» بزن.");
     else ytDetailNeedConnect(sub,"نشست اتصال YouTube در دسترس نیست یا منقضی شده است.");
@@ -5362,16 +5480,28 @@ $("fbClearButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   state.fallback={type:"none",url:""};fallbackKey="";scheduleSave();notify(t("msgFbSaved"));
 });
-$("evEnabled").addEventListener("change",e=>{if(!isAdmin)return;state.events.enabled=e.target.value!=="off";lastEventKey="__";scheduleSave();});
-$("evAddButton").addEventListener("click",()=>{
+$("evEnabled").addEventListener("change",e=>{if(!isAdmin)return;state.events.enabled=e.target.value!=="off";lastEventKey="__";scheduleSave();renderEventList();});
+$("evAddButton").addEventListener("click",async()=>{
   if(!isAdmin)return;
-  const name=$("evName").value.trim();
-  const date=$("evDate").value;
-  const days=Math.max(1,Math.min(60,Number($("evDays").value)||1));
-  if(!name||!/^\d{4}-\d{2}-\d{2}$/.test(date)){notify("Invalid.");return;}
-  state.events.custom.push({id:"ev-"+makeId(),custom:true,name,msg:name,date,days,emoji:$("evEmoji").value.trim().slice(0,4),accent:$("evAccent").value,bg:$("evBg").value,yearly:$("evYearly").checked});
-  $("evName").value="";lastEventKey="__";scheduleSave();
+  const d=eventFormObject();
+  if(!d.name||!/^\d{4}-\d{2}-\d{2}$/.test(d.date)){notify("نام و تاریخ رویداد را کامل کن.");return;}
+  const mediaFile=$("evMediaFile").files?.[0],characterFile=$("evCharacterFile").files?.[0];
+  const btn=$("evAddButton");btn.disabled=true;
+  try{
+    if(mediaFile){d.mediaUrl=await uploadFile(mediaFile,"event-themes");d.mediaType=(mediaFile.type||"").startsWith("video/")?"video":"image";}
+    if(characterFile)d.characterUrl=await uploadFile(characterFile,"event-characters");
+    const idx=(state.events.custom||[]).findIndex(e=>e.id===editingEventId);
+    if(idx>=0)state.events.custom[idx]={...state.events.custom[idx],...d,custom:true,id:editingEventId};
+    else state.events.custom.push({...d,id:"ev-"+makeId(),custom:true});
+    lastEventKey="__";scheduleSave();renderEventList();resetEventForm();notify("رویداد ذخیره شد.");
+  }catch(err){notify("آپلود یا ذخیره ناموفق بود: "+(err.message||err));}
+  finally{btn.disabled=false;}
 });
+$("evPreviewButton")?.addEventListener("click",updateEventPreview);
+$("evCancelEditButton")?.addEventListener("click",resetEventForm);
+["evName","evEmoji","evAccent","evBg","evMediaURL","evCharacterURL","evAnimation","evSubtitle"].forEach(id=>$(id)?.addEventListener("input",updateEventPreview));
+$("evMediaFile")?.addEventListener("change",e=>{const f=e.target.files?.[0];if(!f)return;const url=URL.createObjectURL(f);$("evMediaURL").value=url;const preview=$("evPreview");preview.dataset.localMedia="1";let old=preview.querySelector(".ev-preview-bg");if(old)old.remove();let el;if(f.type.startsWith("video/")){el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.alt="";}el.src=url;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);});
+$("evCharacterFile")?.addEventListener("change",e=>{const f=e.target.files?.[0];if(!f)return;const url=URL.createObjectURL(f);$("evCharacterURL").value=url;updateEventPreview();const preview=$("evPreview");let old=preview.querySelector(".ev-preview-character");if(old)old.remove();const ch=document.createElement("img");ch.className="ev-preview-character";ch.src=url;ch.alt="";preview.appendChild(ch);});
 $("exportButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
@@ -5742,7 +5872,7 @@ setInterval(()=>{
   <div class="yt-detail-box">
     <div class="actions" style="justify-content:space-between;align-items:center">
       <strong id="ytDetailHeading">Channel details</strong>
-      <button type="button" id="ytDetailClose">✕</button>
+      <button type="button" id="ytDetailClose" aria-label="بستن جزئیات">✕ بستن</button>
     </div>
     <div id="ytDetailContent"></div>
   </div>
