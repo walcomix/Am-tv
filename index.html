@@ -1231,7 +1231,7 @@ body.viewerMode #videoElement{controls:none!important}
             <input type="checkbox" id="evYearly"><span data-i18n="evYearlyLbl">هر سال تکرار شود</span>
           </label>
           <div class="actions"><button id="evAddButton" type="button" class="primary"><i class="ic ic-plus"></i> <span id="evAddButtonText" data-i18n="addEventLbl">افزودن رویداد</span></button></div>
-          <div id="evList" class="itemlist"></div>
+          <h4 style="margin:14px 0 6px">رویدادهای خودکار</h4><p class="viewerhint">برای دیدن ظاهر رویدادهای آماده مثل کریسمس، پیش‌نمایش را بزن.</p><div id="evBuiltinList" class="itemlist"></div><h4 style="margin:14px 0 6px">رویدادهای اختصاصی من</h4><div id="evList" class="itemlist"></div>
         </div>
         <div class="section" style="grid-column:1/-1">
           <h3><i class="ic ic-star"></i><span data-i18n="bumperTitle">اینترو بین برنامه‌ها (Bumper)</span></h3>
@@ -3785,8 +3785,19 @@ function renderEventBanner(){
   el.classList.remove("hidden");
 }
 let editingEventId=null;
+function previewEventData(d,shouldScroll=false){
+  const preview=$("evPreview");if(!preview)return;
+  preview.style.backgroundColor=d.bg||"#101510";preview.style.setProperty("--ev-accent",d.accent||"#e8b85b");preview.dataset.animation=d.animation||"none";
+  preview.querySelectorAll(".ev-preview-bg,.ev-preview-character").forEach(n=>n.remove());
+  if(d.mediaUrl){let el;if(d.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(d.mediaUrl)){el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.alt="";}el.src=d.mediaUrl;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);}
+  if(d.characterUrl){const ch=document.createElement("img");ch.className="ev-preview-character";ch.src=d.characterUrl;ch.alt="";preview.appendChild(ch);}
+  $("evPreviewTitle").textContent=(d.emoji?d.emoji+" ":"")+(d.name||d.msg||"پیش‌نمایش رویداد");
+  $("evPreviewSubtitle").textContent=d.subtitle||"ظاهر رویداد اینجا نمایش داده می‌شود";preview.style.borderColor=d.accent||"var(--line)";
+  if(shouldScroll)preview.scrollIntoView({behavior:"smooth",block:"center"});
+}
 function renderEventList(){
   const root=$("evList");if(!root)return;root.innerHTML="";
+  const builtRoot=$("evBuiltinList");if(builtRoot){builtRoot.innerHTML="";BUILTIN_EVENTS.forEach(e=>{const item=document.createElement("div");item.className="listitem";const info=document.createElement("div");info.className="iteminfo";const name=document.createElement("div");name.className="itemname";name.textContent=(e.emoji?e.emoji+" ":"")+((e.msg&&(e.msg[curLang]||e.msg.en))||e.id);const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=e.start+" · "+e.days+" روز · خودکار";info.append(name,meta);const actions=document.createElement("div");actions.className="ev-list-actions";const preview=document.createElement("button");preview.type="button";preview.className="small";preview.innerHTML='<i class="ic ic-eye"></i> پیش‌نمایش';preview.onclick=()=>previewEventData({...e,name:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,msg:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,mediaUrl:e.mediaUrl||"",characterUrl:e.characterUrl||"",animation:e.animation||"none",subtitle:e.subtitle||""},true);actions.append(preview);item.append(info,actions);builtRoot.appendChild(item);});}
   const ev=state.events||{custom:[]};
   const sel=$("evEnabled");
   if(sel&&document.activeElement!==sel)sel.value=ev.enabled===false?"off":"on";
@@ -3807,16 +3818,7 @@ function renderEventList(){
 function eventFormObject(){
   return {name:$("evName").value.trim(),msg:$("evName").value.trim(),date:$("evDate").value,days:Math.max(1,Math.min(60,Number($("evDays").value)||1)),emoji:$("evEmoji").value.trim().slice(0,4),accent:$("evAccent").value,bg:$("evBg").value,yearly:$("evYearly").checked,mediaUrl:$("evMediaURL").value.trim(),mediaType:((($("evMediaFile").files?.[0]?.type)||"").startsWith("video/") || /\.(mp4|webm|ogg)(?:[?#]|$)/i.test($("evMediaURL").value.trim())) ? "video" : "image",characterUrl:$("evCharacterURL").value.trim(),animation:$("evAnimation").value,subtitle:$("evSubtitle").value.trim()};
 }
-function updateEventPreview(){
-  const preview=$("evPreview");if(!preview)return;
-  const d=eventFormObject();preview.style.backgroundColor=d.bg||"#101510";preview.style.setProperty("--ev-accent",d.accent||"#e8b85b");preview.dataset.animation=d.animation||"none";
-  preview.querySelectorAll(".ev-preview-bg,.ev-preview-character").forEach(n=>n.remove());
-  if(d.mediaUrl){let el;if(d.mediaType==="video"){el=document.createElement("video");el.src=d.mediaUrl;el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.src=d.mediaUrl;el.alt="";}el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);}
-  if(d.characterUrl){const ch=document.createElement("img");ch.className="ev-preview-character";ch.src=d.characterUrl;ch.alt="";preview.appendChild(ch);}
-  $("evPreviewTitle").textContent=(d.emoji?d.emoji+" ":"")+(d.name||"پیش‌نمایش رویداد");
-  $("evPreviewSubtitle").textContent=d.subtitle||"ظاهر رویداد اینجا نمایش داده می‌شود";
-  preview.style.borderColor=d.accent||"var(--line)";
-}
+function updateEventPreview(){const d=eventFormObject();previewEventData({...d,name:d.name||"پیش‌نمایش رویداد"});}
 function fillEventForm(c){
   editingEventId=c.id||null;
   $("evName").value=c.name||c.msg||"";$("evDate").value=c.date||"";$("evDays").value=c.days||3;$("evEmoji").value=c.emoji||"";
@@ -4060,7 +4062,7 @@ function renderChannels(){
     const item=document.createElement("div");item.className="listitem";
     const info=document.createElement("div");info.className="iteminfo";
     const name=document.createElement("div");name.className="itemname";name.textContent=c.name||"";
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •"+chStatsText(c);
+    const meta=document.createElement("div");meta.className="itemmeta";meta.innerHTML='<i class="ic ic-list" title="محتوا"></i> '+Number((c.list||[]).length)+" •"+chStatsText(c);
     info.append(name,meta);
     const select=document.createElement("button");select.type="button";select.className="small";select.textContent=(i===state.channelIndex)?"✓":"→";
     select.onclick=()=>{state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};activeMediaKey="";scheduleSave();renderPlayer(true);};
@@ -4143,7 +4145,7 @@ function renderRadioList(){
       const info=document.createElement("div");info.className="iteminfo";
       const name=document.createElement("div");name.className="itemname";
       name.innerHTML='<i class="ic ic-radio"></i> '+esc(c.name||"")+(c.feedId?' <span style="font-size:10px;color:var(--accent)">YT</span>':'');
-      const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.list?.length||0)+" •"+chStatsText(c);
+      const meta=document.createElement("div");meta.className="itemmeta";meta.innerHTML='<i class="ic ic-list" title="محتوا"></i> '+Number((c.list||[]).length)+" •"+chStatsText(c);
       info.append(name,meta);
       const select=document.createElement("button");select.type="button";select.className="small";
       select.textContent=(i===state.radioChannelIndex)?"✓":"→";
@@ -4176,7 +4178,7 @@ function renderKidsAdmin(){
     const name=document.createElement("div");name.className="itemname";
     name.innerHTML='<i class="ic ic-kids"></i> '+esc(c.name||"")+(c.feedId?' <span style="font-size:10px;color:var(--accent)">YT</span>':'');
     const meta=document.createElement("div");meta.className="itemmeta";
-    meta.textContent=(c.list?.length||0)+chStatsText(c);
+    meta.innerHTML='<i class="ic ic-list" title="محتوا"></i> '+Number((c.list||[]).length)+chStatsText(c);
     info.append(name,meta);
     const sel=document.createElement("button");sel.type="button";sel.className="small";
     sel.textContent=(i===state.kidsChannelIndex)?"✓":"→";
@@ -4692,7 +4694,7 @@ function renderYouTubeSubscriptions(){
     const check=document.createElement("input");check.type="checkbox";check.checked=ytSelectedChannels.has(sub.channelId);check.setAttribute("aria-label","انتخاب "+sub.title);check.onchange=()=>{check.checked?ytSelectedChannels.add(sub.channelId):ytSelectedChannels.delete(sub.channelId);saveYtSelectedChannels();};
     const info=document.createElement("div");info.className="yt-sub-info";
     const name=document.createElement("div");name.className="itemname";name.textContent=sub.title;
-    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=ytSubStatsText(sub);
+    const meta=document.createElement("div");meta.className="itemmeta";meta.innerHTML=ytSubStatsHtml(sub);
     const meta2=document.createElement("div");meta2.className="itemmeta";meta2.textContent=sub.channelId;
     info.append(name,meta,meta2);
     const sel=document.createElement("select");
@@ -4757,7 +4759,8 @@ async function addYouTubePlaylistToSection(playlistId,title,section){
       const url="https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId="+encodeURIComponent(playlistId)+"&maxResults=50"+(pageToken?"&pageToken="+encodeURIComponent(pageToken):"");
       const data=await ytApi(url);
       items=items.concat(data.items||[]);pageToken=data.nextPageToken||"";pages++;
-    }while(pageToken&&pages<10);
+    }while(pageToken&&pages<1000);
+    if(pageToken)throw new Error("این پلی‌لیست آن‌قدر بزرگ است که دریافت کامل آن در یک نوبت ممکن نشد؛ دوباره تلاش کن.");
     ch.list=items.map(v=>{
       const id=v.contentDetails?.videoId||v.snippet?.resourceId?.videoId;
       return id?{id:makeId(),youtubeId:id,title:v.snippet?.title||"YouTube video",url:"https://www.youtube.com/watch?v="+id,ytKind:"video",addedAt:v.snippet?.publishedAt||Date.now(),publishedAt:v.snippet?.publishedAt||"",kids:section==="kids"}:null;
@@ -4894,9 +4897,10 @@ async function ytApi(url){
   }
   return d;
 }
-function ytFmt(n){if(n==null)return "—";if(n<0)return "پنهان";try{return Number(n).toLocaleString();}catch(_){return String(n);}}
+function ytFmt(n){if(n==null)return "—";if(typeof n==="string")return n;if(n<0)return "پنهان";try{return Number(n).toLocaleString();}catch(_){return String(n);}}
 function ytCompact(n){if(n==null)return "—";if(n<0)return "پنهان";try{return new Intl.NumberFormat(undefined,{notation:"compact",maximumFractionDigits:1}).format(n);}catch(_){return String(n);}}
-function ytSubStatsText(s){return "👥 "+ytCompact(s.subs)+" مشترک · 👁️ "+ytCompact(s.views)+" بازدید · 🎬 "+ytCompact(s.videos)+" ویدئو · 📚 "+ytCompact(s.playlists)+" پلی‌لیست";}
+function ytSubStatsHtml(s){return '<i class="ic ic-people" title="مشترک‌ها"></i> '+esc(ytCompact(s.subs))+' مشترک · <i class="ic ic-eye" title="بازدید"></i> '+esc(ytCompact(s.views))+' بازدید · <i class="ic ic-video" title="ویدئو"></i> '+esc(ytCompact(s.videos))+' ویدئو · <i class="ic ic-list" title="پلی‌لیست"></i> '+esc(ytCompact(s.playlists))+' پلی‌لیست';}
+function ytSubStatsText(s){return " "+ytCompact(s.subs)+" مشترک · "+ytCompact(s.views)+" بازدید · "+ytCompact(s.videos)+" ویدئو · "+ytCompact(s.playlists)+" پلی‌لیست";}
 
 /* ===== sorting ===== */
 const YT_SORTS=[["default","ترتیب اصلی"],["name","نام (الف‌بایی)"],["subs:desc","ساب: بیشترین"],["subs:asc","ساب: کمترین"],["views:desc","بازدید: بیشترین"],["views:asc","بازدید: کمترین"],["videos:desc","ویدیو: بیشترین"],["videos:asc","ویدیو: کمترین"],["playlists:desc","پلی‌لیست: بیشترین"],["playlists:asc","پلی‌لیست: کمترین"]];
@@ -4907,9 +4911,11 @@ function sortedOrder(n,key,valAt,nameAt){
   if(key==="name"){idx.sort((a,b)=>String(nameAt(a)).localeCompare(String(nameAt(b)),"fa")||a-b);return idx;}
   const parts=key.split(":"),f=parts[0],m=parts[1]==="asc"?1:-1;
   idx.sort((a,b)=>{
-    const va=valAt(a,f),vb=valAt(b,f),na=(va==null||va<0),nb=(vb==null||vb<0);
+    const rawA=valAt(a,f),rawB=valAt(b,f);
+    const va=(rawA==null||rawA==="")?null:Number(rawA),vb=(rawB==null||rawB==="")?null:Number(rawB);
+    const na=(va==null||!Number.isFinite(va)||va<0),nb=(vb==null||!Number.isFinite(vb)||vb<0);
     if(na&&nb)return a-b;if(na)return 1;if(nb)return -1;
-    return (va-vb)*m||(a-b);
+    return ((va-vb)*m)||(a-b);
   });
   return idx;
 }
@@ -4930,7 +4936,7 @@ function chOrder(sec){
     const s=subForChannel(c);return s?s[f]:null;
   },i=>arr[i].name||"");
 }
-function chStatsText(c){const s=subForChannel(c);return s?(" · "+ytSubStatsText(s)):"";}
+function chStatsText(c){const s=subForChannel(c);return s?(" · "+ytSubStatsHtml(s)):"";}
 
 /* ===== channels / targets helpers ===== */
 function secLists(){return {tv:state.channels||[],radio:state.radioChannels||[],kids:state.kidsChannels||[]};}
@@ -5153,8 +5159,8 @@ async function fetchYouTubeChannelStats(withPlaylists){
             do{
               const pd=await ytApi("https://www.googleapis.com/youtube/v3/playlists?part=id&maxResults=50&channelId="+encodeURIComponent(s.channelId)+(tok?"&pageToken="+encodeURIComponent(tok):""));
               n+=(pd.items||[]).length;tok=pd.nextPageToken||"";pg++;
-            }while(tok&&pg<10);
-            s.playlists=n;
+            }while(tok&&pg<1000);
+            s.playlists=tok?null:n;
           }catch(e){
             if(e.quota||e.noToken||e.expired){fatal=e;return;}
             s.playlists=(e.status===404)?0:null;
@@ -5193,7 +5199,7 @@ async function ytFetchDetails(sub){
     playlists:playlists.map(pl=>({id:pl.id,title:(pl.snippet&&pl.snippet.title)||"Playlist",thumb:(pl.snippet&&pl.snippet.thumbnails&&(pl.snippet.thumbnails.medium&&pl.snippet.thumbnails.medium.url||pl.snippet.thumbnails.default&&pl.snippet.thumbnails.default.url))||"",count:Number(pl.contentDetails&&pl.contentDetails.itemCount||0)})),complete:!token,playlistPages:pages
   };
   const cache=ytLoadDetailsCache();cache[sub.channelId]=data;ytSaveDetailsCache(cache);
-  sub.subs=data.subs;sub.views=data.views;sub.videos=data.videos;sub.playlists=data.playlists.length;sub.statsAt=data.at;
+  sub.subs=data.subs;sub.views=data.views;sub.videos=data.videos;sub.playlists=data.complete?data.playlists.length:null;sub.statsAt=data.at;
   if(data.desc)sub.description=data.desc;
   saveYouTubeSubscriptions();
   return data;
@@ -5202,20 +5208,20 @@ function ytRenderDetails(sub,data,note){
   const content=$("ytDetailContent");if(!content)return;
   const channelUrl="https://www.youtube.com/channel/"+sub.channelId;
   const pls=data.playlists||[];
-  const stat=(emoji,label,value)=>'<div class="yt-detail-stat"><span class="yt-stat-emoji">'+emoji+'</span><b>'+esc(ytFmt(value))+'</b><span>'+label+'</span></div>';
+  const stat=(icon,label,value)=>'<div class="yt-detail-stat"><span class="yt-stat-emoji"><i class="ic ic-'+icon+'" aria-hidden="true"></i></span><b>'+esc(ytFmt(value))+'</b><span>'+label+'</span></div>';
   const plMarkup=pls.length?pls.map(pl=>{
     const id=esc(pl.id),title=esc(pl.title),thumb=esc(pl.thumb||"");
-    return '<div class="yt-playlist-row">'+(thumb?'<img src="'+thumb+'" alt="" loading="lazy">':'<div style="width:100px;aspect-ratio:16/9;border-radius:7px;background:var(--panel2);display:grid;place-items:center">📚</div>')+'<div class="yt-playlist-info"><b>'+title+'</b><small>🎬 '+Number(pl.count||0).toLocaleString()+' ویدئو</small><div class="actions" style="margin-top:7px"><button type="button" class="small" data-pl-section="tv" data-pl-id="'+id+'" data-pl-title="'+title+'">افزودن به TV</button><button type="button" class="small" data-pl-section="kids" data-pl-id="'+id+'" data-pl-title="'+title+'">Kids</button><button type="button" class="small" data-pl-section="radio" data-pl-id="'+id+'" data-pl-title="'+title+'">Radio</button></div></div></div>';
+    return '<div class="yt-playlist-row">'+(thumb?'<img src="'+thumb+'" alt="" loading="lazy">':'<div style="width:100px;aspect-ratio:16/9;border-radius:7px;background:var(--panel2);display:grid;place-items:center"><i class="ic ic-list" aria-hidden="true"></i></div>')+'<div class="yt-playlist-info"><b>'+title+'</b><small><i class="ic ic-video" aria-hidden="true"></i> '+Number(pl.count||0).toLocaleString()+' ویدئو</small><div class="actions" style="margin-top:7px"><button type="button" class="small" data-pl-section="tv" data-pl-id="'+id+'" data-pl-title="'+title+'">افزودن به TV</button><button type="button" class="small" data-pl-section="kids" data-pl-id="'+id+'" data-pl-title="'+title+'">Kids</button><button type="button" class="small" data-pl-section="radio" data-pl-id="'+id+'" data-pl-title="'+title+'">Radio</button></div></div></div>';
   }).join(""):'<div class="viewerhint">پلی‌لیست عمومی پیدا نشد یا دسترسی آن محدود است.</div>';
   let when="";try{when=new Date(data.at).toLocaleString(dateLocale());}catch(_){when=new Date(data.at).toLocaleString();}
   const noteHtml=note?'<div class="viewerhint" style="margin:10px 0">'+esc(note)+'</div>':'<div class="viewerhint" style="margin:10px 0">آخرین به‌روزرسانی: '+esc(when)+'</div>';
   content.innerHTML=
     '<div class="yt-detail-head">'+(data.avatar?'<img class="yt-detail-avatar" src="'+esc(data.avatar)+'" alt="">':'<div class="yt-detail-avatar"></div>')+
     '<div style="min-width:0;flex:1"><div class="yt-detail-title">'+esc(data.title||sub.title)+'</div><div class="itemmeta" style="overflow-wrap:anywhere">'+esc(sub.channelId)+'</div><a href="'+channelUrl+'" target="_blank" rel="noopener">باز کردن کانال در YouTube ↗</a></div></div>'+
-    '<div class="yt-detail-stats">'+stat('👥','مشترک‌ها',data.subs)+stat('👁️','بازدید کل',data.views)+stat('🎬','تعداد ویدئوها',data.videos)+stat('📚','پلی‌لیست عمومی',pls.length)+'</div>'+noteHtml+
+    '<div class="yt-detail-stats">'+stat('people','مشترک‌ها',data.subs)+stat('eye','بازدید کل',data.views)+stat('video','تعداد ویدئوها',data.videos)+stat('list','پلی‌لیست عمومی',data.complete?pls.length:'حداقل '+pls.length.toLocaleString())+'</div>'+noteHtml+
     '<div class="actions" style="margin:12px 0"><button type="button" id="ytDetailRefresh" class="small primary">↻ تازه‌سازی از YouTube</button></div>'+
     '<section class="yt-detail-section"><h3>📝 دربارهٔ کانال</h3><div class="yt-detail-desc">'+esc(data.desc||"توضیحی ثبت نشده است.")+'</div></section>'+
-    '<section class="yt-detail-section"><h3>📚 پلی‌لیست‌های عمومی <span style="color:var(--accent)">('+pls.length.toLocaleString()+')</span></h3><div class="viewerhint" style="margin-bottom:8px">تعداد بالا مربوط به پلی‌لیست‌های عمومی‌ای است که API توانسته دریافت کند؛ پلی‌لیست خصوصی یا پنهان نمایش داده نمی‌شود.</div><div class="yt-playlist-list">'+plMarkup+'</div></section>';
+    '<section class="yt-detail-section"><h3><i class="ic ic-list" aria-hidden="true"></i> پلی‌لیست‌های عمومی <span style="color:var(--accent)">('+(data.complete?pls.length.toLocaleString():'حداقل '+pls.length.toLocaleString())+')</span></h3><div class="viewerhint" style="margin-bottom:8px">تعداد مربوط به پلی‌لیست‌های عمومی‌ای است که API توانسته دریافت کند؛ پلی‌لیست خصوصی یا پنهان نمایش داده نمی‌شود. اگر دریافت ناقص باشد، تعداد با «حداقل» مشخص می‌شود.</div><div class="yt-playlist-list">'+plMarkup+'</div></section>';
   content.querySelectorAll("[data-pl-id]").forEach(b=>b.onclick=()=>addYouTubePlaylistToSection(b.dataset.plId,b.dataset.plTitle,b.dataset.plSection));
   const rf=$("ytDetailRefresh");if(rf)rf.onclick=()=>showYouTubeChannelDetails(sub,true);
 }
