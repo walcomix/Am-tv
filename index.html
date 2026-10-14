@@ -2571,58 +2571,89 @@ function parseYouTubeChannelIdFromUrl(channelUrl){
     return query&&/^UC[\w-]+$/.test(query)?query:"";
   }catch(_){return ""}
 }
-async function resolveYouTubeChannelId(channelUrl){
-  const direct=parseYouTubeChannelIdFromUrl(channelUrl);
-  if(direct)return direct;
-  const response=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(channelUrl));
-  if(!response.ok)throw new Error("Channel ID not found.");
-  const html=await response.text();
-  for(const re of [/"channelId"\s*:\s*"(UC[\w-]+)"/,/"externalId"\s*:\s*"(UC[\w-]+)"/]){const m=html.match(re);if(m)return m[1];}
+/* ===== fetch با تایم‌اوت واقعی (AbortController) ===== */
+function fetchWithTimeout(url, options = {}, timeoutMs = 12000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => {
+    try { ctrl.abort(new DOMException("Timeout", "AbortError")); }
+    catch (_) { ctrl.abort(); }
+  }, timeoutMs);
+  return fetch(url, { ...options, signal: ctrl.signal })
+    .finally(() => clearTimeout(timer));
+}
+
+async function resolveYouTubeChannelId(channelUrl) {
+  const direct = parseYouTubeChannelIdFromUrl(channelUrl);
+  if (direct) return direct;
+  const response = await fetchWithTimeout(
+    "https://api.allorigins.win/raw?url=" + encodeURIComponent(channelUrl),
+    {}, 12000
+  );
+  if (!response.ok) throw new Error("Channel ID not found (HTTP " + response.status + ").");
+  const html = await response.text();
+  for (const re of [/"channelId"\s*:\s*"(UC[\w-]+)"/, /"externalId"\s*:\s*"(UC[\w-]+)"/]) {
+    const m = html.match(re);
+    if (m) return m[1];
+  }
   throw new Error("ID not found.");
 }
-async function fetchRecentChannelVideos(channelUrl){
-  const channelId=await resolveYouTubeChannelId(channelUrl);
-  const feedUrl="https://www.youtube.com/feeds/videos.xml?channel_id="+encodeURIComponent(channelId);
-  const cutoff=Date.now()-24*60*60*1000;
-  let items=[];let lastError=null;
-  try{
-    const response=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(feedUrl));
-    if(!response.ok)throw new Error("RSS converter HTTP "+response.status);
-    const data=await response.json();if(data.status!=="ok"||!Array.isArray(data.items))throw new Error(data.message||"RSS converter error");
-    items=data.items.map(v=>({id:(String(v.link||"").match(/[?&]v=([\w-]{6,})/)||String(v.guid||"").match(/yt:video:([\w-]+)/)||[])[1],title:v.title||"YouTube",url:v.link||"",publishedAt:Date.parse(v.pubDate||"")||0}));
-  }catch(err){lastError=err;}
-  if(!items.length){
-    try{
-      const proxied=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(feedUrl));
-      if(!proxied.ok)throw new Error("RSS proxy HTTP "+proxied.status);
-      const xml=new DOMParser().parseFromString(await proxied.text(),"text/xml");
-      items=[...xml.querySelectorAll("entry")].map(v=>{const link=v.querySelector("link")?.getAttribute("href")||"";const id=v.querySelector("videoId")?.textContent||((link.match(/[?&]v=([\w-]{6,})/)||[])[1]);return {id,title:v.querySelector("title")?.textContent||"YouTube",url:link||("https://www.youtube.com/watch?v="+id),publishedAt:Date.parse(v.querySelector("published")?.textContent||"")||0};});
-    }catch(err){throw new Error("RSS unavailable: "+(lastError?.message||err.message)+"; fallback: "+err.message);}
+
+async function fetchRecentChannelVideos(channelUrl) {
+  const channelId = await resolveYouTubeChannelId(channelUrl);
+  const feedUrl = "https://www.youtube.com/feeds/videos.xml?channel_id=" + encodeURIComponent(channelId);
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  let items = [];
+  let lastError = null;
+
+  try {
+    const response = await fetchWithTimeout(
+      "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(feedUrl),
+      {}, 10000
+    );
+    if (!response.ok) throw new Error("RSS converter HTTP " + response.status);
+    const data = await response.json();
+    if (data.status !== "ok" || !Array.isArray(data.items))
+      throw new Error(data.message || "RSS converter error");
+    items = data.items.map(v => ({
+      id: (String(v.link || "").match(/[?&]v=([\w-]{6,})/) ||
+           String(v.guid || "").match(/yt:video:([\w-]+)/) || [])[1],
+      title: v.title || "YouTube",
+      url: v.link || "",
+      publishedAt: Date.parse(v.pubDate || "") || 0
+    }));
+  } catch (err) {
+    lastError = err;
   }
-  return items.filter(v=>v.id&&v.publishedAt>=cutoff).sort((a,b)=>b.publishedAt-a.publishedAt);
+
+  if (!items.length) {
+    try {
+      const proxied = await fetchWithTimeout(
+        "https://api.allorigins.win/raw?url=" + encodeURIComponent(feedUrl),
+        {}, 10000
+      );
+      if (!proxied.ok) throw new Error("RSS proxy HTTP " + proxied.status);
+      const xml = new DOMParser().parseFromString(await proxied.text(), "text/xml");
+      items = [...xml.querySelectorAll("entry")].map(v => {
+        const link = v.querySelector("link")?.getAttribute("href") || "";
+        const id = v.querySelector("videoId")?.textContent ||
+                   ((link.match(/[?&]v=([\w-]{6,})/) || [])[1]);
+        return {
+          id,
+          title: v.querySelector("title")?.textContent || "YouTube",
+          url: link || ("https://www.youtube.com/watch?v=" + id),
+          publishedAt: Date.parse(v.querySelector("published")?.textContent || "") || 0
+        };
+      });
+    } catch (err) {
+      throw new Error("RSS unavailable: " + (lastError?.message || err.message) + "; fallback: " + err.message);
+    }
+  }
+
+  return items
+    .filter(v => v.id && v.publishedAt >= cutoff)
+    .sort((a, b) => b.publishedAt - a.publishedAt);
 }
-async function addChannelFeed(){
-  if(!isAdmin){notify(t("msgNoAdmin"));return}
-  const url=$("feedChannelUrl").value.trim(),name=$("feedChannelName").value.trim(),section=$("feedTargetSection").value;
-  if(!url||!/^https?:\/\//i.test(url)){notify("Invalid link.");return}
-  const feed={id:makeId(),url,name:name||"YouTube Channel",section,createdAt:Date.now(),targetId:""};
-  if(section==="radio"){
-    const channel={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-    state.radioChannels.push(channel);state.radioChannelIndex=state.radioChannels.length-1;feed.targetId=channel.id;
-  }else if(section==="kids"){
-    const channel={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
-    state.kidsChannels.push(channel);state.kidsChannelIndex=state.kidsChannels.length-1;feed.targetId=channel.id;
-  }else{
-    const channel={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-    state.channels.push(channel);state.channelIndex=state.channels.length-1;feed.targetId=channel.id;
-  }
-  state.channelFeeds.push(feed);$("feedChannelUrl").value="";$("feedChannelName").value="";
-  $("channelFeedStatus").textContent="...";
-  try{await syncChannelFeeds(false,feed.id)}catch(error){
-    $("channelFeedStatus").textContent="Error: "+error.message;renderChannelFeedsList();
-    clearTimeout(saveTimer);await saveRemoteState();
-  }
-}
+
 function renderChannelFeedsList(){
   const root=$("channelFeedsList");if(!root)return;root.innerHTML="";
   if(!(state.channelFeeds||[]).length){root.innerHTML='<div class="viewerhint">'+esc(t("noFeedsYet"))+'</div>';return;}
@@ -2648,47 +2679,135 @@ function renderChannelFeedsList(){
     row.append(info,syncOne,del);root.appendChild(row);
   });
 }
-function syncWithTimeout(promise,ms,label){
-  return new Promise((resolve,reject)=>{
-    const timer=setTimeout(()=>reject(new Error(label+" (مهلت "+Math.round(ms/1000)+" ثانیه تمام شد)")),ms);
-    Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value);},error=>{clearTimeout(timer);reject(error);});
+function syncWithTimeout(promise, ms, label) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(
+      () => reject(new Error(label + " (مهلت " + Math.round(ms / 1000) + " ثانیه تمام شد)")),
+      ms
+    );
+    Promise.resolve(promise).then(
+      value => { clearTimeout(timer); resolve(value); },
+      error => { clearTimeout(timer); reject(error); }
+    );
   });
 }
-async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
-  if(!isAdmin){notify(t("msgNoAdmin"));return}
-  const status=$("channelFeedStatus");
-  const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||(f.section||"tv")===sectionFilter));
-  if(!feeds.length){if(status)status.textContent=sectionFilter?"برای این بخش هنوز کانال YouTube قابل همگام‌سازی ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای این بخش فید YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
-  if(status)status.textContent="شروع همگام‌سازی "+feeds.length+" کانال…";
-  let total=0,errors=[];
-  for(let i=0;i<feeds.length;i++){
-    const feed=feeds[i];
-    if(status)status.textContent="همگام‌سازی "+(i+1)+" از "+feeds.length+": "+(feed.name||"YouTube")+"…";
-    try{
-      const videos=await syncWithTimeout(fetchRecentChannelVideos(feed.url),25000,"دریافت ویدیوها از "+(feed.name||"کانال")+" طول کشید");
-      const channels=feed.section==="radio"?state.radioChannels:feed.section==="kids"?state.kidsChannels:state.channels;
-      const target=channels.find(c=>c.id===feed.targetId);
-      if(!target){errors.push((feed.name||"کانال")+": کانال مقصد پیدا نشد");continue;}
-      const existing=Array.isArray(target.list)?target.list:[];
-      const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
-      for(const v of videos){
-        const key=String(v.id);const prior=byVideo.get(key);
-        byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"});
-      }
-      const fresh=[...byVideo.values()].filter(v=>!v.publishedAt||Number(v.publishedAt)>=Date.now()-24*60*60*1000);
-      target.list=fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0));
-      total+=videos.length;
-    }catch(error){errors.push((feed.name||"کانال")+": "+(error?.message||String(error)));}
+
+let syncCancelRequested = false;
+
+async function syncChannelFeeds(showNotice = true, onlyFeedId = "", sectionFilter = "") {
+  if (!isAdmin) { notify(t("msgNoAdmin")); return; }
+  const status = $("channelFeedStatus");
+  const feeds = (state.channelFeeds || []).filter(f =>
+    (!onlyFeedId || f.id === onlyFeedId) &&
+    (!sectionFilter || (f.section || "tv") === sectionFilter)
+  );
+
+  if (!feeds.length) {
+    if (status) status.textContent = sectionFilter
+      ? "برای این بخش هنوز کانال YouTube قابل همگام‌سازی ثبت نشده است."
+      : "—";
+    if (showNotice) notify(sectionFilter
+      ? "برای این بخش فید YouTube ثبت نشده است."
+      : "فیدی برای همگام‌سازی وجود ندارد.");
+    return;
   }
-  state.lastSyncAt=Date.now();renderAll();
-  if(status)status.textContent=errors.length?"همگام‌سازی تمام شد؛ خطاها: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد.");
+
+  syncCancelRequested = false;
+  const t0 = Date.now();
+  const setStatus = txt => { if (status) status.textContent = txt; };
+  setStatus("شروع همگام‌سازی " + feeds.length + " کانال…");
+
+  let total = 0;
+  const errors = [];
+
+  for (let i = 0; i < feeds.length; i++) {
+    if (syncCancelRequested) {
+      setStatus("لغو شد · " + i + " از " + feeds.length + " بررسی شد · " + total + " ویدئو");
+      if (showNotice) notify("لغو شد");
+      return;
+    }
+
+    const feed = feeds[i] || {};
+    const elapsed = Math.round((Date.now() - t0) / 1000);
+    setStatus(
+      "همگام‌سازی " + (i + 1) + "/" + feeds.length +
+      " · " + (feed.name || "YouTube") +
+      " · " + elapsed + "s"
+    );
+
+    try {
+      const videos = await syncWithTimeout(
+        fetchRecentChannelVideos(feed.url),
+        15000,
+        "دریافت " + (feed.name || "کانال")
+      );
+
+      const channels = feed.section === "radio" ? state.radioChannels
+                     : feed.section === "kids" ? state.kidsChannels
+                     : state.channels;
+      const target = channels.find(c => c.id === feed.targetId);
+      if (!target) {
+        errors.push((feed.name || "کانال") + ": کانال مقصد پیدا نشد");
+        continue;
+      }
+
+      const existing = Array.isArray(target.list) ? target.list : [];
+      const byVideo = new Map(
+        existing.filter(v => v.youtubeId || v.ytId)
+                .map(v => [String(v.youtubeId || v.ytId), v])
+      );
+
+      for (const v of videos) {
+        const key = String(v.id);
+        const prior = byVideo.get(key);
+        byVideo.set(key, {
+          ...(prior || {}),
+          id: prior?.id || makeId(),
+          youtubeId: key,
+          title: v.title || prior?.title || "YouTube",
+          url: v.url,
+          ytKind: "video",
+          addedAt: prior?.addedAt || v.publishedAt,
+          publishedAt: v.publishedAt,
+          feedId: feed.id,
+          kids: feed.section === "kids"
+        });
+      }
+
+      const fresh = [...byVideo.values()].filter(v =>
+        !v.publishedAt || Number(v.publishedAt) >= Date.now() - 24 * 60 * 60 * 1000
+      );
+      target.list = fresh.sort((a, b) =>
+        (Number(b.publishedAt) || 0) - (Number(a.publishedAt) || 0)
+      );
+      total += videos.length;
+    } catch (error) {
+      errors.push((feed.name || "کانال") + ": " + (error?.message || String(error)));
+    }
+  }
+
+  state.lastSyncAt = Date.now();
+  renderAll();
+
+  const elapsed = Math.round((Date.now() - t0) / 1000);
+  if (errors.length) {
+    setStatus("پایان · " + total + " ویدئو · " + errors.length + " خطا · " + elapsed + "s · " +
+              errors.slice(0, 2).join(" | "));
+  } else {
+    setStatus("پایان · " + total + " ویدئو تازه · " + elapsed + "s");
+  }
+
   clearTimeout(saveTimer);
-  try{
-    const saved=await syncWithTimeout(saveRemoteState(),12000,"ذخیره‌سازی وضعیت طول کشید");
-    if(saved===false&&status)status.textContent+=" · ذخیره‌سازی در سرور ناموفق بود؛ وضعیت اتصال Supabase را بررسی کن.";
-  }catch(error){if(status)status.textContent+=" · "+(error?.message||"ذخیره‌سازی ناموفق بود");}
-  if(showNotice)notify(errors.length?"!":"✓");
+  try {
+    const saved = await syncWithTimeout(saveRemoteState(), 12000, "ذخیره‌سازی");
+    if (saved === false) setStatus((status?.textContent || "") + " · ذخیره‌سازی ناموفق");
+  } catch (e) {
+    setStatus((status?.textContent || "") + " · " + (e?.message || "خطای ذخیره"));
+  }
+
+  if (showNotice) notify(errors.length ? "تمام شد با خطا" : "✓ همگام‌سازی تمام شد");
 }
+
 function renderLastSync(){/* no-op without el */}
 
 let holdLive=false,holdUntil=0,holdStarted=false;
