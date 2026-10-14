@@ -656,44 +656,37 @@ body.viewerMode #videoElement{controls:none!important}
 
 
 
-/* Full-screen seasonal event preview: each built-in event gets a distinct art direction */
-#eventPreviewModal{position:fixed;inset:0;z-index:100200;background:#05070bea;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
-#eventPreviewModal.show{display:flex}
-#eventPreviewModal .ep-shell{position:relative;width:min(900px,100%);max-height:92vh;overflow:auto;border:1px solid #ffffff30;border-radius:22px;background:#111;color:#fff;box-shadow:0 25px 90px #000b;padding:12px}
-#eventPreviewModal .ep-close{position:sticky;top:0;float:right;z-index:20;border-radius:50%;width:42px;height:42px;background:#0009;color:#fff;border:1px solid #ffffff55;font-size:20px}
-#eventPreviewModal .ep-art{--ep-accent:#e8b85b;position:relative;isolation:isolate;overflow:hidden;min-height:330px;border-radius:16px;padding:36px 24px;display:flex;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--ep-accent) 30%,transparent),transparent 55%),linear-gradient(135deg,#17202b,#090b12);border:1px solid color-mix(in srgb,var(--ep-accent) 70%,transparent)}
-#eventPreviewModal .ep-art:before,#eventPreviewModal .ep-art:after{content:attr(data-deco);position:absolute;inset:12px;display:flex;align-items:flex-start;justify-content:space-between;font-size:clamp(24px,5vw,54px);opacity:.75;pointer-events:none;white-space:pre-wrap;letter-spacing:14px;z-index:-1}
-#eventPreviewModal .ep-art:after{inset:auto 12px 8px;justify-content:space-around;opacity:.45;transform:rotate(180deg)}
-#eventPreviewModal .ep-copy{position:relative;z-index:3;max-width:80%;text-shadow:0 3px 18px #000c}
-#eventPreviewModal .ep-mark{font-size:clamp(54px,11vw,100px);line-height:1.15;filter:drop-shadow(0 6px 18px #0008);margin-bottom:12px}
-#eventPreviewModal .ep-copy h2{font-size:clamp(28px,6vw,56px);line-height:1.15;margin:0 0 12px;font-weight:950;letter-spacing:.02em}
-#eventPreviewModal .ep-copy p{font-size:clamp(14px,2.5vw,19px);margin:0;opacity:.9}
-#eventPreviewModal .ep-date{display:inline-block;margin-top:22px;padding:8px 14px;border:1px solid #ffffff65;border-radius:999px;background:#0004;font-size:12px;letter-spacing:.12em}
-#eventPreviewModal .ep-art.newyear{background:radial-gradient(circle at 50% 0%,#ffe58a70,transparent 42%),linear-gradient(160deg,#07133e,#17123d 55%,#030612)}
-#eventPreviewModal .ep-art.newyear .ep-copy h2{color:#ffe58a;text-transform:uppercase;text-shadow:0 0 22px #ffc72c88}
-#eventPreviewModal .ep-art.valentine{background:radial-gradient(ellipse at 50% 40%,#b62f5b,#300b26 68%,#110512);border-radius:44px 12px 44px 12px}
-#eventPreviewModal .ep-art.valentine .ep-mark{animation:evPulse 2s ease-in-out infinite}
-#eventPreviewModal .ep-art.valentine .ep-copy h2{font-family:Georgia,serif;font-style:italic;color:#ffc1d3}
-#eventPreviewModal .ep-art.nowruz{background:radial-gradient(ellipse at 50% 100%,#2b8c51,#071c17 68%);border:2px solid #b8e6a2}
-#eventPreviewModal .ep-art.nowruz:before,#eventPreviewModal .ep-art.nowruz:after{inset:0;content:'❀  ✿  ❀  ✿  ❀';align-items:center;justify-content:space-around;color:#b5ee9d;letter-spacing:8px}
-#eventPreviewModal .ep-art.nowruz .ep-copy h2{color:#c6ff9f}
-#eventPreviewModal .ep-art.halloween{background:radial-gradient(circle at 50% 100%,#a43d0b,#160707 65%,#020202);border:1px solid #ff8a1f}
-#eventPreviewModal .ep-art.halloween .ep-copy h2{color:#ff9d31;text-shadow:0 0 20px #ff5e00aa}
-#eventPreviewModal .ep-art.halloween .ep-mark{filter:drop-shadow(0 0 16px #ff6900)}
-#eventPreviewModal .ep-art.yalda{background:radial-gradient(circle at 50% 110%,#9d1834,#2b0719 60%,#08070d);border:2px solid #d63c58}
-#eventPreviewModal .ep-art.yalda .ep-copy h2{color:#ffb4c1}
-#eventPreviewModal .ep-art.christmas{background:radial-gradient(circle at 50% 0%,#e4c66b44,transparent 40%),linear-gradient(155deg,#062b20,#06160f 55%,#091e32);border:1px solid #c5a75a}
-#eventPreviewModal .ep-art.christmas .ep-copy h2{color:#f6e7b0}
-#eventPreviewModal .ep-art.custom{background:radial-gradient(circle at 0% 0%,color-mix(in srgb,var(--ep-accent) 36%,transparent),transparent 45%),linear-gradient(135deg,#171a27,#07080d)}
-#eventPreviewModal .ep-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.55}
-#eventPreviewModal .ep-character{position:absolute;right:2%;bottom:0;height:88%;max-width:36%;object-fit:contain;z-index:2;filter:drop-shadow(0 5px 15px #000a);pointer-events:none}
-#eventPreviewModal .ep-art[data-animation="float"] .ep-character{animation:evFloat 3s ease-in-out infinite}
-#eventPreviewModal .ep-art[data-animation="pulse"] .ep-character{animation:evPulse 2s ease-in-out infinite}
-#eventPreviewModal .ep-art[data-animation="slide"] .ep-character{animation:evSlide 1s ease-out both}
-#eventPreviewModal .ep-art[data-animation="glow"] .ep-copy h2{animation:evGlow 2s ease-in-out infinite alternate}
-#eventPreviewModal .ep-foot{padding:12px 4px 3px;color:#b8bbc8;font-size:12px;text-align:center}
-@media(max-width:520px){#eventPreviewModal{padding:7px}#eventPreviewModal .ep-shell{padding:7px}#eventPreviewModal .ep-art{min-height:290px;padding:28px 12px}#eventPreviewModal .ep-character{max-width:35%;height:70%}#eventPreviewModal .ep-copy{max-width:92%}}
-
+/* AM TV feature update: native icon-driven utility surfaces and distinct seasonal art direction */
+#quickRefreshBtn i,#virtualRemoteBtn i,#reminderBtn i{display:inline-block;transition:transform .25s}
+#quickRefreshBtn:active i{transform:rotate(180deg)}
+#amtvToolsModal{position:fixed;inset:0;z-index:9999;background:rgba(4,7,15,.78);backdrop-filter:blur(12px);display:grid;place-items:center;padding:16px}
+#amtvToolsModal.hidden{display:none!important}.amtv-tools-card{width:min(560px,100%);max-height:85dvh;overflow:auto;background:linear-gradient(145deg,#151d31,#0b1020);border:1px solid #53627c;border-radius:24px;padding:20px;box-shadow:0 24px 90px #0009;color:#f4f7ff}
+.amtv-tools-card h2{margin:10px 0 18px;font-size:22px}.amtv-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.amtv-tool-grid button{min-height:58px;border:1px solid #465575;border-radius:14px;background:linear-gradient(145deg,#283652,#171f33);color:#fff;font-weight:700}.amtv-tools-card label{display:grid;gap:7px;margin:12px 0}.amtv-tools-card input,.amtv-tools-card select{width:100%;min-width:0;padding:11px;border:1px solid #465575;border-radius:10px;background:#0b1221;color:#fff}
+.kids-radio-panel{margin:12px 0;padding:16px;border:1px solid #6e55a9;border-radius:20px;background:radial-gradient(circle at 100% 0,#49346f 0,transparent 48%),linear-gradient(145deg,#21183d,#101126)}.kids-radio-audio{width:100%;margin-top:10px}
+/* Special event skins change component geometry, motion, and visual effects—not only colors. */
+body.event-skin-christmas{background-image:radial-gradient(circle at 12% 12%,#b4f7d322 0 2px,transparent 3px),radial-gradient(circle at 72% 24%,#fff7d922 0 2px,transparent 3px),linear-gradient(145deg,#071a14,#0b2d23 55%,#091019);background-size:68px 68px,92px 92px,auto}
+body.event-skin-christmas .panel,body.event-skin-christmas .playerpanel{border:1px solid #397d60;border-radius:6px 24px 6px 24px;box-shadow:0 0 0 1px #c9a85b33,0 18px 45px #001a12aa}
+body.event-skin-christmas button{border-radius:4px 14px 4px 14px;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));}
+body.event-skin-christmas .topbar{border-bottom:2px solid #c9a85b;background:linear-gradient(90deg,#08231aee,#153b2eee,#08231aee)}
+body.event-skin-halloween{background:radial-gradient(ellipse at 50% 0,#4b1c0a 0,transparent 55%),linear-gradient(160deg,#09060f,#180c25 60%,#08060d)}
+body.event-skin-halloween .panel,body.event-skin-halloween .playerpanel{border:1px solid #d96b26;border-radius:2px;box-shadow:0 0 22px #ff6a1624,inset 0 0 30px #ff6a1608}
+body.event-skin-halloween button{border-radius:2px;background-image:linear-gradient(135deg,#24142f,#100d19);border-color:#a94e22;text-transform:uppercase;letter-spacing:.03em}
+body.event-skin-halloween .topbar{background:#100916;border-bottom:2px solid #ff7b22}
+body.event-skin-nowruz{background:radial-gradient(ellipse at 20% 0,#1c5a37 0,transparent 52%),linear-gradient(145deg,#071c16,#102f23 65%,#081b18)}
+body.event-skin-nowruz .panel,body.event-skin-nowruz .playerpanel{border:1px solid #73c68d;border-radius:26px;background:linear-gradient(135deg,#102d22ee,#0a1b18ee);box-shadow:0 14px 45px #3ecf7620}
+body.event-skin-nowruz button{border-radius:999px;border-width:1px;box-shadow:inset 0 1px #ffffff22,0 5px 15px #00180c55}
+body.event-skin-nowruz .topbar{background:#09251ddd;border-bottom:1px solid #73c68d}
+body.event-skin-yalda{background:radial-gradient(circle at 80% 10%,#a81e3a33,transparent 38%),linear-gradient(150deg,#180914,#330d1b 58%,#100811)}
+body.event-skin-yalda .panel,body.event-skin-yalda .playerpanel{border:1px solid #d94a61;border-radius:18px;background:linear-gradient(145deg,#2a0b19ee,#120912ee);box-shadow:0 12px 40px #ec27431a}
+body.event-skin-yalda button{border-radius:12px 4px 12px 4px;border-color:#b92f4c}
+body.event-skin-newyear{background:radial-gradient(circle at 50% -10%,#6e58b633,transparent 45%),linear-gradient(145deg,#070b22,#111b3a 60%,#070b18)}
+body.event-skin-newyear .panel,body.event-skin-newyear .playerpanel{border:1px solid #bda9ff;border-radius:18px;background:linear-gradient(145deg,#141b39ee,#0a1025ee);box-shadow:0 0 0 1px #d8c8ff22,0 18px 55px #6356c533}
+body.event-skin-newyear button{border-radius:8px;background-image:linear-gradient(135deg,#222c54,#111831);box-shadow:0 0 16px #8d7cff22}
+body.event-skin-valentine{background:radial-gradient(ellipse at 100% 0,#9e245522,transparent 50%),linear-gradient(145deg,#1d0a18,#2c1026 55%,#120914)}
+body.event-skin-valentine .panel,body.event-skin-valentine .playerpanel{border:1px solid #dc7baf;border-radius:30px;background:linear-gradient(145deg,#301327ee,#170b19ee);box-shadow:0 14px 45px #e74b9620}
+body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-color:#bd4e89}
+#eventBanner{transition:background .4s,transform .4s,box-shadow .4s}#eventBanner:not(.hidden){box-shadow:0 5px 24px #0005}
+@media(max-width:520px){.amtv-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#quickRefreshBtn .lbl,#virtualRemoteBtn .lbl,#reminderBtn .lbl{display:none}}
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
@@ -703,7 +696,7 @@ body.viewerMode #videoElement{controls:none!important}
     <div class="logo" id="brandLogo">AM</div>
     <div>
       <div class="brandname" id="brandName">AM TV 24/7</div>
-      <div class="tagline" id="brandTagline">THE NEXT ERA · v1.0.2</div>
+      <div class="tagline" id="brandTagline">THE NEXT ERA · v1.0.3</div>
     </div>
   </div>
   <div class="topright">
@@ -728,15 +721,15 @@ body.viewerMode #videoElement{controls:none!important}
   <button id="eventBannerClose" aria-label="close" type="button">✕</button>
 </div>
 
-
-<div id="eventPreviewModal" role="dialog" aria-modal="true" aria-label="پیش‌نمایش کامل رویداد">
-  <div class="ep-shell"><button class="ep-close" id="eventPreviewClose" type="button" aria-label="بستن پیش‌نمایش">×</button>
-    <div class="ep-art custom" id="eventPreviewArt" data-animation="none" data-deco="✦   ✧   ✦">
-      <div class="ep-copy"><div class="ep-mark" id="eventPreviewEmoji">🎉</div><h2 id="eventPreviewTitle">پیش‌نمایش رویداد</h2><p id="eventPreviewSubtitle">ظاهر کامل رویداد</p><div class="ep-date" id="eventPreviewDate">AM TV · EVENT PREVIEW</div></div>
-    </div><div class="ep-foot">پیش‌نمایش طراحی رویداد در AM TV</div>
+<section id="amtvToolsModal" class="hidden" aria-modal="true" role="dialog" aria-label="ابزارهای AM TV">
+  <div class="amtv-tools-card"><button id="amtvToolsClose" type="button" class="small">بستن</button><h2 id="amtvToolsTitle">ریموت کنترل AM TV</h2>
+    <div id="remoteTools" class="amtv-tool-grid">
+      <button id="remotePrev" type="button">قبلی</button><button id="remotePlay" type="button">پخش / توقف</button><button id="remoteNext" type="button">بعدی</button><button id="remoteFullscreen" type="button">تمام‌صفحه</button><button id="remoteRefresh" type="button">تازه‌سازی فهرست</button><button id="remoteCinema" type="button">حالت سینما</button>
+    </div>
+    <div id="reminderTools" class="hidden"><label>نام برنامه<input id="reminderProgram" type="text" maxlength="120"></label><label>زمان یادآوری<input id="reminderAt" type="datetime-local"></label><button id="saveReminder" type="button" class="primary">ذخیرهٔ یادآور</button><div id="reminderStatus" class="viewerhint"></div></div>
+    <div id="subtitleTools" class="hidden"><p>زیرنویس ترجمه‌شده</p><label>زبان مقصد<select id="subtitleLanguage"><option value="fa">فارسی</option><option value="en">English</option><option value="tr">Türkçe</option><option value="ar">العربية</option></select></label><p class="viewerhint">برای ترجمهٔ خودکار واقعی، باید سرویس ترجمه و دسترسی مجاز به متن زیرنویس متصل شود. این رابط به‌تنهایی ترجمه تولید نمی‌کند.</p></div>
   </div>
-</div>
-
+</section>
 <main>
   <div class="hero">
     <section class="playerpanel">
@@ -809,6 +802,7 @@ body.viewerMode #videoElement{controls:none!important}
               <button id="sleepButton" type="button"><i class="ic ic-snooze"></i><span data-i18n="sleep">خواب</span></button>
               <button id="cinemaButton" type="button"><i class="ic ic-cinema"></i><span data-i18n="cinema">سینمایی</span></button>
               <button id="ccButton" type="button"><i class="ic ic-cc"></i><span data-i18n="cc">زیرنویس</span></button>
+              <button id="translatedSubtitleBtn" type="button"><i class="ic ic-cc"></i><span>زیرنویس ترجمه‌شده</span></button>
             </div>
           </div>
         </div>
@@ -1045,6 +1039,7 @@ body.viewerMode #videoElement{controls:none!important}
     </div>
 
     <div id="kidsTab" class="tabcontent hidden">
+      <div class="panel kids-radio-panel"><h3>رادیوی کودک</h3><p class="viewerhint">نشانی فایل صوتی مستقیم یا جریان رادیویی مجاز را وارد کن.</p><div class="field"><label for="kidsRadioUrl">نشانی پخش صوتی</label><input id="kidsRadioUrl" type="url" placeholder="https://example.com/radio.mp3"></div><div class="field"><label for="kidsRadioName">نام ایستگاه</label><input id="kidsRadioName" type="text" placeholder="AM Kids Radio"></div><button id="saveKidsRadio" type="button" class="primary">ذخیرهٔ ایستگاه</button><button id="playKidsRadio" type="button">پخش رادیوی کودک</button><audio id="kidsRadioAudio" controls preload="none" class="kids-radio-audio"></audio><div id="kidsRadioStatus" class="viewerhint"></div></div>
       <div class="adminGrid">
         <div class="section">
           <h3><i class="ic ic-kids"></i><span data-i18n="kidsSettingsTitle">تنظیمات حالت کودک</span></h3>
@@ -1191,7 +1186,7 @@ body.viewerMode #videoElement{controls:none!important}
         <div class="section">
           <h3><i class="ic ic-appear"></i><span data-i18n="stationTitle">تنظیمات ایستگاه</span></h3>
           <div class="field"><label for="stationNameInput" data-i18n="lblStationName">نام ایستگاه</label><input id="stationNameInput" value="AM TV 24/7"></div>
-          <div class="field"><label for="stationTaglineInput" data-i18n="lblTagline">شعار / زیرنویس برند</label><input id="stationTaglineInput" placeholder="THE NEXT ERA · v1.0.2"></div>
+          <div class="field"><label for="stationTaglineInput" data-i18n="lblTagline">شعار / زیرنویس برند</label><input id="stationTaglineInput" placeholder="THE NEXT ERA · v1.0.3"></div>
           <div class="field">
             <label data-i18n="lblLogoMode">حالت نمایش لوگو</label>
             <div class="logoModeRadios" id="logoModeRadios">
@@ -1992,7 +1987,7 @@ function applyLang(init){
 }
 
 const DEFAULT_STATE = {
-  stationName:"AM TV 24/7",tagline:"THE NEXT ERA · v1.0.2",stationLogo:"",mode:"tv",
+  stationName:"AM TV 24/7",tagline:"THE NEXT ERA · v1.0.3",stationLogo:"",mode:"tv",
   channelIndex:0,channels:[{id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]}],
   radioChannels:[{id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]}],
   radioChannelIndex:0,radioIndex:0,
@@ -2462,17 +2457,23 @@ async function resolveYouTubeChannelId(channelUrl){
 async function fetchRecentChannelVideos(channelUrl){
   const channelId=await resolveYouTubeChannelId(channelUrl);
   const feedUrl="https://www.youtube.com/feeds/videos.xml?channel_id="+encodeURIComponent(channelId);
-  const response=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(feedUrl));
-  if(!response.ok)throw new Error("RSS unavailable.");
-  const data=await response.json();
-  if(data.status!=="ok"||!Array.isArray(data.items))throw new Error(data.message||"Error");
   const cutoff=Date.now()-24*60*60*1000;
-  return data.items.map(v=>{
-    const published=Date.parse(v.pubDate||"")||0;
-    const match=String(v.link||"").match(/[?&]v=([\w-]{6,})/);
-    const id=match?match[1]:(String(v.guid||"").match(/yt:video:([\w-]+)/)||[])[1];
-    return {id,title:v.title||"YouTube",url:v.link||("https://www.youtube.com/watch?v="+id),publishedAt:published};
-  }).filter(v=>v.id&&v.publishedAt>=cutoff);
+  let items=[];let lastError=null;
+  try{
+    const response=await fetch("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(feedUrl));
+    if(!response.ok)throw new Error("RSS converter HTTP "+response.status);
+    const data=await response.json();if(data.status!=="ok"||!Array.isArray(data.items))throw new Error(data.message||"RSS converter error");
+    items=data.items.map(v=>({id:(String(v.link||"").match(/[?&]v=([\w-]{6,})/)||String(v.guid||"").match(/yt:video:([\w-]+)/)||[])[1],title:v.title||"YouTube",url:v.link||"",publishedAt:Date.parse(v.pubDate||"")||0}));
+  }catch(err){lastError=err;}
+  if(!items.length){
+    try{
+      const proxied=await fetch("https://api.allorigins.win/raw?url="+encodeURIComponent(feedUrl));
+      if(!proxied.ok)throw new Error("RSS proxy HTTP "+proxied.status);
+      const xml=new DOMParser().parseFromString(await proxied.text(),"text/xml");
+      items=[...xml.querySelectorAll("entry")].map(v=>{const link=v.querySelector("link")?.getAttribute("href")||"";const id=v.querySelector("videoId")?.textContent||((link.match(/[?&]v=([\w-]{6,})/)||[])[1]);return {id,title:v.querySelector("title")?.textContent||"YouTube",url:link||("https://www.youtube.com/watch?v="+id),publishedAt:Date.parse(v.querySelector("published")?.textContent||"")||0};});
+    }catch(err){throw new Error("RSS unavailable: "+(lastError?.message||err.message)+"; fallback: "+err.message);}
+  }
+  return items.filter(v=>v.id&&v.publishedAt>=cutoff).sort((a,b)=>b.publishedAt-a.publishedAt);
 }
 async function addChannelFeed(){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
@@ -2533,12 +2534,19 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId=""){
       const videos=await fetchRecentChannelVideos(feed.url);
       const channels=feed.section==="radio"?state.radioChannels:feed.section==="kids"?state.kidsChannels:state.channels;
       const target=channels.find(c=>c.id===feed.targetId);if(!target)continue;
-      target.list=videos.map(v=>({id:makeId(),youtubeId:v.id,title:v.title,url:v.url,ytKind:"video",addedAt:v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"}));
+      const existing=Array.isArray(target.list)?target.list:[];
+      const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
+      for(const v of videos){
+        const key=String(v.id);const prior=byVideo.get(key);
+        byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"});
+      }
+      const fresh=[...byVideo.values()].filter(v=>!v.publishedAt||Number(v.publishedAt)>=Date.now()-24*60*60*1000);
+      target.list=fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0));
       total+=videos.length;
     }catch(error){errors.push(feed.name+": "+error.message)}
   }
   state.lastSyncAt=Date.now();renderAll();
-  if(status)status.textContent=errors.length?"Error: "+errors.join(" · "):"OK: "+total;
+  if(status)status.textContent=errors.length?"خطا: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد.");
   clearTimeout(saveTimer);await saveRemoteState();
   if(showNotice)notify(errors.length?"!":"✓");
 }
@@ -2650,7 +2658,7 @@ function ensureState(){
   if(!state.schedule)state.schedule=clone(DEFAULT_STATE.schedule);
   if(!state.fallback)state.fallback=clone(DEFAULT_STATE.fallback);
   if(!state.logoMode)state.logoMode="auto";
-  if(!state.tagline)state.tagline="THE NEXT ERA · v1.0.2";
+  if(!state.tagline)state.tagline="THE NEXT ERA · v1.0.3";
   if(typeof state.googleClientId!=="string")state.googleClientId="";
   if(!state.events||!Array.isArray(state.events.custom))state.events={enabled:!(state.events&&state.events.enabled===false),custom:[]};
   if(!state.analytics||typeof state.analytics!=="object")state.analytics=clone(DEFAULT_STATE.analytics);
@@ -3808,10 +3816,12 @@ function eventKey(){const ev=activeEvent();return ev?String(ev.id):"";}
 function eventMsg(e){if(e.custom)return e.msg||e.name||"";return (e.msg&&(e.msg[curLang]||e.msg.en))||"";}
 function renderEventBanner(){
   const el=$("eventBanner");if(!el)return;
+  document.body.classList.remove("event-skin-christmas","event-skin-halloween","event-skin-nowruz","event-skin-yalda","event-skin-newyear","event-skin-valentine");
   const ev=(getPrefs().eventTheme!==false)?activeEvent():null;
   let dismissed=false;
   try{dismissed=!!(ev&&sessionStorage.getItem("evdismiss-"+ev.id))}catch(_){}
   if(!ev||dismissed){el.classList.add("hidden");return;}
+  if(["christmas","halloween","nowruz","yalda","newyear","valentine"].includes(ev.id))document.body.classList.add("event-skin-"+ev.id);
   el.querySelectorAll(".event-banner-media,.event-banner-character").forEach(n=>n.remove());
   el.classList.remove("event-float","event-pulse","event-glow","event-slide");
   const media=ev.mediaUrl||"";
@@ -3829,7 +3839,7 @@ function renderEventBanner(){
   if(ev.subtitle){subtitle=document.createElement("small");subtitle.className="event-banner-subtitle";subtitle.textContent=ev.subtitle;el.insertBefore(subtitle,$("eventBannerClose"));}
   el.style.backgroundColor=ev.accent||"var(--accent)";
   el.style.color=lumOf(ev.accent||"#e8b85b")>0.62?"#15150e":"#ffffff";
-  $("eventBannerText").textContent=(ev.emoji?ev.emoji+" ":"")+eventMsg(ev);
+  $("eventBannerText").textContent=(ev.custom&&ev.emoji?ev.emoji+" ":"")+eventMsg(ev);
   el.classList.remove("hidden");
 }
 let editingEventId=null;
@@ -3839,27 +3849,13 @@ function previewEventData(d,shouldScroll=false){
   preview.querySelectorAll(".ev-preview-bg,.ev-preview-character").forEach(n=>n.remove());
   if(d.mediaUrl){let el;if(d.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(d.mediaUrl)){el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.alt="";}el.src=d.mediaUrl;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);}
   if(d.characterUrl){const ch=document.createElement("img");ch.className="ev-preview-character";ch.src=d.characterUrl;ch.alt="";preview.appendChild(ch);}
-  $("evPreviewTitle").textContent=(d.emoji?d.emoji+" ":"")+(d.name||d.msg||"پیش‌نمایش رویداد");
+  $("evPreviewTitle").textContent=(d.custom&&d.emoji?d.emoji+" ":"")+(d.name||d.msg||"پیش‌نمایش رویداد");
   $("evPreviewSubtitle").textContent=d.subtitle||"ظاهر رویداد اینجا نمایش داده می‌شود";preview.style.borderColor=d.accent||"var(--line)";
   if(shouldScroll)preview.scrollIntoView({behavior:"smooth",block:"center"});
 }
-function showEventPreviewModal(d){
-  const modal=$("eventPreviewModal"),art=$("eventPreviewArt");if(!modal||!art)return;
-  const id=String(d.id||"custom").toLowerCase();const known=["newyear","valentine","nowruz","halloween","yalda","christmas"];
-  art.className="ep-art "+(known.includes(id)?id:"custom");art.dataset.animation=d.animation||"none";art.style.setProperty("--ep-accent",d.accent||"#e8b85b");
-  art.style.backgroundColor=d.bg||"";art.querySelectorAll(".ep-bg,.ep-character").forEach(n=>n.remove());
-  if(d.mediaUrl){let media;if(d.mediaType==="video"||/\.(mp4|webm|ogg)(?:[?#]|$)/i.test(d.mediaUrl)){media=document.createElement("video");media.autoplay=true;media.loop=true;media.muted=true;media.playsInline=true;}else{media=document.createElement("img");media.alt="";}media.className="ep-bg";media.src=d.mediaUrl;art.insertBefore(media,art.firstChild);}
-  if(d.characterUrl){const ch=document.createElement("img");ch.className="ep-character";ch.src=d.characterUrl;ch.alt="";art.appendChild(ch);}
-  const message=typeof d.msg==="object"?((d.msg[curLang]||d.msg.en)||d.id):((d.name||d.msg)||d.id||"پیش‌نمایش رویداد");
-  $("eventPreviewEmoji").textContent=d.emoji||({newyear:"🎆",valentine:"💝",nowruz:"🌱",halloween:"🎃",yalda:"🍉",christmas:"🎄"}[id]||"🎉");
-  $("eventPreviewTitle").textContent=message;$("eventPreviewSubtitle").textContent=d.subtitle||({newyear:"شبی از نور، جشن و شروعی تازه",valentine:"جشن رنگ‌ها و دوستی",nowruz:"بهار تازه، آغاز تازه",halloween:"شب رمزآلود و ترسناک",yalda:"بلندترین شب، قصه و انار",christmas:"نور، برف و حال‌وهوای کریسمس"}[id]||"ظاهر رویداد در AM TV");
-  $("eventPreviewDate").textContent=(d.start||d.date||"AM TV")+" · "+(Number(d.days)||1)+" روز";
-  modal.classList.add("show");document.body.style.overflow="hidden";
-}
-function hideEventPreviewModal(){const m=$("eventPreviewModal");if(m)m.classList.remove("show");document.body.style.overflow="";}
 function renderEventList(){
   const root=$("evList");if(!root)return;root.innerHTML="";
-  const builtRoot=$("evBuiltinList");if(builtRoot){builtRoot.innerHTML="";BUILTIN_EVENTS.forEach(e=>{const item=document.createElement("div");item.className="listitem";const info=document.createElement("div");info.className="iteminfo";const name=document.createElement("div");name.className="itemname";name.textContent=(e.emoji?e.emoji+" ":"")+((e.msg&&(e.msg[curLang]||e.msg.en))||e.id);const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=e.start+" · "+e.days+" روز · خودکار";info.append(name,meta);const actions=document.createElement("div");actions.className="ev-list-actions";const preview=document.createElement("button");preview.type="button";preview.className="small";preview.innerHTML='<i class="ic ic-eye"></i> پیش‌نمایش';preview.onclick=()=>{const label=(e.msg&&(e.msg[curLang]||e.msg.en))||e.id;previewEventData({...e,name:label,msg:label,mediaUrl:e.mediaUrl||"",characterUrl:e.characterUrl||"",animation:e.animation||"none",subtitle:e.subtitle||""},true);showEventPreviewModal({...e,name:label,msg:label,mediaUrl:e.mediaUrl||"",characterUrl:e.characterUrl||"",animation:e.animation||"none",subtitle:e.subtitle||""});};actions.append(preview);item.append(info,actions);builtRoot.appendChild(item);});}
+  const builtRoot=$("evBuiltinList");if(builtRoot){builtRoot.innerHTML="";BUILTIN_EVENTS.forEach(e=>{const item=document.createElement("div");item.className="listitem";const info=document.createElement("div");info.className="iteminfo";const name=document.createElement("div");name.className="itemname";name.textContent=((e.msg&&(e.msg[curLang]||e.msg.en))||e.id);const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=e.start+" · "+e.days+" روز · خودکار";info.append(name,meta);const actions=document.createElement("div");actions.className="ev-list-actions";const preview=document.createElement("button");preview.type="button";preview.className="small";preview.innerHTML='<i class="ic ic-eye"></i> پیش‌نمایش';preview.onclick=()=>previewEventData({...e,name:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,msg:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,mediaUrl:e.mediaUrl||"",characterUrl:e.characterUrl||"",animation:e.animation||"none",subtitle:e.subtitle||""},true);actions.append(preview);item.append(info,actions);builtRoot.appendChild(item);});}
   const ev=state.events||{custom:[]};
   const sel=$("evEnabled");
   if(sel&&document.activeElement!==sel)sel.value=ev.enabled===false?"off":"on";
@@ -3870,7 +3866,7 @@ function renderEventList(){
     const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(c.date||"")+" · "+(c.days||1)+" روز"+(c.yearly?" · هر سال":"")+(c.mediaUrl?" · پس‌زمینهٔ سفارشی":"")+(c.characterUrl?" · شخصیت":"");
     info.append(name,meta);
     const actions=document.createElement("div");actions.className="ev-list-actions";
-    const preview=document.createElement("button");preview.type="button";preview.className="small";preview.textContent="پیش‌نمایش";preview.onclick=()=>{fillEventForm(c);updateEventPreview();showEventPreviewModal(c);};
+    const preview=document.createElement("button");preview.type="button";preview.className="small";preview.textContent="پیش‌نمایش";preview.onclick=()=>{fillEventForm(c);updateEventPreview();$("evPreview").scrollIntoView({behavior:"smooth",block:"center"});};
     const edit=document.createElement("button");edit.type="button";edit.className="small primary";edit.textContent="ویرایش";edit.onclick=()=>fillEventForm(c);
     const del=document.createElement("button");del.type="button";del.className="small danger";del.textContent="حذف";del.onclick=()=>{if(!confirm("این رویداد حذف شود؟"))return;state.events.custom.splice(i,1);if(editingEventId===c.id)resetEventForm();lastEventKey="__";scheduleSave();renderEventList();};
     actions.append(preview,edit,del);item.append(info,actions);root.appendChild(item);
@@ -4088,7 +4084,7 @@ function initialsOf(name){
 }
 function renderBrand(){
   $("brandName").textContent=state.stationName||"AM TV 24/7";
-  const tl=$("brandTagline");if(tl)tl.textContent=state.tagline||"THE NEXT ERA · v1.0.2";
+  const tl=$("brandTagline");if(tl)tl.textContent=state.tagline||"THE NEXT ERA · v1.0.3";
   $("statusStation").textContent=state.stationName||"AM TV 24/7";
   $("radioStationName").textContent=state.stationName||"AM RADIO";
   const el=$("brandLogo");
@@ -4293,7 +4289,7 @@ function renderAll(){
   $("kidsToggle").classList.remove("hidden");
   document.body.classList.toggle("viewerMode",!isAdmin && !kidsMode);
   $("stationNameInput").value=state.stationName||"AM TV 24/7";
-  const tagIn=$("stationTaglineInput");if(tagIn)tagIn.value=state.tagline||"THE NEXT ERA · v1.0.2";
+  const tagIn=$("stationTaglineInput");if(tagIn)tagIn.value=state.tagline||"THE NEXT ERA · v1.0.3";
   $("stationLogoURL").value=state.stationLogo||"";
   const gc=$("googleClientId");if(gc&&document.activeElement!==gc)gc.value=state.googleClientId||"";
   loadWatermarkFields();loadBumperFields();loadScheduleFields();loadLogoFields();
@@ -4961,8 +4957,8 @@ async function ytApi(url){
 }
 function ytFmt(n){if(n==null)return "—";if(typeof n==="string")return n;if(n<0)return "پنهان";try{return Number(n).toLocaleString();}catch(_){return String(n);}}
 function ytCompact(n){if(n==null)return "—";if(n<0)return "پنهان";try{return new Intl.NumberFormat(undefined,{notation:"compact",maximumFractionDigits:1}).format(n);}catch(_){return String(n);}}
-function ytSubStatsHtml(s){return '<i class="ic ic-people" title="مشترک‌ها"></i> '+esc(ytFmt(s.subs))+' مشترک · <i class="ic ic-eye" title="بازدید"></i> '+esc(ytFmt(s.views))+' بازدید · <i class="ic ic-video" title="ویدئو"></i> '+esc(ytFmt(s.videos))+' ویدئو · <i class="ic ic-list" title="پلی‌لیست"></i> '+esc(ytFmt(s.playlists))+' پلی‌لیست';}
-function ytSubStatsText(s){return " "+ytFmt(s.subs)+" مشترک · "+ytFmt(s.views)+" بازدید · "+ytFmt(s.videos)+" ویدئو · "+ytFmt(s.playlists)+" پلی‌لیست";}
+function ytSubStatsHtml(s){return '<i class="ic ic-people" title="مشترک‌ها"></i> '+esc(ytCompact(s.subs))+' مشترک · <i class="ic ic-eye" title="بازدید"></i> '+esc(ytCompact(s.views))+' بازدید · <i class="ic ic-video" title="ویدئو"></i> '+esc(ytCompact(s.videos))+' ویدئو · <i class="ic ic-list" title="پلی‌لیست"></i> '+esc(ytCompact(s.playlists))+' پلی‌لیست';}
+function ytSubStatsText(s){return " "+ytCompact(s.subs)+" مشترک · "+ytCompact(s.views)+" بازدید · "+ytCompact(s.videos)+" ویدئو · "+ytCompact(s.playlists)+" پلی‌لیست";}
 
 /* ===== sorting ===== */
 const YT_SORTS=[["default","ترتیب اصلی"],["name","نام (الف‌بایی)"],["subs:desc","ساب: بیشترین"],["subs:asc","ساب: کمترین"],["views:desc","بازدید: بیشترین"],["views:asc","بازدید: کمترین"],["videos:desc","ویدیو: بیشترین"],["videos:asc","ویدیو: کمترین"],["playlists:desc","پلی‌لیست: بیشترین"],["playlists:asc","پلی‌لیست: کمترین"]];
@@ -5505,7 +5501,7 @@ $("saveStationButton").addEventListener("click",async()=>{
   const name=$("stationNameInput").value.trim();
   if(name)state.stationName=name;
   const tag=$("stationTaglineInput").value.trim();
-  state.tagline=tag||"THE NEXT ERA · v1.0.2";
+  state.tagline=tag||"THE NEXT ERA · v1.0.3";
   const logoURL=$("stationLogoURL").value.trim();
   if(logoURL)state.stationLogo=logoURL;
   const file=$("stationLogoFile").files?.[0];
@@ -5565,10 +5561,7 @@ $("evAddButton").addEventListener("click",async()=>{
   }catch(err){notify("آپلود یا ذخیره ناموفق بود: "+(err.message||err));}
   finally{btn.disabled=false;}
 });
-$("evPreviewButton")?.addEventListener("click",()=>{const d=eventFormObject();updateEventPreview();showEventPreviewModal({...d,id:editingEventId||"custom",name:d.name||"پیش‌نمایش رویداد"});});
-$("eventPreviewClose")?.addEventListener("click",hideEventPreviewModal);
-$("eventPreviewModal")?.addEventListener("click",e=>{if(e.target.id==="eventPreviewModal")hideEventPreviewModal();});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")hideEventPreviewModal();});
+$("evPreviewButton")?.addEventListener("click",updateEventPreview);
 $("evCancelEditButton")?.addEventListener("click",resetEventForm);
 ["evName","evEmoji","evAccent","evBg","evMediaURL","evCharacterURL","evAnimation","evSubtitle"].forEach(id=>$(id)?.addEventListener("input",updateEventPreview));
 $("evMediaFile")?.addEventListener("change",e=>{const f=e.target.files?.[0];if(!f)return;const url=URL.createObjectURL(f);$("evMediaURL").value=url;const preview=$("evPreview");preview.dataset.localMedia="1";let old=preview.querySelector(".ev-preview-bg");if(old)old.remove();let el;if(f.type.startsWith("video/")){el=document.createElement("video");el.autoplay=true;el.loop=true;el.muted=true;el.playsInline=true;}else{el=document.createElement("img");el.alt="";}el.src=url;el.className="ev-preview-bg";preview.insertBefore(el,preview.firstChild);});
@@ -5592,6 +5585,18 @@ $("importFile").addEventListener("change",async e=>{
   e.target.value="";
 });
 $("refreshButton").addEventListener("click",loadRemoteState);
+try{const k=JSON.parse(localStorage.getItem("amtv-kids-radio")||"{}");if(k.url)$("kidsRadioUrl").value=k.url;if(k.name)$("kidsRadioName").value=k.name;}catch(_){}
+const toolsModal=$("amtvToolsModal");
+function openTools(which){toolsModal.classList.remove("hidden");$("remoteTools").classList.toggle("hidden",which!=="remote");$("reminderTools").classList.toggle("hidden",which!=="reminder");$("subtitleTools").classList.toggle("hidden",which!=="subtitle");$("amtvToolsTitle").textContent=which==="remote"?"ریموت کنترل AM TV":which==="reminder"?"یادآوری برنامهٔ دلخواه":"زیرنویس ترجمه‌شده";}
+$("amtvToolsClose").addEventListener("click",()=>toolsModal.classList.add("hidden"));toolsModal.addEventListener("click",e=>{if(e.target===toolsModal)toolsModal.classList.add("hidden")});
+$("virtualRemoteBtn").addEventListener("click",()=>openTools("remote"));$("reminderBtn").addEventListener("click",()=>{const title=$("programTitle")?.textContent||"";$("reminderProgram").value=title;openTools("reminder")});
+$("remotePrev").addEventListener("click",()=>$("prevButton")?.click());$("remotePlay").addEventListener("click",()=>$("playButton")?.click());$("remoteNext").addEventListener("click",()=>$("nextButton")?.click());$("remoteFullscreen").addEventListener("click",()=>$("fullscreenButton")?.click());$("remoteRefresh").addEventListener("click",()=>{loadRemoteState();if(isAdmin)syncChannelFeeds(true)});$("remoteCinema").addEventListener("click",()=>$("cinemaButton")?.click());
+$("quickRefreshBtn").addEventListener("click",async()=>{const b=$("quickRefreshBtn");b.disabled=true;try{await loadRemoteState();if(isAdmin)await syncChannelFeeds(true);else notify("فهرست محلی تازه‌سازی شد؛ همگام‌سازی کانال‌ها نیازمند دسترسی مدیریت است.");}catch(e){notify("تازه‌سازی ناموفق بود: "+e.message)}finally{b.disabled=false}});
+$("saveReminder").addEventListener("click",()=>{const name=$("reminderProgram").value.trim(),at=new Date($("reminderAt").value).getTime();if(!name||!Number.isFinite(at)||at<=Date.now()){ $("reminderStatus").textContent="نام برنامه و زمان آینده را وارد کن.";return;}let arr=[];try{arr=JSON.parse(localStorage.getItem("amtv-reminders")||"[]")}catch(_){}arr.push({id:Date.now(),name,at});localStorage.setItem("amtv-reminders",JSON.stringify(arr));$("reminderStatus").textContent="یادآور در همین مرورگر ذخیره شد. برای هشدار در زمان مقرر، این صفحه باید باز بماند.";if("Notification" in window&&Notification.permission==="default")Notification.requestPermission().catch(()=>{});setTimeout(()=>{try{const now=Date.now(),items=JSON.parse(localStorage.getItem("amtv-reminders")||"[]"),due=items.filter(x=>x.at<=now);if(due.length){due.forEach(x=>{if("Notification" in window&&Notification.permission==="granted")new Notification("یادآوری AM TV",{body:x.name});else alert("یادآوری AM TV: "+x.name)});localStorage.setItem("amtv-reminders",JSON.stringify(items.filter(x=>x.at>now)));}}catch(_){}},Math.min(2147483000,Math.max(1000,at-Date.now())));});
+$("saveKidsRadio").addEventListener("click",()=>{const url=$("kidsRadioUrl").value.trim();if(!/^https?:\/\//i.test(url)){notify("نشانی مستقیم رادیو را وارد کن.");return;}localStorage.setItem("amtv-kids-radio",JSON.stringify({url,name:$("kidsRadioName").value.trim()||"AM Kids Radio"}));$("kidsRadioStatus").textContent="ایستگاه ذخیره شد در همین مرورگر.";});
+$("playKidsRadio").addEventListener("click",async()=>{let cfg={};try{cfg=JSON.parse(localStorage.getItem("amtv-kids-radio")||"{}")}catch(_){}const url=$("kidsRadioUrl").value.trim()||cfg.url;if(!url){$("kidsRadioStatus").textContent="اول نشانی رادیو را ذخیره کن.";return;}const a=$("kidsRadioAudio");a.src=url;try{await a.play();$("kidsRadioStatus").textContent="در حال پخش";}catch(e){$("kidsRadioStatus").textContent="پخش ناموفق؛ نشانی باید فایل صوتی یا جریان مستقیم قابل‌دسترسی باشد.";}});
+$("translatedSubtitleBtn").addEventListener("click",()=>openTools("subtitle"));
+
 $("saveBumperButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   state.bumper={enabled:$("bumperEnabled").value!=="off",seconds:Math.max(2,Math.min(30,Number($("bumperSeconds").value)||6)),text:$("bumperTextInput").value.trim()};
