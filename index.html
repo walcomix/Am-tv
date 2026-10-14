@@ -104,8 +104,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 .ic-sparkle{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5z'/><path d='M18 4l.7 2.3L21 7l-2.3.7L18 10l-.7-2.3L15 7l2.3-.7z'/></svg>")}
 .ic-note{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M4 4h12l4 4v12H4z'/><path d='M8 10h8M8 14h6'/></svg>")}
 .ic-idea{--ic:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18h6M10 22h4'/><path d='M12 2a7 7 0 0 0-4 12.7V18h8v-3.3A7 7 0 0 0 12 2z'/></svg>")}
-body.emoji-only button .lbl,body.emoji-only .btnlabel{display:none!important}
-body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px;min-width:38px}
+/* Restore button names even if the saved Emoji-only preference is enabled. */
+body.emoji-only button .lbl,body.emoji-only .btnlabel{display:inline!important}
+body.emoji-only .topright button,body.emoji-only #adminPlayerControls button{padding:9px 12px;min-width:0}
 #castButton{position:relative}
 #castButton.casting{background:var(--accent);color:var(--onaccent);border-color:var(--accent)}
 #castButton.casting::after{content:"";position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:#52e879;box-shadow:0 0 6px #52e879;animation:castPulse 1.6s ease-in-out infinite}
