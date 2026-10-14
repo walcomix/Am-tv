@@ -2712,52 +2712,50 @@ async function syncChannelFeeds(showNotice = true, onlyFeedId = "", sectionFilte
     return;
   }
 
+  if (window.__amtvSyncRunning) {
+    if (showNotice) notify("همگام‌سازی دیگری در حال اجراست.");
+    return;
+  }
+  window.__amtvSyncRunning = true;
   syncCancelRequested = false;
   const t0 = Date.now();
   const setStatus = txt => { if (status) status.textContent = txt; };
-  setStatus("شروع همگام‌سازی " + feeds.length + " کانال…");
-
+  let completed = 0;
   let total = 0;
   const errors = [];
+  const workerCount = Math.min(4, feeds.length);
+  setStatus("شروع همگام‌سازی " + feeds.length + " کانال با " + workerCount + " پردازش هم‌زمان…");
 
-  for (let i = 0; i < feeds.length; i++) {
-    if (syncCancelRequested) {
-      setStatus("لغو شد · " + i + " از " + feeds.length + " بررسی شد · " + total + " ویدئو");
-      if (showNotice) notify("لغو شد");
+  async function processFeed(feed) {
+    if (!feed || !feed.url) {
+      errors.push(((feed && feed.name) || "کانال") + ": نشانی کانال خالی است");
       return;
     }
-
-    const feed = feeds[i] || {};
-    const elapsed = Math.round((Date.now() - t0) / 1000);
-    setStatus(
-      "همگام‌سازی " + (i + 1) + "/" + feeds.length +
-      " · " + (feed.name || "YouTube") +
-      " · " + elapsed + "s"
-    );
-
     try {
       const videos = await syncWithTimeout(
         fetchRecentChannelVideos(feed.url),
-        15000,
+        18000,
         "دریافت " + (feed.name || "کانال")
       );
 
-      const channels = feed.section === "radio" ? state.radioChannels
-                     : feed.section === "kids" ? state.kidsChannels
+      const section = feed.section || "tv";
+      const channels = section === "radio" ? state.radioChannels
+                     : section === "kids" ? state.kidsChannels
                      : state.channels;
-      const target = channels.find(c => c.id === feed.targetId);
+      const target = (channels || []).find(ch => ch.id === feed.targetId);
       if (!target) {
         errors.push((feed.name || "کانال") + ": کانال مقصد پیدا نشد");
-        continue;
+        return;
       }
 
       const existing = Array.isArray(target.list) ? target.list : [];
       const byVideo = new Map(
-        existing.filter(v => v.youtubeId || v.ytId)
+        existing.filter(v => v && (v.youtubeId || v.ytId))
                 .map(v => [String(v.youtubeId || v.ytId), v])
       );
 
       for (const v of videos) {
+        if (!v || !v.id) continue;
         const key = String(v.id);
         const prior = byVideo.get(key);
         byVideo.set(key, {
@@ -2765,47 +2763,75 @@ async function syncChannelFeeds(showNotice = true, onlyFeedId = "", sectionFilte
           id: prior?.id || makeId(),
           youtubeId: key,
           title: v.title || prior?.title || "YouTube",
-          url: v.url,
+          url: v.url || ("https://www.youtube.com/watch?v=" + key),
           ytKind: "video",
           addedAt: prior?.addedAt || v.publishedAt,
           publishedAt: v.publishedAt,
           feedId: feed.id,
-          kids: feed.section === "kids"
+          kids: section === "kids"
         });
       }
 
-      const fresh = [...byVideo.values()].filter(v =>
-        !v.publishedAt || Number(v.publishedAt) >= Date.now() - 24 * 60 * 60 * 1000
-      );
-      target.list = fresh.sort((a, b) =>
-        (Number(b.publishedAt) || 0) - (Number(a.publishedAt) || 0)
-      );
+      const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+      target.list = [...byVideo.values()]
+        .filter(v => !v.publishedAt || Number(v.publishedAt) >= cutoff)
+        .sort((a, b) => (Number(b.publishedAt) || 0) - (Number(a.publishedAt) || 0));
       total += videos.length;
     } catch (error) {
       errors.push((feed.name || "کانال") + ": " + (error?.message || String(error)));
     }
   }
 
-  state.lastSyncAt = Date.now();
-  renderAll();
-
-  const elapsed = Math.round((Date.now() - t0) / 1000);
-  if (errors.length) {
-    setStatus("پایان · " + total + " ویدئو · " + errors.length + " خطا · " + elapsed + "s · " +
-              errors.slice(0, 2).join(" | "));
-  } else {
-    setStatus("پایان · " + total + " ویدئو تازه · " + elapsed + "s");
+  let nextIndex = 0;
+  async function worker() {
+    while (true) {
+      if (syncCancelRequested) return;
+      const index = nextIndex++;
+      if (index >= feeds.length) return;
+      const feed = feeds[index];
+      setStatus(
+        "همگام‌سازی " + (index + 1) + "/" + feeds.length +
+        " · " + ((feed && feed.name) || "YouTube") +
+        " · پایان‌یافته: " + completed + "/" + feeds.length +
+        " · " + Math.round((Date.now() - t0) / 1000) + "s"
+      );
+      await processFeed(feed);
+      completed++;
+      setStatus(
+        (syncCancelRequested ? "در حال توقف" : "همگام‌سازی") +
+        " · پایان‌یافته: " + completed + "/" + feeds.length +
+        " · " + total + " ویدئو · " +
+        Math.round((Date.now() - t0) / 1000) + "s"
+      );
+    }
   }
 
-  clearTimeout(saveTimer);
   try {
-    const saved = await syncWithTimeout(saveRemoteState(), 12000, "ذخیره‌سازی");
-    if (saved === false) setStatus((status?.textContent || "") + " · ذخیره‌سازی ناموفق");
-  } catch (e) {
-    setStatus((status?.textContent || "") + " · " + (e?.message || "خطای ذخیره"));
-  }
+    await Promise.all(Array.from({ length: workerCount }, () => worker()));
+    if (syncCancelRequested) {
+      setStatus("لغو شد · " + completed + " از " + feeds.length + " کانال بررسی شد · " + total + " ویدئو");
+      if (showNotice) notify("همگام‌سازی لغو شد.");
+      return;
+    }
 
-  if (showNotice) notify(errors.length ? "تمام شد با خطا" : "✓ همگام‌سازی تمام شد");
+    state.lastSyncAt = Date.now();
+    renderAll();
+    const elapsed = Math.round((Date.now() - t0) / 1000);
+    setStatus(errors.length
+      ? "پایان · " + total + " ویدئو · " + errors.length + " خطا · " + elapsed + "s · " + errors.slice(0, 2).join(" | ")
+      : "پایان · " + total + " ویدئو تازه · " + elapsed + "s");
+
+    clearTimeout(saveTimer);
+    try {
+      const saved = await syncWithTimeout(saveRemoteState(), 12000, "ذخیره‌سازی");
+      if (saved === false) setStatus((status?.textContent || "") + " · ذخیره‌سازی ناموفق");
+    } catch (e) {
+      setStatus((status?.textContent || "") + " · " + (e?.message || "خطای ذخیره"));
+    }
+    if (showNotice) notify(errors.length ? "همگام‌سازی تمام شد، اما چند کانال خطا داشت." : "✓ همگام‌سازی تمام شد");
+  } finally {
+    window.__amtvSyncRunning = false;
+  }
 }
 
 function renderLastSync(){/* no-op without el */}
