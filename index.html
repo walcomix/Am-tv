@@ -703,6 +703,16 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
 #guideList .guide-row .reminder-row-btn.is-set{color:#f8c95c;border-color:#f8c95c;background:#51401b}
 #reminderTools{max-height:55dvh;overflow:auto}.reminder-entry{display:flex;align-items:center;gap:10px;padding:10px;border-bottom:1px solid #ffffff20}.reminder-entry>div{flex:1;min-width:0}.reminder-entry strong{display:block;overflow-wrap:anywhere}.reminder-entry small{opacity:.75}.reminder-entry button{padding:5px 9px}
 @media(max-width:520px){.remote-dock{right:10px;bottom:92px}.remote-control{width:205px}.remote-dock-toggle{padding:10px 13px}}
+.topright #syncTVBtn,.topright #syncRadioBtn,.topright #syncKidsBtn{display:none!important}
+.feed-sync-actions{display:flex;flex-wrap:wrap;gap:8px}.feed-sync-actions button{max-width:100%}
+.party-home-controls{border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:10px;display:flex;flex-direction:column;gap:10px;flex-shrink:0}
+.party-home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.party-home-toolbar strong{color:var(--accent);font-size:13px}
+.party-home-actions{display:flex;gap:6px;flex-wrap:wrap}.party-home-actions button,.party-home-list button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;padding:7px 10px;font-size:11px;cursor:pointer}
+.party-home-actions button.active,.party-home-list button.active{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--panel))}
+.party-home-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:10px}.party-home-label{font-size:10px;color:var(--muted);margin-bottom:6px}
+.party-home-list{display:flex;gap:6px;flex-wrap:wrap;max-height:112px;overflow:auto}.party-home-list button{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.remote-suppressed #remoteDock{display:none!important}
+@media(max-width:600px){.party-home-columns{grid-template-columns:minmax(0,1fr)}.party-home-list{max-height:85px}.feed-sync-actions button{flex:1 1 42%}}
 
 </style>
 </head><body class="booting">
@@ -713,16 +723,13 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
     <div class="logo" id="brandLogo">AM</div>
     <div>
       <div class="brandname" id="brandName">AM TV 24/7</div>
-      <div class="tagline" id="brandTagline">THE NEXT ERA · v1.0.3</div>
+      <div class="tagline" id="brandTagline">THE NEXT ERA · v1.0.6</div>
     </div>
   </div>
   <div class="topright">
     <div class="clock" id="clock">--:--:--</div>
     <button id="modeTV" class="active" type="button"><i class="ic ic-tv"></i><span class="lbl" data-i18n="navTV">TV</span></button>
     <button id="modeRadio" type="button"><i class="ic ic-radio"></i><span class="lbl" data-i18n="navRadio">Radio</span></button>
-    <button id="syncTVBtn" class="mode-sync-btn" type="button" title="همگام‌سازی ویدئوهای TV" aria-label="همگام‌سازی TV"><i class="ic ic-sync"></i><span class="lbl">Sync TV</span></button>
-    <button id="syncRadioBtn" class="mode-sync-btn" type="button" title="همگام‌سازی محتوای Radio" aria-label="همگام‌سازی Radio"><i class="ic ic-sync"></i><span class="lbl">Sync Radio</span></button>
-    <button id="syncKidsBtn" class="mode-sync-btn" type="button" title="همگام‌سازی محتوای کودک" aria-label="همگام‌سازی کودک"><i class="ic ic-sync"></i><span class="lbl">Sync Kids</span></button>
     <button id="guideToggle" type="button"><i class="ic ic-guide"></i><span class="lbl" data-i18n="navGuide">برنامه</span></button>
     <button id="quickRefreshBtn" type="button" title="تازه‌سازی فهرست" aria-label="تازه‌سازی فهرست"><span class="utility-glyph" aria-hidden="true">↻</span><span class="lbl">تازه‌سازی</span></button>
     <button id="virtualRemoteBtn" type="button" title="ریموت کنترل" aria-label="ریموت کنترل"><span class="utility-glyph" aria-hidden="true">⌘</span><span class="lbl">ریموت</span></button>
@@ -1203,8 +1210,11 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
             <div class="field"><label for="feedChannelName" data-i18n="feedChannelNameLbl">نام نمایشی کانال</label><input id="feedChannelName" placeholder="—"></div>
             <div class="field"><label for="feedTargetSection" data-i18n="feedTargetSectionLbl">بخش مقصد</label><select id="feedTargetSection"><option value="tv">TV</option><option value="radio">Radio</option><option value="kids">Kids</option></select></div>
           </div>
-          <div class="actions">
+          <div class="actions feed-sync-actions">
             <button id="addChannelFeedButton" type="button" class="primary"><i class="ic ic-plus"></i><span data-i18n="addChannelFeedLbl">افزودن کانال</span></button>
+            <button id="syncTVBtn" type="button" title="همگام‌سازی فقط TV"><i class="ic ic-sync"></i><span class="lbl">همگام‌سازی TV</span></button>
+            <button id="syncRadioBtn" type="button" title="همگام‌سازی فقط Radio"><i class="ic ic-sync"></i><span class="lbl">همگام‌سازی Radio</span></button>
+            <button id="syncKidsBtn" type="button" title="همگام‌سازی فقط Kids"><i class="ic ic-sync"></i><span class="lbl">همگام‌سازی کودک</span></button>
             <button id="syncChannelFeedsButton" type="button"><i class="ic ic-sync"></i><span data-i18n="syncChannelFeedsLbl">همگام‌سازی ۲۴ ساعت اخیر</span></button>
             <button id="syncAllFeedsButton" type="button"><i class="ic ic-sync"></i><span data-i18n="syncAllFeedsLbl">همگام‌سازی همه</span></button>
           </div>
@@ -1474,6 +1484,10 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
           <button id="partyLeaveBtn" type="button" class="small danger"><i class="ic ic-exit"></i> <span data-i18n="leaveLbl">خروج</span></button>
         </div>
 
+        <section id="partyHomeControls" class="party-home-controls" aria-label="ابزارهای صفحهٔ اصلی AM TV">
+          <div class="party-home-toolbar"><strong>صفحهٔ اصلی AM TV</strong><div class="party-home-actions"><button type="button" data-party-home-mode="tv">TV</button><button type="button" data-party-home-mode="radio">Radio</button><button type="button" data-party-home-mode="kids">Kids</button><button type="button" id="partyHomeRefresh">↻ تازه‌سازی</button><button type="button" id="partyHomeGuide">راهنمای برنامه</button></div></div>
+          <div class="party-home-columns"><div><div class="party-home-label">کانال‌ها</div><div id="partyHomeChannels" class="party-home-list"></div></div><div><div class="party-home-label">ویدئوها و برنامه‌ها</div><div id="partyHomePrograms" class="party-home-list"></div></div></div>
+        </section>
         <div id="partyPlayerWrap">
           <div id="partyEmpty">
             <i class="ic ic-video" style="width:32px;height:32px;opacity:.6"></i>
@@ -3091,8 +3105,21 @@ function partyOpenModal(){
   if(partyRoom){$("partyLobby").classList.add("hidden");$("partyRoom").classList.remove("hidden");}
   else{$("partyLobby").classList.remove("hidden");$("partyRoom").classList.add("hidden");}
   if(!$("partyName").value)try{$("partyName").value=localStorage.getItem("amtv-party-name")||"";}catch(_){}
+  renderPartyHomeControls();
 }
 function partyCloseModal(){$("partyModal").classList.remove("show");}
+function renderPartyHomeControls(){
+  const cr=$("partyHomeChannels"),pr=$("partyHomePrograms");if(!cr||!pr)return;
+  const mode=activeMode(),channels=mode==="kids"?state.kidsChannels:mode==="radio"?state.radioChannels:state.channels;
+  cr.textContent="";pr.textContent="";
+  document.querySelectorAll("[data-party-home-mode]").forEach(b=>b.classList.toggle("active",b.dataset.partyHomeMode===mode));
+  (channels||[]).forEach((ch,i)=>{const b=document.createElement("button");b.type="button";b.textContent=ch.name||("کانال "+(i+1));b.title=b.textContent;b.classList.toggle("active",i===(mode==="kids"?state.kidsChannelIndex:mode==="radio"?state.radioChannelIndex:state.channelIndex));b.addEventListener("click",()=>{if(mode==="kids")state.kidsChannelIndex=i;else if(mode==="radio")state.radioChannelIndex=i;else state.channelIndex=i;activeMediaKey="";renderPlayer(true);renderPartyHomeControls();if(isAdmin)scheduleSave();if(partyIsHost)setTimeout(()=>{partyLoadCurrentItem(true);partyBroadcastPlayback()},250)});cr.append(b)});
+  const list=currentList();list.forEach((item,i)=>{const b=document.createElement("button");b.type="button";b.textContent=item.title||item.name||item.label||mediaUrl(item)||("برنامه "+(i+1));b.title=b.textContent;b.classList.toggle("active",i===currentIndex());b.addEventListener("click",()=>{chooseIndex(i,mode);renderPartyHomeControls()});pr.append(b)});
+  if(!channels?.length)cr.textContent="هنوز کانالی نیست";if(!list.length)pr.textContent="برای این کانال هنوز برنامه‌ای ثبت نشده";
+}
+document.querySelectorAll("[data-party-home-mode]").forEach(b=>b.addEventListener("click",()=>{const m=b.dataset.partyHomeMode;if(m==="kids")setKidsMode(true);else{if(kidsMode)setKidsMode(false);setMode(m)}renderPartyHomeControls()}));
+$("partyHomeRefresh")?.addEventListener("click",async()=>{try{if(isAdmin)await syncChannelFeeds(true,"",activeMode());else{await loadRemoteState();notify("فهرست صفحهٔ اصلی تازه شد.")}}catch(e){notify("تازه‌سازی ناموفق بود: "+(e?.message||e))}renderPartyHomeControls()});
+$("partyHomeGuide")?.addEventListener("click",()=>{$("partyModal").classList.remove("show");$("guideToggle")?.click()});
 function partyGenCode(){return Math.random().toString(36).slice(2,8).toUpperCase();}
 
 /* Party mini YT player */
@@ -5686,6 +5713,13 @@ $("virtualRemoteBtn")?.addEventListener("click",()=>toggleRemote());$("reminderB
 const remoteDockToggle=$("remoteDockToggle"),remoteControl=$("remoteControl");
 function toggleRemote(force){const open=force===undefined?remoteControl.classList.contains("hidden"):!!force;remoteControl.classList.toggle("hidden",!open);remoteDockToggle.setAttribute("aria-expanded",String(open));remoteDockToggle.innerHTML=open?'⌄ <span>کنترل</span>':'▤ <span>ریموت</span>';}
 remoteDockToggle.addEventListener("click",()=>toggleRemote());$("remoteDockClose").addEventListener("click",()=>toggleRemote(false));
+function updateRemoteSuppression(){
+  const optionOpen=!!document.querySelector('.menu-wrap.open,.more-wrap.open,.modal.show,#partyModal.show,#amtvToolsModal:not(.hidden),#loginBox:not(.hidden),#pinModal.show,.sidepanel.open');
+  document.body.classList.toggle("remote-suppressed",optionOpen);
+  if(optionOpen&&remoteControl&&!remoteControl.classList.contains("hidden"))toggleRemote(false);
+}
+const remoteUiObserver=new MutationObserver(updateRemoteSuppression);remoteUiObserver.observe(document.body,{subtree:true,attributes:true,attributeFilter:["class","aria-expanded"]});
+document.addEventListener("click",()=>setTimeout(updateRemoteSuppression,40),true);updateRemoteSuppression();
 let remoteDigits="",remoteDigitTimer=0;
 function remoteChannelList(){const m=activeMode();return m==="kids"?state.kidsChannels:m==="radio"?state.radioChannels:state.channels}
 function applyRemoteChannel(){const n=Number(remoteDigits),list=remoteChannelList();if(n>=1&&n<=list.length){const mode=activeMode();if(mode==="kids")state.kidsChannelIndex=n-1;else if(mode==="radio")state.radioChannelIndex=n-1;else state.channelIndex=n-1;activeMediaKey="";renderPlayer(true);if(isAdmin)scheduleSave();$("remoteChannelReadout").textContent="CH "+String(n).padStart(2,"0");}else{$("remoteChannelReadout").textContent="CH "+String(n).padStart(2,"0")+" · —";}remoteDigits="";}
