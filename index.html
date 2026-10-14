@@ -766,16 +766,21 @@ body.remote-suppressed #remoteDock{display:none!important}
 #eventSkinTestPage[data-animation="glow"] .test-event-copy h2{animation:evGlow 2s ease-in-out infinite alternate}
 @media(max-width:700px){#eventSkinTestPage .test-main{grid-template-columns:1fr}#eventSkinTestPage .test-event img.character{max-width:32%}#eventSkinTestPage .test-event-copy{max-width:75%}}
 
-/* AM TV label restoration: override mobile/compact rules that hide button names. */
-body .topright .lbl,
-body .topright button .lbl,
-body .mode-sync-btn .lbl,
-body #quickRefreshBtn .lbl,
-body #virtualRemoteBtn .lbl,
-body #reminderBtn .lbl,
-body button .btnlabel,
-body.emoji-only button .lbl,
-body.emoji-only .btnlabel{display:inline!important;visibility:visible!important;opacity:1!important}
+/* Restore button names only; override compact/mobile rules that hide their text. */
+html body .topright .lbl,
+html body .topright button .lbl,
+html body .topright .menu-wrap button .lbl,
+html body .mode-sync-btn .lbl,
+html body #quickRefreshBtn .lbl,
+html body #virtualRemoteBtn .lbl,
+html body #reminderBtn .lbl,
+html body button .btnlabel,
+html body.emoji-only button .lbl,
+html body.emoji-only .btnlabel{
+  display:inline-flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
@@ -797,7 +802,7 @@ body.emoji-only .btnlabel{display:inline!important;visibility:visible!important;
     <button id="virtualRemoteBtn" type="button" title="ریموت کنترل" aria-label="ریموت کنترل"><span class="utility-glyph" aria-hidden="true">⌘</span><span class="lbl">ریموت</span></button>
     <button id="reminderBtn" type="button" title="یادآوری برنامه" aria-label="یادآوری برنامه"><i class="ic ic-bell"></i><span class="lbl">یادآور</span></button>
     <div class="menu-wrap" id="topMenuWrap">
-      <button id="topMenuBtn" type="button" title="Menu"><i class="ic ic-menu"></i></button>
+      <button id="topMenuBtn" type="button" title="Menu"><i class="ic ic-menu"></i><span class="lbl" data-i18n="navMenu">منو</span></button>
       <div class="menu-dropdown">
         <button id="settingsToggle" type="button"><i class="ic ic-appear"></i><span class="lbl" data-i18n="navAppear">ظاهر</span></button>
         <button id="kidsToggle" type="button" class="hidden"><i class="ic ic-kids"></i><span class="lbl" data-i18n="kidsBtn">کودک</span></button>
