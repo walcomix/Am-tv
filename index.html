@@ -475,9 +475,9 @@ body.viewerMode #videoElement{controls:none!important}
 #partyBtn.live::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:#52e879;box-shadow:0 0 7px #52e879;animation:castPulse 1.6s ease-in-out infinite}
 
 /* ===== Party modal (redesigned with player) ===== */
-#partyModal{position:fixed;inset:0;z-index:450;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;backdrop-filter:blur(8px);padding:10px}
+#partyModal{position:fixed;inset:0;z-index:450;background:var(--bg,#080b12);display:none;align-items:stretch;justify-content:stretch;backdrop-filter:none;padding:0;overflow:auto}
 #partyModal.show{display:flex}
-.partyBox{background:var(--panel);border:1px solid var(--accent);border-radius:18px;width:min(920px,98vw);max-height:96vh;display:flex;flex-direction:column;overflow:hidden}
+.partyBox{background:var(--panel);border:0;border-radius:0;width:100%;min-height:100dvh;height:100dvh;max-height:none;display:flex;flex-direction:column;overflow:hidden}
 .partyHead{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-shrink:0}
 .partyHead h3{margin:0;color:var(--accent);font-size:15px;flex:1;display:flex;align-items:center;gap:8px}
 .partyBody{padding:10px 14px;overflow-y:auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
@@ -525,11 +525,11 @@ body.viewerMode #videoElement{controls:none!important}
  .adminGrid{grid-template-columns:minmax(0,1fr)}
  .topbar{padding:10px}.brandname{font-size:17px}
  .modeGrid{grid-template-columns:repeat(2,1fr)}
- .partyBox{max-height:96vh}
+ .partyBox{width:100%;height:100dvh;min-height:100dvh;max-height:none}
 }
 @media(max-width:600px){
   #partyPlayerWrap{aspect-ratio:16/9}
-  .partyChat{max-height:120px;min-height:80px}
+  .partyChat{max-height:22dvh;min-height:70px}
 }
 @media(max-width:460px){
  .topright{width:100%;margin-inline-start:0}
@@ -658,6 +658,7 @@ body.viewerMode #videoElement{controls:none!important}
 
 /* AM TV feature update: native icon-driven utility surfaces and distinct seasonal art direction */
 #quickRefreshBtn i,#virtualRemoteBtn i,#reminderBtn i{display:inline-block;transition:transform .25s}
+.mode-sync-btn{display:inline-flex;align-items:center;gap:5px!important;font-size:11px!important;padding:8px!important}.mode-sync-btn:disabled{opacity:.55;pointer-events:none}@media(max-width:620px){.mode-sync-btn .lbl{display:none}.mode-sync-btn{min-width:34px;padding:8px!important}}
 .utility-glyph{display:inline-grid;place-items:center;font-size:19px;line-height:1;width:20px;height:20px;font-weight:700}
 #quickRefreshBtn:disabled{opacity:.55;pointer-events:none}
 @media(max-width:620px){.topright #quickRefreshBtn .lbl,.topright #virtualRemoteBtn .lbl,.topright #reminderBtn .lbl{display:none}.topright #quickRefreshBtn,.topright #virtualRemoteBtn,.topright #reminderBtn{min-width:36px;padding-inline:8px}}
@@ -719,6 +720,9 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
     <div class="clock" id="clock">--:--:--</div>
     <button id="modeTV" class="active" type="button"><i class="ic ic-tv"></i><span class="lbl" data-i18n="navTV">TV</span></button>
     <button id="modeRadio" type="button"><i class="ic ic-radio"></i><span class="lbl" data-i18n="navRadio">Radio</span></button>
+    <button id="syncTVBtn" class="mode-sync-btn" type="button" title="همگام‌سازی ویدئوهای TV" aria-label="همگام‌سازی TV"><i class="ic ic-sync"></i><span class="lbl">Sync TV</span></button>
+    <button id="syncRadioBtn" class="mode-sync-btn" type="button" title="همگام‌سازی محتوای Radio" aria-label="همگام‌سازی Radio"><i class="ic ic-sync"></i><span class="lbl">Sync Radio</span></button>
+    <button id="syncKidsBtn" class="mode-sync-btn" type="button" title="همگام‌سازی محتوای کودک" aria-label="همگام‌سازی کودک"><i class="ic ic-sync"></i><span class="lbl">Sync Kids</span></button>
     <button id="guideToggle" type="button"><i class="ic ic-guide"></i><span class="lbl" data-i18n="navGuide">برنامه</span></button>
     <button id="quickRefreshBtn" type="button" title="تازه‌سازی فهرست" aria-label="تازه‌سازی فهرست"><span class="utility-glyph" aria-hidden="true">↻</span><span class="lbl">تازه‌سازی</span></button>
     <button id="virtualRemoteBtn" type="button" title="ریموت کنترل" aria-label="ریموت کنترل"><span class="utility-glyph" aria-hidden="true">⌘</span><span class="lbl">ریموت</span></button>
@@ -1068,7 +1072,7 @@ body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-colo
     </div>
 
     <div id="kidsTab" class="tabcontent hidden">
-      <div class="panel kids-radio-panel"><h3>رادیوی کودک</h3><p class="viewerhint">نشانی فایل صوتی مستقیم یا جریان رادیویی مجاز را وارد کن.</p><div class="field"><label for="kidsRadioUrl">نشانی پخش صوتی</label><input id="kidsRadioUrl" type="url" placeholder="https://example.com/radio.mp3"></div><div class="field"><label for="kidsRadioName">نام ایستگاه</label><input id="kidsRadioName" type="text" placeholder="AM Kids Radio"></div><button id="saveKidsRadio" type="button" class="primary">ذخیرهٔ ایستگاه</button><button id="playKidsRadio" type="button">پخش رادیوی کودک</button><audio id="kidsRadioAudio" controls preload="none" class="kids-radio-audio"></audio><div id="kidsRadioStatus" class="viewerhint"></div></div>
+      <div class="panel kids-radio-panel"><h3>رادیوی کودک</h3><p class="viewerhint">نشانی فایل صوتی مستقیم یا جریان رادیویی مجاز را وارد کن.</p><div class="field"><label for="kidsRadioUrl">نشانی پخش صوتی</label><input id="kidsRadioUrl" type="url" placeholder="https://example.com/radio.mp3"></div><div class="field"><label for="kidsRadioName">نام ایستگاه</label><input id="kidsRadioName" type="text" placeholder="AM Kids Radio"></div><button id="saveKidsRadio" type="button" class="primary">ذخیرهٔ ایستگاه</button><button id="playKidsRadio" type="button">پخش رادیوی کودک</button><audio id="kidsRadioAudio" controls preload="none" class="kids-radio-audio"></audio><div id="kidsRadioStatus" class="viewerhint"></div><h4 style="margin-top:16px">کانال‌های منتقل‌شده به رادیوی کودک</h4><div id="kidsRadioChannelsList" class="itemlist"></div></div>
       <div class="adminGrid">
         <div class="section">
           <h3><i class="ic ic-kids"></i><span data-i18n="kidsSettingsTitle">تنظیمات حالت کودک</span></h3>
@@ -2554,11 +2558,11 @@ function renderChannelFeedsList(){
     row.append(info,syncOne,del);root.appendChild(row);
   });
 }
-async function syncChannelFeeds(showNotice=true,onlyFeedId=""){
+async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const status=$("channelFeedStatus");
-  const feeds=(state.channelFeeds||[]).filter(f=>!onlyFeedId||f.id===onlyFeedId);
-  if(!feeds.length){if(status)status.textContent="—";return}
+  const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||(f.section||"tv")===sectionFilter));
+  if(!feeds.length){if(status)status.textContent=sectionFilter?"برای این بخش هنوز کانال YouTube قابل همگام‌سازی ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای این بخش فید YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
   if(status)status.textContent="...";
   let total=0,errors=[];
   for(const feed of feeds){
@@ -4283,6 +4287,17 @@ function renderKidsAdmin(){
     sel.textContent=(i===state.kidsChannelIndex)?"✓":"→";
     if(i===state.kidsChannelIndex)sel.classList.add("primary");
     sel.onclick=()=>{state.kidsChannelIndex=i;state.kidsPlayback={index:0,startedAt:serverNow(),nonce:1};activeMediaKey="";scheduleSave();renderKidsAdmin();};
+    const toKidsRadio=document.createElement("button");toKidsRadio.type="button";toKidsRadio.className="small";toKidsRadio.title="انتقال کانال و ویدئوها به رادیوی کودک";toKidsRadio.innerHTML='<i class="ic ic-radio"></i> رادیوی کودک';
+    toKidsRadio.onclick=()=>{
+      const source=state.kidsChannels[i];if(!source)return;
+      const existing=state.radioChannels.find(x=>x.kidsRadioSourceId===source.id);
+      if(existing){notify("این کانال قبلاً به رادیوی کودک منتقل شده است.");return;}
+      const moved={...source,id:"kids-radio-"+makeId(),name:"رادیوی کودک · "+(source.name||"Kids"),color:"#ff9e3d",list:(source.list||[]).map(v=>({...v,kids:true})),kidsRadioSourceId:source.id};
+      state.radioChannels.push(moved);state.radioChannelIndex=state.radioChannels.length-1;
+      state.kidsChannels.splice(i,1);state.kidsChannelIndex=Math.max(0,Math.min(state.kidsChannelIndex,state.kidsChannels.length-1));
+      state.kidsChannels.forEach(c=>{c.list=c.list||[];});
+      scheduleSave();renderAll();notify("کانال و "+moved.list.length+" ویدئو به رادیوی کودک منتقل شد.");
+    };
     const del=document.createElement("button");del.type="button";del.className="small danger";del.innerHTML='<i class="ic ic-trash"></i>';
     del.disabled=state.kidsChannels.length<=1;
     del.onclick=()=>{
@@ -4291,7 +4306,7 @@ function renderKidsAdmin(){
       state.kidsChannelIndex=Math.max(0,Math.min(state.kidsChannelIndex,state.kidsChannels.length-1));
       scheduleSave();renderKidsAdmin();
     };
-    row.append(selBox(selCh.kids,c.id),info,sel,del);chRoot.appendChild(row);
+    row.append(selBox(selCh.kids,c.id),info,toKidsRadio,sel,del);chRoot.appendChild(row);
   });
   plRoot.innerHTML="";
   const list=currentKidsChannel().list;
@@ -4319,9 +4334,24 @@ function renderKidsAdmin(){
     if(!v.id)v.id=makeId();row.append(selBox(selVid.kids,v.id),info,pick,play,edit);plRoot.appendChild(row);
   });
 }
+function renderKidsRadioChannels(){
+  const root=$("kidsRadioChannelsList");if(!root)return;root.innerHTML="";
+  const list=(state.radioChannels||[]).filter(c=>c.kidsRadioSourceId);
+  if(!list.length){root.innerHTML='<div class="viewerhint">هنوز کانالی منتقل نشده است. از فهرست کانال‌های کودک، «رادیوی کودک» را بزن.</div>';return;}
+  list.forEach(ch=>{
+    const row=document.createElement("div");row.className="listitem";
+    const info=document.createElement("div");info.className="iteminfo";
+    const name=document.createElement("div");name.className="itemname";name.textContent=ch.name||"رادیوی کودک";
+    const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=(ch.list||[]).length+" ویدئو";
+    info.append(name,meta);
+    const play=document.createElement("button");play.type="button";play.className="small primary";play.innerHTML='<i class="ic ic-play"></i> پخش';
+    play.onclick=()=>{const i=state.radioChannels.findIndex(x=>x.id===ch.id);if(i<0)return;state.radioChannelIndex=i;state.radioIndex=0;state.mode="radio";localViewerMode="radio";state.radioPlayback={index:0,startedAt:serverNow(),nonce:(state.radioPlayback?.nonce||0)+1};activeMediaKey="";scheduleSave();renderAll();renderPlayer(true);};
+    row.append(info,play);root.appendChild(row);
+  });
+}
 function renderAll(){
   ensureState();
-  renderBrand();renderChannels();renderPlaylist();renderRadioList();renderKidsAdmin();
+  renderBrand();renderChannels();renderPlaylist();renderRadioList();renderKidsAdmin();renderKidsRadioChannels();
   $("modeTV").classList.toggle("active",activeMode()==="tv");
   $("modeRadio").classList.toggle("active",activeMode()==="radio");
   $("statusRole").textContent=isAdmin?t("adminRole"):t("viewerRole");
@@ -5442,6 +5472,18 @@ $("screenUnlockBtn").addEventListener("touchstart",e=>{e.preventDefault();$("pla
 $("addChannelFeedButton").addEventListener("click",addChannelFeed);
 $("syncChannelFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
 $("syncAllFeedsButton").addEventListener("click",()=>syncChannelFeeds(true));
+async function syncFeedsForSection(section,button){
+  if(!isAdmin){notify(t("msgNoAdmin"));return;}
+  if(button)button.disabled=true;
+  const label=button?.querySelector(".lbl");const oldLabel=label?.textContent;
+  if(label)label.textContent="در حال همگام‌سازی…";
+  try{await syncChannelFeeds(true,"",section);}
+  catch(e){notify("همگام‌سازی ناموفق بود: "+(e?.message||e));}
+  finally{if(button)button.disabled=false;if(label&&oldLabel)label.textContent=oldLabel;}
+}
+$("syncTVBtn")?.addEventListener("click",()=>syncFeedsForSection("tv",$("syncTVBtn")));
+$("syncRadioBtn")?.addEventListener("click",()=>syncFeedsForSection("radio",$("syncRadioBtn")));
+$("syncKidsBtn")?.addEventListener("click",()=>syncFeedsForSection("kids",$("syncKidsBtn")));
 $("coverExit").addEventListener("click",toggleFullscreen);
 $("rotateButton").addEventListener("click",()=>{toggleOrientation();setTimeout(applyWatermark,100);});
 document.addEventListener("fullscreenchange",()=>{
