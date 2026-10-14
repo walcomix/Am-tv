@@ -2648,18 +2648,27 @@ function renderChannelFeedsList(){
     row.append(info,syncOne,del);root.appendChild(row);
   });
 }
+function syncWithTimeout(promise,ms,label){
+  return new Promise((resolve,reject)=>{
+    const timer=setTimeout(()=>reject(new Error(label+" (مهلت "+Math.round(ms/1000)+" ثانیه تمام شد)")),ms);
+    Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value);},error=>{clearTimeout(timer);reject(error);});
+  });
+}
 async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const status=$("channelFeedStatus");
   const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||(f.section||"tv")===sectionFilter));
   if(!feeds.length){if(status)status.textContent=sectionFilter?"برای این بخش هنوز کانال YouTube قابل همگام‌سازی ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای این بخش فید YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
-  if(status)status.textContent="...";
+  if(status)status.textContent="شروع همگام‌سازی "+feeds.length+" کانال…";
   let total=0,errors=[];
-  for(const feed of feeds){
+  for(let i=0;i<feeds.length;i++){
+    const feed=feeds[i];
+    if(status)status.textContent="همگام‌سازی "+(i+1)+" از "+feeds.length+": "+(feed.name||"YouTube")+"…";
     try{
-      const videos=await fetchRecentChannelVideos(feed.url);
+      const videos=await syncWithTimeout(fetchRecentChannelVideos(feed.url),25000,"دریافت ویدیوها از "+(feed.name||"کانال")+" طول کشید");
       const channels=feed.section==="radio"?state.radioChannels:feed.section==="kids"?state.kidsChannels:state.channels;
-      const target=channels.find(c=>c.id===feed.targetId);if(!target)continue;
+      const target=channels.find(c=>c.id===feed.targetId);
+      if(!target){errors.push((feed.name||"کانال")+": کانال مقصد پیدا نشد");continue;}
       const existing=Array.isArray(target.list)?target.list:[];
       const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
       for(const v of videos){
@@ -2669,11 +2678,15 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
       const fresh=[...byVideo.values()].filter(v=>!v.publishedAt||Number(v.publishedAt)>=Date.now()-24*60*60*1000);
       target.list=fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0));
       total+=videos.length;
-    }catch(error){errors.push(feed.name+": "+error.message)}
+    }catch(error){errors.push((feed.name||"کانال")+": "+(error?.message||String(error)));}
   }
   state.lastSyncAt=Date.now();renderAll();
-  if(status)status.textContent=errors.length?"خطا: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد.");
-  clearTimeout(saveTimer);await saveRemoteState();
+  if(status)status.textContent=errors.length?"همگام‌سازی تمام شد؛ خطاها: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد.");
+  clearTimeout(saveTimer);
+  try{
+    const saved=await syncWithTimeout(saveRemoteState(),12000,"ذخیره‌سازی وضعیت طول کشید");
+    if(saved===false&&status)status.textContent+=" · ذخیره‌سازی در سرور ناموفق بود؛ وضعیت اتصال Supabase را بررسی کن.";
+  }catch(error){if(status)status.textContent+=" · "+(error?.message||"ذخیره‌سازی ناموفق بود");}
   if(showNotice)notify(errors.length?"!":"✓");
 }
 function renderLastSync(){/* no-op without el */}
