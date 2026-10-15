@@ -2675,38 +2675,80 @@ function renderChannelFeedsList(){
     row.append(info,syncOne,del);root.appendChild(row);
   });
 }
+function syncProgressUI(){
+  let box=document.getElementById("syncProgressBox");
+  if(!box){
+    box=document.createElement("div");box.id="syncProgressBox";box.dir="rtl";
+    box.style.cssText="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:100600;width:min(420px,92vw);background:var(--panel,#1b211b);color:var(--text,#fff);border:1px solid var(--accent,#e8b85b);border-radius:14px;padding:12px 14px;box-shadow:0 10px 40px #0009;font-size:13px;display:none";
+    box.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:8px"><strong id="spTitle">همگام‌سازی…</strong><span id="spPct" style="font-variant-numeric:tabular-nums">0٪</span></div><div style="height:8px;background:var(--panel2,#242c24);border-radius:99px;overflow:hidden"><div id="spBar" style="height:100%;width:0;background:var(--accent,#e8b85b);transition:width .25s"></div></div><div id="spDetail" style="margin-top:8px;opacity:.85;line-height:1.7"></div>';
+    document.body.appendChild(box);
+  }
+  return {
+    show(){box.style.display="block"},
+    hide(ms){setTimeout(()=>{box.style.display="none"},ms||0)},
+    set(pct,title,detail){
+      pct=Math.max(0,Math.min(100,Math.round(pct)));
+      box.querySelector("#spPct").textContent=pct.toLocaleString("fa-IR")+"٪";
+      box.querySelector("#spBar").style.width=pct+"%";
+      if(title!=null)box.querySelector("#spTitle").textContent=title;
+      if(detail!=null)box.querySelector("#spDetail").innerHTML=detail;
+    }
+  };
+}
+function renderSyncPartial(){
+  try{renderPlaylist()}catch(_){}
+  try{renderRadioList()}catch(_){}
+  try{renderKidsAdmin()}catch(_){}
+  try{renderGuide()}catch(_){}
+}
 async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const status=$("channelFeedStatus");
   const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||(f.section||"tv")===sectionFilter));
   if(!feeds.length){if(status)status.textContent=sectionFilter?"برای این بخش هنوز کانال YouTube قابل همگام‌سازی ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای این بخش فید YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
-  if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<90000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
+  if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
   window.__feedSyncBusy=Date.now();
-  if(status)status.textContent="...";
-  let total=0,errors=[],idx=0;
+  const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی…","آماده‌سازی…");
+  let total=0,errors=[],idx=0;const N=feeds.length;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const setStatus=(txt)=>{if(status)status.textContent=txt};
   try{
-  for(const feed of feeds){
-    idx++;if(status)status.textContent="در حال همگام‌سازی "+idx+"/"+feeds.length+": "+feed.name;
-    try{
-      const videos=await withTimeout(fetchRecentChannelVideos(feed.url),45000,"sync");
-      const channels=feed.section==="radio"?state.radioChannels:feed.section==="kids"?state.kidsChannels:state.channels;
-      const target=channels.find(c=>c.id===feed.targetId);if(!target)continue;
-      const existing=Array.isArray(target.list)?target.list:[];
-      const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
-      for(const v of videos){
-        const key=String(v.id);const prior=byVideo.get(key);
-        byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"});
-      }
-      const fresh=[...byVideo.values()].filter(v=>!v.publishedAt||Number(v.publishedAt)>=Date.now()-24*60*60*1000);
-      target.list=fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0));
-      total+=videos.length;
-    }catch(error){errors.push(feed.name+": "+error.message)}
-  }
+    for(const feed of feeds){
+      idx++;
+      const base=((idx-1)/N)*100,slice=100/N;
+      ui.set(base,"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR"),"در حال دریافت فید: <b>"+esc(feed.name)+"</b><br>ویدیوهای همگام‌شده تا الان: <b>"+total.toLocaleString("fa-IR")+"</b>");
+      setStatus("در حال دریافت فید "+feed.name+" ("+idx+"/"+N+")…");
+      try{
+        const videos=await withTimeout(fetchRecentChannelVideos(feed.url),45000,"sync");
+        const channels=feed.section==="radio"?state.radioChannels:feed.section==="kids"?state.kidsChannels:state.channels;
+        const target=channels.find(c=>c.id===feed.targetId);if(!target)continue;
+        const cutoff=()=>Date.now()-24*60*60*1000;
+        const existing=Array.isArray(target.list)?target.list:[];
+        const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
+        const others=existing.filter(v=>!(v.youtubeId||v.ytId));
+        let n=0;
+        for(const v of videos){
+          const key=String(v.id);const prior=byVideo.get(key);
+          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"});
+          const fresh=[...byVideo.values()].filter(x=>!x.publishedAt||Number(x.publishedAt)>=cutoff());
+          target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));
+          n++;total++;
+          renderSyncPartial();
+          ui.set(base+slice*(n/videos.length),"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
+          setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");
+          await sleep(120);
+        }
+        if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
+      }catch(error){errors.push(feed.name+": "+error.message)}
+    }
   }finally{window.__feedSyncBusy=0}
   state.lastSyncAt=Date.now();renderAll();
-  if(status)status.textContent=errors.length?"خطا: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد.");
-  clearTimeout(saveTimer);try{await withTimeout(saveRemoteState(),15000,"save")}catch(e){if(status)status.textContent+=" (ذخیره: "+e.message+")"}
+  ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>"+(errors.length?"<br><span style='color:#ff8b8b'>خطا: "+esc(errors.join(" · "))+"</span>":""));
+  setStatus(errors.length?"خطا: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد."));
+  clearTimeout(saveTimer);
+  try{ui.set(100,null,null);await withTimeout(saveRemoteState(),15000,"save")}catch(e){setStatus((status?.textContent||"")+" (ذخیره: "+e.message+")")}
   if(showNotice)notify(errors.length?"!":"✓");
+  ui.hide(errors.length?8000:4000);
 }
 function renderLastSync(){/* no-op without el */}
 
