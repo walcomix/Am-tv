@@ -800,6 +800,7 @@ html body.emoji-only .btnlabel{
     <button id="guideToggle" type="button"><i class="ic ic-guide"></i><span class="lbl" data-i18n="navGuide">برنامه</span></button>
     <button id="quickRefreshBtn" type="button" title="تازه‌سازی فهرست" aria-label="تازه‌سازی فهرست"><span class="utility-glyph" aria-hidden="true">↻</span><span class="lbl">تازه‌سازی</span></button>
     <button id="virtualRemoteBtn" type="button" title="ریموت کنترل" aria-label="ریموت کنترل"><span class="utility-glyph" aria-hidden="true">⌘</span><span class="lbl">ریموت</span></button>
+    <button id="channelMenuBtn" type="button" title="انتخاب شبکه / کانال" aria-label="انتخاب شبکه"><i class="ic ic-tv"></i><span class="lbl">شبکه‌ها</span></button>
     <button id="reminderBtn" type="button" title="یادآوری برنامه" aria-label="یادآوری برنامه"><i class="ic ic-bell"></i><span class="lbl">یادآور</span></button>
     <div class="menu-wrap" id="topMenuWrap">
       <button id="topMenuBtn" type="button" title="Menu"><i class="ic ic-menu"></i><span class="lbl" data-i18n="navMenu">منو</span></button>
@@ -833,6 +834,7 @@ html body.emoji-only .btnlabel{
     <div class="remote-brand"><span class="remote-led"></span><b>AM TV</b><button id="remoteDockClose" type="button" aria-label="بستن کنترل">×</button></div>
     <div class="remote-top-row"><button id="remotePower" class="remote-power" type="button" aria-label="خاموش یا روشن کردن">⏻<small>POWER</small></button><button id="remoteMute" type="button" class="remote-mute" aria-label="قطع یا وصل صدا">🔇<small>MUTE</small></button></div>
     <div class="remote-number-grid" aria-label="شماره کانال"><button data-remote-digit="1">1</button><button data-remote-digit="2">2</button><button data-remote-digit="3">3</button><button data-remote-digit="4">4</button><button data-remote-digit="5">5</button><button data-remote-digit="6">6</button><button data-remote-digit="7">7</button><button data-remote-digit="8">8</button><button data-remote-digit="9">9</button><button data-remote-digit="0" class="remote-zero">0</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 8px 0"><button id="remoteChDown" type="button">CH −</button><button id="remoteChOk" type="button">OK</button><button id="remoteChUp" type="button">CH +</button></div>
     <div class="remote-volume-row"><button id="remoteVolDown" type="button" aria-label="کم کردن صدا">−</button><span>VOL</span><button id="remoteVolUp" type="button" aria-label="زیاد کردن صدا">+</button></div>
     <div id="remoteChannelReadout" class="remote-readout">CH --</div>
   </div>
@@ -2275,11 +2277,18 @@ function parseYouTubeSource(url){
   }catch(_){ return null; }
 }
 function mediaUrl(item){return item && (item.url||item.src)||""}
+var viewerCh=(function(){try{return JSON.parse(localStorage.getItem("amtv-viewer-ch")||"{}")||{}}catch(_){return {}}})();
+var VIEW_EPOCH=1704067200000;
+function viewerChannelFor(kind){
+  if(isAdmin||!viewerCh||!viewerCh[kind])return null;
+  const L=kind==="kids"?state.kidsChannels:kind==="radio"?state.radioChannels:state.channels;
+  return (L||[]).find(c=>c.id===viewerCh[kind])||null;
+}
 function currentChannel(){
   if(!Array.isArray(state.channels))state.channels=[];
   if(!state.channels.length)state.channels.push({id:"main",name:"AM TV 24/7",color:"#e8b85b",list:[]});
   state.channelIndex=Math.max(0,Math.min(Number(state.channelIndex)||0,state.channels.length-1));
-  const c=state.channels[state.channelIndex];
+  const c=viewerChannelFor("tv")||state.channels[state.channelIndex];
   if(!Array.isArray(c.list))c.list=[];
   return c;
 }
@@ -2287,7 +2296,7 @@ function currentRadioChannel(){
   if(!Array.isArray(state.radioChannels))state.radioChannels=[];
   if(!state.radioChannels.length)state.radioChannels.push({id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]});
   state.radioChannelIndex=Math.max(0,Math.min(Number(state.radioChannelIndex)||0,state.radioChannels.length-1));
-  const c=state.radioChannels[state.radioChannelIndex];
+  const c=viewerChannelFor("radio")||state.radioChannels[state.radioChannelIndex];
   if(!Array.isArray(c.list))c.list=[];
   return c;
 }
@@ -2295,7 +2304,7 @@ function currentKidsChannel(){
   if(!Array.isArray(state.kidsChannels))state.kidsChannels=[];
   if(!state.kidsChannels.length)state.kidsChannels.push({id:"kids-main",name:"Kids World",color:"#ff9e3d",list:[]});
   state.kidsChannelIndex=Math.max(0,Math.min(Number(state.kidsChannelIndex)||0,state.kidsChannels.length-1));
-  const c=state.kidsChannels[state.kidsChannelIndex];
+  const c=viewerChannelFor("kids")||state.kidsChannels[state.kidsChannelIndex];
   if(!Array.isArray(c.list))c.list=[];
   return c;
 }
@@ -2351,6 +2360,7 @@ function fmtDur(sec){
   return m+":"+String(s).padStart(2,"0");
 }
 function anchorFor(kind){
+  if(kind!=="kids"&&viewerChannelFor(kind))return {index:0,startedAt:VIEW_EPOCH};
   if(kind==="radio"){const p=state.radioPlayback||{};return {index:Number(state.radioIndex)||0,startedAt:Number(p.startedAt)||0};}
   if(kind==="kids"){const p=state.kidsPlayback||{};return {index:Number(p.index)||0,startedAt:Number(p.startedAt)||0};}
   const p=state.playback||{};
@@ -2462,11 +2472,12 @@ function liveInfoAt(kind,t){
   const startIdx=rot[pos];
   if(!a.startedAt)return {index:startIdx,offset:0,known:false};
   let elapsed=(t-a.startedAt)/1000;
-  if(kind!=="radio")elapsed-=pausedMs(a.startedAt,t)/1000;
+  if(kind!=="radio"&&!viewerChannelFor(kind))elapsed-=pausedMs(a.startedAt,t)/1000;
   if(!(elapsed>0))return {index:startIdx,offset:0,known:true};
   const B=bumperSecs(kind);
   let total=0,all=true;
   for(const k of rot){const d=durOf(list[k]);if(!d){all=false;break}total+=d+B;}
+  if(!all&&viewerChannelFor(kind))return {index:rot[pos],offset:0,known:false};
   if(all&&total>0)elapsed=elapsed%total;
   let first=true,p=pos;
   for(let step=0;step<rot.length+1;step++){
@@ -2638,7 +2649,7 @@ function fixSyncedYtIds(){
 }
 async function fetchRecentChannelVideos(channelUrl){
   let apiErr=null;
-  if(!window.__ytApiSkip){
+  if(!window.__ytApiSkip&&!(window.__autoSyncRun&&!ytTokenValid())){
     try{
       const r=await withTimeout(fetchViaYouTubeApi(channelUrl),30000,"YouTube API");
       if(r)return r.filter(v=>v.publishedAt>=Date.now()-24*60*60*1000).sort((a,b)=>b.publishedAt-a.publishedAt);
@@ -2791,7 +2802,8 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!feeds.length){if(status)status.textContent=sectionFilter?"برای بخش "+secName+" هنوز کانال YouTube منتقل/ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای بخش "+secName+" کانال YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
   if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
   window.__feedSyncBusy=Date.now();window.__ytApiSkip=false;fixSyncedYtIds();
-  const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی"+(secName?" بخش "+secName:"")+"…","آماده‌سازی…");
+  const silent=!!window.__autoSyncRun;const okSections=new Set();
+  const ui=silent?{show(){},hide(){},set(){},addRow(){},done(){}}:syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی"+(secName?" بخش "+secName:"")+"…","آماده‌سازی…");
   let total=0,errors=[],idx=0;const N=feeds.length;const syncedTargets=[];
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const setStatus=(txt)=>{if(status)status.textContent=txt};
@@ -2811,7 +2823,8 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
         const others=existing.filter(v=>!(v.youtubeId||v.ytId));
         let n=0;
-        if(videos.length)syncedTargets.push({section:loc.section,target});
+        okSections.add(loc.section);
+        if(videos.length)syncedTargets.push({section:loc.section,target:networkFor(feed)||target});
         for(const v of videos){
           const key=String(v.id);const prior=byVideo.get(key);
           byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,ytId:key,...((v.duration>0)?{duration:v.duration}:{}),title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
@@ -2823,11 +2836,12 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
           setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");
           await sleep(120);
         }
+        try{mergeFeedIntoNetwork(feed);renderSyncPartial()}catch(e){console.warn("network merge failed",e)}
         if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
       }catch(error){errors.push({name:feed.name,msg:error.message})}
     }
   }finally{window.__feedSyncBusy=0}
-  state.lastSyncAt=Date.now();renderAll();
+  state.lastSyncAt=Date.now();state.syncMeta=state.syncMeta||{};okSections.forEach(sc=>{state.syncMeta[sc]=Date.now()});renderAll();
   ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>"+(errors.length?"<br><span style='color:#ff8b8b'>"+esc(syncErrSummary(errors,N))+"</span>":""));
   setStatus(errors.length?"خطا: "+syncErrSummary(errors,N):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد."));
   clearTimeout(saveTimer);
@@ -2835,7 +2849,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   try{
     const wantSec=sectionFilter||(typeof activeMode==="function"?activeMode():"");
     const pick=syncedTargets.find(x=>x.section===wantSec)||(!sectionFilter?null:syncedTargets[0]);
-    if(pick&&pick.target&&(pick.target.list||[]).length){
+    if(!silent&&pick&&pick.target&&(pick.target.list||[]).length){
       const L=secLists()[pick.section];const ci=L.indexOf(pick.target);
       if(ci>=0){
         if(pick.section==="kids")state.kidsChannelIndex=ci;
@@ -2944,6 +2958,7 @@ function driftCorrect(){
 function activeItem(){const list=currentList();return list[currentIndex()]||null;}
 function ensureState(){
   fixSyncedYtIds();
+  try{ensureChannelNumbers()}catch(_){}
   if(!Array.isArray(state.channels))state.channels=[];
   if(!state.channels.length)state.channels=clone(DEFAULT_STATE.channels);
   state.channels.forEach(c=>{if(!Array.isArray(c.list))c.list=[];if(!c.id)c.id=makeId()});
@@ -2978,7 +2993,7 @@ function ensureState(){
 }
 function effectiveItemKey(item){
   if(!item)return "";
-  return [activeMode(),item.id||mediaUrl(item),state.channelIndex,state.radioChannelIndex,state.kidsChannelIndex].join("|");
+  return [activeMode(),item.id||mediaUrl(item),state.channelIndex,state.radioChannelIndex,state.kidsChannelIndex,(viewerCh&&viewerCh[activeMode()])||""].join("|");
 }
 
 let lastTrackedKey="";
@@ -4718,7 +4733,7 @@ function renderAll(){
   loadWatermarkFields();loadBumperFields();loadScheduleFields();loadLogoFields();
   const ek=eventKey();
   if(ek!==lastEventKey){lastEventKey=ek;applyPrefs();renderEventBanner();}
-  renderEventList();renderGuide();renderChannelFeedsList();updateViewerUI();
+  renderEventList();renderGuide();renderChannelFeedsList();updateViewerUI();try{renderNetworksPanel()}catch(_){}
   renderAnalytics();renderPollList();renderFeedbackList();
   const hasPoll=!!activePoll();
   const pv=$("pollsViewerBtn");
@@ -6056,9 +6071,213 @@ function updateRemoteSuppression(){
 const remoteUiObserver=new MutationObserver(updateRemoteSuppression);remoteUiObserver.observe(document.body,{subtree:true,attributes:true,attributeFilter:["class","aria-expanded"]});
 document.addEventListener("click",()=>setTimeout(updateRemoteSuppression,40),true);updateRemoteSuppression();
 let remoteDigits="",remoteDigitTimer=0;
-function remoteChannelList(){const m=activeMode();return m==="kids"?state.kidsChannels:m==="radio"?state.radioChannels:state.channels}
-function applyRemoteChannel(){const n=Number(remoteDigits),list=remoteChannelList();if(n>=1&&n<=list.length){const mode=activeMode();if(mode==="kids")state.kidsChannelIndex=n-1;else if(mode==="radio")state.radioChannelIndex=n-1;else state.channelIndex=n-1;activeMediaKey="";renderPlayer(true);if(isAdmin)scheduleSave();$("remoteChannelReadout").textContent="CH "+String(n).padStart(2,"0");}else{$("remoteChannelReadout").textContent="CH "+String(n).padStart(2,"0")+" · —";}remoteDigits="";}
-document.querySelectorAll("[data-remote-digit]").forEach(btn=>btn.addEventListener("click",()=>{remoteDigits+=btn.dataset.remoteDigit;$("remoteChannelReadout").textContent="CH "+remoteDigits;clearTimeout(remoteDigitTimer);remoteDigitTimer=setTimeout(applyRemoteChannel,1000);if(remoteDigits.length>=2)applyRemoteChannel();}));
+/* ================= Channel numbers, networks, remote, viewer menu, auto-sync ================= */
+function chNum(c){return Number(c&&c.number)||0}
+function ensureChannelNumbers(){
+  const L=secLists();
+  for(const sec of ["tv","radio","kids"]){
+    const arr=L[sec]||[];const used=new Set();
+    arr.forEach(c=>{const n=chNum(c);if(n>0&&Number.isInteger(n)&&!used.has(n))used.add(n);else c.number=0});
+    arr.forEach(c=>{if(!chNum(c)){let n=1;while(used.has(n))n++;c.number=n;used.add(n)}});
+  }
+}
+function channelsFor(mode){return secLists()[mode==="kids"?"kids":mode==="radio"?"radio":"tv"]}
+function curChannelFor(mode){return mode==="kids"?currentKidsChannel():mode==="radio"?currentRadioChannel():currentChannel()}
+function switchToChannel(ch,mode){
+  mode=mode||activeMode();const L=channelsFor(mode),idx=L.indexOf(ch);if(idx<0)return false;
+  if(isAdmin){
+    if(mode==="kids")state.kidsChannelIndex=idx;else if(mode==="radio")state.radioChannelIndex=idx;else state.channelIndex=idx;
+    activeMediaKey="";
+    if((ch.list||[]).length)chooseIndex(0,mode);else{scheduleSave();renderPlayer(true)}
+  }else{
+    viewerCh[mode]=ch.id;try{localStorage.setItem("amtv-viewer-ch",JSON.stringify(viewerCh))}catch(_){}
+    if(mode==="kids")state.kidsPlayback={index:0,startedAt:serverNow(),nonce:(state.kidsPlayback&&state.kidsPlayback.nonce||0)+1};
+    activeMediaKey="";renderPlayer(true);
+  }
+  try{renderChannelMenu()}catch(_){}
+  return true;
+}
+function clearViewerChannel(mode){
+  mode=mode||activeMode();viewerCh[mode]="";try{localStorage.setItem("amtv-viewer-ch",JSON.stringify(viewerCh))}catch(_){}
+  activeMediaKey="";renderPlayer(true);try{renderChannelMenu()}catch(_){}
+}
+/* ---- remote ---- */
+function remoteReadout(t){const el=$("remoteChannelReadout");if(el)el.textContent=t}
+function applyRemoteChannel(){
+  clearTimeout(remoteDigitTimer);
+  const n=Number(remoteDigits);remoteDigits="";if(!n)return;
+  const mode=activeMode(),ch=channelsFor(mode).find(c=>chNum(c)===n);
+  if(ch){switchToChannel(ch,mode);remoteReadout("CH "+String(n).padStart(2,"0")+" · "+(ch.name||""));notify("کانال "+n+": "+(ch.name||""))}
+  else{remoteReadout("CH "+String(n).padStart(2,"0")+" · —");notify("کانالی با شمارهٔ "+n+" وجود ندارد.")}
+}
+function remotePushDigit(d){
+  remoteDigits=(remoteDigits+d).slice(0,3);remoteReadout("CH "+remoteDigits);
+  clearTimeout(remoteDigitTimer);remoteDigitTimer=setTimeout(applyRemoteChannel,3000);
+}
+function remoteStepChannel(dir){
+  const mode=activeMode(),L=channelsFor(mode).slice().sort((a,b)=>chNum(a)-chNum(b));if(!L.length)return;
+  const cur=curChannelFor(mode);let i=L.findIndex(c=>c.id===cur.id);i=(i+dir+L.length)%L.length;
+  const ch=L[i];switchToChannel(ch,mode);remoteReadout("CH "+String(chNum(ch)).padStart(2,"0")+" · "+(ch.name||""));
+}
+document.querySelectorAll("[data-remote-digit]").forEach(btn=>btn.addEventListener("click",()=>remotePushDigit(btn.dataset.remoteDigit)));
+$("remoteChOk")?.addEventListener("click",applyRemoteChannel);
+$("remoteChUp")?.addEventListener("click",()=>remoteStepChannel(1));
+$("remoteChDown")?.addEventListener("click",()=>remoteStepChannel(-1));
+document.addEventListener("keydown",e=>{
+  const tg=e.target&&e.target.tagName;if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT"||e.ctrlKey||e.metaKey||e.altKey)return;
+  if(/^[0-9]$/.test(e.key)){const rc=$("remoteControl");if(rc&&!rc.classList.contains("hidden")||true){remotePushDigit(e.key)}}
+  else if(e.key==="Enter"&&remoteDigits)applyRemoteChannel();
+});
+/* ---- feed -> network ---- */
+function networkFor(feed){
+  if(!feed||!feed.networkId)return null;
+  const sec=resolveFeedTarget(feed).section;
+  return (secLists()[sec]||[]).find(c=>c.id===feed.networkId&&!c.feedId)||null;
+}
+function mergeFeedIntoNetwork(feed){
+  const loc=resolveFeedTarget(feed),net=networkFor(feed);if(!net||!loc.target)return 0;
+  const mine=(loc.target.list||[]).filter(v=>v.feedId===feed.id&&v.youtubeId);
+  net.list=Array.isArray(net.list)?net.list:[];
+  const idxMap=new Map();net.list.forEach((v,i)=>{if(v.youtubeId&&v.feedId===feed.id)idxMap.set(String(v.youtubeId),i)});
+  let added=0;
+  mine.forEach(v=>{
+    const k=String(v.youtubeId);
+    if(idxMap.has(k)){const o=net.list[idxMap.get(k)];Object.assign(o,{title:v.title,url:v.url,ytId:v.ytId||k,publishedAt:v.publishedAt,...(v.duration>0?{duration:v.duration}:{})})}
+    else{net.list.push({...v,id:makeId()});added++}
+  });
+  const keep=new Set(mine.map(v=>String(v.youtubeId)));
+  net.list=net.list.filter(v=>!(v.feedId===feed.id&&v.youtubeId&&!keep.has(String(v.youtubeId))));
+  const manual=net.list.filter(v=>!(v.youtubeId&&v.feedId));
+  const synced=net.list.filter(v=>v.youtubeId&&v.feedId).sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0));
+  net.list=manual.concat(synced);
+  return added;
+}
+function setFeedNetwork(feed,id){
+  const old=networkFor(feed);feed.networkId=id||"";
+  if(old&&old.id!==id)old.list=(old.list||[]).filter(v=>v.feedId!==feed.id);
+  const n=mergeFeedIntoNetwork(feed);
+  scheduleSave();notify(id?("به شبکه منتقل شد ("+n+" ویدیو)"):"از شبکه خارج شد.");
+}
+/* ---- admin panel: networks & numbers ---- */
+var netSec="tv";
+function ensureNetworksPanel(){
+  let p=document.getElementById("networksPanel");if(p)return p;
+  const anchor=$("syncTVMount")&&$("syncTVMount").closest(".section");if(!anchor)return null;
+  p=document.createElement("div");p.className="section";p.id="networksPanel";
+  p.innerHTML='<h3><i class="ic ic-tv"></i> مدیریت شبکه‌ها و شمارهٔ کانال‌ها</h3><div class="actions" id="netTabs"></div><div id="netNew"></div><div id="netList" class="itemlist"></div><h4 style="margin-top:14px">کانال‌های یوتیوب ← انتقال به شبکه</h4><div id="netFeeds" class="itemlist"></div><div id="netAuto" class="viewerhint" style="margin-top:12px"></div>';
+  anchor.before(p);return p;
+}
+function renderNetworksPanel(){
+  if(!isAdmin)return;const p=ensureNetworksPanel();if(!p)return;
+  if(p.contains(document.activeElement)&&/INPUT|SELECT/.test(document.activeElement.tagName))return;
+  const SEC={tv:"TV",radio:"رادیو",kids:"کودک"};
+  const tabs=$("netTabs");tabs.innerHTML="";
+  ["tv","radio","kids"].forEach(sec=>{const b=document.createElement("button");b.type="button";b.textContent=SEC[sec];if(sec===netSec)b.classList.add("primary");b.onclick=()=>{netSec=sec;renderNetworksPanel()};tabs.appendChild(b)});
+  const arr=secLists()[netSec];
+  const nw=$("netNew");nw.innerHTML="";
+  const row=document.createElement("div");row.className="rowfields";
+  row.innerHTML='<div class="field"><label>نام شبکهٔ جدید</label><input id="netNewName" placeholder="مثلاً شبکه ورزش"></div><div class="field"><label>شماره</label><input id="netNewNum" type="number" min="1" max="999" placeholder="خودکار"></div><div class="field"><label>رنگ</label><input id="netNewColor" type="color" value="#e8b85b"></div><div class="field" style="justify-content:end"><button id="netNewBtn" type="button" class="primary"><i class="ic ic-plus"></i> ساخت</button></div>';
+  nw.appendChild(row);
+  $("netNewBtn").onclick=()=>{
+    const name=$("netNewName").value.trim();if(!name){notify("نام شبکه را وارد کن.");return}
+    let num=Number($("netNewNum").value)||0;if(num&&arr.some(c=>chNum(c)===num)){notify("این شماره قبلاً استفاده شده.");return}
+    arr.push({id:(netSec==="radio"?"rad-":netSec==="kids"?"kids-":"")+makeId(),name,number:num,color:$("netNewColor").value||"#e8b85b",list:[]});
+    ensureChannelNumbers();scheduleSave();notify("شبکه ساخته شد.");
+  };
+  const list=$("netList");list.innerHTML="";
+  arr.slice().sort((a,b)=>chNum(a)-chNum(b)).forEach(c=>{
+    const r=document.createElement("div");r.className="listitem";r.style.cssText="flex-wrap:wrap;gap:6px";
+    const num=document.createElement("input");num.type="number";num.min=1;num.max=999;num.value=chNum(c);num.style.width="64px";num.title="شمارهٔ کانال";
+    num.onchange=()=>{
+      const v=Math.round(Number(num.value));if(!(v>=1&&v<=999)){num.value=chNum(c);return}
+      const other=arr.find(x=>x!==c&&chNum(x)===v);if(other){other.number=chNum(c);notify("شماره‌ها با کانال «"+(other.name||"")+"» جابه‌جا شد.")}
+      c.number=v;scheduleSave();
+    };
+    const name=document.createElement("input");name.value=c.name||"";name.style.cssText="flex:1;min-width:110px";name.onchange=()=>{c.name=name.value.trim()||c.name;scheduleSave()};
+    const col=document.createElement("input");col.type="color";col.value=c.color||"#e8b85b";col.onchange=()=>{c.color=col.value;scheduleSave()};
+    const info=document.createElement("span");info.className="itemmeta";info.textContent=(c.feedId?"YT · ":"شبکه · ")+(c.list||[]).length+" ویدیو";
+    const del=document.createElement("button");del.type="button";del.className="small danger";del.innerHTML='<i class="ic ic-trash"></i>';
+    del.disabled=!!c.feedId||arr.length<=1;del.title=c.feedId?"کانال یوتیوب را از مدیریت فیدها حذف کن":"حذف شبکه";
+    del.onclick=()=>{
+      if(!confirm("این شبکه حذف شود؟"))return;
+      const i=arr.indexOf(c);if(i<0)return;arr.splice(i,1);
+      (state.channelFeeds||[]).forEach(f=>{if(f.networkId===c.id)f.networkId=""});
+      state.channelIndex=Math.max(0,Math.min(state.channelIndex,state.channels.length-1));state.radioChannelIndex=Math.max(0,Math.min(state.radioChannelIndex,state.radioChannels.length-1));state.kidsChannelIndex=Math.max(0,Math.min(state.kidsChannelIndex,state.kidsChannels.length-1));
+      activeMediaKey="";scheduleSave();renderPlayer(true);
+    };
+    r.append(num,name,col,info,del);list.appendChild(r);
+  });
+  const fl=$("netFeeds");fl.innerHTML="";
+  const feeds=(state.channelFeeds||[]).filter(f=>resolveFeedTarget(f).section===netSec);
+  const nets=arr.filter(c=>!c.feedId);
+  if(!feeds.length)fl.innerHTML='<div class="viewerhint">در این بخش هنوز کانال یوتیوبی منتقل/ثبت نشده است.</div>';
+  feeds.forEach(f=>{
+    const r=document.createElement("div");r.className="listitem";r.style.cssText="flex-wrap:wrap;gap:6px";
+    const nm=document.createElement("div");nm.className="itemname";nm.style.flex="1";nm.textContent=f.name||"YouTube";
+    const sel=document.createElement("select");
+    sel.innerHTML='<option value="">— بدون شبکه —</option>'+nets.map(n=>'<option value="'+esc(n.id)+'">'+esc("CH "+chNum(n)+" · "+(n.name||""))+'</option>').join("");
+    sel.value=f.networkId&&nets.some(n=>n.id===f.networkId)?f.networkId:"";
+    sel.onchange=()=>setFeedNetwork(f,sel.value);
+    r.append(nm,sel);fl.appendChild(r);
+  });
+  const au=$("netAuto");au.innerHTML="";
+  const lab=document.createElement("label");lab.style.cssText="display:flex;gap:8px;align-items:center";
+  const cb=document.createElement("input");cb.type="checkbox";cb.checked=state.autoSync!==false;cb.onchange=()=>{state.autoSync=cb.checked;scheduleSave()};
+  lab.append(cb,document.createTextNode("همگام‌سازی خودکار هر ۲۴ ساعت (TV، رادیو، کودک و همهٔ شبکه‌ها)"));au.appendChild(lab);
+  const m=state.syncMeta||{};const fmt=t=>t?new Date(t).toLocaleString(dateLocale()):"—";
+  const info=document.createElement("div");info.style.marginTop="6px";info.textContent="آخرین همگام‌سازی — TV: "+fmt(m.tv)+" · رادیو: "+fmt(m.radio)+" · کودک: "+fmt(m.kids);au.appendChild(info);
+  const note=document.createElement("div");note.style.cssText="margin-top:4px;opacity:.8";note.textContent="همگام‌سازی خودکار فقط وقتی انجام می‌شود که صفحه با حساب ادمین باز باشد.";au.appendChild(note);
+}
+/* ---- auto sync every 24h ---- */
+window.__autoTry=window.__autoTry||{};
+function autoSyncTick(){
+  try{
+    if(!isAdmin||state.autoSync===false||!window.__remoteLoaded||window.__stateFromCache)return;
+    if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000)return;
+    state.syncMeta=state.syncMeta||{};
+    const secs=["tv","radio","kids"].filter(sc=>(state.channelFeeds||[]).some(f=>resolveFeedTarget(f).section===sc));
+    const due=secs.find(sc=>Date.now()-(Number(state.syncMeta[sc])||0)>=DAY&&Date.now()-(window.__autoTry[sc]||0)>=60*60*1000);
+    if(!due)return;
+    window.__autoTry[due]=Date.now();window.__autoSyncRun=true;
+    syncChannelFeeds(false,"",due).catch(()=>{}).finally(()=>{window.__autoSyncRun=false;try{scheduleSave()}catch(_){}});
+  }catch(e){console.warn("autoSync failed",e)}
+}
+setInterval(autoSyncTick,10*60*1000);setTimeout(autoSyncTick,25000);
+/* ---- viewer / admin channel menu ---- */
+function ensureChannelMenu(){
+  let m=document.getElementById("channelMenu");if(m)return m;
+  m=document.createElement("div");m.id="channelMenu";m.dir="rtl";
+  m.style.cssText="position:fixed;inset:0;z-index:100700;background:#000a;display:none;align-items:center;justify-content:center;padding:12px";
+  m.innerHTML='<div style="background:var(--panel,#1b211b);color:var(--text,#fff);border:1px solid var(--accent,#e8b85b);border-radius:16px;width:min(460px,100%);max-height:85vh;display:flex;flex-direction:column;overflow:hidden"><div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line,#3a443a)"><strong id="chMenuTitle">شبکه‌ها</strong><button id="chMenuClose" type="button" class="small">بستن</button></div><div id="chMenuList" style="overflow:auto;padding:8px"></div></div>';
+  document.body.appendChild(m);
+  m.addEventListener("click",e=>{if(e.target===m)m.style.display="none"});
+  m.querySelector("#chMenuClose").onclick=()=>{m.style.display="none"};
+  return m;
+}
+function renderChannelMenu(){
+  const m=document.getElementById("channelMenu");if(!m||m.style.display==="none")return;
+  const mode=activeMode(),L=channelsFor(mode).slice().sort((a,b)=>chNum(a)-chNum(b));
+  const cur=curChannelFor(mode);
+  m.querySelector("#chMenuTitle").textContent="شبکه‌های "+(mode==="kids"?"کودک":mode==="radio"?"رادیو":"تلویزیون");
+  const box=m.querySelector("#chMenuList");box.innerHTML="";
+  const shown=L.filter(c=>isAdmin||(c.list||[]).length);
+  if(!shown.length){box.innerHTML='<div class="viewerhint" style="padding:12px">هنوز شبکه‌ای با برنامه ثبت نشده است.</div>';}
+  shown.forEach(c=>{
+    const b=document.createElement("button");b.type="button";
+    b.style.cssText="display:flex;align-items:center;gap:10px;width:100%;text-align:right;margin:4px 0;padding:10px;border-radius:12px;"+(cur&&c.id===cur.id?"outline:2px solid var(--accent,#e8b85b)":"");
+    const n=document.createElement("span");n.textContent=chNum(c);n.style.cssText="min-width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;background:"+(c.color||"#e8b85b")+";color:#111";
+    const t1=document.createElement("span");t1.style.flex="1";t1.textContent=c.name||"—";
+    const t2=document.createElement("span");t2.className="itemmeta";t2.textContent=(c.list||[]).length+" برنامه"+(cur&&c.id===cur.id?" · ● در حال پخش":"")+(c.feedId?" · YT":"");
+    b.append(n,t1,t2);b.onclick=()=>{switchToChannel(c,mode);m.style.display="none";notify("کانال "+chNum(c)+": "+(c.name||""))};
+    box.appendChild(b);
+  });
+  if(!isAdmin&&viewerCh&&viewerCh[mode]){
+    const d=document.createElement("button");d.type="button";d.style.cssText="width:100%;margin-top:8px;padding:10px;border-radius:12px";d.textContent="بازگشت به پخش پیش‌فرض ایستگاه (زنده)";
+    d.onclick=()=>{clearViewerChannel(mode);m.style.display="none"};box.appendChild(d);
+  }
+}
+function openChannelMenu(){const m=ensureChannelMenu();m.style.display="flex";renderChannelMenu()}
+$("channelMenuBtn")?.addEventListener("click",openChannelMenu);
 $("remotePower").addEventListener("click",()=>{const v=$("videoElement"),a=$("audioElement");const playing=(!v.paused&&!v.ended)||(!a.paused&&!a.ended)||(ytReady&&ytPlayer&&ytPlayer.getPlayerState&&ytPlayer.getPlayerState()===1);if(playing){try{v.pause();a.pause();if(ytReady&&ytPlayer)ytPlayer.pauseVideo()}catch(_){}$("remotePower").style.color="#8df0a6";}else{$("playButton")?.click();$("remotePower").style.color="#ff8b8b";}});
 let remoteMuted=false;
 $("remoteMute").addEventListener("click",()=>{remoteMuted=!remoteMuted;$("videoElement").muted=remoteMuted;$("audioElement").muted=remoteMuted;if(ytReady&&ytPlayer){try{remoteMuted?ytPlayer.mute():ytPlayer.unMute()}catch(_){}}$("remoteMute").innerHTML=(remoteMuted?"🔊":"🔇")+"<small>"+(remoteMuted?"UNMUTE":"MUTE")+"</small>";});
