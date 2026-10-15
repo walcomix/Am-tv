@@ -2483,7 +2483,10 @@ function showBumper(next,left){
   try{$("videoElement").pause()}catch(_){}
   try{$("audioElement").pause()}catch(_){}
   try{const fv=$("fallbackLayer").querySelector("video");if(fv)fv.pause()}catch(_){}
-  try{if(ytReady&&ytPlayer&&ytPlayer.pauseVideo)ytPlayer.pauseVideo()}catch(_){}
+  try{if(ytReady&&ytPlayer){
+    if(typeof ytPlayer.stopVideo==="function")ytPlayer.stopVideo();
+    else if(typeof ytPlayer.pauseVideo==="function")ytPlayer.pauseVideo();
+  }}catch(_){}
 }
 function hideBumper(){$("bumperScreen").classList.add("hidden");bumperOn=false;}
 
@@ -3962,7 +3965,10 @@ function hideAllMedia(){
   $("radioScreen").style.display="none";
   $("videoElement").pause();
   $("audioElement").pause();
-  try{if(ytReady&&ytPlayer&&ytPlayer.pauseVideo)ytPlayer.pauseVideo()}catch(_){}
+  try{if(ytReady&&ytPlayer){
+    if(typeof ytPlayer.stopVideo==="function")ytPlayer.stopVideo();
+    else if(typeof ytPlayer.pauseVideo==="function")ytPlayer.pauseVideo();
+  }}catch(_){}
   try{const fv=$("fallbackLayer").querySelector("video");if(fv)fv.pause()}catch(_){}
 }
 function applyFallback(){
@@ -4030,8 +4036,9 @@ function renderPlayer(force=false){
     const isYtItem=item.ytKind==='playlist'||item.ytKind==='video'||isYouTube(url);
     if(isYtItem){
       const rid=(item.ytKind==='playlist'||item.ytKind==='video')?item.ytId:youtubeId(url);
-      $("youtubePlayer").style.display="block";
       if(rid&&ytReady&&ytPlayer){
+        try{if(typeof ytPlayer.stopVideo==="function")ytPlayer.stopVideo();}catch(_){}
+        $("youtubePlayer").style.display="block";
         try{
           if(item.ytKind==='playlist')ytPlayer.loadPlaylist({list:rid,listType:'playlist',index:0,startSeconds:0});
           else ytPlayer.loadVideoById({videoId:rid,startSeconds:off});
@@ -4048,17 +4055,18 @@ function renderPlayer(force=false){
   }
 
   if(isYouTube(url)){
-    $("youtubePlayer").style.display="block";
     const id=item.ytId||youtubeId(url);
     if(!id){showEmpty(t("badYt"));return;}
     if(ytReady&&ytPlayer){
+      try{if(typeof ytPlayer.stopVideo==="function")ytPlayer.stopVideo();}catch(_){}
+      $("youtubePlayer").style.display="block";
       try{
         if(item.ytKind==='playlist')ytPlayer.loadPlaylist({list:id,listType:'playlist',index:0,startSeconds:0});
         else ytPlayer.loadVideoById({videoId:id,startSeconds:off});
         ytPlayer.setVolume(Number($("volumeSlider").value)||80);
       }catch(e){console.error(e)}
     }else{
-      $("youtubePlayer").style.display="block";
+      $("youtubePlayer").style.display="none";
       $("emptyScreen").style.display="flex";$("emptyHint").textContent=t("loadingYt");
     }
   }else{
