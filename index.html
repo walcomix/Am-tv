@@ -11,7 +11,6 @@
   --text:#f2eedf;--muted:#a9b09f;--accent:#e8b85b;
   --line:#384237;--radius:13px;
   --screen1:#263026;--screen2:#090b09;--screenaccent:#e8b85b;--screenmuted:#a9b09f;--topbar:#141a14;--section:#171d17;--input:#0f140f;--onaccent:#15150e;--danger:#ffb7ac;
-}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Tahoma,sans-serif;min-height:100vh;opacity:1;transition:opacity .18s ease}
 body.booting{opacity:0}
@@ -1250,6 +1249,21 @@ html body.emoji-only .btnlabel{
 
     <div id="youtubeTab" class="tabcontent hidden">
       <div class="adminGrid">
+        <div class="section" style="grid-column:1/-1">
+          <h3><i class="ic ic-yt"></i> جستجوی کانال یا موضوع در YouTube</h3>
+          <p class="viewerhint">نام کانال یا هر موضوعی (مثلاً «آشپزی»، «فوتبال»، «کارتون») را بنویس. موضوع هر کانال خودکار تشخیص داده می‌شود و در شبکهٔ هم‌موضوع قرار می‌گیرد.</p>
+          <div class="rowfields">
+            <div class="field"><input id="amChQuery" placeholder="نام کانال یا موضوع…"></div>
+            <div class="field"><select id="amChSec"><option value="auto">بخش: خودکار</option><option value="tv">TV</option><option value="radio">رادیو</option><option value="kids">کودک</option></select></div>
+            <button id="amChGo" type="button" class="primary">جستجو</button>
+          </div>
+          <div id="amChResults" class="itemlist"></div>
+        </div>
+        <div class="section" style="grid-column:1/-1">
+          <h3><i class="ic ic-guide"></i> برنامهٔ پخش ۲۴ ساعت آینده (شبکهٔ TV فعلی)</h3>
+          <p class="viewerhint">ساعت هر ویدیو خودکار محاسبه می‌شود. با تغییر ساعت، آن ویدیو هر روز در همان ساعت ثابت پخش می‌شود (برای TV). مدت ویدیو باید مشخص باشد.</p>
+          <div id="amSchedList" class="itemlist"></div>
+        </div>
         <div class="section" style="grid-column:1/-1">
           <h3><i class="ic ic-yt"></i><span data-i18n="ytSubsTitle">اتصال به حساب YouTube و دریافت سابسکریپشن‌ها</span></h3>
           <p class="viewerhint" data-i18n="ytSubsDesc">
@@ -2522,7 +2536,7 @@ function buildGuide(maxRows,horizonMs){
     if(!(remain>0))remain=1000;
     if(!li.pinned){const np=nextPinStart(t);if(np&&np<t+remain)remain=np-t;}
     const resumed=li.offset>1&&out.length>0;
-    out.push({title:item.title,start:resumed?t:t-li.offset*1000,pinned:!!li.pinned,now:out.length===0,resumed});
+    out.push({idx:li.index,title:item.title,start:resumed?t:t-li.offset*1000,pinned:!!li.pinned,now:out.length===0,resumed});
     t+=remain+50;
   }
   return out;
@@ -2567,7 +2581,7 @@ function pruneOldSynced(){
   const ch=currentChannel();
   const list=ch.list;
   const cutoff=Date.now()-24*60*60*1000;
-  const isOld=v=>!!(v&&v.youtubeId&&Number(v.addedAt)&&Number(v.addedAt)<cutoff);
+  const isOld=v=>!!(v&&v.youtubeId&&v.played);
   const removed=list.filter(isOld).length;
   if(!removed)return 0;
   const li=liveInfo("tv");
@@ -2817,12 +2831,12 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         okSections.add(loc.section);
         if(videos.length)syncedTargets.push({section:loc.section,target:networkFor(feed)||target});
         for(const v of videos){
-          const key=String(v.id);const prior=byVideo.get(key);
+          const key=String(v.id);if(window.amtvWasPlayed&&amtvWasPlayed(key))continue;const prior=byVideo.get(key);
           byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,ytId:key,...((v.duration>0)?{duration:v.duration}:{}),title:(prior&&prior.customTitle)?prior.title:(v.title||prior?.title||"YouTube"),url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
           n++;total++;
           if(n===videos.length||n%8===0){ui.addRow(v,secName,feed.name);ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+(v.duration>0?" (⏱ "+fmtDur(v.duration)+")":"")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");await sleep(0);}
         }
-        {const fresh=[...byVideo.values()].filter(x=>!x.publishedAt||Number(x.publishedAt)>=cutoff());target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));}
+        {const fresh=[...byVideo.values()].filter(x=>!x.played);target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));}
         renderSyncPartial();
         try{mergeFeedIntoNetwork(feed);renderSyncPartial()}catch(e){console.warn("network merge failed",e)}
         if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
@@ -6400,8 +6414,8 @@ function autoSyncTick(){
     if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000)return;
     state.syncMeta=state.syncMeta||{};
     const secs=["tv","radio","kids"].filter(sc=>(state.channelFeeds||[]).some(f=>resolveFeedTarget(f).section===sc));
-    const due=secs.find(sc=>Date.now()-(Number(state.syncMeta[sc])||0)>=DAY&&Date.now()-(window.__autoTry[sc]||0)>=60*60*1000);
-    if(!due)return;
+    const due=secs.find(sc=>window.amtvSectionDue(sc)&&Date.now()-(window.__autoTry[sc]||0)>=60*60*1000);
+    if(!due)return;window.amtvMarkPlayed(due);
     window.__autoTry[due]=Date.now();window.__autoSyncRun=true;
     syncChannelFeeds(false,"",due).catch(()=>{}).finally(()=>{window.__autoSyncRun=false;try{scheduleSave()}catch(_){}});
   }catch(e){console.warn("autoSync failed",e)}
@@ -6830,5 +6844,96 @@ setInterval(()=>{
     <div id="ytDetailContent"></div>
   </div>
 </div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SEC={tv:"TV",radio:"رادیو",kids:"کودک"};
+/* ---- 1+2: channel/topic search with auto topic detection ---- */
+async function chSearch(){
+  const q=$("amChQuery").value.trim(),pref=$("amChSec").value,out=$("amChResults");
+  if(!q)return; if(!isAdmin){notify("فقط ادمین");return}
+  out.innerHTML='<div class="viewerhint">در حال جستجو…</div>';
+  try{
+    const qq=pref==="kids"?q+" کودک kids":pref==="radio"?q+" music":q;
+    const d=await ytApi("https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&maxResults=15"+(pref==="kids"?"&safeSearch=strict":"")+"&q="+encodeURIComponent(qq));
+    const ids=(d.items||[]).map(i=>(i.id&&i.id.channelId)||i.snippet.channelId).filter(Boolean);
+    if(!ids.length){out.innerHTML='<div class="viewerhint">چیزی پیدا نشد.</div>';return}
+    const c=await ytApi("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,topicDetails,status&maxResults=50&id="+ids.join(","));
+    chRender(c.items||[],pref);
+  }catch(e){out.innerHTML='<div class="viewerhint">'+esc(e.quota?"سهمیهٔ YouTube API تمام شده.":e.noToken?"اول به YouTube وصل شو.":e.message)+'</div>'}
+}
+function chRender(items,pref){
+  const out=$("amChResults");out.innerHTML="";
+  items.forEach(x=>{
+    const sn=x.snippet||{},kids=!!(x.status&&x.status.madeForKids);
+    const topic=autoTopic((sn.title+" "+sn.description).toLowerCase(),{kids,topics:(x.topicDetails&&x.topicDetails.topicCategories)||[]});
+    const sug=kids||topic==="کودک"?"kids":topic==="موسیقی"?"radio":"tv";
+    const r=document.createElement("div");r.className="listitem";r.style.cssText="flex-wrap:wrap;gap:8px;align-items:center";
+    r.innerHTML='<img src="'+esc(sn.thumbnails&&(sn.thumbnails.default||{}).url)+'" width="44" height="44" style="border-radius:50%"><div class="iteminfo" style="flex:1;min-width:140px"><div class="itemname">'+esc(sn.title)+'</div><div class="itemmeta">'+esc(topic)+' · '+esc(ytCompact(x.statistics&&x.statistics.subscriberCount!=null?+x.statistics.subscriberCount:null))+' مشترک</div></div>';
+    const sel=document.createElement("select");sel.innerHTML=Object.keys(SEC).map(k=>'<option value="'+k+'">'+SEC[k]+'</option>').join("");sel.value=pref==="auto"?sug:pref;
+    const b=document.createElement("button");b.type="button";b.className="small primary";b.textContent="افزودن";
+    b.onclick=()=>chAdd(x,sel.value,b);
+    r.append(sel,b);out.appendChild(r);
+  });
+}
+function chAdd(x,sec,btn){
+  const url="https://www.youtube.com/channel/"+x.id;state.channelFeeds=state.channelFeeds||[];
+  if(state.channelFeeds.some(f=>f.url===url)){notify("این کانال قبلاً اضافه شده.");return}
+  const feed={id:makeId(),url,name:x.snippet.title,section:sec,createdAt:Date.now(),targetId:"",networkId:"",ytChannelId:x.id};
+  state.channelFeeds.push(feed);btn.disabled=true;btn.textContent="✓ اضافه شد";
+  try{renderChannelFeedsList()}catch(_){}
+  scheduleSave();autoAssignFeeds([feed.id]);
+}
+$("amChGo").onclick=chSearch;$("amChQuery").addEventListener("keydown",e=>{if(e.key==="Enter")chSearch()});
+/* ---- 3: played tracking + 24h cycle ---- */
+const ids=()=>(state.playedIds=state.playedIds||{});
+window.amtvWasPlayed=id=>!!ids()[String(id)];
+function plan(n,now){
+  if(!n.cycleStart)n.cycleStart=now;
+  const el=now-n.cycleStart;let cum=0,all=true;const played=[];
+  for(const v of n.list||[]){const d=durOf(v)*1000;if(!d){all=false;break}cum+=d;if(v.feedId&&v.youtubeId&&cum<=el)played.push(v)}
+  const finished=all&&(n.list||[]).length>0&&cum<=el;
+  return {played,due:(finished&&el>=DAY)||el>=2*DAY};
+}
+const hasFeed=n=>(state.channelFeeds||[]).some(f=>f.networkId===n.id);
+window.amtvSectionDue=sec=>(secLists()[sec]||[]).some(n=>!n.feedId&&hasFeed(n)&&plan(n,Date.now()).due);
+window.amtvMarkPlayed=sec=>{
+  const now=Date.now(),I=ids();
+  (secLists()[sec]||[]).forEach(n=>{
+    if(n.feedId||!hasFeed(n))return;const p=plan(n,now);if(!p.due)return;
+    p.played.forEach(v=>{v.played=true;I[v.youtubeId]=now});n.cycleStart=now;
+  });
+  Object.keys(I).forEach(k=>{if(now-I[k]>7*DAY)delete I[k]});
+};
+/* ---- 4: schedule view + editable time ---- */
+function hhmm(ms){const m=Math.floor((((ms+tzMs())%DAY)+DAY)%DAY/60000);return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")}
+function renderSched(){
+  const root=$("amSchedList");if(!root||root.closest(".tabcontent").classList.contains("hidden"))return;
+  if(root.contains(document.activeElement))return;
+  let rows=[];try{rows=buildGuide(40,24*3600*1000)}catch(_){}
+  root.innerHTML=rows.length?"":'<div class="viewerhint">برنامه‌ای قابل محاسبه نیست (مدت ویدیوها هنوز مشخص نیست).</div>';
+  const list=currentChannel().list,today=new Date().toDateString();
+  rows.forEach(r=>{
+    const it=list[r.idx];if(!it)return;
+    const row=document.createElement("div");row.className="listitem";row.style.cssText="gap:8px;align-items:center";
+    const d=new Date(r.start);
+    const day=d.toDateString()===today?"":d.toLocaleDateString(dateLocale(),{weekday:"short"})+" ";
+    row.innerHTML='<div class="iteminfo" style="flex:1;min-width:0"><div class="itemname">'+(r.now?"▶ ":"")+esc(r.title||"—")+'</div><div class="itemmeta">'+esc(day)+(r.pinned?"⏰ ساعت ثابت":"خودکار")+'</div></div>';
+    const inp=document.createElement("input");inp.type="time";inp.value=hhmm(r.start);inp.disabled=!isAdmin;inp.style.width="110px";
+    inp.onchange=()=>{
+      if(!inp.value)return;it.pin=inp.value;activeMediaKey="";scheduleSave();renderPlayer(true);
+      if(!durOf(it))notify("مدت این ویدیو هنوز مشخص نیست؛ ساعت ثابت وقتی اعمال می‌شود که مدت معلوم شود.");
+      else notify("ساعت پخش تغییر کرد.");setTimeout(renderSched,300);
+    };
+    row.appendChild(inp);
+    if(r.pinned&&isAdmin){const c=document.createElement("button");c.type="button";c.className="small";c.textContent="✕";c.title="برگشت به خودکار";c.onclick=()=>{delete it.pin;activeMediaKey="";scheduleSave();renderPlayer(true);setTimeout(renderSched,300)};row.appendChild(c)}
+    root.appendChild(row);
+  });
+}
+setInterval(renderSched,30000);setTimeout(renderSched,3000);
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest('[data-tab="youtubeTab"]'))setTimeout(renderSched,200)});
+})();
+</script>
 </body>
         </html>
