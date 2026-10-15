@@ -2705,7 +2705,7 @@ async function addChannelFeed(){
   const feed={id:makeId(),url,name:name||"YouTube Channel",section,createdAt:Date.now(),targetId:""};
   feed.networkId=($("feedTargetNetwork")||{}).value||"";
   state.channelFeeds.push(feed);
-  if(!feed.networkId){$("feedChannelUrl").value="";$("feedChannelName").value="";renderChannelFeedsList();try{renderNetworksPanel()}catch(_){}scheduleSave();notify("کانال یوتیوب ذخیره شد. از «مدیریت شبکه‌ها» به یک شبکه وصلش کن.");return}$("feedChannelUrl").value="";$("feedChannelName").value="";
+  if(!feed.networkId){$("feedChannelUrl").value="";$("feedChannelName").value="";renderChannelFeedsList();try{renderNetworksPanel()}catch(_){}scheduleSave();autoAssignFeeds([feed.id]);return}$("feedChannelUrl").value="";$("feedChannelName").value="";
   $("channelFeedStatus").textContent="...";
   try{await syncChannelFeeds(false,feed.id)}catch(error){
     $("channelFeedStatus").textContent="Error: "+error.message;renderChannelFeedsList();
@@ -5314,7 +5314,7 @@ async function addSubscriptionAsFeed(sub,btn){
   const feed={id:makeId(),url:channelUrl,name:sub.title,section:sub.section,tvGroup:sub.section==="tv"?(sub.tvGroup||""):"",createdAt:Date.now(),targetId:""};
   state.channelFeeds.push(feed);
   scheduleSave();if(btn){btn.disabled=true;btn.textContent="✓";}
-  notify("به منابع اضافه شد؛ از «مدیریت شبکه‌ها» به یک شبکه وصلش کن.");try{renderNetworksPanel()}catch(_){}
+  autoAssignFeeds([feed.id]);
   return;
   if(btn){btn.disabled=true;btn.textContent="…";}
   scheduleSave();
@@ -5328,16 +5328,16 @@ async function addSubscriptionAsFeed(sub,btn){
 }
 async function addAllSubscriptions(){
   if(!isAdmin||!ytSubscriptions.length){notify("List empty.");return;}
-  notify("Adding…");
+  notify("Adding…");window.__addAllIds=[];
   for(const sub of ytSubscriptions){
     const channelUrl="https://www.youtube.com/channel/"+sub.channelId;
     if((state.channelFeeds||[]).some(f=>f.url===channelUrl))continue;
     const feed={id:makeId(),url:channelUrl,name:sub.title,section:sub.section,createdAt:Date.now(),targetId:""};
-    state.channelFeeds.push(feed);
+    state.channelFeeds.push(feed);window.__addAllIds.push(feed.id);
   }
   clearTimeout(saveTimer);await saveRemoteState();
   renderAll();renderChannelFeedsList();renderYouTubeSubscriptionStats();
-  notify("همه به منابع اضافه شدند؛ هر کدام را در «مدیریت شبکه‌ها» به یک شبکه وصل کن.");
+  await autoAssignFeeds(window.__addAllIds||[]);
 }
 
 async function scanSelectedLiveStreams(){
@@ -6180,6 +6180,70 @@ async function bulkSendFeeds(ids,netId){
   window.__syncIds=new Set(feeds.map(f=>f.id));
   try{await syncChannelFeeds(true,feeds[0].id)}catch(e){notify("خطا: "+e.message)}finally{window.__syncIds=null}
 }
+/* ---- auto topic classification ---- */
+const TOPIC_COLOR={"موسیقی":"#e85b9a","ورزش":"#4ecb71","بازی":"#8b6cff","سرگرمی و فیلم":"#ff9e3d","اخبار و اجتماعی":"#5ba8e8","دانش و فناوری":"#37c7d8","آشپزی":"#e8c85b","خودرو":"#c0c7d1","سبک زندگی":"#d98cff","کودک":"#ffb347","متفرقه":"#9aa3b2"};
+const TOPIC_KW={
+ "کودک":["kids","kid ","children","کودک","بچه","cartoon","کارتون","nursery","baby","انیمیشن کودک"],
+ "بازی":["game","gaming","گیم","بازی","minecraft","gameplay","playthrough"],
+ "موسیقی":["music","موزیک","آهنگ","song","concert","official audio","records","بند"],
+ "ورزش":["sport","football","soccer","ورزش","فوتبال","league","nba","ufc","goal"],
+ "سرگرمی و فیلم":["movie","film","series","سریال","فیلم","trailer","comedy","کمدی","show","entertain"],
+ "اخبار و اجتماعی":["news","خبر","politic","سیاست","report","تحلیل"],
+ "دانش و فناوری":["science","tech","علم","فناوری","آموزش","learn","history","تاریخ","review"],
+ "آشپزی":["cook","recipe","food","آشپزی","غذا","کباب"],
+ "خودرو":["car ","cars","auto","خودرو","ماشین","motor"],
+ "سبک زندگی":["lifestyle","health","سلامت","travel","سفر","fashion","vlog","beauty"]};
+const TOPIC_WIKI=[
+ [/game|gaming|minecraft|role-playing|strategy|puzzle|simulation|casual/,"بازی",3],
+ [/music|hip_hop|rock|pop|jazz|classical|electronic|country|reggae|soul|rhythm|opera|vocal/,"موسیقی",3],
+ [/sport|football|soccer|basketball|baseball|cricket|golf|boxing|martial|tennis|motorsport|racing|volleyball|rugby|wrestling|hockey|athletics/,"ورزش",3],
+ [/food|cooking|recipe/,"آشپزی",3],[/vehicle|automotive|motorcycle|^car/,"خودرو",3],
+ [/politic|news|military|government|law/,"اخبار و اجتماعی",2],
+ [/knowledge|education|science|history|technology|physics/,"دانش و فناوری",1],
+ [/film|television|movie|animated|drama|comedy|humou?r|entertainment/,"سرگرمی و فیلم",1],
+ [/lifestyle|health|fashion|beauty|tourism|travel|pet|hobby|fitness|religion|society/,"سبک زندگی",1]];
+function autoTopic(hay,m){
+  if(m&&m.kids)return "کودک";
+  const sc={};
+  ((m&&m.topics)||[]).forEach(u=>{const slug=decodeURIComponent(String(u).split("/").pop()||"").toLowerCase();for(const [re,lab,w] of TOPIC_WIKI){if(re.test(slug)){sc[lab]=(sc[lab]||0)+w;break}}});
+  Object.keys(TOPIC_KW).forEach(lab=>{const k=TOPIC_KW[lab].filter(w=>hay.includes(w)).length;if(k)sc[lab]=(sc[lab]||0)+k*1.5});
+  let best="متفرقه",b=0;Object.keys(sc).forEach(l=>{if(sc[l]>b){b=sc[l];best=l}});return best;
+}
+async function autoAssignFeeds(ids){
+  if(!isAdmin)return;
+  const idset=new Set(ids||[]),feeds=(state.channelFeeds||[]).filter(f=>idset.has(f.id));if(!feeds.length)return;
+  notify("در حال تشخیص موضوع کانال‌ها…");
+  const meta={};
+  try{
+    if(ytTokenValid()||await ytEnsureToken()){
+      const map=[];
+      for(const f of feeds){let id=f.ytChannelId||parseYouTubeChannelIdFromUrl(f.url);if(!/^UC/.test(id||"")){try{id=await resolveYouTubeChannelId(f.url)}catch(_){}}if(/^UC/.test(id||"")){f.ytChannelId=id;map.push([f,id])}}
+      for(let i=0;i<map.length;i+=50){
+        const b=map.slice(i,i+50);
+        const d=await ytApi("https://www.googleapis.com/youtube/v3/channels?part=snippet,topicDetails,brandingSettings,status&maxResults=50&id="+b.map(x=>x[1]).join(","));
+        (d.items||[]).forEach(it=>{const x=b.find(y=>y[1]===it.id);if(!x)return;const sn=it.snippet||{},br=(it.brandingSettings&&it.brandingSettings.channel)||{};
+          meta[x[0].id]={text:[sn.title,sn.description,br.keywords].join(" "),topics:(it.topicDetails&&it.topicDetails.topicCategories)||[],kids:!!(it.status&&it.status.madeForKids)}});
+      }
+    }
+  }catch(e){console.warn("auto meta",e)}
+  const created=new Set(),assigned=[];
+  feeds.forEach(f=>{
+    const m=meta[f.id]||{text:"",topics:[],kids:false},hay=((f.name||"")+" "+m.text).toLowerCase();
+    const sec=f.section||"tv",arr=secLists()[sec],nets=arr.filter(c=>!c.feedId);
+    let target=null,best=0;
+    nets.forEach(c=>{const ks=String(c.keywords||"").split(/[,،\n]/).map(x=>x.trim().toLowerCase()).filter(Boolean);const k=ks.filter(w=>hay.includes(w)).length;if(k>best){best=k;target=c}});
+    if(!target){
+      const label=autoTopic(hay,m);target=nets.find(x=>(x.name||"").trim()===label)||null;
+      if(!target){target={id:(sec==="radio"?"rad-":sec==="kids"?"kids-":"")+makeId(),name:label,number:0,color:TOPIC_COLOR[label]||"#e8b85b",list:[],keywords:""};arr.push(target);created.add(label)}
+    }
+    const old=networkFor(f);if(old&&old.id!==target.id)old.list=(old.list||[]).filter(v=>v.feedId!==f.id);
+    f.networkId=target.id;resolveFeedTarget(f);assigned.push(f.id);
+  });
+  ensureChannelNumbers();scheduleSave();
+  notify(assigned.length+" کانال دسته‌بندی شد"+(created.size?" · شبکه‌های جدید: "+[...created].join("، "):"")+"؛ در حال همگام‌سازی…");
+  window.__syncIds=new Set(assigned);
+  try{await syncChannelFeeds(true,assigned[0])}catch(e){notify("خطا: "+e.message)}finally{window.__syncIds=null}
+}
 /* ---- admin panel: networks & numbers ---- */
 var netSec="tv";
 function ensureNetworksPanel(){
@@ -6193,7 +6257,7 @@ function fillFeedNetworkSelect(){
   const s=$("feedTargetNetwork"),sc=$("feedTargetSection");if(!s||!sc)return;
   const nets=(secLists()[sc.value]||[]).filter(c=>!c.feedId).sort((a,b)=>chNum(a)-chNum(b));
   const prev=s.value;
-  s.innerHTML='<option value="">— بدون شبکه (بعداً وصل می‌کنم) —</option>'+nets.map(n=>'<option value="'+esc(n.id)+'">'+esc("CH "+chNum(n)+" · "+(n.name||""))+'</option>').join("");
+  s.innerHTML='<option value="">— خودکار بر اساس موضوع —</option>'+nets.map(n=>'<option value="'+esc(n.id)+'">'+esc("CH "+chNum(n)+" · "+(n.name||""))+'</option>').join("");
   s.value=nets.some(n=>n.id===prev)?prev:"";try{refreshSelects()}catch(_){}
 }
 function renderNetworksPanel(){
@@ -6235,7 +6299,8 @@ function renderNetworksPanel(){
       state.channelIndex=Math.max(0,Math.min(state.channelIndex,state.channels.length-1));state.radioChannelIndex=Math.max(0,Math.min(state.radioChannelIndex,state.radioChannels.length-1));state.kidsChannelIndex=Math.max(0,Math.min(state.kidsChannelIndex,state.kidsChannels.length-1));
       activeMediaKey="";scheduleSave();renderPlayer(true);
     };
-    r.append(num,name,col,info,del);list.appendChild(r);
+    const kw=document.createElement("input");kw.placeholder="کلمات کلیدی برای دسته‌بندی خودکار (با , جدا کن)";kw.value=c.keywords||"";kw.style.cssText="flex:1 0 100%;font-size:12px";kw.onchange=()=>{c.keywords=kw.value.trim();scheduleSave()};
+    r.append(num,name,col,info,del,kw);list.appendChild(r);
   });
   const fl=$("netFeeds");fl.innerHTML="";
   const feeds=(state.channelFeeds||[]).filter(f=>resolveFeedTarget(f).section===netSec);
@@ -6255,7 +6320,12 @@ function renderNetworksPanel(){
       if(!S.size){notify("هیچ کانالی انتخاب نشده.");return}
       const ids=new Set(S);S.clear();bulkSendFeeds(ids,nid);
     });
-    bar.append(mkBtn("انتخاب همه","",()=>{feeds.forEach(x=>S.add(x.id));rr()}),mkBtn("فقط بدون شبکه","",()=>{S.clear();feeds.filter(x=>!networkFor(x)).forEach(x=>S.add(x.id));rr()}),mkBtn("هیچ","",()=>{S.clear();rr()}),cnt,bsel,go);
+    const autoBtn=mkBtn("🪄 دسته‌بندی خودکار موضوعی","primary",()=>{
+      const ids=S.size?[...S]:(state.channelFeeds||[]).filter(x=>!networkFor(x)).map(x=>x.id);
+      if(!ids.length){notify("کانال بدون شبکه‌ای نیست.");return}
+      S.clear();autoAssignFeeds(ids);
+    });
+    bar.append(autoBtn,mkBtn("انتخاب همه","",()=>{feeds.forEach(x=>S.add(x.id));rr()}),mkBtn("فقط بدون شبکه","",()=>{S.clear();feeds.filter(x=>!networkFor(x)).forEach(x=>S.add(x.id));rr()}),mkBtn("هیچ","",()=>{S.clear();rr()}),cnt,bsel,go);
     fl.appendChild(bar);
   }
   if(!feeds.length)fl.innerHTML='<div class="viewerhint">در این بخش هنوز کانال یوتیوبی منتقل/ثبت نشده است.</div>';
