@@ -2818,15 +2818,12 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         if(videos.length)syncedTargets.push({section:loc.section,target:networkFor(feed)||target});
         for(const v of videos){
           const key=String(v.id);const prior=byVideo.get(key);
-          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,ytId:key,...((v.duration>0)?{duration:v.duration}:{}),title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
-          const fresh=[...byVideo.values()].filter(x=>!x.publishedAt||Number(x.publishedAt)>=cutoff());
-          target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));
-          n++;total++;ui.addRow(v,secName,feed.name);
-          renderSyncPartial();
-          ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+(v.duration>0?" (⏱ "+fmtDur(v.duration)+")":"")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
-          setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");
-          await sleep(120);
+          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,ytId:key,...((v.duration>0)?{duration:v.duration}:{}),title:(prior&&prior.customTitle)?prior.title:(v.title||prior?.title||"YouTube"),url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
+          n++;total++;
+          if(n===videos.length||n%8===0){ui.addRow(v,secName,feed.name);ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+(v.duration>0?" (⏱ "+fmtDur(v.duration)+")":"")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");await sleep(0);}
         }
+        {const fresh=[...byVideo.values()].filter(x=>!x.publishedAt||Number(x.publishedAt)>=cutoff());target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));}
+        renderSyncPartial();
         try{mergeFeedIntoNetwork(feed);renderSyncPartial()}catch(e){console.warn("network merge failed",e)}
         if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
       }catch(error){errors.push({name:feed.name,msg:error.message})}
@@ -2947,6 +2944,18 @@ function driftCorrect(){
   }catch(_){}
 }
 function activeItem(){const list=currentList();return list[currentIndex()]||null;}
+function bindPB(){
+  [["playback","tv",()=>currentChannel()],["radioPlayback","radio",()=>currentRadioChannel()],["kidsPlayback","kids",()=>currentKidsChannel()]].forEach(([k,sec,cur])=>{
+    const d=Object.getOwnPropertyDescriptor(state,k);if(d&&d.get)return;
+    const legacy=d&&d.value&&typeof d.value==="object"?d.value:null,curId=(cur()||{}).id;
+    (secLists()[sec]||[]).forEach(c=>{if(!c.pb||typeof c.pb!=="object")c.pb=(legacy&&c.id===curId)?{index:Number(legacy.index)||0,startedAt:Number(legacy.startedAt)||VIEW_EPOCH,nonce:Number(legacy.nonce)||0}:{index:0,startedAt:VIEW_EPOCH,nonce:0}});
+    Object.defineProperty(state,k,{configurable:true,enumerable:false,
+      get(){const c=cur();if(!c)return {index:0,startedAt:0,nonce:0};return c.pb||(c.pb={index:0,startedAt:VIEW_EPOCH,nonce:0})},
+      set(v){const c=cur();if(c&&v&&typeof v==="object")c.pb=v}});
+  });
+  const d=Object.getOwnPropertyDescriptor(state,"radioIndex");
+  if(!(d&&d.get))Object.defineProperty(state,"radioIndex",{configurable:true,enumerable:false,get(){return Number(state.radioPlayback.index)||0},set(v){state.radioPlayback.index=Number(v)||0}});
+}
 function ensureState(){
   fixSyncedYtIds();
   try{ensureChannelNumbers()}catch(_){}
@@ -2963,6 +2972,7 @@ function ensureState(){
   if(!state.playback)state.playback={index:0,startedAt:0,nonce:0};
   if(!state.radioPlayback)state.radioPlayback={index:0,startedAt:0,nonce:0};
   if(!state.kidsPlayback)state.kidsPlayback={index:0,startedAt:0,nonce:0};
+  try{bindPB()}catch(e){console.warn("bindPB",e)}
   if(!state.watermark)state.watermark=clone(DEFAULT_STATE.watermark);
   if(!state.bumper)state.bumper=clone(DEFAULT_STATE.bumper);
   if(!state.schedule)state.schedule=clone(DEFAULT_STATE.schedule);
@@ -4539,7 +4549,7 @@ function renderChannels(){
     b.className="channelbutton"+(i===state.channelIndex?" selected":"");
     b.innerHTML='<i class="ic ic-tv"></i> '+esc(c.name||"");
     b.onclick=()=>{
-      if(isAdmin){state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};scheduleSave();activeMediaKey="";renderPlayer(true);}
+      if(isAdmin){state.channelIndex=i;state.playback.nonce=(state.playback.nonce||0)+1;scheduleSave();activeMediaKey="";renderPlayer(true);}
       else notify(t("msgNoChannelSwitch"));
     };
     list.appendChild(b);
@@ -4549,7 +4559,7 @@ function renderChannels(){
     const meta=document.createElement("div");meta.className="itemmeta";meta.innerHTML='<i class="ic ic-list" title="محتوا"></i> '+Number((c.list||[]).length)+" •"+chStatsText(c);
     info.append(name,meta);
     const select=document.createElement("button");select.type="button";select.className="small";select.textContent=(i===state.channelIndex)?"✓":"→";
-    select.onclick=()=>{state.channelIndex=i;state.playback={index:0,startedAt:serverNow(),nonce:(state.playback?.nonce||0)+1};activeMediaKey="";scheduleSave();renderPlayer(true);};
+    select.onclick=()=>{state.channelIndex=i;state.playback.nonce=(state.playback.nonce||0)+1;activeMediaKey="";scheduleSave();renderPlayer(true);};
     const del=document.createElement("button");del.type="button";del.className="small danger";del.innerHTML='<i class="ic ic-trash"></i>';
     del.disabled=state.channels.length<=1;
     del.onclick=()=>{if(!confirm(t("confirmDelCh")))return;state.channels.splice(i,1);state.channelIndex=Math.min(state.channelIndex,state.channels.length-1);scheduleSave();renderPlayer(true);};
@@ -4713,7 +4723,7 @@ function renderKidsAdmin(){
     edit.onclick=()=>{
       const nv=prompt(t("promptRename"),v.title||"");
       if(nv===null)return;
-      v.title=nv.trim().slice(0,200)||v.title;
+      v.title=nv.trim().slice(0,200)||v.title;v.customTitle=true;
       scheduleSave();renderKidsAdmin();
     };
     if(!v.id)v.id=makeId();row.append(selBox(selVid.kids,v.id),info,pick,play,edit);plRoot.appendChild(row);
@@ -4794,7 +4804,7 @@ function renameItem(v){
   if(nv===null)return;
   const tt=nv.trim();
   if(!tt){notify(t("msgRenameEmpty"));return;}
-  v.title=tt.slice(0,200);
+  v.title=tt.slice(0,200);v.customTitle=true;
   scheduleSave();renderAll();notify(t("msgRenamed"));
 }
 
@@ -6091,7 +6101,7 @@ function switchToChannel(ch,mode){
   if(isAdmin){
     if(mode==="kids")state.kidsChannelIndex=idx;else if(mode==="radio")state.radioChannelIndex=idx;else state.channelIndex=idx;
     activeMediaKey="";
-    if((ch.list||[]).length)chooseIndex(0,mode);else{scheduleSave();renderPlayer(true)}
+    scheduleSave();renderPlayer(true)
   }else{
     viewerCh[mode]=ch.id;try{localStorage.setItem("amtv-viewer-ch",JSON.stringify(viewerCh))}catch(_){}
     if(mode==="kids")state.kidsPlayback={index:0,startedAt:serverNow(),nonce:(state.kidsPlayback&&state.kidsPlayback.nonce||0)+1};
@@ -6231,7 +6241,12 @@ function renderNetworksPanel(){
     sel.innerHTML='<option value="">— بدون شبکه —</option>'+nets.map(n=>'<option value="'+esc(n.id)+'">'+esc("CH "+chNum(n)+" · "+(n.name||""))+'</option>').join("");
     sel.value=f.networkId&&nets.some(n=>n.id===f.networkId)?f.networkId:"";
     sel.onchange=()=>setFeedNetwork(f,sel.value);
-    r.append(nm,sel);fl.appendChild(r);
+    const ls=document.createElement("select");ls.title="اگر این کانال لایو شد، لایو به این شبکه منتقل شود";
+    const allNets=[];["tv","radio","kids"].forEach(sc=>(secLists()[sc]||[]).filter(c=>!c.feedId).forEach(c=>allNets.push({c,sc})));
+    ls.innerHTML='<option value="">لایو: بدون انتقال</option>'+allNets.map(x=>'<option value="'+esc(x.c.id)+'">'+esc("لایو ← "+x.sc.toUpperCase()+" · CH "+chNum(x.c)+" · "+(x.c.name||""))+'</option>').join("");
+    ls.value=f.liveNetworkId&&allNets.some(x=>x.c.id===f.liveNetworkId)?f.liveNetworkId:"";
+    ls.onchange=()=>{f.liveNetworkId=ls.value;scheduleSave();notify(ls.value?"لایو این کانال به شبکهٔ انتخابی منتقل می‌شود.":"انتقال لایو خاموش شد.");setTimeout(liveWatchTick,500)};
+    r.append(nm,sel,ls);fl.appendChild(r);
   });
   const au=$("netAuto");au.innerHTML="";
   const lab=document.createElement("label");lab.style.cssText="display:flex;gap:8px;align-items:center";
@@ -6242,6 +6257,44 @@ function renderNetworksPanel(){
   const note=document.createElement("div");note.style.cssText="margin-top:4px;opacity:.8";note.textContent="همگام‌سازی خودکار فقط وقتی انجام می‌شود که صفحه با حساب ادمین باز باشد.";au.appendChild(note);
 }
 $("feedTargetSection")&&$("feedTargetSection").addEventListener("change",()=>fillFeedNetworkSelect());
+/* ---- live watcher: live stream -> chosen network ---- */
+function liveGoTo(net,sec,item){
+  try{
+    const ci=secLists()[sec].indexOf(net);if(ci<0)return;
+    if(sec==="kids")state.kidsChannelIndex=ci;else if(sec==="radio")state.radioChannelIndex=ci;else state.channelIndex=ci;
+    try{if(activeMode()!==sec)setMode(sec)}catch(_){}
+    activeMediaKey="";renderAll();chooseIndex(Math.max(0,net.list.indexOf(item)),sec);scheduleSave();
+  }catch(e){console.warn("liveGoTo",e)}
+}
+async function liveWatchTick(){
+  if(!isAdmin||!window.__remoteLoaded||window.__stateFromCache||window.__liveBusy||!ytTokenValid())return;
+  if(Date.now()<(window.__liveSkipUntil||0))return;
+  window.__liveBusy=true;
+  try{
+    for(const feed of state.channelFeeds||[]){
+      if(!feed.liveNetworkId)continue;
+      const hit=findChannelAnywhere(feed.liveNetworkId);if(!hit)continue;
+      let chId=feed.ytChannelId||parseYouTubeChannelIdFromUrl(feed.url);
+      if(!/^UC/.test(chId||"")){try{chId=await resolveYouTubeChannelId(feed.url)}catch(_){continue}}
+      if(!/^UC/.test(chId||""))continue;feed.ytChannelId=chId;
+      const d=await ytApi("https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&maxResults=6&playlistId=UU"+chId.slice(2));
+      const ids=(d.items||[]).map(i=>i.contentDetails&&i.contentDetails.videoId).filter(Boolean);
+      let live=[];
+      if(ids.length){const dd=await ytApi("https://www.googleapis.com/youtube/v3/videos?part=snippet&id="+ids.join(","));live=(dd.items||[]).filter(x=>x.snippet&&x.snippet.liveBroadcastContent==="live")}
+      const net=hit.ch;net.list=Array.isArray(net.list)?net.list:[];
+      let added=null;
+      live.forEach(x=>{if(net.list.some(v=>v.youtubeId===x.id))return;
+        added={id:makeId(),youtubeId:x.id,ytId:x.id,title:(x.snippet&&x.snippet.title)||feed.name,url:"https://www.youtube.com/watch?v="+x.id,ytKind:"video",live:true,duration:43200,liveFeedId:feed.id,addedAt:Date.now(),publishedAt:Date.now()};
+        net.list.unshift(added)});
+      const liveIds=new Set(live.map(x=>x.id)),before=net.list.length;
+      net.list=net.list.filter(v=>!(v.liveFeedId===feed.id&&!liveIds.has(v.youtubeId)));
+      if(added){notify("🔴 لایو «"+feed.name+"» روی شبکه "+(net.name||"")+" رفت.");liveGoTo(net,hit.section,added)}
+      else if(net.list.length!==before){activeMediaKey="";scheduleSave();renderAll();renderPlayer(true)}
+    }
+  }catch(e){if(e&&(e.quota||e.noToken||e.expired))window.__liveSkipUntil=Date.now()+30*60000;console.warn("liveWatch",e)}
+  finally{window.__liveBusy=false}
+}
+setInterval(liveWatchTick,120000);setTimeout(liveWatchTick,30000);
 /* ---- auto sync every 24h ---- */
 window.__autoTry=window.__autoTry||{};
 function autoSyncTick(){
