@@ -786,6 +786,20 @@ html body.emoji-only .btnlabel{
 .remote-control{box-shadow:0 6px 16px #000a!important;background:#202733!important;overscroll-behavior:contain}
 .remote-dock-toggle{box-shadow:0 3px 8px #0009!important;background:#2a3342!important}
 .remote-dock,.remote-dock *{transition:none!important;animation:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;-webkit-tap-highlight-color:transparent}
+
+/* AM TV shared MP3 library */
+.media-library-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.media-library-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end;margin:12px 0}
+.media-library-tools .field{margin:0;min-width:0}
+.media-library-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:14px}
+.media-library-card{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);min-width:0}
+.media-library-card .ml-info{flex:1;min-width:0}
+.media-library-card .ml-title{font-weight:700;overflow-wrap:anywhere}
+.media-library-card .ml-meta{font-size:11px;color:var(--muted);margin-top:4px}
+.media-library-card input[type=checkbox]{width:18px;height:18px;flex:0 0 auto}
+.media-library-card .ml-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);flex:0 0 auto}
+@media(max-width:520px){.media-library-list{grid-template-columns:1fr}.media-library-tools{grid-template-columns:1fr}}
+
 </style>
 <style>
 
@@ -1086,6 +1100,7 @@ html body.emoji-only .btnlabel{
     </div>
     <div class="tabs">
       <button class="tab active" type="button" data-tab="contentTab"><i class="ic ic-video"></i><span data-i18n="tabContent">ویدیو و کانال</span></button>
+      <button class="tab" type="button" data-tab="mediaLibraryTab"><i class="ic ic-mic"></i><span>کتابخانهٔ MP3</span></button>
       <button class="tab" type="button" data-tab="radioTab"><i class="ic ic-radio"></i><span data-i18n="tabRadio">مدیریت رادیو</span></button>
       <button class="tab" type="button" data-tab="kidsTab"><i class="ic ic-kids"></i><span data-i18n="tabKids">کودک</span></button>
       <button class="tab" type="button" data-tab="watermarkTab"><i class="ic ic-wm"></i><span data-i18n="tabWatermark">Watermark</span></button>
@@ -1138,6 +1153,26 @@ html body.emoji-only .btnlabel{
           </div>
           <div id="adminPlaylist" class="itemlist"></div>
         </div>
+      </div>
+    </div>
+
+    <div id="mediaLibraryTab" class="tabcontent hidden">
+      <div class="section" style="grid-column:1/-1">
+        <div class="media-library-head">
+          <h3><i class="ic ic-mic"></i> کتابخانهٔ مشترک MP3</h3>
+          <span class="onair" id="mediaLibraryCount">۰ فایل</span>
+        </div>
+        <p class="viewerhint">فایل‌های MP3 را یک‌بار آپلود کن، چندتایی انتخاب کن و مستقیم به هر شبکه‌ای در TV، رادیو یا کودک منتقل کن. هنگام انتقال، فایل از کتابخانه برداشته می‌شود ولی فایل ذخیره‌شده در Supabase باقی می‌ماند.</p>
+        <div class="field"><label for="mediaLibraryFiles">انتخاب چند فایل MP3</label><input id="mediaLibraryFiles" type="file" accept=".mp3,audio/mpeg" multiple></div>
+        <div class="actions"><button id="uploadMediaLibraryBtn" type="button" class="primary"><i class="ic ic-plus"></i> آپلود به کتابخانه</button><button id="selectAllMediaLibraryBtn" type="button" class="small">انتخاب همه</button><button id="clearMediaLibrarySelectionBtn" type="button" class="small">لغو انتخاب</button></div>
+        <div class="media-library-tools">
+          <div class="field"><label for="mediaLibraryTargetSection">بخش مقصد</label><select id="mediaLibraryTargetSection"><option value="tv">TV</option><option value="radio">رادیو</option><option value="kids">کودک</option></select></div>
+          <div class="field"><label for="mediaLibraryTargetChannel">شبکهٔ مقصد</label><select id="mediaLibraryTargetChannel"></select></div>
+          <button id="transferMediaLibraryBtn" type="button" class="primary"><i class="ic ic-arrow-right"></i> انتقال انتخاب‌شده‌ها به شبکه</button>
+          <button id="deleteMediaLibraryBtn" type="button" class="danger"><i class="ic ic-trash"></i> حذف از فهرست</button>
+        </div>
+        <div id="mediaLibraryStatus" class="statusbox" aria-live="polite">هنوز فایلی به کتابخانه اضافه نشده است.</div>
+        <div id="mediaLibraryList" class="media-library-list"></div>
       </div>
     </div>
 
@@ -2176,7 +2211,7 @@ const DEFAULT_STATE = {
   schedule:{tz:210},logoMode:"auto",
   fallback:{type:"none",url:""},
   events:{enabled:true,custom:[]},
-  lastSyncAt:0,channelFeeds:[],googleClientId:"",
+  lastSyncAt:0,channelFeeds:[],mediaLibrary:[],googleClientId:"",
   watermark:{text:"",image:"",size:100,opacity:85,width:110,color:"#ffffff",position:"top-left",x:3,y:4},
   analytics:{itemViews:{},itemWatchTime:{},hourViews:new Array(24).fill(0),totalWatchSeconds:0,dailyViews:{}},
   polls:[],feedback:[]
@@ -2188,6 +2223,7 @@ let currentUser = null;
 let isAdmin = false;
 let selectedVideoIndex = -1;
 let selectedRadioIndex = -1;
+let selectedMediaLibraryIds = new Set();
 let selectedKidsIndex = -1;
 let ytPlayer = null;
 let ytReady = false;
@@ -3032,6 +3068,7 @@ function ensureState(){
   if(!Array.isArray(state.feedback))state.feedback=[];
   if(!state.stationName)state.stationName="AM TV 24/7";
   if(!Array.isArray(state.channelFeeds))state.channelFeeds=[];
+  if(!Array.isArray(state.mediaLibrary))state.mediaLibrary=[];
   try{
     const defs={channels:null,radioChannels:{id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]},kidsChannels:{id:"kids-main",name:"Kids World",color:"#ff9e3d",list:[]}};
     let moved=false;
@@ -4803,7 +4840,7 @@ function renderAll(){
   loadWatermarkFields();loadBumperFields();loadScheduleFields();loadLogoFields();
   const ek=eventKey();
   if(ek!==lastEventKey){lastEventKey=ek;applyPrefs();renderEventBanner();}
-  renderEventList();renderGuide();renderChannelFeedsList();updateViewerUI();try{renderNetworksPanel()}catch(_){}
+  renderEventList();renderGuide();renderChannelFeedsList();renderMediaLibrary();updateViewerUI();try{renderNetworksPanel()}catch(_){}
   renderAnalytics();renderPollList();renderFeedbackList();
   const hasPoll=!!activePoll();
   const pv=$("pollsViewerBtn");
@@ -4919,6 +4956,75 @@ async function addRadio(){
     scheduleSave();renderRadioList();notify(t("msgAdded",{n:additions.length}));
   }catch(e){console.error(e);notify(t("msgAddFail")+e.message);}
   finally{$("addRadioButton").disabled=false;}
+}
+
+function mediaLibraryTargetList(section){return section==="radio"?state.radioChannels:section==="kids"?state.kidsChannels:state.channels;}
+function renderMediaLibraryTargetChannels(){
+  const sec=$("mediaLibraryTargetSection"),sel=$("mediaLibraryTargetChannel");if(!sec||!sel)return;
+  const section=sec.value||"tv",list=mediaLibraryTargetList(section),old=sel.value;
+  sel.innerHTML="";
+  (list||[]).forEach((ch,i)=>{const op=document.createElement("option");op.value=ch.id;op.textContent=ch.name||("شبکهٔ "+(i+1));sel.appendChild(op)});
+  if((list||[]).some(ch=>ch.id===old))sel.value=old;
+}
+function renderMediaLibrary(){
+  const root=$("mediaLibraryList");if(!root)return;
+  if(!Array.isArray(state.mediaLibrary))state.mediaLibrary=[];
+  renderMediaLibraryTargetChannels();
+  const count=$("mediaLibraryCount");if(count)count.textContent=state.mediaLibrary.length+" فایل";
+  root.innerHTML="";
+  if(!state.mediaLibrary.length){root.innerHTML='<div class="viewerhint">کتابخانه خالی است؛ از بخش بالا چند فایل MP3 انتخاب و آپلود کن.</div>';return;}
+  state.mediaLibrary.forEach((file)=>{
+    const card=document.createElement("div");card.className="media-library-card";
+    const cb=document.createElement("input");cb.type="checkbox";cb.checked=selectedMediaLibraryIds.has(file.id);cb.setAttribute("aria-label","انتخاب "+(file.title||"MP3"));
+    cb.onchange=()=>{if(cb.checked)selectedMediaLibraryIds.add(file.id);else selectedMediaLibraryIds.delete(file.id);};
+    const icon=document.createElement("div");icon.className="ml-icon";icon.innerHTML='<i class="ic ic-mic"></i>';
+    const info=document.createElement("div");info.className="ml-info";
+    const title=document.createElement("div");title.className="ml-title";title.textContent=file.title||"Audio.mp3";
+    const meta=document.createElement("div");meta.className="ml-meta";const mb=Number(file.size)>0?(Number(file.size)/1048576).toFixed(2)+" MB":"MP3";meta.textContent=mb+(file.addedAt?" · "+new Date(file.addedAt).toLocaleDateString():"");
+    info.append(title,meta);card.append(cb,icon,info);root.appendChild(card);
+  });
+}
+async function uploadMediaLibraryFiles(){
+  if(!isAdmin){notify(t("msgNoAdmin"));return;}
+  const input=$("mediaLibraryFiles"),files=Array.from(input?.files||[]);if(!files.length){notify("اول فایل‌های MP3 را انتخاب کن.");return;}
+  const invalid=files.find(f=>!(/\.mp3$/i.test(f.name||"")||f.type==="audio/mpeg"));
+  if(invalid){notify("فقط فایل MP3 قابل آپلود است: "+invalid.name);return;}
+  const btn=$("uploadMediaLibraryBtn");btn.disabled=true;const uploaded=[];
+  try{
+    for(let i=0;i<files.length;i++){
+      const file=files[i];btn.textContent="در حال آپلود "+(i+1)+" از "+files.length+"…";
+      const url=await uploadFile(file,"mp3-library");
+      uploaded.push({id:makeId(),title:file.name||"Audio.mp3",url,addedAt:Date.now(),size:Number(file.size)||0,mime:"audio/mpeg"});
+    }
+    state.mediaLibrary.push(...uploaded);input.value="";uploaded.forEach(f=>selectedMediaLibraryIds.add(f.id));
+    scheduleSave();renderMediaLibrary();const status=$("mediaLibraryStatus");if(status)status.textContent=uploaded.length+" فایل MP3 آپلود و به کتابخانه اضافه شد.";
+    notify(uploaded.length+" فایل MP3 اضافه شد.");
+  }catch(e){console.error("MP3 library upload failed",e);const status=$("mediaLibraryStatus");if(status)status.textContent="خطا در آپلود: "+(e?.message||e);notify("آپلود کامل نشد: "+(e?.message||e));}
+  finally{btn.disabled=false;btn.innerHTML='<i class="ic ic-plus"></i> آپلود به کتابخانه';}
+}
+function transferMediaLibraryFiles(){
+  if(!isAdmin){notify(t("msgNoAdmin"));return;}
+  const ids=new Set(selectedMediaLibraryIds);if(!ids.size){notify("حداقل یک فایل را انتخاب کن.");return;}
+  const section=$("mediaLibraryTargetSection")?.value||"tv",channelId=$("mediaLibraryTargetChannel")?.value;
+  const list=mediaLibraryTargetList(section),channel=(list||[]).find(c=>c.id===channelId);
+  if(!channel){notify("شبکهٔ مقصد را انتخاب کن.");return;}
+  const chosen=(state.mediaLibrary||[]).filter(f=>ids.has(f.id));if(!chosen.length){notify("فایل انتخاب‌شده پیدا نشد.");return;}
+  if(!confirm("انتقال "+chosen.length+" فایل به «"+(channel.name||"شبکه")+"»؟ فایل‌ها از فهرست کتابخانه برداشته می‌شوند."))return;
+  channel.list=Array.isArray(channel.list)?channel.list:[];
+  const moved=chosen.map(f=>({id:makeId(),title:f.title||"Audio.mp3",url:f.url,addedAt:Date.now(),mediaType:"audio",mime:"audio/mpeg",librarySourceId:f.id}));
+  channel.list.push(...moved);
+  state.mediaLibrary=state.mediaLibrary.filter(f=>!ids.has(f.id));chosen.forEach(f=>selectedMediaLibraryIds.delete(f.id));
+  if(section==="tv"){state.channelIndex=Math.max(0,list.findIndex(c=>c.id===channel.id));selectedVideoIndex=channel.list.length-1;}
+  else if(section==="radio"){state.radioChannelIndex=Math.max(0,list.findIndex(c=>c.id===channel.id));selectedRadioIndex=channel.list.length-1;}
+  else{state.kidsChannelIndex=Math.max(0,list.findIndex(c=>c.id===channel.id));}
+  activeMediaKey="";scheduleSave();renderMediaLibrary();
+  const status=$("mediaLibraryStatus");if(status)status.textContent=chosen.length+" فایل به شبکهٔ «"+(channel.name||"")+"» منتقل شد.";
+  notify(chosen.length+" فایل به "+(channel.name||"شبکه")+" منتقل شد.");
+}
+function deleteMediaLibrarySelection(){
+  if(!isAdmin)return;const ids=new Set(selectedMediaLibraryIds);if(!ids.size){notify("اول فایل‌ها را انتخاب کن.");return;}
+  if(!confirm("فقط "+ids.size+" مورد از فهرست کتابخانه حذف شوند؟ فایل‌های ذخیره‌شده در فضای ابری پاک نمی‌شوند."))return;
+  state.mediaLibrary=state.mediaLibrary.filter(f=>!ids.has(f.id));selectedMediaLibraryIds.clear();scheduleSave();renderMediaLibrary();
 }
 
 const THEMES={
@@ -5078,6 +5184,7 @@ function openTab(tabId){
   if(tabId==="pollsTab")renderPollList();
   if(tabId==="feedbackTab")renderFeedbackList();
   if(tabId==="kidsTab")renderKidsAdmin();
+  if(tabId==="mediaLibraryTab")renderMediaLibrary();
   if(tabId==="youtubeTab")renderYouTubeSubscriptions();
   setTimeout(refreshSelects,0);
 }
@@ -5981,6 +6088,12 @@ $("scheduleTz").addEventListener("change",e=>{
   activeMediaKey="";scheduleSave();
 });
 $("addRadioButton").addEventListener("click",addRadio);
+$("uploadMediaLibraryBtn").addEventListener("click",uploadMediaLibraryFiles);
+$("mediaLibraryTargetSection").addEventListener("change",()=>{renderMediaLibraryTargetChannels();});
+$("selectAllMediaLibraryBtn").addEventListener("click",()=>{(state.mediaLibrary||[]).forEach(f=>selectedMediaLibraryIds.add(f.id));renderMediaLibrary();});
+$("clearMediaLibrarySelectionBtn").addEventListener("click",()=>{selectedMediaLibraryIds.clear();renderMediaLibrary();});
+$("transferMediaLibraryBtn").addEventListener("click",transferMediaLibraryFiles);
+$("deleteMediaLibraryBtn").addEventListener("click",deleteMediaLibrarySelection);
 $("playSelectedRadio").addEventListener("click",()=>{if(selectedRadioIndex>=0){setMode("radio");chooseIndex(selectedRadioIndex,"radio");}});
 $("deleteSelectedRadio").addEventListener("click",()=>{
   const list=currentRadioChannel().list;
