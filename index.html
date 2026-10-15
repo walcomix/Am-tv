@@ -781,6 +781,11 @@ html body.emoji-only .btnlabel{
   visibility:visible!important;
   opacity:1!important;
 }
+
+.remote-dock{will-change:transform;transform:translateZ(0);contain:layout style}
+.remote-control{box-shadow:0 6px 16px #000a!important;background:#202733!important;overscroll-behavior:contain}
+.remote-dock-toggle{box-shadow:0 3px 8px #0009!important;background:#2a3342!important}
+.remote-dock,.remote-dock *{transition:none!important;animation:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;-webkit-tap-highlight-color:transparent}
 </style>
 </head><body class="booting">
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
@@ -1203,6 +1208,9 @@ html body.emoji-only .btnlabel{
       <div class="adminGrid">
         <div class="section">
           <h3><i class="ic ic-wm"></i><span data-i18n="wmTitle">متن یا لوگوی واترمارک</span></h3>
+          <div class="field"><label for="wmTarget">واترمارک برای کدام شبکه؟</label><select id="wmTarget"></select></div>
+          <label style="display:flex;gap:8px;align-items:center;margin:6px 0"><input type="checkbox" id="wmOff"> بدون واترمارک روی این شبکه</label>
+          <div class="viewerhint">برای دیدن پیش‌نمایش، همان شبکه را پخش کن. شبکه‌ای که واترمارک اختصاصی ندارد، از پیش‌فرض استفاده می‌کند.</div>
           <div class="field"><label for="wmTextInput" data-i18n="wmText">متن دلخواه</label><input id="wmTextInput" placeholder="AM ORIGINAL"></div>
           <div class="field"><label for="wmImageInput" data-i18n="wmImgFile">تصویر لوگو</label><input id="wmImageInput" type="file" accept="image/*"></div>
           <div class="field"><label for="wmImageURL" data-i18n="wmImgUrl">یا لینک مستقیم تصویر</label><input id="wmImageURL" type="url" placeholder="https://.../logo.png"></div>
@@ -1278,6 +1286,7 @@ html body.emoji-only .btnlabel{
           <div class="rowfields">
             <div class="field"><label for="feedChannelName" data-i18n="feedChannelNameLbl">نام نمایشی کانال</label><input id="feedChannelName" placeholder="—"></div>
             <div class="field"><label for="feedTargetSection" data-i18n="feedTargetSectionLbl">بخش مقصد</label><select id="feedTargetSection"><option value="tv">TV</option><option value="radio">Radio</option><option value="kids">Kids</option></select></div>
+            <div class="field"><label for="feedTargetNetwork">شبکهٔ مقصد</label><select id="feedTargetNetwork"></select></div>
           </div>
           <div class="actions feed-sync-actions">
             <button id="addChannelFeedButton" type="button" class="primary"><i class="ic ic-plus"></i><span data-i18n="addChannelFeedLbl">افزودن کانال</span></button>
@@ -2694,17 +2703,9 @@ async function addChannelFeed(){
   const url=$("feedChannelUrl").value.trim(),name=$("feedChannelName").value.trim(),section=$("feedTargetSection").value;
   if(!url||!/^https?:\/\//i.test(url)){notify("Invalid link.");return}
   const feed={id:makeId(),url,name:name||"YouTube Channel",section,createdAt:Date.now(),targetId:""};
-  if(section==="radio"){
-    const channel={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-    state.radioChannels.push(channel);state.radioChannelIndex=state.radioChannels.length-1;feed.targetId=channel.id;
-  }else if(section==="kids"){
-    const channel={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
-    state.kidsChannels.push(channel);state.kidsChannelIndex=state.kidsChannels.length-1;feed.targetId=channel.id;
-  }else{
-    const channel={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-    state.channels.push(channel);state.channelIndex=state.channels.length-1;feed.targetId=channel.id;
-  }
-  state.channelFeeds.push(feed);$("feedChannelUrl").value="";$("feedChannelName").value="";
+  feed.networkId=($("feedTargetNetwork")||{}).value||"";
+  state.channelFeeds.push(feed);
+  if(!feed.networkId){$("feedChannelUrl").value="";$("feedChannelName").value="";renderChannelFeedsList();try{renderNetworksPanel()}catch(_){}scheduleSave();notify("کانال یوتیوب ذخیره شد. از «مدیریت شبکه‌ها» به یک شبکه وصلش کن.");return}$("feedChannelUrl").value="";$("feedChannelName").value="";
   $("channelFeedStatus").textContent="...";
   try{await syncChannelFeeds(false,feed.id)}catch(error){
     $("channelFeedStatus").textContent="Error: "+error.message;renderChannelFeedsList();
@@ -2727,11 +2728,8 @@ function renderChannelFeedsList(){
     syncOne.onclick=()=>syncChannelFeeds(true,feed.id);
     const del=document.createElement("button");del.className="small danger";del.type="button";del.innerHTML='<i class="ic ic-trash"></i>';
     del.onclick=async()=>{if(!confirm("?"))return;
-      state.channelFeeds=state.channelFeeds.filter(x=>x.id!==feed.id);
-      state.channels=state.channels.filter(c=>c.id!==feed.targetId);
-      state.radioChannels=state.radioChannels.filter(c=>c.id!==feed.targetId);
-      state.kidsChannels=state.kidsChannels.filter(c=>c.id!==feed.targetId);
-      activeMediaKey="";renderAll();clearTimeout(saveTimer);await saveRemoteState();
+      try{const nt=networkFor(feed);if(nt)nt.list=(nt.list||[]).filter(v=>v.feedId!==feed.id)}catch(_){}
+      state.channelFeeds=state.channelFeeds.filter(x=>x.id!==feed.id);activeMediaKey="";renderAll();clearTimeout(saveTimer);await saveRemoteState();
     };
     row.append(info,syncOne,del);root.appendChild(row);
   });
@@ -2773,17 +2771,10 @@ function renderSyncPartial(){
 const SYNC_SEC_NAME={tv:"TV",radio:"رادیو",kids:"کودک"};
 /* Find where a feed's channel really lives (tv / radio / kids) so videos always land in the right section. */
 function resolveFeedTarget(feed){
-  const L=secLists();
-  const order=[feed.section||"tv",...["tv","radio","kids"].filter(x=>x!==(feed.section||"tv"))];
-  for(const sec of order){
-    const ch=(L[sec]||[]).find(c=>c.id===feed.targetId)||(L[sec]||[]).find(c=>c.feedId===feed.id);
-    if(ch){
-      if(feed.section!==sec)feed.section=sec;
-      if(feed.targetId!==ch.id)feed.targetId=ch.id;
-      return {section:sec,target:ch};
-    }
-  }
-  return {section:feed.section||"tv",target:null};
+  const L=secLists(),first=feed.section||"tv";
+  const order=[first,...["tv","radio","kids"].filter(x=>x!==first)];
+  if(feed.networkId){for(const sec of order){const n=(L[sec]||[]).find(c=>c.id===feed.networkId&&!c.feedId);if(n){if(feed.section!==sec)feed.section=sec;return {section:sec,target:n};}}}
+  return {section:first,target:null};
 }
 function syncErrSummary(errors,N){
   if(!errors.length)return "";
@@ -2816,7 +2807,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
       try{
         const videos=await withTimeout(fetchRecentChannelVideos(feed.url),45000,"sync");
         const loc=resolveFeedTarget(feed);const target=loc.target;
-        if(!target){errors.push({name:feed.name,msg:"کانال مقصد پیدا نشد"});continue}
+        if(!target){errors.push({name:feed.name,msg:"به هیچ شبکه‌ای وصل نیست"});continue}
         if(sectionFilter&&loc.section!==sectionFilter)continue;
         const cutoff=()=>Date.now()-24*60*60*1000;
         const existing=Array.isArray(target.list)?target.list:[];
@@ -2989,6 +2980,19 @@ function ensureState(){
   if(!Array.isArray(state.feedback))state.feedback=[];
   if(!state.stationName)state.stationName="AM TV 24/7";
   if(!Array.isArray(state.channelFeeds))state.channelFeeds=[];
+  try{
+    const defs={channels:null,radioChannels:{id:"rad-main",name:"AM Radio",color:"#e8b85b",list:[]},kidsChannels:{id:"kids-main",name:"Kids World",color:"#ff9e3d",list:[]}};
+    let moved=false;
+    [["channels","channelIndex"],["radioChannels","radioChannelIndex"],["kidsChannels","kidsChannelIndex"]].forEach(([k,ik])=>{
+      const arr=state[k];if(!arr.some(c=>c.feedId))return;moved=true;
+      const curId=(arr[state[ik]]||{}).id;
+      state[k]=arr.filter(c=>{if(!c.feedId)return true;const f=state.channelFeeds.find(x=>x.id===c.feedId);if(f)f.targetId="";return false;});
+      if(!state[k].length)state[k]=k==="channels"?clone(DEFAULT_STATE.channels):[clone(defs[k])];
+      state[k].forEach(c=>{if(!Array.isArray(c.list))c.list=[];if(!c.id)c.id=makeId()});
+      const ni=state[k].findIndex(c=>c.id===curId);state[ik]=ni>=0?ni:0;
+    });
+    if(moved){ensureChannelNumbers();if(isAdmin&&window.__remoteLoaded&&!window.__stateFromCache)scheduleSave();}
+  }catch(e){console.warn("feed-channel migration failed",e)}
   state.channelIndex=Math.max(0,Math.min(Number(state.channelIndex)||0,state.channels.length-1));
 }
 function effectiveItemKey(item){
@@ -4100,8 +4104,22 @@ function adminResumeLive(){
   if(did){adminResumed=true;activeMediaKey="";}
 }
 
+var wmTarget="";
+function wmTargetCh(){if(!wmTarget)return null;const L=secLists();for(const s of["tv","radio","kids"]){const c=(L[s]||[]).find(x=>x.id===wmTarget&&!x.feedId);if(c)return c}return null}
+function wmCur(){const c=wmTargetCh();return c?(c.watermark||{...DEFAULT_STATE.watermark}):(state.watermark||DEFAULT_STATE.watermark)}
+function wmSet(p){const c=wmTargetCh();if(c)c.watermark={...(c.watermark||DEFAULT_STATE.watermark),...p,off:false};else state.watermark={...state.watermark,...p}}
+function fillWmTargetSelect(){
+  const s=$("wmTarget");if(!s)return;const L=secLists(),N={tv:"TV",radio:"رادیو",kids:"کودک"};
+  let h='<option value="">همهٔ شبکه‌ها (پیش‌فرض)</option>';
+  ["tv","radio","kids"].forEach(sc=>(L[sc]||[]).filter(c=>!c.feedId).sort((a,b)=>chNum(a)-chNum(b)).forEach(c=>{h+='<option value="'+esc(c.id)+'">'+esc(N[sc]+" · CH "+chNum(c)+" · "+(c.name||"")+(c.watermark?" ✓":""))+'</option>'}));
+  s.innerHTML=h;if(!wmTargetCh())wmTarget="";s.value=wmTarget;
+  const o=$("wmOff");if(o){const c=wmTargetCh();o.disabled=!c;o.checked=!!(c&&c.watermark&&c.watermark.off)}
+  try{refreshSelects()}catch(_){}
+}
 function applyWatermark(){
-  const w=state.watermark||DEFAULT_STATE.watermark;
+  let w=state.watermark||DEFAULT_STATE.watermark;
+  try{const _c=curChannelFor(activeMode());if(_c&&_c.watermark&&(_c.watermark.off||_c.watermark.image||_c.watermark.text))w=_c.watermark;}catch(_){}
+  if(w.off){$("watermark").style.display="none";return}
   const root=$("watermark"),img=$("watermarkImage"),txt=$("watermarkText");
   const image=(w.image||"").trim(),text=(w.text||"").trim();
   if(!image&&!text){root.style.display="none";return}
@@ -4128,7 +4146,7 @@ function applyWatermark(){
 function readWatermarkFields(){
   return {
     text:$("wmTextInput").value.trim(),
-    image:$("wmImageURL").value.trim()||state.watermark.image||"",
+    image:$("wmImageURL").value.trim()||wmCur().image||"",
     size:Number($("wmSize").value)||100,
     opacity:Number($("wmOpacity").value)||85,
     width:Number($("wmWidth").value)||110,
@@ -4139,7 +4157,7 @@ function readWatermarkFields(){
   };
 }
 function loadWatermarkFields(){
-  const w=state.watermark||DEFAULT_STATE.watermark;
+  fillWmTargetSelect();const w=wmCur();
   $("wmTextInput").value=w.text||"";
   $("wmImageURL").value=w.image||"";
   $("wmSize").value=w.size||100;
@@ -5284,17 +5302,10 @@ async function addSubscriptionAsFeed(sub,btn){
     return;
   }
   const feed={id:makeId(),url:channelUrl,name:sub.title,section:sub.section,tvGroup:sub.section==="tv"?(sub.tvGroup||""):"",createdAt:Date.now(),targetId:""};
-  if(sub.section==="radio"){
-    const ch={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-    state.radioChannels.push(ch);feed.targetId=ch.id;
-  }else if(sub.section==="kids"){
-    const ch={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
-    state.kidsChannels.push(ch);feed.targetId=ch.id;
-  }else{
-    const ch={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id,tvGroup:feed.tvGroup};
-    state.channels.push(ch);feed.targetId=ch.id;
-  }
   state.channelFeeds.push(feed);
+  scheduleSave();if(btn){btn.disabled=true;btn.textContent="✓";}
+  notify("به منابع اضافه شد؛ از «مدیریت شبکه‌ها» به یک شبکه وصلش کن.");try{renderNetworksPanel()}catch(_){}
+  return;
   if(btn){btn.disabled=true;btn.textContent="…";}
   scheduleSave();
   try{
@@ -5312,21 +5323,11 @@ async function addAllSubscriptions(){
     const channelUrl="https://www.youtube.com/channel/"+sub.channelId;
     if((state.channelFeeds||[]).some(f=>f.url===channelUrl))continue;
     const feed={id:makeId(),url:channelUrl,name:sub.title,section:sub.section,createdAt:Date.now(),targetId:""};
-    if(sub.section==="radio"){
-      const ch={id:"rad-feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-      state.radioChannels.push(ch);feed.targetId=ch.id;
-    }else if(sub.section==="kids"){
-      const ch={id:"kids-feed-"+feed.id,name:feed.name,color:"#ff9e3d",list:[],feedId:feed.id};
-      state.kidsChannels.push(ch);feed.targetId=ch.id;
-    }else{
-      const ch={id:"feed-"+feed.id,name:feed.name,color:"#e8b85b",list:[],feedId:feed.id};
-      state.channels.push(ch);feed.targetId=ch.id;
-    }
     state.channelFeeds.push(feed);
   }
   clearTimeout(saveTimer);await saveRemoteState();
   renderAll();renderChannelFeedsList();renderYouTubeSubscriptionStats();
-  notify("Done. Use Sync to fetch videos.");
+  notify("همه به منابع اضافه شدند؛ هر کدام را در «مدیریت شبکه‌ها» به یک شبکه وصل کن.");
 }
 
 async function scanSelectedLiveStreams(){
@@ -5937,26 +5938,28 @@ $("deleteSelectedRadio").addEventListener("click",()=>{
   state.radioIndex=Math.max(0,Math.min(state.radioIndex,list.length-1));
   activeMediaKey="";scheduleSave();renderPlayer(true);
 });
-$("wmPosition").addEventListener("change",()=>{state.watermark={...state.watermark,...readWatermarkFields()};applyWatermark();});
+$("wmTarget").addEventListener("change",e=>{wmTarget=e.target.value;loadWatermarkFields();applyWatermark();});
+$("wmOff").addEventListener("change",e=>{const c=wmTargetCh();if(!c){e.target.checked=false;return}c.watermark={...(c.watermark||DEFAULT_STATE.watermark),off:e.target.checked};applyWatermark();});
+$("wmPosition").addEventListener("change",()=>{wmSet(readWatermarkFields());applyWatermark();});
 ["wmTextInput","wmSize","wmOpacity","wmWidth","wmColor","wmX","wmY"].forEach(id=>{
-  $(id).addEventListener("input",()=>{state.watermark={...state.watermark,...readWatermarkFields()};applyWatermark();});
+  $(id).addEventListener("input",()=>{wmSet(readWatermarkFields());applyWatermark();});
 });
-$("wmImageURL").addEventListener("input",()=>{state.watermark={...state.watermark,image:$("wmImageURL").value.trim()};applyWatermark();});
+$("wmImageURL").addEventListener("input",()=>{wmSet({image:$("wmImageURL").value.trim()});applyWatermark();});
 $("wmImageInput").addEventListener("change",async e=>{
   const file=e.target.files?.[0];if(!file)return;
   if(!isAdmin)return;
-  try{const url=await uploadFile(file,"watermarks");$("wmImageURL").value=url;state.watermark={...state.watermark,image:url};applyWatermark();}
+  try{const url=await uploadFile(file,"watermarks");$("wmImageURL").value=url;wmSet({image:url});applyWatermark();}
   catch(err){notify(t("msgUploadFail")+err.message);}
 });
-$("previewWatermark").addEventListener("click",()=>{state.watermark={...state.watermark,...readWatermarkFields()};applyWatermark();$("playerShell")?.scrollIntoView({behavior:"smooth",block:"center"});const wm=$("watermark");if(wm){wm.classList.remove("hidden");wm.style.opacity="1";}notify(t("msgPreviewUpd"));});
+$("previewWatermark").addEventListener("click",()=>{wmSet(readWatermarkFields());applyWatermark();$("playerShell")?.scrollIntoView({behavior:"smooth",block:"center"});const wm=$("watermark");if(wm){wm.classList.remove("hidden");wm.style.opacity="1";}notify(t("msgPreviewUpd"));});
 $("saveWatermark").addEventListener("click",()=>{
   if(!isAdmin)return;
-  state.watermark={...state.watermark,...readWatermarkFields()};
+  wmSet(readWatermarkFields());
   scheduleSave();applyWatermark();notify(t("msgWmSaved"));
 });
 $("clearWatermark").addEventListener("click",()=>{
   if(!isAdmin)return;
-  state.watermark=clone(DEFAULT_STATE.watermark);
+  {const c=wmTargetCh();if(c)delete c.watermark;else state.watermark=clone(DEFAULT_STATE.watermark);}
   loadWatermarkFields();applyWatermark();scheduleSave();notify(t("msgWmCleared"));
 });
 $("saveStationButton").addEventListener("click",async()=>{
@@ -6068,7 +6071,7 @@ function updateRemoteSuppression(){
   document.body.classList.toggle("remote-suppressed",optionOpen);
   if(optionOpen&&remoteControl&&!remoteControl.classList.contains("hidden"))toggleRemote(false);
 }
-const remoteUiObserver=new MutationObserver(updateRemoteSuppression);remoteUiObserver.observe(document.body,{subtree:true,attributes:true,attributeFilter:["class","aria-expanded"]});
+let _rsT=0;const remoteUiObserver=new MutationObserver(()=>{if(_rsT)return;_rsT=setTimeout(()=>{_rsT=0;updateRemoteSuppression()},200)});remoteUiObserver.observe(document.body,{subtree:true,attributes:true,attributeFilter:["class"]});
 document.addEventListener("click",()=>setTimeout(updateRemoteSuppression,40),true);updateRemoteSuppression();
 let remoteDigits="",remoteDigitTimer=0;
 /* ================= Channel numbers, networks, remote, viewer menu, auto-sync ================= */
@@ -6125,7 +6128,7 @@ $("remoteChUp")?.addEventListener("click",()=>remoteStepChannel(1));
 $("remoteChDown")?.addEventListener("click",()=>remoteStepChannel(-1));
 document.addEventListener("keydown",e=>{
   const tg=e.target&&e.target.tagName;if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT"||e.ctrlKey||e.metaKey||e.altKey)return;
-  if(/^[0-9]$/.test(e.key)){const rc=$("remoteControl");if(rc&&!rc.classList.contains("hidden")||true){remotePushDigit(e.key)}}
+  if(/^[0-9]$/.test(e.key)){const rc=$("remoteControl");if(rc&&!rc.classList.contains("hidden")){remotePushDigit(e.key)}}
   else if(e.key==="Enter"&&remoteDigits)applyRemoteChannel();
 });
 /* ---- feed -> network ---- */
@@ -6135,7 +6138,7 @@ function networkFor(feed){
   return (secLists()[sec]||[]).find(c=>c.id===feed.networkId&&!c.feedId)||null;
 }
 function mergeFeedIntoNetwork(feed){
-  const loc=resolveFeedTarget(feed),net=networkFor(feed);if(!net||!loc.target)return 0;
+  const loc=resolveFeedTarget(feed),net=networkFor(feed);if(!net||!loc.target||net===loc.target)return 0;
   const mine=(loc.target.list||[]).filter(v=>v.feedId===feed.id&&v.youtubeId);
   net.list=Array.isArray(net.list)?net.list:[];
   const idxMap=new Map();net.list.forEach((v,i)=>{if(v.youtubeId&&v.feedId===feed.id)idxMap.set(String(v.youtubeId),i)});
@@ -6153,10 +6156,12 @@ function mergeFeedIntoNetwork(feed){
   return added;
 }
 function setFeedNetwork(feed,id){
-  const old=networkFor(feed);feed.networkId=id||"";
+  const old=networkFor(feed);
   if(old&&old.id!==id)old.list=(old.list||[]).filter(v=>v.feedId!==feed.id);
-  const n=mergeFeedIntoNetwork(feed);
-  scheduleSave();notify(id?("به شبکه منتقل شد ("+n+" ویدیو)"):"از شبکه خارج شد.");
+  feed.networkId=id||"";
+  if(!id){scheduleSave();renderAll();notify("از شبکه خارج شد.");return}
+  resolveFeedTarget(feed);scheduleSave();renderAll();
+  syncChannelFeeds(true,feed.id).catch(()=>{});
 }
 /* ---- admin panel: networks & numbers ---- */
 var netSec="tv";
@@ -6167,7 +6172,15 @@ function ensureNetworksPanel(){
   p.innerHTML='<h3><i class="ic ic-tv"></i> مدیریت شبکه‌ها و شمارهٔ کانال‌ها</h3><div class="actions" id="netTabs"></div><div id="netNew"></div><div id="netList" class="itemlist"></div><h4 style="margin-top:14px">کانال‌های یوتیوب ← انتقال به شبکه</h4><div id="netFeeds" class="itemlist"></div><div id="netAuto" class="viewerhint" style="margin-top:12px"></div>';
   anchor.before(p);return p;
 }
+function fillFeedNetworkSelect(){
+  const s=$("feedTargetNetwork"),sc=$("feedTargetSection");if(!s||!sc)return;
+  const nets=(secLists()[sc.value]||[]).filter(c=>!c.feedId).sort((a,b)=>chNum(a)-chNum(b));
+  const prev=s.value;
+  s.innerHTML='<option value="">— بدون شبکه (بعداً وصل می‌کنم) —</option>'+nets.map(n=>'<option value="'+esc(n.id)+'">'+esc("CH "+chNum(n)+" · "+(n.name||""))+'</option>').join("");
+  s.value=nets.some(n=>n.id===prev)?prev:"";try{refreshSelects()}catch(_){}
+}
 function renderNetworksPanel(){
+  try{fillFeedNetworkSelect()}catch(_){}
   if(!isAdmin)return;const p=ensureNetworksPanel();if(!p)return;
   if(p.contains(document.activeElement)&&/INPUT|SELECT/.test(document.activeElement.tagName))return;
   const SEC={tv:"TV",radio:"رادیو",kids:"کودک"};
@@ -6228,6 +6241,7 @@ function renderNetworksPanel(){
   const info=document.createElement("div");info.style.marginTop="6px";info.textContent="آخرین همگام‌سازی — TV: "+fmt(m.tv)+" · رادیو: "+fmt(m.radio)+" · کودک: "+fmt(m.kids);au.appendChild(info);
   const note=document.createElement("div");note.style.cssText="margin-top:4px;opacity:.8";note.textContent="همگام‌سازی خودکار فقط وقتی انجام می‌شود که صفحه با حساب ادمین باز باشد.";au.appendChild(note);
 }
+$("feedTargetSection")&&$("feedTargetSection").addEventListener("change",()=>fillFeedNetworkSelect());
 /* ---- auto sync every 24h ---- */
 window.__autoTry=window.__autoTry||{};
 function autoSyncTick(){
@@ -6589,7 +6603,7 @@ setTimeout(()=>{document.body.classList.remove("booting");},3000);
   }
   $("playerShell").addEventListener("contextmenu",e=>{if(!isAdmin)e.preventDefault();});
   $("playerShell").addEventListener("keydown",e=>{if(!isAdmin)e.preventDefault();},true);
-  apply();setInterval(apply,1000);
+  apply();setInterval(apply,2500);
 })();
 
 let driftTick=0;
