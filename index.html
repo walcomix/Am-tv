@@ -2701,14 +2701,30 @@ function renderSyncPartial(){
   try{renderKidsAdmin()}catch(_){}
   try{renderGuide()}catch(_){}
 }
+const SYNC_SEC_NAME={tv:"TV",radio:"رادیو",kids:"کودک"};
+/* Find where a feed's channel really lives (tv / radio / kids) so videos always land in the right section. */
+function resolveFeedTarget(feed){
+  const L=secLists();
+  const order=[feed.section||"tv",...["tv","radio","kids"].filter(x=>x!==(feed.section||"tv"))];
+  for(const sec of order){
+    const ch=(L[sec]||[]).find(c=>c.id===feed.targetId)||(L[sec]||[]).find(c=>c.feedId===feed.id);
+    if(ch){
+      if(feed.section!==sec)feed.section=sec;
+      if(feed.targetId!==ch.id)feed.targetId=ch.id;
+      return {section:sec,target:ch};
+    }
+  }
+  return {section:feed.section||"tv",target:null};
+}
 async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const status=$("channelFeedStatus");
-  const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||(f.section||"tv")===sectionFilter));
-  if(!feeds.length){if(status)status.textContent=sectionFilter?"برای این بخش هنوز کانال YouTube قابل همگام‌سازی ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای این بخش فید YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
+  const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||resolveFeedTarget(f).section===sectionFilter));
+  const secName=sectionFilter?(SYNC_SEC_NAME[sectionFilter]||sectionFilter):"";
+  if(!feeds.length){if(status)status.textContent=sectionFilter?"برای بخش "+secName+" هنوز کانال YouTube منتقل/ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای بخش "+secName+" کانال YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
   if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
   window.__feedSyncBusy=Date.now();
-  const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی…","آماده‌سازی…");
+  const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی"+(secName?" بخش "+secName:"")+"…","آماده‌سازی…");
   let total=0,errors=[],idx=0;const N=feeds.length;
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const setStatus=(txt)=>{if(status)status.textContent=txt};
@@ -2716,12 +2732,13 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
     for(const feed of feeds){
       idx++;
       const base=((idx-1)/N)*100,slice=100/N;
-      ui.set(base,"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR"),"در حال دریافت فید: <b>"+esc(feed.name)+"</b><br>ویدیوهای همگام‌شده تا الان: <b>"+total.toLocaleString("fa-IR")+"</b>");
+      ui.set(base,(secName?"بخش "+secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR"),"در حال دریافت فید: <b>"+esc(feed.name)+"</b><br>ویدیوهای همگام‌شده تا الان: <b>"+total.toLocaleString("fa-IR")+"</b>");
       setStatus("در حال دریافت فید "+feed.name+" ("+idx+"/"+N+")…");
       try{
         const videos=await withTimeout(fetchRecentChannelVideos(feed.url),45000,"sync");
-        const channels=feed.section==="radio"?state.radioChannels:feed.section==="kids"?state.kidsChannels:state.channels;
-        const target=channels.find(c=>c.id===feed.targetId);if(!target)continue;
+        const loc=resolveFeedTarget(feed);const target=loc.target;
+        if(!target){errors.push(feed.name+": کانال مقصد پیدا نشد");continue}
+        if(sectionFilter&&loc.section!==sectionFilter)continue;
         const cutoff=()=>Date.now()-24*60*60*1000;
         const existing=Array.isArray(target.list)?target.list:[];
         const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
@@ -2729,12 +2746,12 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         let n=0;
         for(const v of videos){
           const key=String(v.id);const prior=byVideo.get(key);
-          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:feed.section==="kids"});
+          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
           const fresh=[...byVideo.values()].filter(x=>!x.publishedAt||Number(x.publishedAt)>=cutoff());
           target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));
           n++;total++;
           renderSyncPartial();
-          ui.set(base+slice*(n/videos.length),"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
+          ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
           setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");
           await sleep(120);
         }
@@ -5915,8 +5932,8 @@ let remoteMuted=false;
 $("remoteMute").addEventListener("click",()=>{remoteMuted=!remoteMuted;$("videoElement").muted=remoteMuted;$("audioElement").muted=remoteMuted;if(ytReady&&ytPlayer){try{remoteMuted?ytPlayer.mute():ytPlayer.unMute()}catch(_){}}$("remoteMute").innerHTML=(remoteMuted?"🔊":"🔇")+"<small>"+(remoteMuted?"UNMUTE":"MUTE")+"</small>";});
 function changeRemoteVolume(delta){const slider=$("volumeSlider");if(!slider)return;const val=Math.max(Number(slider.min||0),Math.min(Number(slider.max||100),Number(slider.value||0)+delta));slider.value=val;slider.dispatchEvent(new Event("input",{bubbles:true}));}
 $("remoteVolDown").addEventListener("click",()=>changeRemoteVolume(-10));$("remoteVolUp").addEventListener("click",()=>changeRemoteVolume(10));
-$("remotePrev").addEventListener("click",()=>$("prevButton")?.click());$("remotePlay").addEventListener("click",()=>$("playButton")?.click());$("remoteNext").addEventListener("click",()=>$("nextButton")?.click());$("remoteFullscreen").addEventListener("click",()=>$("fullscreenButton")?.click());$("remoteRefresh").addEventListener("click",async()=>{try{await loadRemoteState();if(isAdmin)await syncChannelFeeds(true);else notify("فهرست محلی تازه‌سازی شد.")}catch(e){notify("تازه‌سازی ناموفق بود: "+e.message)}});$("remoteCinema").addEventListener("click",()=>$("cinemaButton")?.click());
-$("quickRefreshBtn").addEventListener("click",async()=>{const b=$("quickRefreshBtn");b.disabled=true;try{await loadRemoteState();if(isAdmin)await syncChannelFeeds(true);else notify("فهرست محلی تازه‌سازی شد.")}catch(e){notify("تازه‌سازی ناموفق بود: "+e.message)}finally{b.disabled=false}});
+$("remotePrev").addEventListener("click",()=>$("prevButton")?.click());$("remotePlay").addEventListener("click",()=>$("playButton")?.click());$("remoteNext").addEventListener("click",()=>$("nextButton")?.click());$("remoteFullscreen").addEventListener("click",()=>$("fullscreenButton")?.click());$("remoteRefresh").addEventListener("click",async()=>{try{await loadRemoteState();if(isAdmin)await syncChannelFeeds(true,"",activeMode());else notify("فهرست محلی تازه‌سازی شد.")}catch(e){notify("تازه‌سازی ناموفق بود: "+e.message)}});$("remoteCinema").addEventListener("click",()=>$("cinemaButton")?.click());
+$("quickRefreshBtn").addEventListener("click",async()=>{const b=$("quickRefreshBtn");b.disabled=true;try{await loadRemoteState();if(isAdmin)await syncChannelFeeds(true,"",activeMode());else notify("فهرست محلی تازه‌سازی شد.")}catch(e){notify("تازه‌سازی ناموفق بود: "+e.message)}finally{b.disabled=false}});
 $("saveReminder").addEventListener("click",()=>{});
 $("saveKidsRadio").addEventListener("click",()=>{const url=$("kidsRadioUrl").value.trim();if(!/^https?:\/\//i.test(url)){notify("نشانی مستقیم رادیو را وارد کن.");return;}localStorage.setItem("amtv-kids-radio",JSON.stringify({url,name:$("kidsRadioName").value.trim()||"AM Kids Radio"}));$("kidsRadioStatus").textContent="ایستگاه ذخیره شد در همین مرورگر.";});
 $("playKidsRadio").addEventListener("click",async()=>{let cfg={};try{cfg=JSON.parse(localStorage.getItem("amtv-kids-radio")||"{}")}catch(_){}const url=$("kidsRadioUrl").value.trim()||cfg.url;if(!url){$("kidsRadioStatus").textContent="اول نشانی رادیو را ذخیره کن.";return;}const a=$("kidsRadioAudio");a.src=url;try{await a.play();$("kidsRadioStatus").textContent="در حال پخش";}catch(e){$("kidsRadioStatus").textContent="پخش ناموفق؛ نشانی باید فایل صوتی یا جریان مستقیم قابل‌دسترسی باشد.";}});
