@@ -2792,7 +2792,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
   window.__feedSyncBusy=Date.now();window.__ytApiSkip=false;fixSyncedYtIds();
   const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی"+(secName?" بخش "+secName:"")+"…","آماده‌سازی…");
-  let total=0,errors=[],idx=0;const N=feeds.length;
+  let total=0,errors=[],idx=0;const N=feeds.length;const syncedTargets=[];
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const setStatus=(txt)=>{if(status)status.textContent=txt};
   try{
@@ -2811,6 +2811,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
         const others=existing.filter(v=>!(v.youtubeId||v.ytId));
         let n=0;
+        if(videos.length)syncedTargets.push({section:loc.section,target});
         for(const v of videos){
           const key=String(v.id);const prior=byVideo.get(key);
           byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,ytId:key,...((v.duration>0)?{duration:v.duration}:{}),title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
@@ -2830,9 +2831,27 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>"+(errors.length?"<br><span style='color:#ff8b8b'>"+esc(syncErrSummary(errors,N))+"</span>":""));
   setStatus(errors.length?"خطا: "+syncErrSummary(errors,N):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد."));
   clearTimeout(saveTimer);
+  /* show the synced channel's playlist and start from the first video */
+  try{
+    const wantSec=sectionFilter||(typeof activeMode==="function"?activeMode():"");
+    const pick=syncedTargets.find(x=>x.section===wantSec)||(!sectionFilter?null:syncedTargets[0]);
+    if(pick&&pick.target&&(pick.target.list||[]).length){
+      const L=secLists()[pick.section];const ci=L.indexOf(pick.target);
+      if(ci>=0){
+        if(pick.section==="kids")state.kidsChannelIndex=ci;
+        else if(pick.section==="radio")state.radioChannelIndex=ci;
+        else state.channelIndex=ci;
+        selectedVideoIndex=-1;selectedRadioIndex=-1;selectedKidsIndex=-1;
+        renderAll();
+        chooseIndex(0,pick.section);
+        const rootId=pick.section==="kids"?"kidsPlaylist":pick.section==="radio"?"adminRadioList":"adminPlaylist";
+        setTimeout(()=>{try{document.getElementById(rootId).scrollIntoView({behavior:"smooth",block:"center"})}catch(_){}},400);
+      }
+    }
+  }catch(e){console.warn("post-sync select failed",e)}
   try{ui.set(100,null,null);await withTimeout(saveRemoteState(),15000,"save")}catch(e){setStatus((status?.textContent||"")+" (ذخیره: "+e.message+")")}
   if(showNotice)notify(errors.length?"!":"✓");
-  ui.done();
+  if(errors.length)ui.done();else ui.hide(1200);
 }
 function renderLastSync(){/* no-op without el */}
 
@@ -4504,6 +4523,9 @@ function renderChannels(){
     item.append(selBox(selCh.tv,c.id),info,select,del);adminList.appendChild(item);
   });
 }
+function syncedMeta(v){
+  try{return v&&v.publishedAt?"🕒 "+new Date(Number(v.publishedAt)).toLocaleString(dateLocale(),{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})+" · ":""}catch(_){return ""}
+}
 function renderPlaylist(){
   refreshListTools("tv");
   const root=$("adminPlaylist");root.innerHTML="";
@@ -4522,7 +4544,7 @@ function renderPlaylist(){
     if(v.ytKind==='playlist')srcLabel='<i class="ic ic-list"></i> playlist';
     else if(v.ytKind==='video'||isYouTube(mediaUrl(v)))srcLabel='<i class="ic ic-yt"></i> yt';
     else srcLabel='<i class="ic ic-video"></i> file';
-    meta.innerHTML=(v.pin?"⏰ "+esc(v.pin)+" · ":"")+durTxt+srcLabel+" · "+escUrl(mediaUrl(v));
+    meta.innerHTML=(v.pin?"⏰ "+esc(v.pin)+" · ":"")+durTxt+syncedMeta(v)+srcLabel+" · "+escUrl(mediaUrl(v));
     info.append(title,meta);
     const pick=document.createElement("button");pick.type="button";pick.className="small";pick.textContent="•";
     pick.onclick=()=>{selectedVideoIndex=i;renderPlaylist();};
@@ -4557,7 +4579,7 @@ function renderRadioList(){
       title.innerHTML=(i===state.radioIndex?'<i class="ic ic-play"></i> ':'')+esc(v.title||t("untitled"));
       const meta=document.createElement("div");meta.className="itemmeta";
       const d=durOf(v);const durTxt=d?('⏱ '+fmtDur(d)+' · '):'';
-      meta.innerHTML=durTxt+"<i class='ic ic-mic'></i> · "+escUrl(mediaUrl(v));
+      meta.innerHTML=durTxt+syncedMeta(v)+"<i class='ic ic-mic'></i> · "+escUrl(mediaUrl(v));
       info.append(title,meta);
       const pick=document.createElement("button");pick.type="button";pick.className="small";pick.textContent="•";
       pick.onclick=()=>{selectedRadioIndex=i;renderRadioList();};
@@ -4646,7 +4668,8 @@ function renderKidsAdmin(){
     const title=document.createElement("div");title.className="itemname";
     title.innerHTML=(i===(state.kidsPlayback?.index||0)?'<i class="ic ic-play"></i> ':'')+esc(v.title||t("untitled"));
     const meta=document.createElement("div");meta.className="itemmeta";
-    meta.innerHTML='<i class="ic ic-video"></i> '+escUrl(mediaUrl(v));
+    const kd=durOf(v);
+    meta.innerHTML=(kd?'⏱ '+fmtDur(kd)+' · ':'')+syncedMeta(v)+'<i class="ic ic-video"></i> '+escUrl(mediaUrl(v));
     info.append(title,meta);
     const pick=document.createElement("button");pick.type="button";pick.className="small";pick.textContent="•";
     if(selectedKidsIndex===i)pick.classList.add("primary");
