@@ -2600,7 +2600,36 @@ async function resolveYouTubeChannelId(channelUrl){
   }
   throw new Error("Channel ID: "+(lastErr?.message||"failed"));
 }
+async function fetchViaYouTubeApi(channelUrl){
+  let chId=parseYouTubeChannelIdFromUrl(channelUrl);
+  if(!chId){
+    const m=/youtube\.com\/(@[^\/?#]+)/i.exec(channelUrl);
+    if(m){const d=await ytApi("https://www.googleapis.com/youtube/v3/channels?part=id&forHandle="+encodeURIComponent(decodeURIComponent(m[1])));chId=d.items&&d.items[0]&&d.items[0].id}
+  }
+  if(!chId||!/^UC/.test(chId))return null;
+  let d;
+  try{d=await ytApi("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId="+encodeURIComponent("UU"+chId.slice(2)))}
+  catch(e){if(e.status===404)return [];throw e}
+  return (d.items||[]).map(it=>{
+    const cd=it.contentDetails||{},sn=it.snippet||{},id=cd.videoId||(sn.resourceId&&sn.resourceId.videoId);
+    return {id,title:sn.title||"YouTube",url:"https://www.youtube.com/watch?v="+id,publishedAt:Date.parse(cd.videoPublishedAt||sn.publishedAt||"")||0,priv:/^(Private|Deleted) video$/i.test(sn.title||"")};
+  }).filter(v=>v.id&&!v.priv);
+}
 async function fetchRecentChannelVideos(channelUrl){
+  let apiErr=null;
+  if(!window.__ytApiSkip){
+    try{
+      const r=await withTimeout(fetchViaYouTubeApi(channelUrl),30000,"YouTube API");
+      if(r)return r.filter(v=>v.publishedAt>=Date.now()-24*60*60*1000).sort((a,b)=>b.publishedAt-a.publishedAt);
+    }catch(e){
+      apiErr=e.noToken?"NO_TOKEN":(e.message||"API error");
+      if(e.noToken||e.expired||e.quota||/timeout/i.test(e.message||""))window.__ytApiSkip=true;
+    }
+  }
+  try{return await fetchRecentChannelVideosRss(channelUrl)}
+  catch(e){throw new Error(apiErr==="NO_TOKEN"?"NO_TOKEN":(apiErr?"YouTube API: "+apiErr+" | ":"")+e.message)}
+}
+async function fetchRecentChannelVideosRss(channelUrl){
   const channelId=await resolveYouTubeChannelId(channelUrl);
   const feedUrl="https://www.youtube.com/feeds/videos.xml?channel_id="+encodeURIComponent(channelId);
   const cutoff=Date.now()-24*60*60*1000;
@@ -2716,6 +2745,15 @@ function resolveFeedTarget(feed){
   }
   return {section:feed.section||"tv",target:null};
 }
+function syncErrSummary(errors,N){
+  if(!errors.length)return "";
+  const noTok=errors.filter(e=>e.msg==="NO_TOKEN").length;
+  let t=errors.length+" کانال از "+N+" ناموفق بود. ";
+  if(noTok)t+="برای همگام‌سازی پایدار باید به YouTube/Google متصل شوی (دکمهٔ اتصال YouTube را بزن و دوباره همگام کن)؛ سرویس‌های RSS رایگان فعلاً جواب نمی‌دهند. ";
+  const other=errors.filter(e=>e.msg!=="NO_TOKEN");
+  if(other.length)t+="نمونه: "+other.slice(0,3).map(e=>e.name+" ← "+(/RSS unavailable/.test(e.msg)?"سرویس RSS جواب نداد":e.msg.slice(0,90))).join(" · ");
+  return t;
+}
 async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const status=$("channelFeedStatus");
@@ -2723,7 +2761,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   const secName=sectionFilter?(SYNC_SEC_NAME[sectionFilter]||sectionFilter):"";
   if(!feeds.length){if(status)status.textContent=sectionFilter?"برای بخش "+secName+" هنوز کانال YouTube منتقل/ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای بخش "+secName+" کانال YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
   if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
-  window.__feedSyncBusy=Date.now();
+  window.__feedSyncBusy=Date.now();window.__ytApiSkip=false;
   const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی"+(secName?" بخش "+secName:"")+"…","آماده‌سازی…");
   let total=0,errors=[],idx=0;const N=feeds.length;
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -2737,7 +2775,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
       try{
         const videos=await withTimeout(fetchRecentChannelVideos(feed.url),45000,"sync");
         const loc=resolveFeedTarget(feed);const target=loc.target;
-        if(!target){errors.push(feed.name+": کانال مقصد پیدا نشد");continue}
+        if(!target){errors.push({name:feed.name,msg:"کانال مقصد پیدا نشد"});continue}
         if(sectionFilter&&loc.section!==sectionFilter)continue;
         const cutoff=()=>Date.now()-24*60*60*1000;
         const existing=Array.isArray(target.list)?target.list:[];
@@ -2756,12 +2794,12 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
           await sleep(120);
         }
         if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
-      }catch(error){errors.push(feed.name+": "+error.message)}
+      }catch(error){errors.push({name:feed.name,msg:error.message})}
     }
   }finally{window.__feedSyncBusy=0}
   state.lastSyncAt=Date.now();renderAll();
-  ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>"+(errors.length?"<br><span style='color:#ff8b8b'>خطا: "+esc(errors.join(" · "))+"</span>":""));
-  setStatus(errors.length?"خطا: "+errors.join(" · "):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد."));
+  ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>"+(errors.length?"<br><span style='color:#ff8b8b'>"+esc(syncErrSummary(errors,N))+"</span>":""));
+  setStatus(errors.length?"خطا: "+syncErrSummary(errors,N):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد."));
   clearTimeout(saveTimer);
   try{ui.set(100,null,null);await withTimeout(saveRemoteState(),15000,"save")}catch(e){setStatus((status?.textContent||"")+" (ذخیره: "+e.message+")")}
   if(showNotice)notify(errors.length?"!":"✓");
