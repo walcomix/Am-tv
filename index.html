@@ -2837,7 +2837,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   try{
     const wantSec=sectionFilter||(typeof activeMode==="function"?activeMode():"");
     const pick=syncedTargets.find(x=>x.section===wantSec)||(!sectionFilter?null:syncedTargets[0]);
-    if(!silent&&pick&&pick.target&&(pick.target.list||[]).length){
+    if(false&&pick&&pick.target&&(pick.target.list||[]).length){
       const L=secLists()[pick.section];const ci=L.indexOf(pick.target);
       if(ci>=0){
         if(pick.section==="kids")state.kidsChannelIndex=ci;
@@ -6169,8 +6169,8 @@ function setFeedNetwork(feed,id){
   const old=networkFor(feed);
   if(old&&old.id!==id)old.list=(old.list||[]).filter(v=>v.feedId!==feed.id);
   feed.networkId=id||"";
-  if(!id){scheduleSave();renderAll();notify("از شبکه خارج شد.");return}
-  resolveFeedTarget(feed);scheduleSave();renderAll();
+  if(!id){scheduleSave();notify("از شبکه خارج شد.");return}
+  resolveFeedTarget(feed);scheduleSave();
   syncChannelFeeds(true,feed.id).catch(()=>{});
 }
 /* ---- admin panel: networks & numbers ---- */
@@ -6602,6 +6602,15 @@ setInterval(tickClock,1000);tickClock();
 initPrefs();applyLang(true);syncSubUI();
 document.body.classList.toggle("viewerMode",!isAdmin);
 
+(function(){
+  const raw=renderAll;
+  renderAll=function(){
+    const busy=window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000,gap=busy?1200:300,now=Date.now();
+    if(now-(window.__raLast||0)>gap){clearTimeout(window.__raT);window.__raLast=now;return raw();}
+    clearTimeout(window.__raT);
+    window.__raT=setTimeout(()=>{window.__raLast=Date.now();try{raw()}catch(e){console.warn(e)}},gap);
+  };
+})();
 (async function boot(){
   ensureState();renderAll();
   enhanceAllSelects(document);
