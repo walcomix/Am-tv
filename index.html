@@ -2788,7 +2788,7 @@ function syncErrSummary(errors,N){
 async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   if(!isAdmin){notify(t("msgNoAdmin"));return}
   const status=$("channelFeedStatus");
-  const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||f.id===onlyFeedId)&&(!sectionFilter||resolveFeedTarget(f).section===sectionFilter));
+  const feeds=(state.channelFeeds||[]).filter(f=>(!onlyFeedId||(window.__syncIds?window.__syncIds.has(f.id):f.id===onlyFeedId))&&(!sectionFilter||resolveFeedTarget(f).section===sectionFilter));
   const secName=sectionFilter?(SYNC_SEC_NAME[sectionFilter]||sectionFilter):"";
   if(!feeds.length){if(status)status.textContent=sectionFilter?"برای بخش "+secName+" هنوز کانال YouTube منتقل/ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای بخش "+secName+" کانال YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
   if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
@@ -6173,6 +6173,13 @@ function setFeedNetwork(feed,id){
   resolveFeedTarget(feed);scheduleSave();
   syncChannelFeeds(true,feed.id).catch(()=>{});
 }
+async function bulkSendFeeds(ids,netId){
+  const feeds=(state.channelFeeds||[]).filter(f=>ids.has(f.id));if(!feeds.length)return;
+  feeds.forEach(f=>{const old=networkFor(f);if(old&&old.id!==netId)old.list=(old.list||[]).filter(v=>v.feedId!==f.id);f.networkId=netId;resolveFeedTarget(f)});
+  scheduleSave();notify(feeds.length+" کانال به شبکه ارسال شد؛ در حال همگام‌سازی…");
+  window.__syncIds=new Set(feeds.map(f=>f.id));
+  try{await syncChannelFeeds(true,feeds[0].id)}catch(e){notify("خطا: "+e.message)}finally{window.__syncIds=null}
+}
 /* ---- admin panel: networks & numbers ---- */
 var netSec="tv";
 function ensureNetworksPanel(){
@@ -6233,6 +6240,24 @@ function renderNetworksPanel(){
   const fl=$("netFeeds");fl.innerHTML="";
   const feeds=(state.channelFeeds||[]).filter(f=>resolveFeedTarget(f).section===netSec);
   const nets=arr.filter(c=>!c.feedId);
+  window.__netSel=window.__netSel||new Set();const S=window.__netSel;let upd=()=>{};
+  [...S].forEach(id=>{if(!(state.channelFeeds||[]).some(x=>x.id===id))S.delete(id)});
+  const rr=()=>{try{document.activeElement&&document.activeElement.blur()}catch(_){}renderNetworksPanel()};
+  if(feeds.length){
+    const bar=document.createElement("div");bar.className="actions";bar.style.cssText="flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px";
+    const cnt=document.createElement("span");cnt.className="itemmeta";upd=()=>{cnt.textContent="انتخاب‌شده: "+S.size};upd();
+    const bsel=document.createElement("select");
+    const bn=[];["tv","radio","kids"].forEach(sc=>(secLists()[sc]||[]).filter(c=>!c.feedId).forEach(c=>bn.push({c,sc})));
+    bsel.innerHTML='<option value="">— شبکهٔ مقصد —</option>'+bn.map(x=>'<option value="'+esc(x.c.id)+'">'+esc(x.sc.toUpperCase()+" · CH "+chNum(x.c)+" · "+(x.c.name||""))+'</option>').join("");
+    bsel.value=window.__netBulkTarget||"";bsel.onchange=()=>{window.__netBulkTarget=bsel.value};
+    const go=mkBtn("ارسال انتخاب‌شده‌ها به شبکه","primary",()=>{
+      const nid=bsel.value;if(!nid){notify("اول شبکهٔ مقصد را انتخاب کن.");return}
+      if(!S.size){notify("هیچ کانالی انتخاب نشده.");return}
+      const ids=new Set(S);S.clear();bulkSendFeeds(ids,nid);
+    });
+    bar.append(mkBtn("انتخاب همه","",()=>{feeds.forEach(x=>S.add(x.id));rr()}),mkBtn("فقط بدون شبکه","",()=>{S.clear();feeds.filter(x=>!networkFor(x)).forEach(x=>S.add(x.id));rr()}),mkBtn("هیچ","",()=>{S.clear();rr()}),cnt,bsel,go);
+    fl.appendChild(bar);
+  }
   if(!feeds.length)fl.innerHTML='<div class="viewerhint">در این بخش هنوز کانال یوتیوبی منتقل/ثبت نشده است.</div>';
   feeds.forEach(f=>{
     const r=document.createElement("div");r.className="listitem";r.style.cssText="flex-wrap:wrap;gap:6px";
@@ -6246,7 +6271,9 @@ function renderNetworksPanel(){
     ls.innerHTML='<option value="">لایو: بدون انتقال</option>'+allNets.map(x=>'<option value="'+esc(x.c.id)+'">'+esc("لایو ← "+x.sc.toUpperCase()+" · CH "+chNum(x.c)+" · "+(x.c.name||""))+'</option>').join("");
     ls.value=f.liveNetworkId&&allNets.some(x=>x.c.id===f.liveNetworkId)?f.liveNetworkId:"";
     ls.onchange=()=>{f.liveNetworkId=ls.value;scheduleSave();notify(ls.value?"لایو این کانال به شبکهٔ انتخابی منتقل می‌شود.":"انتقال لایو خاموش شد.");setTimeout(liveWatchTick,500)};
-    r.append(nm,sel,ls);fl.appendChild(r);
+    const cb=document.createElement("input");cb.type="checkbox";cb.checked=S.has(f.id);cb.style.cssText="width:auto;flex:0 0 auto";
+    cb.onchange=()=>{cb.checked?S.add(f.id):S.delete(f.id);upd()};
+    r.append(cb,nm,sel,ls);fl.appendChild(r);
   });
   const au=$("netAuto");au.innerHTML="";
   const lab=document.createElement("label");lab.style.cssText="display:flex;gap:8px;align-items:center";
