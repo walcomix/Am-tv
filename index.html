@@ -2610,10 +2610,31 @@ async function fetchViaYouTubeApi(channelUrl){
   let d;
   try{d=await ytApi("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&maxResults=50&playlistId="+encodeURIComponent("UU"+chId.slice(2)))}
   catch(e){if(e.status===404)return [];throw e}
-  return (d.items||[]).map(it=>{
+  const vids=(d.items||[]).map(it=>{
     const cd=it.contentDetails||{},sn=it.snippet||{},id=cd.videoId||(sn.resourceId&&sn.resourceId.videoId);
     return {id,title:sn.title||"YouTube",url:"https://www.youtube.com/watch?v="+id,publishedAt:Date.parse(cd.videoPublishedAt||sn.publishedAt||"")||0,priv:/^(Private|Deleted) video$/i.test(sn.title||"")};
-  }).filter(v=>v.id&&!v.priv);
+  }).filter(v=>v.id&&!v.priv&&v.publishedAt>=Date.now()-24*60*60*1000);
+  if(vids.length){
+    try{
+      const dd=await ytApi("https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&maxResults=50&id="+vids.map(v=>encodeURIComponent(v.id)).join(","));
+      const map=new Map((dd.items||[]).map(x=>[x.id,x]));
+      vids.forEach(v=>{
+        const x=map.get(v.id);if(!x)return;
+        v.duration=ytIsoToSec(x.contentDetails&&x.contentDetails.duration);
+        v.live=(x.snippet&&x.snippet.liveBroadcastContent)||"none";
+      });
+    }catch(e){if(e.noToken||e.expired||e.quota)throw e}
+  }
+  /* skip live / upcoming premieres: they have no fixed length and break the schedule */
+  return vids.filter(v=>v.live!=="live"&&v.live!=="upcoming");
+}
+function ytIsoToSec(iso){
+  const m=/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$/.exec(String(iso||""));
+  if(!m)return 0;
+  return Math.round((+m[1]||0)*86400+(+m[2]||0)*3600+(+m[3]||0)*60+(+m[4]||0));
+}
+function fixSyncedYtIds(){
+  try{for(const L of [state.channels,state.radioChannels,state.kidsChannels])(L||[]).forEach(c=>(c.list||[]).forEach(v=>{if(v&&v.youtubeId&&!v.ytId){v.ytId=v.youtubeId;if(!v.ytKind)v.ytKind="video"}}))}catch(_){}
 }
 async function fetchRecentChannelVideos(channelUrl){
   let apiErr=null;
@@ -2709,11 +2730,19 @@ function syncProgressUI(){
   if(!box){
     box=document.createElement("div");box.id="syncProgressBox";box.dir="rtl";
     box.style.cssText="position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:100600;width:min(420px,92vw);background:var(--panel,#1b211b);color:var(--text,#fff);border:1px solid var(--accent,#e8b85b);border-radius:14px;padding:12px 14px;box-shadow:0 10px 40px #0009;font-size:13px;display:none";
-    box.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:8px"><strong id="spTitle">همگام‌سازی…</strong><span id="spPct" style="font-variant-numeric:tabular-nums">0٪</span></div><div style="height:8px;background:var(--panel2,#242c24);border-radius:99px;overflow:hidden"><div id="spBar" style="height:100%;width:0;background:var(--accent,#e8b85b);transition:width .25s"></div></div><div id="spDetail" style="margin-top:8px;opacity:.85;line-height:1.7"></div>';
+    box.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:8px"><strong id="spTitle">همگام‌سازی…</strong><span id="spPct" style="font-variant-numeric:tabular-nums">0٪</span></div><div style="height:8px;background:var(--panel2,#242c24);border-radius:99px;overflow:hidden"><div id="spBar" style="height:100%;width:0;background:var(--accent,#e8b85b);transition:width .25s"></div></div><div id="spDetail" style="margin-top:8px;opacity:.85;line-height:1.7"></div><div id="spList" style="margin-top:8px;max-height:30vh;overflow:auto;border-top:1px solid var(--line,#3a443a);padding-top:6px;font-size:12px"></div><button id="spClose" type="button" style="margin-top:8px;width:100%;display:none">بستن</button>';
+    box.querySelector("#spClose").onclick=()=>{box.style.display="none"};
     document.body.appendChild(box);
   }
   return {
-    show(){box.style.display="block"},
+    show(){box.style.display="block";box.querySelector("#spList").innerHTML="";box.querySelector("#spClose").style.display="none"},
+    addRow(v,secName,chName){
+      const r=document.createElement("div");r.style.cssText="display:flex;justify-content:space-between;gap:8px;padding:3px 0";
+      const a=document.createElement("span");a.textContent=v.title||"YouTube";a.style.cssText="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1";a.title=(chName||"")+" · "+(v.title||"");
+      const b=document.createElement("span");b.textContent=v.duration>0?"⏱ "+fmtDur(v.duration):"⏱ —";b.style.cssText="font-variant-numeric:tabular-nums;opacity:.9";
+      r.append(a,b);const L=box.querySelector("#spList");L.prepend(r);
+    },
+    done(){box.querySelector("#spClose").style.display="block"},
     hide(ms){setTimeout(()=>{box.style.display="none"},ms||0)},
     set(pct,title,detail){
       pct=Math.max(0,Math.min(100,Math.round(pct)));
@@ -2761,7 +2790,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   const secName=sectionFilter?(SYNC_SEC_NAME[sectionFilter]||sectionFilter):"";
   if(!feeds.length){if(status)status.textContent=sectionFilter?"برای بخش "+secName+" هنوز کانال YouTube منتقل/ثبت نشده است.":"—";if(showNotice)notify(sectionFilter?"برای بخش "+secName+" کانال YouTube ثبت نشده است.":"فیدی برای همگام‌سازی وجود ندارد.");return}
   if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000){if(showNotice)notify("همگام‌سازی در حال انجام است…");return}
-  window.__feedSyncBusy=Date.now();window.__ytApiSkip=false;
+  window.__feedSyncBusy=Date.now();window.__ytApiSkip=false;fixSyncedYtIds();
   const ui=syncProgressUI();ui.show();ui.set(0,"در حال همگام‌سازی"+(secName?" بخش "+secName:"")+"…","آماده‌سازی…");
   let total=0,errors=[],idx=0;const N=feeds.length;
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -2784,12 +2813,12 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         let n=0;
         for(const v of videos){
           const key=String(v.id);const prior=byVideo.get(key);
-          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
+          byVideo.set(key,{...(prior||{}),id:prior?.id||makeId(),youtubeId:key,ytId:key,...((v.duration>0)?{duration:v.duration}:{}),title:v.title||prior?.title||"YouTube",url:v.url,ytKind:"video",addedAt:prior?.addedAt||v.publishedAt,publishedAt:v.publishedAt,feedId:feed.id,kids:loc.section==="kids"});
           const fresh=[...byVideo.values()].filter(x=>!x.publishedAt||Number(x.publishedAt)>=cutoff());
           target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));
-          n++;total++;
+          n++;total++;ui.addRow(v,secName,feed.name);
           renderSyncPartial();
-          ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
+          ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+(v.duration>0?" (⏱ "+fmtDur(v.duration)+")":"")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
           setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");
           await sleep(120);
         }
@@ -2803,7 +2832,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   clearTimeout(saveTimer);
   try{ui.set(100,null,null);await withTimeout(saveRemoteState(),15000,"save")}catch(e){setStatus((status?.textContent||"")+" (ذخیره: "+e.message+")")}
   if(showNotice)notify(errors.length?"!":"✓");
-  ui.hide(errors.length?8000:4000);
+  ui.done();
 }
 function renderLastSync(){/* no-op without el */}
 
@@ -2895,6 +2924,7 @@ function driftCorrect(){
 }
 function activeItem(){const list=currentList();return list[currentIndex()]||null;}
 function ensureState(){
+  fixSyncedYtIds();
   if(!Array.isArray(state.channels))state.channels=[];
   if(!state.channels.length)state.channels=clone(DEFAULT_STATE.channels);
   state.channels.forEach(c=>{if(!Array.isArray(c.list))c.list=[];if(!c.id)c.id=makeId()});
@@ -3066,13 +3096,51 @@ function setupSleepAndKids(){
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("pinModal")?.classList.contains("show"))$("pinModal").classList.remove("show");});
 }
 
-try{
-  if(window.supabase && window.supabase.createClient){
-    sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
-      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+/* Every Supabase request gets a timeout so a stalled VPN connection can never hang the app forever. */
+function sbFetch(url,opts){
+  opts=opts||{};
+  const c=new AbortController();const t=setTimeout(()=>c.abort(),25000);
+  if(opts.signal){if(opts.signal.aborted)c.abort();else opts.signal.addEventListener("abort",()=>c.abort(),{once:true});}
+  return fetch(url,{...opts,signal:c.signal}).finally(()=>clearTimeout(t));
+}
+function makeSbClient(){
+  try{
+    if(window.supabase && window.supabase.createClient){
+      sbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+        auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
+        global:{fetch:sbFetch}
+      });
+    }
+  }catch(e){console.error("Supabase init failed:",e)}
+  return !!sbClient;
+}
+makeSbClient();
+/* If the main CDN is blocked (common with VPNs / filtering), try other CDNs for the Supabase SDK. */
+async function ensureSupabaseSdk(){
+  if(sbClient)return true;
+  const urls=["https://fastly.jsdelivr.net/npm/@supabase/supabase-js@2","https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js","https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"];
+  for(const u of urls){
+    await new Promise(res=>{
+      const sc=document.createElement("script");let done=false;
+      const fin=ok=>{if(done)return;done=true;res(ok)};
+      sc.src=u;sc.onload=()=>fin(true);sc.onerror=()=>fin(false);
+      setTimeout(()=>fin(false),12000);document.head.appendChild(sc);
     });
+    if(makeSbClient())return true;
   }
-}catch(e){console.error("Supabase init failed:",e)}
+  return false;
+}
+const STATE_CACHE_KEY="amtv-state-cache-v1";
+function applyCachedState(){
+  try{
+    const raw=localStorage.getItem(STATE_CACHE_KEY);if(!raw)return false;
+    const cached=JSON.parse(raw);if(!cached||typeof cached!=="object")return false;
+    isApplyingRemote=true;state={...clone(DEFAULT_STATE),...cached};ensureState();isApplyingRemote=false;
+    window.__stateFromCache=true;renderAll();
+    try{$("supabaseStatus").value="cache (offline)"}catch(_){}
+    return true;
+  }catch(_){isApplyingRemote=false;return false}
+}
 
 /* ===== Connectivity diagnostics ===== */
 async function testSupabaseConnection(){
@@ -3135,19 +3203,23 @@ async function loadRemoteState(){
   if(!sbClient){$("supabaseStatus").value="no client";return}
   try{
     const {data,error}=await sbClient.from(STATE_TABLE).select("data").eq("id",1).maybeSingle();
-    if(error){$("supabaseStatus").value="err: "+error.message;return}
+    if(error){$("supabaseStatus").value="err: "+error.message;if(!window.__remoteLoaded)applyCachedState();return}
     if(data && data.data && typeof data.data==="object"){
       isApplyingRemote=true;
       state={...clone(DEFAULT_STATE),...data.data};
       ensureState();
       isApplyingRemote=false;
+      window.__remoteLoaded=true;window.__stateFromCache=false;
+      try{localStorage.setItem(STATE_CACHE_KEY,JSON.stringify(data.data))}catch(_){}
       beginHold();renderAll();
       await syncPlayback(true);
       $("supabaseStatus").value="OK";
-    }else{$("supabaseStatus").value="connected · no row";}
+    }else{window.__remoteLoaded=true;$("supabaseStatus").value="connected · no row";}
   }catch(err){
     console.error("loadRemoteState failed:",err);
-    $("supabaseStatus").value="net err";
+    isApplyingRemote=false;
+    if(!window.__remoteLoaded)applyCachedState();
+    else $("supabaseStatus").value="net err";
     if(/failed to fetch|networkerror|load failed/i.test(String(err&&err.message||err))){
       showAmTvError("ارتباط با سرور AM TV (Supabase) برقرار نشد. ممکن است سرور، VPN یا تنظیمات شبکه مشکل داشته باشد؛ این پیام به‌تنهایی به معنی قطع بودن اینترنت نیست.");
     }
@@ -3155,6 +3227,11 @@ async function loadRemoteState(){
 }
 async function saveRemoteState(){
   if(!sbClient || !isAdmin || isApplyingRemote)return false;
+  if(!window.__remoteLoaded||window.__stateFromCache){
+    try{$("supabaseStatus").value="save blocked: server state not loaded"}catch(_){}
+    try{notify("ذخیره انجام نشد: هنوز اطلاعات سرور لود نشده (مشکل اتصال/VPN). صفحه را رفرش کن.")}catch(_){}
+    return false;
+  }
   try{
     const payload={id:1,data:clone(state),updated_at:new Date().toISOString()};
     const {error}=await sbClient.from(STATE_TABLE).upsert(payload,{onConflict:"id"});
@@ -3204,15 +3281,9 @@ async function signIn(){
   button.innerHTML='<i class="ic ic-sync"></i> ...';
   try{
     const diag=await testSupabaseConnection();
-    if(diag.netOk===false){
-      notify("اینترنت به سرور وصل نمی‌شود.");
-      showAmTvError("مرورگر شما نمی‌تواند به اینترنت وصل شود. VPN را روشن/خاموش کن.");
-      return;
-    }
-    if(diag.ok===false){
-      notify("Supabase در دسترس نیست.");
-      showAmTvError("Supabase از IP شما مسدود است. VPN روی حالت Global بگذار یا DNS را عوض کن. اگر پروژه Paused است آن را Restore کن.");
-      return;
+    if(diag.netOk===false||diag.ok===false){
+      /* the quick probe can fail on a slow VPN even though the real request works — still try to sign in */
+      notify("اتصال کند/ناپایدار است؛ تلاش برای ورود ادامه دارد…");
     }
     const {data,error}=await sbClient.auth.signInWithPassword({email,password});
     if(error){
@@ -6225,28 +6296,32 @@ document.body.classList.toggle("viewerMode",!isAdmin);
 (async function boot(){
   ensureState();renderAll();
   enhanceAllSelects(document);
-  if(!sbClient){$("supabaseStatus").value="no client";document.body.classList.remove("booting");return;}
+  if(!sbClient)await ensureSupabaseSdk();
+  if(!sbClient){$("supabaseStatus").value="no client";applyCachedState();document.body.classList.remove("booting");return;}
+  /* each step is independent and has its own timeout, so one stalled request (VPN) cannot block login or the rest */
+  const step=async(name,fn,ms)=>{try{await withTimeout(Promise.resolve().then(fn),ms,name)}catch(e){console.warn("AM TV boot step failed:",name,e&&e.message)}};
   try{
-    await syncServerTime();
-    await loadRemoteState();
-    await initAuth();
-    await setupRealtime();
-    await setupPresence();
-    await countTotalViews();
-    watchTotalViewsRealtime();
-    if(isAdmin){const p=pruneOldSynced();if(p){await saveRemoteState();}}
-    try{if(localStorage.getItem("amtv-kids")==="1")kidsMode=true;}catch(_){}
-    if(kidsMode){document.body.classList.add("kids-mode");document.body.classList.add("kids-special");}
-    ytRestoreToken();
-    renderAll();
-    try{if(ytSubscriptions.length)renderYouTubeSubscriptions();}catch(_){}
+    await step("time",syncServerTime,8000);
+    await step("state",loadRemoteState,20000);
+    await step("auth",initAuth,15000);
+    if(!window.__remoteLoaded||window.__stateFromCache)await step("state-retry",loadRemoteState,20000);
+    await step("realtime",setupRealtime,10000);
+    await step("presence",setupPresence,10000);
+    await step("views",countTotalViews,10000);
+    try{watchTotalViewsRealtime()}catch(_){}
+    if(isAdmin&&window.__remoteLoaded&&!window.__stateFromCache){const p=pruneOldSynced();if(p){await step("prune-save",saveRemoteState,15000);}}
   }catch(e){
     console.error("AM TV startup error:",e);
     if(typeof window.showAmTvError==="function"){
       window.showAmTvError("Load failed: "+String(e&&e.message||e).slice(0,220));
     }
   }
-  finally{document.body.classList.remove("booting");}
+  try{if(localStorage.getItem("amtv-kids")==="1")kidsMode=true;}catch(_){}
+  if(kidsMode){document.body.classList.add("kids-mode");document.body.classList.add("kids-special");}
+  ytRestoreToken();
+  try{renderAll();}catch(_){}
+  try{if(ytSubscriptions.length)renderYouTubeSubscriptions();}catch(_){}
+  document.body.classList.remove("booting");
 })();
 setTimeout(()=>{document.body.classList.remove("booting");},3000);
 
