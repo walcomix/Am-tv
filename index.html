@@ -6597,7 +6597,7 @@ function autoSyncTick(){
     if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000)return;
     state.syncMeta=state.syncMeta||{};
     const secs=["tv","radio","kids"].filter(sc=>(state.channelFeeds||[]).some(f=>resolveFeedTarget(f).section===sc));
-    const due=secs.find(sc=>window.amtvSectionDue(sc)&&Date.now()-(window.__autoTry[sc]||0)>=60*60*1000);
+    const due=secs.find(sc=>{const empty=(secLists()[sc]||[]).some(n=>!n.feedId&&hasFeed(n)&&!(n.list||[]).some(v=>!v.played));return (empty||window.amtvSectionDue(sc))&&Date.now()-(window.__autoTry[sc]||0)>=60*60*1000;});
     if(!due)return;window.amtvMarkPlayed(due);
     window.__autoTry[due]=Date.now();window.__autoSyncRun=true;
     syncChannelFeeds(false,"",due).catch(()=>{}).finally(()=>{window.__autoSyncRun=false;try{scheduleSave()}catch(_){}});
@@ -6949,7 +6949,7 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   try{if(ytSubscriptions.length)renderYouTubeSubscriptions();}catch(_){}
   document.body.classList.remove("booting");
 })();
-setTimeout(()=>{document.body.classList.remove("booting");},3000);
+
 
 (function lockViewerPlayback(){
   $("viewerStart").addEventListener("click",()=>{
