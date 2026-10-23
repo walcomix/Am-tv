@@ -2892,8 +2892,13 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
         if(sectionFilter&&loc.section!==sectionFilter)continue;
         const cutoff=()=>Date.now()-24*60*60*1000;
         const existing=Array.isArray(target.list)?target.list:[];
-        const byVideo=new Map(existing.filter(v=>v.youtubeId||v.ytId).map(v=>[String(v.youtubeId||v.ytId),v]));
-        const others=existing.filter(v=>!(v.youtubeId||v.ytId));
+        /* Keep this feed's unplayed videos even when they are older than the RSS window.
+           Remove played synced videos, but never wipe manual items or another feed's queue. */
+        const isSynced=v=>!!(v&&(v.youtubeId||v.ytId));
+        const isPlayed=v=>!!(v&&(v.played||(v.youtubeId||v.ytId)&&window.amtvWasPlayed&&amtvWasPlayed(String(v.youtubeId||v.ytId))));
+        const byVideo=new Map(existing.filter(v=>isSynced(v)&&v.feedId===feed.id&&!isPlayed(v)).map(v=>[String(v.youtubeId||v.ytId),v]));
+        const others=existing.filter(v=>!isSynced(v)&&!isPlayed(v));
+        const otherFeeds=existing.filter(v=>isSynced(v)&&v.feedId!==feed.id&&!isPlayed(v));
         let n=0;
         okSections.add(loc.section);
         if(videos.length)syncedTargets.push({section:loc.section,target:networkFor(feed)||target});
@@ -2903,7 +2908,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
           n++;total++;
           if(n===videos.length||n%8===0){ui.addRow(v,secName,feed.name);ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+(v.duration>0?" (⏱ "+fmtDur(v.duration)+")":"")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");await sleep(0);}
         }
-        {const fresh=[...byVideo.values()].filter(x=>!x.played);target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));}
+        {const fresh=[...byVideo.values()].filter(x=>!isPlayed(x));target.list=others.concat(otherFeeds,fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));}
         renderSyncPartial();
         try{mergeFeedIntoNetwork(feed);renderSyncPartial()}catch(e){console.warn("network merge failed",e)}
         if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
@@ -6597,8 +6602,15 @@ function autoSyncTick(){
     if(window.__feedSyncBusy&&Date.now()-window.__feedSyncBusy<120000)return;
     state.syncMeta=state.syncMeta||{};
     const secs=["tv","radio","kids"].filter(sc=>(state.channelFeeds||[]).some(f=>resolveFeedTarget(f).section===sc));
-    const due=secs.find(sc=>{const empty=(secLists()[sc]||[]).some(n=>!n.feedId&&hasFeed(n)&&!(n.list||[]).some(v=>!v.played));return (empty||window.amtvSectionDue(sc))&&Date.now()-(window.__autoTry[sc]||0)>=60*60*1000;});
-    if(!due)return;window.amtvMarkPlayed(due);
+    /* An empty assigned queue is an immediate sync condition; otherwise respect the 24h cycle. */
+    const emptyQueue=sec=> (state.channelFeeds||[]).some(f=>{
+      const loc=resolveFeedTarget(f);
+      return loc.section===sec&&loc.target&&(!Array.isArray(loc.target.list)||loc.target.list.length===0);
+    });
+    const now=Date.now();
+    const due=secs.find(sc=>(emptyQueue(sc)||now-(Number(state.syncMeta[sc])||0)>=24*60*60*1000)&&now-(window.__autoTry[sc]||0)>=60*60*1000);
+    if(!due)return;
+    if(!emptyQueue(due)&&window.amtvSectionDue(due))window.amtvMarkPlayed(due);
     window.__autoTry[due]=Date.now();window.__autoSyncRun=true;
     syncChannelFeeds(false,"",due).catch(()=>{}).finally(()=>{window.__autoSyncRun=false;try{scheduleSave()}catch(_){}});
   }catch(e){console.warn("autoSync failed",e)}
@@ -6949,7 +6961,8 @@ document.body.classList.toggle("viewerMode",!isAdmin);
   try{if(ytSubscriptions.length)renderYouTubeSubscriptions();}catch(_){}
   document.body.classList.remove("booting");
 })();
-
+/* Do not reveal cached/previous playback while the authoritative server state is still loading.
+   The boot routine removes this class when loading finishes (or when no SDK is available). */
 
 (function lockViewerPlayback(){
   $("viewerStart").addEventListener("click",()=>{
