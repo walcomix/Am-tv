@@ -219,8 +219,6 @@ main{max-width:1450px;margin:auto;padding:18px}
 #playerShell:fullscreen #videoElement,#playerShell:fullscreen #youtubePlayer,#playerShell:fullscreen #radioScreen{width:100%;height:100%;object-fit:contain}
 #videoElement{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;display:none}
 #youtubePlayer{position:absolute;inset:0;width:100%;height:100%;border:0;display:none}
-#externalEmbed{position:absolute;inset:0;width:100%;height:100%;border:0;display:none;background:#000}
-#playerShell:fullscreen #externalEmbed{width:100%;height:100%}
 #radioScreen{position:absolute;inset:0;background:radial-gradient(ellipse at center,var(--screen1) 0,var(--screen2) 72%);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
 .radioicon{color:var(--screenaccent)}
 .radioicon .ic{width:clamp(48px,10vw,110px);height:clamp(48px,10vw,110px)}
@@ -684,27 +682,6 @@ body.viewerMode #videoElement{controls:none!important}
 .amtv-tools-card h2{margin:10px 0 18px;font-size:22px}.amtv-tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.amtv-tool-grid button{min-height:58px;border:1px solid #465575;border-radius:14px;background:linear-gradient(145deg,#283652,#171f33);color:#fff;font-weight:700}.amtv-tools-card label{display:grid;gap:7px;margin:12px 0}.amtv-tools-card input,.amtv-tools-card select{width:100%;min-width:0;padding:11px;border:1px solid #465575;border-radius:10px;background:#0b1221;color:#fff}
 .kids-radio-panel{margin:12px 0;padding:16px;border:1px solid #6e55a9;border-radius:20px;background:radial-gradient(circle at 100% 0,#49346f 0,transparent 48%),linear-gradient(145deg,#21183d,#101126)}.kids-radio-audio{width:100%;margin-top:10px}
 /* Special event skins change component geometry, motion, and visual effects—not only colors. */
-body.event-skin-christmas{background-image:radial-gradient(circle at 12% 12%,#b4f7d322 0 2px,transparent 3px),radial-gradient(circle at 72% 24%,#fff7d922 0 2px,transparent 3px),linear-gradient(145deg,#071a14,#0b2d23 55%,#091019);background-size:68px 68px,92px 92px,auto}
-body.event-skin-christmas .panel,body.event-skin-christmas .playerpanel{border:1px solid #397d60;border-radius:6px 24px 6px 24px;box-shadow:0 0 0 1px #c9a85b33,0 18px 45px #001a12aa}
-body.event-skin-christmas button{border-radius:4px 14px 4px 14px;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));}
-body.event-skin-christmas .topbar{border-bottom:2px solid #c9a85b;background:linear-gradient(90deg,#08231aee,#153b2eee,#08231aee)}
-body.event-skin-halloween{background:radial-gradient(ellipse at 50% 0,#4b1c0a 0,transparent 55%),linear-gradient(160deg,#09060f,#180c25 60%,#08060d)}
-body.event-skin-halloween .panel,body.event-skin-halloween .playerpanel{border:1px solid #d96b26;border-radius:2px;box-shadow:0 0 22px #ff6a1624,inset 0 0 30px #ff6a1608}
-body.event-skin-halloween button{border-radius:2px;background-image:linear-gradient(135deg,#24142f,#100d19);border-color:#a94e22;text-transform:uppercase;letter-spacing:.03em}
-body.event-skin-halloween .topbar{background:#100916;border-bottom:2px solid #ff7b22}
-body.event-skin-nowruz{background:radial-gradient(ellipse at 20% 0,#1c5a37 0,transparent 52%),linear-gradient(145deg,#071c16,#102f23 65%,#081b18)}
-body.event-skin-nowruz .panel,body.event-skin-nowruz .playerpanel{border:1px solid #73c68d;border-radius:26px;background:linear-gradient(135deg,#102d22ee,#0a1b18ee);box-shadow:0 14px 45px #3ecf7620}
-body.event-skin-nowruz button{border-radius:999px;border-width:1px;box-shadow:inset 0 1px #ffffff22,0 5px 15px #00180c55}
-body.event-skin-nowruz .topbar{background:#09251ddd;border-bottom:1px solid #73c68d}
-body.event-skin-yalda{background:radial-gradient(circle at 80% 10%,#a81e3a33,transparent 38%),linear-gradient(150deg,#180914,#330d1b 58%,#100811)}
-body.event-skin-yalda .panel,body.event-skin-yalda .playerpanel{border:1px solid #d94a61;border-radius:18px;background:linear-gradient(145deg,#2a0b19ee,#120912ee);box-shadow:0 12px 40px #ec27431a}
-body.event-skin-yalda button{border-radius:12px 4px 12px 4px;border-color:#b92f4c}
-body.event-skin-newyear{background:radial-gradient(circle at 50% -10%,#6e58b633,transparent 45%),linear-gradient(145deg,#070b22,#111b3a 60%,#070b18)}
-body.event-skin-newyear .panel,body.event-skin-newyear .playerpanel{border:1px solid #bda9ff;border-radius:18px;background:linear-gradient(145deg,#141b39ee,#0a1025ee);box-shadow:0 0 0 1px #d8c8ff22,0 18px 55px #6356c533}
-body.event-skin-newyear button{border-radius:8px;background-image:linear-gradient(135deg,#222c54,#111831);box-shadow:0 0 16px #8d7cff22}
-body.event-skin-valentine{background:radial-gradient(ellipse at 100% 0,#9e245522,transparent 50%),linear-gradient(145deg,#1d0a18,#2c1026 55%,#120914)}
-body.event-skin-valentine .panel,body.event-skin-valentine .playerpanel{border:1px solid #dc7baf;border-radius:30px;background:linear-gradient(145deg,#301327ee,#170b19ee);box-shadow:0 14px 45px #e74b9620}
-body.event-skin-valentine button{border-radius:999px 999px 12px 12px;border-color:#bd4e89}
 #eventBanner{transition:background .4s,transform .4s,box-shadow .4s}#eventBanner:not(.hidden){box-shadow:0 5px 24px #0005}
 @media(max-width:520px){.amtv-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#quickRefreshBtn .lbl,#virtualRemoteBtn .lbl,#reminderBtn .lbl{display:none}}
  
@@ -820,7 +797,128 @@ html body.emoji-only .btnlabel{
 @media(max-width:520px){#channelMenu{padding:9px!important}#channelMenu .ch-menu-card{border-radius:20px;max-height:82dvh}#channelMenu .ch-menu-head{padding:13px}#channelMenu .ch-menu-search{margin:10px 10px 7px}.ch-network-card{padding:10px;gap:9px}.ch-network-number{flex-basis:42px;height:42px;border-radius:12px}.ch-network-info strong{font-size:13px}.ch-network-status{max-width:66px;font-size:9px}}
 
 </style>
+<style>
+/* ===== AM TV v2 patch: event skins, Frutiger Aero, spotify, parent lock ===== */
+.modeGrid{grid-template-columns:repeat(auto-fit,minmax(78px,1fr))}
+#spotifyFrame{position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4;display:none;background:#121212}
+#pinSetModal{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#pinSetModal.show{display:flex}
+#pinSetModal .pinBox{background:var(--panel);border:1px solid var(--accent);border-radius:18px;padding:22px;max-width:340px;width:90%;text-align:center}
+#pinSetModal h3{margin:0 0 6px;color:var(--accent);font-size:18px}
+#pinSetModal p{margin:0 0 14px;color:var(--muted);font-size:12px}
+#pinSetModal input{width:100%;font-size:20px;letter-spacing:10px;text-align:center;padding:11px;background:var(--input);color:var(--text);border:2px solid var(--line);border-radius:10px;margin-bottom:10px;font-family:monospace}
+#pinSetModal input:focus{border-color:var(--accent);outline:none}
+#pinSetModal .pinActions{display:flex;gap:8px}#pinSetModal .pinActions button{flex:1}
+
+/* ---------- event fx layers ---------- */
+#evCanvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:40;display:none}
+#evDeco div{pointer-events:none}
+.ev-blob{position:fixed;z-index:-1;border-radius:50%;filter:blur(70px);opacity:.55;animation:evBlob 16s ease-in-out infinite alternate}
+.ev-blob.a{width:46vw;height:46vw;left:-12vw;top:-10vw}
+.ev-blob.b{width:40vw;height:40vw;right:-10vw;bottom:-12vw;animation-duration:21s}
+@keyframes evBlob{from{transform:translate(0,0) scale(1)}to{transform:translate(6vw,4vw) scale(1.18)}}
+@keyframes evTwinkle{0%,100%{filter:brightness(1.35) saturate(1.4)}50%{filter:brightness(.62) saturate(1)}}
+@keyframes evShimmer{to{background-position:200% 0}}
+@keyframes evBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.06)}28%{transform:scale(1)}42%{transform:scale(1.05)}}
+@keyframes evFlicker{0%,100%{text-shadow:0 0 6px #ff7b22,0 0 18px #ff7b2288}45%{text-shadow:0 0 3px #ff7b22,0 0 8px #ff7b2255}52%{text-shadow:0 0 9px #ffb066,0 0 26px #ff7b22aa}}
+@keyframes evFog{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
+@keyframes evFlame{0%,100%{transform:scale(1,1) rotate(-2deg)}30%{transform:scale(.92,1.1) rotate(2deg)}60%{transform:scale(1.06,.95) rotate(-1deg)}}
+@keyframes evBat{0%{transform:translate(-12vw,0)}25%{transform:translate(22vw,-5vh)}50%{transform:translate(55vw,4vh)}75%{transform:translate(82vw,-6vh)}100%{transform:translate(115vw,2vh)}}
+@keyframes evFlap{0%,100%{scale:1 1}50%{scale:1 .45}}
+@keyframes evSun{to{transform:rotate(360deg)}}
+
+/* ---------- CHRISTMAS ---------- */
+body.event-skin-christmas{background:radial-gradient(ellipse at 50% 120%,#c0283a40,transparent 55%),radial-gradient(ellipse at 20% 0,#1f8f5a55,transparent 50%),linear-gradient(170deg,#06150f,#0b2a1f 50%,#0f141c) fixed}
+body.event-skin-christmas .ev-blob.a{background:#1fa86a}body.event-skin-christmas .ev-blob.b{background:#d62839}
+body.event-skin-christmas .topbar{background:linear-gradient(180deg,#0d2f22f2,#082016f2);border-bottom:4px solid transparent;border-image:repeating-linear-gradient(135deg,#d62839 0 14px,#fff 14px 28px,#1f9d62 28px 42px) 1}
+body.event-skin-christmas .topbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:46px;pointer-events:none;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='46' viewBox='0 0 120 46'><path d='M0 4Q30 22 60 4Q90 22 120 4' fill='none' stroke='%23334' stroke-width='1.6'/><g stroke='%23223' stroke-width='1'><path d='M15 11v3M45 11v3M75 11v3M105 11v3'/></g><circle cx='15' cy='19' r='4.6' fill='%23ff3b4e'/><circle cx='45' cy='19' r='4.6' fill='%23ffd23f'/><circle cx='75' cy='19' r='4.6' fill='%232ee59d'/><circle cx='105' cy='19' r='4.6' fill='%234db8ff'/></svg>") repeat-x top left;animation:evTwinkle 1.7s ease-in-out infinite}
+body.event-skin-christmas .panel,body.event-skin-christmas .playerpanel,body.event-skin-christmas .sidepanel{border:1px solid #d4af3766;border-top:3px solid #d62839;border-radius:18px;background:linear-gradient(160deg,#0f3a2bcc,#0a1f19cc);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 #ffffff14,0 12px 40px #00000066,0 0 34px #d6283920}
+body.event-skin-christmas button{border-radius:999px;background:linear-gradient(180deg,#1f6a4a,#124632);border-color:#d4af37aa}
+body.event-skin-christmas button.primary{background:linear-gradient(180deg,#e03a4b,#a91d2e);border-color:#ffd9a0;color:#fff}
+body.event-skin-christmas button:hover:not(:disabled){box-shadow:0 0 18px #ffd23f66}
+
+/* ---------- HALLOWEEN ---------- */
+body.event-skin-halloween{background:radial-gradient(circle at 82% 10%,#ffb34733 0,#ff7a1a1c 10%,transparent 26%),radial-gradient(ellipse at 50% 110%,#5b1f0a88,transparent 55%),linear-gradient(165deg,#07040d,#1a0b2b 55%,#0a0610) fixed}
+body.event-skin-halloween .topbar{background:linear-gradient(180deg,#14091fee,#0a0510ee);border-bottom:2px solid #ff7b22;box-shadow:0 4px 26px #ff7b2255}
+body.event-skin-halloween .topbar::before{content:"";position:absolute;inset:0;pointer-events:none;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 110' fill='none' stroke='%23d8c9ff' stroke-opacity='.5' stroke-width='1'><path d='M0 0L110 0M0 0L100 40M0 0L75 75M0 0L40 100M0 0L0 110'/><path d='M30 0Q27 27 0 30M60 0Q50 40 0 60M90 0Q70 62 0 90'/></svg>") left top/92px no-repeat,url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 110' fill='none' stroke='%23d8c9ff' stroke-opacity='.5' stroke-width='1'><g transform='translate(110 0) scale(-1 1)'><path d='M0 0L110 0M0 0L100 40M0 0L75 75M0 0L40 100M0 0L0 110'/><path d='M30 0Q27 27 0 30M60 0Q50 40 0 60M90 0Q70 62 0 90'/></g></svg>") right top/92px no-repeat}
+body.event-skin-halloween .topbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:22px;pointer-events:none;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='22' viewBox='0 0 80 22'><path d='M0 0H80V5C76 5 76 10 74 10S72 5 68 5 66 18 62 18 60 5 56 5 54 12 50 12 48 5 44 5 42 20 38 20 36 5 32 5 30 11 26 11 24 5 20 5 18 15 14 15 12 5 8 5 6 9 2 9 0 5Z' fill='%23ff7b22'/></svg>") repeat-x top left;filter:drop-shadow(0 3px 6px #ff7b2288)}
+body.event-skin-halloween .panel,body.event-skin-halloween .playerpanel,body.event-skin-halloween .sidepanel{border:1px solid #ff7b2266;border-radius:6px 22px 6px 22px;background:linear-gradient(160deg,#1a0e29d9,#0c0714d9);backdrop-filter:blur(6px);box-shadow:0 0 26px #ff7b2224,inset 0 0 40px #7b2cff14}
+body.event-skin-halloween h3,body.event-skin-halloween .brandname{animation:evFlicker 3.2s infinite;color:#ffb066}
+body.event-skin-halloween button{border-radius:8px 2px 8px 2px;background:linear-gradient(180deg,#2a1540,#150a22);border:1px solid #ff7b2299;color:#ffd9b0}
+body.event-skin-halloween button.primary{background:linear-gradient(180deg,#ff8a2b,#c4560a);color:#1b0a00}
+body.event-skin-halloween button:hover:not(:disabled){box-shadow:0 0 18px #ff7b22aa}
+.ev-moon{position:fixed;z-index:-1;top:86px;right:7%;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff6d0,#ffc46b 55%,#e8862a);box-shadow:0 0 60px 20px #ff9a3a55,0 0 150px 60px #ff7b2230}
+.ev-moon::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 62% 34%,#d8903a66 0 9%,transparent 10%),radial-gradient(circle at 36% 66%,#d8903a55 0 12%,transparent 13%),radial-gradient(circle at 70% 70%,#d8903a44 0 6%,transparent 7%)}
+.ev-fog{position:fixed;z-index:-1;left:-20%;right:-20%;bottom:-40px;height:240px;background:radial-gradient(ellipse at 30% 100%,#9a7bd355,transparent 60%),radial-gradient(ellipse at 72% 100%,#ff7b2236,transparent 60%);filter:blur(14px);animation:evFog 18s ease-in-out infinite alternate}
+.ev-fog.two{height:170px;opacity:.7;animation-duration:27s;animation-direction:alternate-reverse}
+.ev-bat{position:fixed;z-index:40;left:0;width:54px;height:27px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 32'><path d='M32 10C28 4 22 2 14 4 10 5 6 8 0 12 6 12 9 14 11 18 14 15 17 15 20 18 22 14 26 14 28 20 30 24 32 30 32 30 32 30 34 24 36 20 38 14 42 14 44 18 47 15 50 15 53 18 55 14 58 12 64 12 58 8 54 5 50 4 42 2 36 4 32 10Z' fill='%231b0b2a' stroke='%23ff7b22' stroke-opacity='.55'/></svg>") center/contain no-repeat;animation:evBat 19s linear infinite,evFlap .35s ease-in-out infinite}
+.ev-bat.b1{top:14vh}.ev-bat.b2{top:30vh;width:38px;height:19px;animation-duration:27s,.28s;animation-delay:-9s,0s}.ev-bat.b3{top:52vh;width:46px;height:23px;animation-duration:23s,.31s;animation-delay:-15s,0s}
+
+/* ---------- NEW YEAR ---------- */
+body.event-skin-newyear{background:radial-gradient(circle at 50% -20%,#6b4fd855,transparent 52%),linear-gradient(160deg,#050818,#0d1536 55%,#05081a) fixed}
+body.event-skin-newyear .ev-blob.a{background:#7a5cff}body.event-skin-newyear .ev-blob.b{background:#f6a93b;opacity:.35}
+body.event-skin-newyear .topbar{background:linear-gradient(180deg,#0b1230f2,#060a1ef2);border-bottom:2px solid transparent;border-image:linear-gradient(90deg,#f6d365,#fda085,#a78bfa,#f6d365) 1;box-shadow:0 6px 30px #f6d36526}
+body.event-skin-newyear .brandname{background:linear-gradient(90deg,#f6d365,#fff,#f6d365);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;animation:evShimmer 4s linear infinite}
+body.event-skin-newyear .panel,body.event-skin-newyear .playerpanel,body.event-skin-newyear .sidepanel{border:1px solid #f6d36566;border-radius:18px;background:linear-gradient(150deg,#141b3fcc,#0a1028cc);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 #ffffff18,0 0 34px #7a5cff2a,0 16px 50px #00000066}
+body.event-skin-newyear button{border-radius:10px;background:linear-gradient(180deg,#232d5e,#111936);border-color:#f6d36577}
+body.event-skin-newyear button.primary{background:linear-gradient(180deg,#f6d365,#e09a2c);color:#1a1300;border-color:#fff1b8}
+body.event-skin-newyear button:hover:not(:disabled){box-shadow:0 0 20px #f6d36577}
+
+/* ---------- VALENTINE ---------- */
+body.event-skin-valentine{background:radial-gradient(ellipse at 100% 0,#ff4f9a44,transparent 50%),radial-gradient(ellipse at 0 100%,#ff8fb844,transparent 50%),linear-gradient(160deg,#2a0a1e,#4a1030 55%,#1c0716) fixed}
+body.event-skin-valentine .ev-blob.a{background:#ff4f9a}body.event-skin-valentine .ev-blob.b{background:#ff9ec7}
+body.event-skin-valentine .topbar{background:linear-gradient(90deg,#3a0f2bf0,#5c1745f0,#3a0f2bf0);border-bottom:2px solid #ff8fc2}
+body.event-skin-valentine .topbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:30px;pointer-events:none;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'><path d='M0 3Q30 14 60 3' stroke='%23ff8fc2' fill='none'/><path d='M30 22C30 22 22 16 22 12C22 9 26 8 30 12C34 8 38 9 38 12C38 16 30 22 30 22Z' fill='%23ff4f9a'/></svg>") repeat-x top left;animation:evTwinkle 2.4s ease-in-out infinite}
+body.event-skin-valentine .panel,body.event-skin-valentine .playerpanel,body.event-skin-valentine .sidepanel{border:1px solid #ff8fc2aa;border-radius:28px;background:linear-gradient(150deg,#5a1a42cc,#2a0c22cc);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 #ffffff26,0 10px 40px #ff4f9a33}
+body.event-skin-valentine button{border-radius:999px;background:linear-gradient(180deg,#7a2459,#4a1236);border-color:#ff8fc2aa}
+body.event-skin-valentine button.primary{background:linear-gradient(180deg,#ff6fae,#e0307f);color:#fff;border-color:#ffd0e4;animation:evBeat 2.2s infinite}
+
+/* ---------- NOWRUZ ---------- */
+body.event-skin-nowruz{background:radial-gradient(circle at 86% -4%,#ffe68a99 0,#ffd45a33 12%,transparent 32%),radial-gradient(ellipse at 15% 100%,#2fd27a44,transparent 50%),linear-gradient(165deg,#06241d,#0d4a3a 55%,#073028) fixed}
+body.event-skin-nowruz .topbar{background:linear-gradient(180deg,#0b3d31f2,#072a22f2);border-bottom:4px double #e9c46a}
+body.event-skin-nowruz .panel,body.event-skin-nowruz .playerpanel,body.event-skin-nowruz .sidepanel{border:1px solid #e9c46a88;outline:1px solid #e9c46a38;outline-offset:-6px;border-radius:24px;background:linear-gradient(150deg,#0e4a3acc,#08302ccc);backdrop-filter:blur(6px);box-shadow:0 12px 40px #2fd27a22,inset 0 0 0 1px #ffffff10}
+body.event-skin-nowruz button{border-radius:999px;background:linear-gradient(180deg,#15705a,#0b4a3a);border-color:#e9c46aaa}
+body.event-skin-nowruz button.primary{background:linear-gradient(180deg,#f3d27a,#d6a43a);color:#2a1d00}
+.ev-sun{position:fixed;z-index:-1;top:-120px;right:-120px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,#fff3b0 0 22%,#ffd45a66 23% 38%,transparent 62%);animation:evSun 90s linear infinite}
+.ev-sun::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(#ffe68a44 0 6deg,transparent 6deg 18deg);-webkit-mask:radial-gradient(circle,transparent 30%,#000 31%,transparent 70%);mask:radial-gradient(circle,transparent 30%,#000 31%,transparent 70%)}
+.ev-grass{position:fixed;z-index:-1;left:0;right:0;bottom:0;height:70px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='70' viewBox='0 0 120 70'><path d='M0 70V50Q10 40 20 52 26 30 34 52 44 38 52 54 60 28 68 54 80 42 90 56 100 36 108 54 114 48 120 52V70Z' fill='%232fae5a'/><path d='M0 70V60Q14 50 26 62 40 48 54 64 70 52 84 64 100 54 120 62V70Z' fill='%23218a47'/><circle cx='26' cy='29' r='3.4' fill='%23ffb3d1'/><circle cx='60' cy='27' r='3.4' fill='%23fff0f5'/><circle cx='100' cy='35' r='3.4' fill='%23ffd45a'/></svg>") repeat-x bottom left}
+
+/* ---------- YALDA ---------- */
+body.event-skin-yalda{background:radial-gradient(circle at 50% 120%,#ff2d5566,transparent 55%),radial-gradient(circle at 15% 0,#7a1fa233,transparent 45%),linear-gradient(170deg,#12040f,#2b0818 55%,#14040d) fixed}
+body.event-skin-yalda .ev-blob.a{background:#7a1fa2;opacity:.4}
+body.event-skin-yalda .topbar{background:linear-gradient(180deg,#3a0b1ef2,#1c0610f2);border-bottom:4px solid #2e9e4f;box-shadow:0 4px 0 #f4f1d6,0 9px 26px #ff2d5555}
+body.event-skin-yalda .panel,body.event-skin-yalda .playerpanel,body.event-skin-yalda .sidepanel{border:1px solid #ff4d6d88;border-bottom:5px solid #2e9e4f;border-radius:22px 22px 22px 6px;background:linear-gradient(155deg,#3a0b1ecc,#180510cc);backdrop-filter:blur(6px);box-shadow:0 4px 0 #f4f1d633,0 0 34px #ff2d5533}
+body.event-skin-yalda button{border-radius:14px 4px 14px 4px;background:linear-gradient(180deg,#5a1230,#2e0a1a);border-color:#ff4d6daa}
+body.event-skin-yalda button.primary{background:linear-gradient(180deg,#ff5473,#c41e47);color:#fff}
+.ev-candle{position:fixed;z-index:-1;bottom:0;width:26px;height:78px;border-radius:6px 6px 0 0;background:linear-gradient(90deg,#d9c9a0,#f7ecd0 45%,#cdbb8a)}
+.ev-candle.l{left:3vw}.ev-candle.r{right:3vw;height:104px}
+.ev-candle::before{content:"";position:absolute;left:50%;top:-30px;width:14px;height:28px;margin-left:-7px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;background:radial-gradient(ellipse at 50% 70%,#fff6c0 0 25%,#ffb43a 55%,#ff6a1a);transform-origin:50% 100%;animation:evFlame 1.3s ease-in-out infinite;box-shadow:0 0 22px 8px #ff9a3a77}
+.ev-candle::after{content:"";position:absolute;left:50%;top:-110px;width:240px;height:240px;margin-left:-120px;border-radius:50%;background:radial-gradient(circle,#ff9a3a40,transparent 65%)}
+
+@media(max-width:700px){.ev-moon{width:62px;height:62px;top:70px}.ev-sun{width:240px;height:240px;top:-90px;right:-90px}.ev-candle{display:none}}
+@media (prefers-reduced-motion:reduce){[class*="ev-"],body[class*="event-skin-"] *{animation:none!important}}
+
+/* ---------- FRUTIGER AERO ---------- */
+body.aero{background:radial-gradient(ellipse 80% 45% at 50% -8%,#ffffffcc 0,#ffffff00 70%),linear-gradient(180deg,#4db8f0 0%,#8fd8ff 32%,#cdf1ff 60%,#c4f2a4 100%) fixed;color:#0a3550}
+body.aero::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 12% 22%,#ffffffb0 0 1.4%,#ffffff26 1.8% 4%,transparent 4.6%),radial-gradient(circle at 84% 16%,#ffffffa0 0 1%,#ffffff22 1.4% 3%,transparent 3.6%),radial-gradient(circle at 72% 60%,#ffffff90 0 1.8%,#ffffff1e 2.2% 5%,transparent 5.6%),radial-gradient(circle at 24% 70%,#ffffff90 0 1.3%,#ffffff1e 1.7% 4%,transparent 4.6%),radial-gradient(circle at 92% 84%,#ffffff80 0 1%,#ffffff1c 1.4% 3.2%,transparent 3.8%),radial-gradient(circle at 48% 38%,#ffffff70 0 .8%,#ffffff18 1.1% 2.6%,transparent 3.2%);animation:aeroFloat 16s ease-in-out infinite alternate}
+body.aero::after{content:"";position:fixed;left:-10%;right:-10%;bottom:-9vh;height:30vh;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 28% 100%,#6fdc5e 0 55%,transparent 56%),radial-gradient(ellipse at 76% 100%,#43bd4c 0 50%,transparent 51%);opacity:.9}
+@keyframes aeroFloat{from{transform:translateY(0)}to{transform:translateY(-22px)}}
+body.aero .topbar{background:linear-gradient(180deg,#ffffffdd,#a9dcf6cc 55%,#8fcdeecc);border-bottom:1px solid #fff;box-shadow:0 4px 18px #1d78a855,inset 0 1px 0 #fff}
+body.aero .brandname{text-shadow:0 1px 0 #fff,0 0 12px #ffffffaa;color:#0a4a6e}
+body.aero .panel,body.aero .playerpanel,body.aero .sidepanel{background:linear-gradient(180deg,#ffffffd0,#dff3ffa0);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);border:1px solid #ffffffd8;border-radius:20px;box-shadow:0 10px 34px #1d78a844,inset 0 1px 0 #fff,inset 0 -14px 26px #7cc8f433}
+body.aero .section,body.aero .listitem{background:linear-gradient(180deg,#ffffffb8,#e6f6ff90);border-color:#bfe3f6}
+body.aero button{background:linear-gradient(180deg,#fff 0,#dff4ff 48%,#aee3fb 52%,#d9f7ff 100%);border:1px solid #7cc4e8;color:#0a3550;text-shadow:0 1px 0 #fff;border-radius:999px;box-shadow:inset 0 1px 0 #fff,0 2px 6px #00669933}
+body.aero button:hover:not(:disabled){box-shadow:inset 0 1px 0 #fff,0 0 14px #5ec5f5aa;border-color:#2fa3d8}
+body.aero button.primary,body.aero button.active,body.aero .modeCard.active{background:linear-gradient(180deg,#b6f59a 0,#5fd65f 48%,#2fb24a 52%,#86e582 100%);border-color:#2a9a42;color:#fff;text-shadow:0 1px 1px #1a6b2e}
+body.aero input,body.aero select,body.aero textarea{background:linear-gradient(180deg,#e8f6ff,#fff);border:1px solid #8fd0ef;color:#0a3550;border-radius:12px;box-shadow:inset 0 2px 4px #1d78a826}
+body.aero .modeCard{background:linear-gradient(180deg,#fff,#d4efff);border-color:#9fd2ee;color:#0a3550;border-radius:16px}
+body.aero .clock,body.aero .tagline,body.aero .viewerhint{color:#2c6a8a}
+body.aero .remote-dock-toggle,body.aero #remoteDockToggle{background:linear-gradient(180deg,#fff,#d4efff 50%,#aee3fb 52%,#d9f7ff)!important;color:#0a3550!important;border:1px solid #7cc4e8!important;text-shadow:0 1px 0 #fff}
+body.aero h3,body.aero h2{color:#0a4a6e}
+
+</style>
 </head><body class="booting">
+<div id="evDeco"></div><canvas id="evCanvas"></canvas>
 <div id="amtvErrorNotice" role="status" aria-live="polite"><strong>AM TV — خطا</strong><span id="amtvErrorText">بخشی از برنامه درست بارگذاری نشده است.</span></div>
 <div id="menuBackdrop"></div>
 <header class="topbar">
@@ -895,13 +993,13 @@ html body.emoji-only .btnlabel{
           <div class="emptyhint" id="emptyHint" data-i18n="waiting">کانال در انتظار برنامه است</div>
         </div>
         <div id="youtubePlayer"></div>
-        <iframe id="externalEmbed" title="External media player" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
         <video id="videoElement" playsinline controlslist="nodownload noplaybackrate"></video>
         <div id="radioScreen">
           <div class="radioicon"><i class="ic ic-radio"></i></div>
           <div class="emptylogo" id="radioStationName">AM RADIO</div>
           <div class="radiofrequency">24 / 7 · LIVE SOUND</div>
           <audio id="audioElement" preload="metadata"></audio>
+          <iframe id="spotifyFrame" title="Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         </div>
         <div id="vhsOverlay" class="hidden">
           <div class="vhs-noise"></div>
@@ -1024,6 +1122,10 @@ html body.emoji-only .btnlabel{
           <button type="button" class="modeCard" data-mode="dream">
             <svg class="modeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/><circle cx="17" cy="7" r="1" fill="currentColor"/><circle cx="19" cy="10" r="0.7" fill="currentColor"/></svg>
             <span data-i18n="modeDream">دریمکور</span>
+          </button>
+          <button type="button" class="modeCard" data-mode="aero">
+            <svg class="modeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="14" r="6"/><circle cx="17" cy="7" r="3.2"/><path d="M6.5 12a3 3 0 0 1 2.2-1.6"/></svg>
+            <span>فروتیگر ایرو</span>
           </button>
         </div>
       </div>
@@ -1192,7 +1294,7 @@ html body.emoji-only .btnlabel{
         <div class="section">
           <h3><i class="ic ic-mic"></i><span data-i18n="addAudioTitle">افزودن صوت به کانال فعلی</span></h3>
           <div class="field"><label for="radioTitle" data-i18n="lblAudioName">نام برنامه</label><input id="radioTitle" placeholder="—"></div>
-          <div class="field"><label for="radioURL" data-i18n="lblAudioUrl">لینک صوت / یوتیوب / پلی‌لیست یوتیوب</label><input id="radioURL" type="url" placeholder="MP3 یا playlist?list=..."></div>
+          <div class="field"><label for="radioURL" data-i18n="lblAudioUrl">لینک صوت / یوتیوب / پلی‌لیست یوتیوب / اسپاتیفای</label><input id="radioURL" type="url" placeholder="MP3 / youtube playlist?list=... / open.spotify.com/playlist/..."></div>
           <div class="field"><label for="radioFiles" data-i18n="lblAudioFile">یا فایل‌های صوتی برای آپلود</label><input id="radioFiles" type="file" accept="audio/*" multiple></div>
           <button id="addRadioButton" type="button" class="primary"><i class="ic ic-plus"></i><span class="lbl" data-i18n="addBtn">افزودن</span></button>
         </div>
@@ -1803,7 +1905,7 @@ const I18N={
  lblNewCh:"نام کانال جدید",lblColor:"رنگ کانال",
  playlistTitle:"پلی‌لیست کانال فعلی",tzLbl:"منطقهٔ زمانی ساعت‌های ثابت",
  radioChannelsTitle:"کانال‌های رادیو",lblNewRadioCh:"نام کانال رادیو جدید",addAudioTitle:"افزودن صوت به کانال فعلی",
- lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست یوتیوب",lblAudioFile:"یا فایل‌های صوتی برای آپلود",
+ lblAudioName:"نام برنامه",lblAudioUrl:"لینک صوت / یوتیوب / پلی‌لیست یوتیوب / اسپاتیفای",lblAudioFile:"یا فایل‌های صوتی برای آپلود",
  playlistRadioTitle:"پلی‌لیست کانال فعلی",
  wmTitle:"متن یا لوگوی واترمارک",wmText:"متن دلخواه",wmImgFile:"تصویر لوگو",wmImgUrl:"یا لینک مستقیم تصویر",
  wmSize:"اندازه متن (%)",wmOpacity:"شفافیت (%)",wmWidth:"عرض لوگو (px)",wmColor:"رنگ متن",
@@ -1899,7 +2001,7 @@ const I18N={
  lblNewCh:"New channel name",lblColor:"Channel color",
  playlistTitle:"Current channel playlist",tzLbl:"Timezone for fixed times",
  radioChannelsTitle:"Radio channels",lblNewRadioCh:"New radio channel name",addAudioTitle:"Add audio to current channel",
- lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube link",lblAudioFile:"Or audio files to upload",
+ lblAudioName:"Program name",lblAudioUrl:"Audio / YouTube / Spotify link",lblAudioFile:"Or audio files to upload",
  playlistRadioTitle:"Current channel playlist",
  wmTitle:"Watermark text or logo",wmText:"Custom text",wmImgFile:"Logo image",wmImgUrl:"Or direct image URL",
  wmSize:"Text size (%)",wmOpacity:"Opacity (%)",wmWidth:"Logo width (px)",wmColor:"Text color",
@@ -2332,34 +2434,6 @@ function notify(message){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>el.style.display="none",3200);
 }
-function parseAparatSource(url){
-  try{
-    const u=new URL(url);
-    const host=u.hostname.replace(/^www\\./i,"").toLowerCase();
-    if(host!=="aparat.com"&&!host.endsWith(".aparat.com"))return null;
-    const parts=u.pathname.split("/").filter(Boolean);
-    let id="";
-    if(parts[0]==="v"&&parts[1])id=parts[1];
-    else if(parts[0]==="video"&&parts[1]==="video"&&parts[2]==="embed"&&parts[3]==="videohash"&&parts[4])id=parts[4];
-    return /^[a-zA-Z0-9_-]+$/.test(id)?id:null;
-  }catch(_){return null}
-}
-function parseSpotifySource(url){
-  try{
-    const u=new URL(url);
-    const host=u.hostname.toLowerCase();
-    if(host!=="open.spotify.com")return null;
-    const parts=u.pathname.split("/").filter(Boolean);
-    if(parts[0]==="embed")parts.shift();
-    const type=parts[0],id=parts[1];
-    if(!["track","album","playlist","artist","episode","show"].includes(type)||!id||! /^[a-zA-Z0-9]+$/.test(id))return null;
-    return {type,id};
-  }catch(_){return null}
-}
-function spotifyEmbedUrl(url){
-  const parsed=parseSpotifySource(url);
-  return parsed?"https://open.spotify.com/embed/"+parsed.type+"/"+parsed.id+"?utm_source=generator&theme=0":"";
-}
 function isYouTube(url){
   try{
     const u=new URL(url);
@@ -2509,8 +2583,6 @@ function showBumper(next,left){
   $("bumperNext").textContent=next?(t("bumperNext")+" "+(next.title||t("untitled"))):"";
   $("emptyScreen").style.display="none";
   $("youtubePlayer").style.display="none";
-  $("externalEmbed").style.display="none";
-  $("externalEmbed").src="about:blank";
   $("videoElement").style.display="none";
   $("radioScreen").style.display="none";
   try{$("videoElement").pause()}catch(_){}
@@ -2677,6 +2749,30 @@ function renderGuide(){
   });
 }
 
+function amtvReanchor(section,target,mutate){
+  let isCur=false,curId=null,off=0;
+  try{
+    isCur=section==="tv"?currentChannel()===target:section==="radio"?currentRadioChannel()===target:currentKidsChannel()===target;
+    if(isCur){
+      if(section==="kids"){const it=target.list[Number(state.kidsPlayback&&state.kidsPlayback.index)||0];if(it)curId=it.id;}
+      else{const li=liveInfo(section);const it=target.list[li.index];if(it&&li.known&&!li.bumper){curId=it.id;off=li.offset;}}
+    }
+  }catch(_){}
+  mutate();
+  if(!isCur)return;
+  let pos=curId?target.list.findIndex(v=>v.id===curId):-1;
+  if(pos<0){pos=0;off=0;}
+  const started=Math.round(serverNow()-off*1000);
+  if(section==="kids"){state.kidsPlayback={index:pos,startedAt:started,nonce:(state.kidsPlayback?.nonce||0)+1};}
+  else{
+    const B=bumperSecs(section);let before=0;
+    for(let i=0;i<pos;i++)before+=(durOf(target.list[i])+B);
+    target.cycleStart=Date.now()-Math.round((before+off)*1000);
+    if(section==="radio"){state.radioIndex=pos;state.radioPlayback={index:pos,startedAt:started,nonce:(state.radioPlayback?.nonce||0)+1};}
+    else state.playback={index:pos,startedAt:started,nonce:(state.playback?.nonce||0)+1};
+  }
+  activeMediaKey="";
+}
 function pruneOldSynced(){
   const ch=currentChannel();
   const list=ch.list;
@@ -2936,7 +3032,10 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
           n++;total++;
           if(n===videos.length||n%8===0){ui.addRow(v,secName,feed.name);ui.set(base+slice*(n/videos.length),(secName?secName+" — ":"")+"کانال "+idx.toLocaleString("fa-IR")+" از "+N.toLocaleString("fa-IR")+" — "+feed.name,"ویدیو "+n.toLocaleString("fa-IR")+" از "+videos.length.toLocaleString("fa-IR")+(v.duration>0?" (⏱ "+fmtDur(v.duration)+")":"")+": "+esc(v.title||"")+"<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");setStatus("همگام‌شده: "+total+" ویدیو (کانال "+idx+"/"+N+")");await sleep(0);}
         }
-        {const fresh=[...byVideo.values()].filter(x=>!x.played);target.list=others.concat(fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0)));}
+        {const allV=[...byVideo.values()];let fresh=allV.filter(x=>!x.played);
+         if(!fresh.length&&allV.length){allV.forEach(x=>{if(x.played){delete x.played;try{delete state.playedIds[x.youtubeId]}catch(_){}}});fresh=allV;}/* nothing new came in: keep looping the old ones instead of dead air */
+         const _sorted=fresh.sort((a,b)=>(Number(b.publishedAt)||0)-(Number(a.publishedAt)||0));
+         amtvReanchor(loc.section,target,()=>{target.list=others.concat(_sorted);});}
         renderSyncPartial();
         try{mergeFeedIntoNetwork(feed);renderSyncPartial()}catch(e){console.warn("network merge failed",e)}
         if(!videos.length)ui.set(base+slice,null,"در ۲۴ ساعت اخیر ویدیوی تازه‌ای برای <b>"+esc(feed.name)+"</b> نبود.<br>کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>");
@@ -2977,6 +3076,7 @@ const probeFailed=new Set();
 function probeOne(item){
   return new Promise(resolve=>{
     const url=mediaUrl(item);
+    if(item.ytKind==='spotify')return resolve();
     let done=false;
     const finish=ok=>{if(done)return;done=true;if(ok===false)probeFailed.add(item.id);resolve()};
     if(isYouTube(url)){
@@ -3237,7 +3337,7 @@ function promptKidsExit(){
   setTimeout(()=>$("pinInput").focus(),100);
 }
 function checkPin(){
-  const entered=($("pinInput").value||"").trim();
+  const entered=normDigits(($("pinInput").value||"").trim());
   const stored=getKidsPin();
   if(entered===stored){
     $("pinModal").classList.remove("show");
@@ -3299,7 +3399,7 @@ function applyCachedState(){
     const raw=localStorage.getItem(STATE_CACHE_KEY);if(!raw)return false;
     const cached=JSON.parse(raw);if(!cached||typeof cached!=="object")return false;
     isApplyingRemote=true;state={...clone(DEFAULT_STATE),...cached};ensureState();isApplyingRemote=false;
-    window.__stateFromCache=true;renderAll();
+    window.__stateFromCache=true;window.__playReady=true;renderAll();
     try{$("supabaseStatus").value="cache (offline)"}catch(_){}
     return true;
   }catch(_){isApplyingRemote=false;return false}
@@ -3374,10 +3474,10 @@ async function loadRemoteState(){
       isApplyingRemote=false;
       window.__remoteLoaded=true;window.__stateFromCache=false;
       try{localStorage.setItem(STATE_CACHE_KEY,JSON.stringify(data.data))}catch(_){}
-      beginHold();renderAll();
+      window.__playReady=true;beginHold();renderAll();
       await syncPlayback(true);
       $("supabaseStatus").value="OK";
-    }else{window.__remoteLoaded=true;$("supabaseStatus").value="connected · no row";}
+    }else{window.__remoteLoaded=true;window.__playReady=true;$("supabaseStatus").value="connected · no row";}
   }catch(err){
     console.error("loadRemoteState failed:",err);
     isApplyingRemote=false;
@@ -3996,6 +4096,7 @@ function hideAllMedia(){
   $("youtubePlayer").style.display="none";
   $("videoElement").style.display="none";
   $("radioScreen").style.display="none";
+  try{const _sf=$("spotifyFrame");if(_sf){_sf.style.display="none";_sf.removeAttribute("src");}}catch(_){}
   $("videoElement").pause();
   $("audioElement").pause();
   try{if(ytReady&&ytPlayer){
@@ -4052,6 +4153,7 @@ function renderPlayer(force=false){
   }
   if(bumperOn&&!(isAdmin&&adminBumperTimer))hideBumper();
 
+  if(!window.__playReady){activeMediaKey="";$("emptyScreen").style.display="flex";$("emptyHint").textContent=t("syncing");return;}
   if(holdLive && item){activeMediaKey="";showEmpty(t("syncing"));return;}
   if(!item||!mediaUrl(item)){activeMediaKey="";showEmpty(t("emptySection"));return;}
   const url=mediaUrl(item);
@@ -4065,16 +4167,8 @@ function renderPlayer(force=false){
   if(partyIsHost)setTimeout(partyOnHostItemChange,300);
 
   if(mode==="radio"){
-    const spotifyUrl=spotifyEmbedUrl(url);
-    if(spotifyUrl){
-      const embed=$("externalEmbed");
-      embed.title="Spotify player";
-      embed.src=spotifyUrl;
-      embed.style.display="block";
-      $("statusPlayback").textContent="Spotify · برای پخش از کنترل‌های خود Spotify استفاده کن";
-      return;
-    }
     $("radioScreen").style.display="flex";
+    if(item.ytKind==='spotify'){showSpotify(item);$("statusPlayback").textContent=t("radioMode");return;}
     const isYtItem=item.ytKind==='playlist'||item.ytKind==='video'||isYouTube(url);
     if(isYtItem){
       const rid=(item.ytKind==='playlist'||item.ytKind==='video')?item.ytId:youtubeId(url);
@@ -4096,16 +4190,6 @@ function renderPlayer(force=false){
     $("statusPlayback").textContent=t("radioMode");return;
   }
 
-  const aparatId=parseAparatSource(url);
-  if(aparatId){
-    const embed=$("externalEmbed");
-    embed.title="Aparat video player";
-    embed.src="https://www.aparat.com/video/video/embed/videohash/"+encodeURIComponent(aparatId)+"/vt/frame";
-    embed.style.display="block";
-    $("statusPlayback").textContent="Aparat";
-    return;
-  }
-
   if(isYouTube(url)){
     const id=item.ytId||youtubeId(url);
     if(!id){showEmpty(t("badYt"));return;}
@@ -4124,6 +4208,7 @@ function renderPlayer(force=false){
   }else{
     const video=$("videoElement");
     video.style.display="block";video.controls=false;
+    if(off>1){video.style.visibility="hidden";const _rv=()=>{video.style.visibility="visible"};video.addEventListener("seeked",_rv,{once:true});setTimeout(_rv,2500);}else video.style.visibility="visible";
     pendingSeek=off;video.src=url;
     video.volume=(Number($("volumeSlider").value)||80)/100;video.loop=!!state.repeat;
     video.play().then(()=>{localPlaying=true;if(isAdmin)$("playButton").innerHTML='<i class="ic ic-pause"></i>';try{updateMediaSessionMeta()}catch(_){}}).catch(()=>{});
@@ -4135,10 +4220,7 @@ function togglePlay(){
   const mode=activeMode();
   if(mode==="radio"){
     const ri=activeItem();
-    if(ri&&parseSpotifySource(mediaUrl(ri))){
-      notify("برای پخش یا توقف، از کنترل‌های داخل Spotify استفاده کن.");
-      return;
-    }
+    if(ri&&ri.ytKind==='spotify')return;
     const isYt=ri&&(ri.ytKind==='playlist'||ri.ytKind==='video'||isYouTube(mediaUrl(ri)));
     if(isYt){
       if(!ytReady||!ytPlayer)return;
@@ -4173,7 +4255,7 @@ function chooseIndex(index,kind=activeMode()){
   if(!list.length)return;
   clearTimeout(adminBumperTimer);adminBumperTimer=null;
   if(bumperOn)hideBumper();
-  holdLive=false;adminResumed=true;
+  holdLive=false;adminResumed=true;window.__playReady=true;
   index=(index+list.length)%list.length;
   if(kind==="kids"){state.kidsPlayback={index,startedAt:serverNow(),nonce:(state.kidsPlayback?.nonce||0)+1};}
   else if(kind==="radio"){state.radioIndex=index;state.radioPlayback={index,startedAt:serverNow(),nonce:(state.radioPlayback?.nonce||0)+1};}
@@ -4385,8 +4467,8 @@ function renderEventBanner(){
   const ev=(getPrefs().eventTheme!==false)?activeEvent():null;
   let dismissed=false;
   try{dismissed=!!(ev&&sessionStorage.getItem("evdismiss-"+ev.id))}catch(_){}
-  if(!ev||dismissed){el.classList.add("hidden");return;}
-  if(["christmas","halloween","nowruz","yalda","newyear","valentine"].includes(ev.id))document.body.classList.add("event-skin-"+ev.id);
+  if(!ev||dismissed){el.classList.add("hidden");try{window.evFxStart&&window.evFxStart("")}catch(_){}return;}
+  if(["christmas","halloween","nowruz","yalda","newyear","valentine"].includes(ev.id)){document.body.classList.add("event-skin-"+ev.id);try{window.evFxStart&&window.evFxStart(ev.id)}catch(_){}}else{try{window.evFxStart&&window.evFxStart("")}catch(_){}}
   el.querySelectorAll(".event-banner-media,.event-banner-character").forEach(n=>n.remove());
   el.classList.remove("event-float","event-pulse","event-glow","event-slide");
   const media=ev.mediaUrl||"";
@@ -4992,6 +5074,13 @@ async function addVideos(){
   }catch(e){console.error(e);notify(t("msgAddFail")+e.message);}
   finally{$("addVideoButton").disabled=false;}
 }
+function parseSpotify(u){const m=/open\.spotify\.com\/(?:intl-[a-z-]+\/)?(playlist|album|track|episode|show|artist)\/([A-Za-z0-9]+)/i.exec(String(u||""));return m?{type:m[1].toLowerCase(),id:m[2]}:null;}
+function showSpotify(item){
+  const f=$("spotifyFrame");if(!f)return;
+  const src="https://open.spotify.com/embed/"+item.spotifyType+"/"+item.spotifyId+"?utm_source=generator&theme=0";
+  if(f.getAttribute("src")!==src)f.setAttribute("src",src);
+  f.style.display="block";
+}
 async function addRadio(){
   if(!isAdmin){notify(t("msgNoAdmin"));return;}
   const title=$("radioTitle").value.trim();
@@ -5003,8 +5092,9 @@ async function addRadio(){
     const additions=[];
     if(url){
       if(!/^https?:\/\//i.test(url))throw new Error("Invalid URL");
-      const yt=parseYouTubeSource(url);
-      if(yt){
+      const sp=parseSpotify(url);const yt=sp?null:parseYouTubeSource(url);
+      if(sp){additions.push({id:makeId(),title:title||("Spotify "+sp.type),url,ytKind:'spotify',spotifyType:sp.type,spotifyId:sp.id,addedAt:Date.now()});}
+      else if(yt){
         if(yt.kind==='playlist')additions.push({id:makeId(),title:title||"Playlist",url,ytKind:'playlist',ytId:yt.id,addedAt:Date.now()});
         else if(yt.kind==='video')additions.push({id:makeId(),title:title||"Video",url,ytKind:'video',ytId:yt.id,addedAt:Date.now()});
         else if(yt.kind==='handle')throw new Error(t("msgYtHandle"));
@@ -5099,6 +5189,7 @@ const THEMES={
   red:{bg:"#1a1010",panel:"#281818",panel2:"#392020",text:"#fff0eb",muted:"#c5a4a0",accent:"#ff8c75",line:"#543434"}
 };
 const BASE_MODES={
+  aero:{bg:"#bfe6fb",panel:"#ffffff",panel2:"#e3f5ff",text:"#0a3550",muted:"#3c6f8c",accent:"#2fb36b",line:"#9fd2ee"},
   dream:{bg:"#140d2b",panel:"#1d1538",panel2:"#2a1d4d",text:"#f7eaff",muted:"#bda7dd",accent:"#ff9ad5",line:"#4a3a7a"},
   dark:{bg:"#0e1014",panel:"#161920",panel2:"#1e222b",text:"#eceff4",muted:"#98a1b0",accent:"#5b9cff",line:"#2b303b"},
   light:{bg:"#f2f4f7",panel:"#ffffff",panel2:"#e9ecf1",text:"#14171c",muted:"#5b6472",accent:"#2563eb",line:"#d5dae2"}
@@ -5112,7 +5203,7 @@ function savePrefs(p){try{localStorage.setItem("amtv-prefs2",JSON.stringify(p));
 function applyPrefs(){
   const p=getPrefs();
   const preset=THEMES[p.preset]?p.preset:"green";
-  const mode=["dark","light","special","dream"].includes(p.mode)?p.mode:"dark";
+  const mode=["dark","light","special","dream","aero"].includes(p.mode)?p.mode:"dark";
   const t=mode==="special"?{...THEMES[preset]}:{...BASE_MODES[mode]};
   const evTheme=(p.eventTheme!==false&&!p.accent&&!p.bg)?activeEvent():null;
   const accentC=p.accent||(evTheme&&evTheme.accent)||"";
@@ -5135,8 +5226,8 @@ function applyPrefs(){
   t.onaccent=lumOf(t.accent)>0.55?"#15150e":"#ffffff";
   t.screenaccent=lumOf(t.accent)<0.5?mixHex(t.accent,"#ffffff",0.4):t.accent;
   t.screenmuted="#a9b09f";
-  t.screen1=mode==="dream"?"#2b1a52":(mode==="special"?"#263026":"#20262f");
-  t.screen2=mode==="dream"?"#0d0820":(mode==="special"?"#090b09":"#0b0d10");
+  t.screen1=mode==="aero"?"#1d78a8":mode==="dream"?"#2b1a52":(mode==="special"?"#263026":"#20262f");
+  t.screen2=mode==="aero"?"#06324c":mode==="dream"?"#0d0820":(mode==="special"?"#090b09":"#0b0d10");
   t.danger=dark?"#ffb7ac":"#b3261e";
   const r=document.documentElement;
   Object.keys(t).forEach(k=>r.style.setProperty("--"+k,t[k]));
@@ -5153,6 +5244,7 @@ function applyPrefs(){
   }catch(_){}
   document.body.classList.toggle("emoji-only",!!p.emojiOnly);
   document.body.classList.toggle("dream",mode==="dream");
+  document.body.classList.toggle("aero",mode==="aero");
   const eventBackdrop=(p.eventTheme!==false)?activeEvent():null;
   if(eventBackdrop&&eventBackdrop.mediaUrl&&eventBackdrop.mediaType!=="video"){
     document.body.style.backgroundImage='linear-gradient(180deg,rgba(0,0,0,.34),rgba(0,0,0,.58)),url('+JSON.stringify(eventBackdrop.mediaUrl)+')';
@@ -6977,9 +7069,10 @@ document.body.classList.toggle("viewerMode",!isAdmin);
 })();
 (async function boot(){
   ensureState();renderAll();
+  setTimeout(()=>{if(!window.__playReady){window.__playReady=true;try{renderPlayer(true)}catch(_){}}},9000);
   enhanceAllSelects(document);
   if(!sbClient)await ensureSupabaseSdk();
-  if(!sbClient){$("supabaseStatus").value="no client";applyCachedState();document.body.classList.remove("booting");return;}
+  if(!sbClient){$("supabaseStatus").value="no client";applyCachedState();window.__playReady=true;document.body.classList.remove("booting");return;}
   /* each step is independent and has its own timeout, so one stalled request (VPN) cannot block login or the rest */
   const step=async(name,fn,ms)=>{try{await withTimeout(Promise.resolve().then(fn),ms,name)}catch(e){console.warn("AM TV boot step failed:",name,e&&e.message)}};
   try{
@@ -7199,10 +7292,10 @@ const ids=()=>(state.playedIds=state.playedIds||{});
 window.amtvWasPlayed=id=>!!ids()[String(id)];
 function plan(n,now){
   if(!n.cycleStart)n.cycleStart=now;
-  const el=now-n.cycleStart;let cum=0,all=true;const played=[];
-  for(const v of n.list||[]){const d=durOf(v)*1000;if(!d){all=false;break}cum+=d;if(v.feedId&&v.youtubeId&&cum<=el)played.push(v)}
+  const el=now-n.cycleStart,B=bumperSecs("tv")*1000;let cum=0,all=true;const played=[];
+  for(const v of n.list||[]){const d=durOf(v)*1000;if(!d){all=false;break}cum+=d+B;if(v.feedId&&v.youtubeId&&cum-B<=el)played.push(v)}
   const finished=all&&(n.list||[]).length>0&&cum<=el;
-  return {played,due:(finished&&el>=DAY)||el>=2*DAY};
+  return {played,due:finished||el>=DAY};
 }
 const hasFeed=n=>(state.channelFeeds||[]).some(f=>f.networkId===n.id);
 window.amtvSectionDue=sec=>(secLists()[sec]||[]).some(n=>!n.feedId&&hasFeed(n)&&plan(n,Date.now()).due);
@@ -7242,6 +7335,144 @@ function renderSched(){
 setInterval(renderSched,30000);setTimeout(renderSched,3000);
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest('[data-tab="youtubeTab"]'))setTimeout(renderSched,200)});
 })();
+</script>
+<script>
+/* ===== AM TV v2: event fx engine + parent-lock for everyone ===== */
+(function(){
+const $=id=>document.getElementById(id);
+const cv=$("evCanvas"),dc=$("evDeco");
+if(cv&&dc){
+const cx=cv.getContext("2d");
+let W=0,H=0,dpr=1,cur="",raf=0,P=[],E=[],FW=[],SP=[],last=0,nextFw=0,T=0;
+const R=(a,b)=>a+Math.random()*(b-a),PI2=Math.PI*2,pick=a=>a[(Math.random()*a.length)|0];
+function size(){dpr=Math.min(2,window.devicePixelRatio||1);W=window.innerWidth;H=window.innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cx.setTransform(dpr,0,0,dpr,0,0);}
+const CFG={
+ christmas:{n:70,kind:"flake"},
+ halloween:{n:34,kind:"ember",emoji:["🎃","👻","🕸️"],en:6},
+ newyear:{n:46,kind:"confetti",fw:true},
+ valentine:{n:26,kind:"heart",emoji:["💖","💗","💕"],en:8,up:true},
+ nowruz:{n:40,kind:"petal",emoji:["🌸","🌷"],en:4},
+ yalda:{n:46,kind:"star",emoji:["🍉","🍎"],en:6,up:true}
+};
+const DECO={
+ christmas:'<div class="ev-blob a"></div><div class="ev-blob b"></div>',
+ halloween:'<div class="ev-moon"></div><div class="ev-fog"></div><div class="ev-fog two"></div><div class="ev-bat b1"></div><div class="ev-bat b2"></div><div class="ev-bat b3"></div>',
+ newyear:'<div class="ev-blob a"></div><div class="ev-blob b"></div>',
+ valentine:'<div class="ev-blob a"></div><div class="ev-blob b"></div>',
+ nowruz:'<div class="ev-sun"></div><div class="ev-grass"></div>',
+ yalda:'<div class="ev-blob a"></div><div class="ev-candle l"></div><div class="ev-candle r"></div>'
+};
+function mk(kind,init){
+ const p={kind,x:R(0,W),y:init?R(0,H):-20,ph:R(0,PI2),r:R(0,PI2),vr:R(-.03,.03),a:1,s:1,vx:0,vy:1,c:"#fff"};
+ if(kind==="flake"){p.s=R(1.2,4.2);p.vy=R(.5,1.6)*(p.s/3+.5);p.vx=R(-.2,.2);p.a=R(.55,.95);}
+ else if(kind==="ember"){p.y=init?R(0,H):H+10;p.s=R(1,3);p.vy=-R(.4,1.4);p.vx=R(-.3,.3);p.a=R(.4,1);p.c=Math.random()<.7?"255,140,40":"190,120,255";}
+ else if(kind==="confetti"){p.s=R(5,9);p.vy=R(.8,2);p.vx=R(-.4,.4);p.c=pick(["#f6d365","#ff7eb3","#7afcff","#ffffff","#b28dff"]);}
+ else if(kind==="heart"){p.y=init?R(0,H):H+20;p.s=R(8,20);p.vy=-R(.5,1.3);p.vx=R(-.2,.2);p.a=R(.35,.85);p.c=pick(["#ff4f9a","#ff8fc2","#ff2d6f","#ffc2dd"]);}
+ else if(kind==="petal"){p.s=R(5,10);p.vy=R(.6,1.4);p.vx=R(.2,.9);p.c=pick(["#ffc2d9","#fff0f5","#ffb3cf","#ffe0ec"]);p.a=R(.7,1);}
+ else if(kind==="star"){p.y=R(0,H);p.s=R(1.2,3.2);p.vy=0;p.a=R(.2,1);}
+ return p;
+}
+function mkEmoji(init,list,up){return {e:pick(list),x:R(0,W),y:init?R(0,H):(up?H+30:-30),s:R(18,34),vx:R(-.5,.5),vy:up?-R(.25,.7):R(.3,.8),ph:R(0,PI2),a:R(.55,.9)};}
+function heart(x,y,s){cx.beginPath();cx.moveTo(x,y+s*.3);cx.bezierCurveTo(x,y-s*.2,x-s*.55,y-s*.2,x-s*.55,y+s*.15);cx.bezierCurveTo(x-s*.55,y+s*.5,x,y+s*.7,x,y+s);cx.bezierCurveTo(x,y+s*.7,x+s*.55,y+s*.5,x+s*.55,y+s*.15);cx.bezierCurveTo(x+s*.55,y-s*.2,x,y-s*.2,x,y+s*.3);cx.fill();}
+function sparkle(x,y,s){cx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,r=i%2?s*.45:s*2.4;cx.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r);}cx.closePath();cx.fill();}
+function loop(ts){
+ raf=requestAnimationFrame(loop);
+ const dt=Math.min(2.5,(ts-(last||ts))/16.7);last=ts;T+=dt;
+ cx.clearRect(0,0,W,H);
+ const c=CFG[cur];if(!c)return;
+ for(const p of P){
+  const k=p.kind;
+  if(k==="flake"){p.ph+=.02*dt;p.x+=(Math.sin(p.ph)*.5+p.vx)*dt;p.y+=p.vy*dt;if(p.y>H+8){p.y=-8;p.x=R(0,W);}
+   cx.globalAlpha=p.a;cx.fillStyle="#fff";cx.beginPath();cx.arc(p.x,p.y,p.s,0,PI2);cx.fill();}
+  else if(k==="ember"){p.ph+=.03*dt;p.x+=(Math.sin(p.ph)*.4+p.vx)*dt;p.y+=p.vy*dt;p.a-=.0015*dt;
+   if(p.y<-10||p.a<=0){Object.assign(p,mk("ember",false));continue;}
+   cx.globalCompositeOperation="lighter";cx.fillStyle="rgba("+p.c+","+p.a*.25+")";cx.beginPath();cx.arc(p.x,p.y,p.s*3,0,PI2);cx.fill();
+   cx.fillStyle="rgba("+p.c+","+p.a+")";cx.beginPath();cx.arc(p.x,p.y,p.s,0,PI2);cx.fill();cx.globalCompositeOperation="source-over";}
+  else if(k==="confetti"){p.ph+=.12*dt;p.r+=p.vr*dt;p.x+=(p.vx+Math.sin(p.ph*.5)*.5)*dt;p.y+=p.vy*dt;if(p.y>H+10){p.y=-10;p.x=R(0,W);}
+   cx.save();cx.globalAlpha=.9;cx.translate(p.x,p.y);cx.rotate(p.r);cx.scale(1,Math.cos(p.ph));cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cx.restore();}
+  else if(k==="heart"){p.ph+=.03*dt;p.x+=(Math.sin(p.ph)*.5+p.vx)*dt;p.y+=p.vy*dt;if(p.y<-30)Object.assign(p,mk("heart",false));
+   cx.globalAlpha=p.a;cx.fillStyle=p.c;heart(p.x,p.y,p.s);}
+  else if(k==="petal"){p.ph+=.04*dt;p.r+=p.vr*dt;p.x+=(p.vx+Math.sin(p.ph)*.6)*dt;p.y+=p.vy*dt;if(p.y>H+10||p.x>W+10){p.x=R(-120,W);p.y=-10;}
+   cx.save();cx.globalAlpha=p.a;cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.beginPath();cx.ellipse(0,0,p.s,p.s*.55,0,0,PI2);cx.fill();cx.restore();}
+  else if(k==="star"){cx.globalAlpha=(.3+.7*Math.abs(Math.sin(T*.03+p.ph)))*p.a;cx.fillStyle="#ffecbe";sparkle(p.x,p.y,p.s);}
+ }
+ cx.globalAlpha=1;
+ for(const e of E){
+  e.ph+=.02*dt;e.x+=(e.vx+Math.sin(e.ph)*.3)*dt;e.y+=e.vy*dt;
+  if(e.y>H+50||e.y<-50||e.x<-50||e.x>W+50)Object.assign(e,mkEmoji(false,c.emoji,c.up));
+  cx.save();cx.globalAlpha=e.a;cx.translate(e.x,e.y);cx.rotate(Math.sin(e.ph)*.2);cx.font=e.s+"px serif";cx.textAlign="center";cx.textBaseline="middle";cx.fillText(e.e,0,0);cx.restore();
+ }
+ if(c.fw){
+  nextFw-=dt;
+  if(nextFw<=0){FW.push({x:R(W*.15,W*.85),y:H+10,vy:-R(7,10),ty:R(H*.12,H*.45),c:pick(["246,211,101","255,126,179","122,252,255","178,141,255","255,255,255"])});nextFw=R(45,110);}
+  cx.globalCompositeOperation="lighter";
+  for(let i=FW.length-1;i>=0;i--){const r=FW[i];r.y+=r.vy*dt;
+   cx.fillStyle="rgba("+r.c+",.9)";cx.beginPath();cx.arc(r.x,r.y,2,0,PI2);cx.fill();
+   if(r.y<=r.ty){const n=(R(28,46))|0;for(let j=0;j<n;j++){const a=PI2*j/n+R(-.1,.1),sp=R(1.5,4.2);if(SP.length<700)SP.push({x:r.x,y:r.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,l:1,d:R(.008,.016),c:r.c});}FW.splice(i,1);}}
+  for(let i=SP.length-1;i>=0;i--){const s=SP[i];s.vx*=.985;s.vy+=.045*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.l-=s.d*dt;
+   if(s.l<=0){SP.splice(i,1);continue;}
+   cx.fillStyle="rgba("+s.c+","+s.l+")";cx.beginPath();cx.arc(s.x,s.y,1.8,0,PI2);cx.fill();}
+  cx.globalCompositeOperation="source-over";
+ }
+}
+window.evFxStart=function(id){
+ id=id||"";
+ if(id===cur)return;
+ cur=id;cancelAnimationFrame(raf);raf=0;P=[];E=[];FW=[];SP=[];
+ try{cx.clearRect(0,0,W,H)}catch(_){}
+ dc.innerHTML=(id&&DECO[id])||"";
+ if(!id||!CFG[id]){cv.style.display="none";return;}
+ if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){cv.style.display="none";return;}
+ size();cv.style.display="block";
+ const c=CFG[id],k=Math.min(1,W/1100)*.7+.3;
+ for(let i=0;i<Math.round(c.n*k);i++)P.push(mk(c.kind,true));
+ if(c.emoji)for(let i=0;i<c.en;i++)E.push(mkEmoji(true,c.emoji,c.up));
+ last=0;nextFw=30;raf=requestAnimationFrame(loop);
+};
+window.addEventListener("resize",()=>{if(cur)size();});
+}
+
+/* ---- parent lock: every visitor can change the PIN (on this device); admin also syncs it ---- */
+const TX={
+ fa:{btn:"قفل والدین",title:"تنظیم قفل والدین",hint:"رمز فعلی را وارد کن و رمز جدید (۴ تا ۶ رقم) بگذار.",cur:"رمز فعلی",n1:"رمز جدید",n2:"تکرار رمز جدید",save:"ذخیره",cancel:"انصراف",reset:"بازگشت به ۱۲۳۴",bad:"رمز فعلی اشتباه است.",fmt:"رمز باید ۴ تا ۶ رقم باشد.",mis:"تکرار رمز یکسان نیست.",ok:"رمز والدین ذخیره شد.",rst:"رمز به پیش‌فرض برگشت."},
+ en:{btn:"Parental lock",title:"Parental lock settings",hint:"Enter the current PIN and choose a new 4-6 digit PIN.",cur:"Current PIN",n1:"New PIN",n2:"Repeat new PIN",save:"Save",cancel:"Cancel",reset:"Reset to 1234",bad:"Current PIN is wrong.",fmt:"PIN must be 4-6 digits.",mis:"PINs do not match.",ok:"Parental PIN saved.",rst:"PIN reset to default."},
+ ar:{btn:"قفل الوالدين",title:"إعدادات قفل الوالدين",hint:"أدخل الرمز الحالي ثم رمزًا جديدًا من 4 إلى 6 أرقام.",cur:"الرمز الحالي",n1:"رمز جديد",n2:"تأكيد الرمز",save:"حفظ",cancel:"إلغاء",reset:"إعادة إلى 1234",bad:"الرمز الحالي غير صحيح.",fmt:"يجب أن يكون الرمز من 4 إلى 6 أرقام.",mis:"الرمزان غير متطابقين.",ok:"تم حفظ الرمز.",rst:"تمت إعادة الرمز."},
+ tr:{btn:"Ebeveyn kilidi",title:"Ebeveyn kilidi ayarları",hint:"Mevcut PIN'i girin ve 4-6 haneli yeni bir PIN seçin.",cur:"Mevcut PIN",n1:"Yeni PIN",n2:"Yeni PIN tekrar",save:"Kaydet",cancel:"İptal",reset:"1234'e sıfırla",bad:"Mevcut PIN yanlış.",fmt:"PIN 4-6 haneli olmalı.",mis:"PIN'ler eşleşmiyor.",ok:"PIN kaydedildi.",rst:"PIN sıfırlandı."}
+};
+const L=()=>TX[(typeof curLang!=="undefined"&&TX[curLang])?curLang:"fa"];
+const tg=$("kidsToggle");
+if(tg&&!$("kidsLockBtn")){
+ const b=document.createElement("button");b.id="kidsLockBtn";b.type="button";
+ b.innerHTML='<i class="ic ic-admin"></i><span class="lbl"></span>';
+ tg.insertAdjacentElement("afterend",b);
+ const m=document.createElement("div");m.id="pinSetModal";
+ m.innerHTML='<div class="pinBox"><h3></h3><p></p><input id="pinSetCur" type="tel" inputmode="numeric" maxlength="6" autocomplete="off"><input id="pinSetNew" type="tel" inputmode="numeric" maxlength="6" autocomplete="off"><input id="pinSetNew2" type="tel" inputmode="numeric" maxlength="6" autocomplete="off"><div class="pinActions"><button id="pinSetCancel" type="button"></button><button id="pinSetSave" type="button" class="primary"></button></div><button id="pinSetReset" type="button" style="margin-top:10px;width:100%"></button></div>';
+ document.body.appendChild(m);
+ const paint=()=>{const t=L();b.querySelector(".lbl").textContent=t.btn;m.querySelector("h3").textContent=t.title;m.querySelector("p").textContent=t.hint;
+  $("pinSetCur").placeholder=t.cur;$("pinSetNew").placeholder=t.n1;$("pinSetNew2").placeholder=t.n2;
+  $("pinSetSave").textContent=t.save;$("pinSetCancel").textContent=t.cancel;$("pinSetReset").textContent=t.reset;};
+ paint();setInterval(paint,3000);
+ const num=id=>normDigits(($(id).value||"").trim());
+ const close=()=>m.classList.remove("show");
+ const persist=pin=>{try{if(pin)localStorage.setItem("amtv-kids-pin",pin);else localStorage.removeItem("amtv-kids-pin");}catch(_){}
+  if(isAdmin){state.schedule=state.schedule||{};if(pin)state.schedule.kidsPin=pin;else delete state.schedule.kidsPin;try{scheduleSave()}catch(_){}}};
+ b.addEventListener("click",()=>{["pinSetCur","pinSetNew","pinSetNew2"].forEach(i=>$(i).value="");m.classList.add("show");setTimeout(()=>$("pinSetCur").focus(),80);try{closeAllMenus()}catch(_){}});
+ $("pinSetCancel").addEventListener("click",close);
+ m.addEventListener("click",e=>{if(e.target===m)close();});
+ $("pinSetSave").addEventListener("click",()=>{
+  const t=L(),cur=num("pinSetCur"),n1=num("pinSetNew"),n2=num("pinSetNew2");
+  if(cur!==getKidsPin()){notify(t.bad);return;}
+  if(!/^\d{4,6}$/.test(n1)){notify(t.fmt);return;}
+  if(n1!==n2){notify(t.mis);return;}
+  persist(n1);close();notify(t.ok);
+ });
+ $("pinSetReset").addEventListener("click",()=>{
+  const t=L();if(num("pinSetCur")!==getKidsPin()){notify(t.bad);return;}
+  persist("1234");close();notify(t.rst);
+ });
+}
+})();
+
 </script>
 </body>
         </html>
