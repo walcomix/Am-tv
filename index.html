@@ -2965,7 +2965,7 @@ function syncProgressUI(){
     hide(ms){setTimeout(()=>{box.style.display="none"},ms||0)},
     set(pct,title,detail){
       pct=Math.max(0,Math.min(100,Math.round(pct)));
-      box.querySelector("#spPct").textContent=pct.toLocaleString("fa-IR")+"٪";
+      box.querySelector("#spPct").textContent=pct.toLocaleString("fa-IR")+"٪";try{if(window.__syncBtnLbl)window.__syncBtnLbl.textContent=pct.toLocaleString("fa-IR")+"٪ همگام‌سازی…"}catch(_){}
       box.querySelector("#spBar").style.width=pct+"%";
       if(title!=null)box.querySelector("#spTitle").textContent=title;
       if(detail!=null)box.querySelector("#spDetail").innerHTML=detail;
@@ -3043,7 +3043,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
     }
   }finally{window.__feedSyncBusy=0}
   state.lastSyncAt=Date.now();state.syncMeta=state.syncMeta||{};okSections.forEach(sc=>{state.syncMeta[sc]=Date.now()});renderAll();
-  ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","کل ویدیوهای همگام‌شده: <b>"+total.toLocaleString("fa-IR")+"</b>"+(errors.length?"<br><span style='color:#ff8b8b'>"+esc(syncErrSummary(errors,N))+"</span>":""));
+  ui.set(100,errors.length?"پایان با خطا":"همگام‌سازی کامل شد","✅ <b>"+total.toLocaleString("fa-IR")+"</b> ویدیو از <b>"+N.toLocaleString("fa-IR")+"</b> کانال همگام شد"+(errors.length?"<br><span style='color:#ff8b8b'>"+esc(syncErrSummary(errors,N))+"</span>":""));
   setStatus(errors.length?"خطا: "+syncErrSummary(errors,N):(total?"همگام شد: "+total+" ویدئو":"اتصال موفق بود؛ در ۲۴ ساعت اخیر ویدئوی تازه‌ای در RSS پیدا نشد."));
   clearTimeout(saveTimer);
   /* show the synced channel's playlist and start from the first video */
@@ -3066,7 +3066,7 @@ async function syncChannelFeeds(showNotice=true,onlyFeedId="",sectionFilter=""){
   }catch(e){console.warn("post-sync select failed",e)}
   try{ui.set(100,null,null);await withTimeout(saveRemoteState(),15000,"save")}catch(e){setStatus((status?.textContent||"")+" (ذخیره: "+e.message+")")}
   if(showNotice)notify(errors.length?"!":"✓");
-  if(errors.length)ui.done();else ui.hide(1200);
+  ui.done();
 }
 function renderLastSync(){/* no-op without el */}
 
@@ -4463,7 +4463,7 @@ function eventKey(){const ev=activeEvent();return ev?String(ev.id):"";}
 function eventMsg(e){if(e.custom)return e.msg||e.name||"";return (e.msg&&(e.msg[curLang]||e.msg.en))||"";}
 function renderEventBanner(){
   const el=$("eventBanner");if(!el)return;
-  document.body.classList.remove("event-skin-christmas","event-skin-halloween","event-skin-nowruz","event-skin-yalda","event-skin-newyear","event-skin-valentine");
+  [...document.body.classList].filter(c=>c.startsWith("event-skin-")).forEach(c=>document.body.classList.remove(c));
   const ev=(getPrefs().eventTheme!==false)?activeEvent():null;
   let dismissed=false;
   try{dismissed=!!(ev&&sessionStorage.getItem("evdismiss-"+ev.id))}catch(_){}
@@ -4502,6 +4502,17 @@ function openEventSkinTest(d){
   $("eventSkinTestSubtitle").textContent=d.subtitle||"این صفحه نمای کلی پوسته و اجزای صفحهٔ اصلی را نشان می‌دهد.";
   page.classList.add("show");document.body.style.overflow="hidden";
 }
+window.previewBuiltinSkin=function(id){
+  if(!["christmas","halloween","nowruz","yalda","newyear","valentine"].includes(id))return false;
+  [...document.body.classList].filter(c=>c.startsWith("event-skin-")).forEach(c=>document.body.classList.remove(c));
+  document.body.classList.add("event-skin-"+id);try{window.evFxStart&&window.evFxStart(id)}catch(_){}
+  window.scrollTo({top:0,behavior:"smooth"});
+  let b=document.getElementById("evPrevExit");if(b)b.remove();
+  b=document.createElement("button");b.id="evPrevExit";b.type="button";b.textContent="✕ پایان پیش‌نمایش پوسته";
+  b.style.cssText="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:100600;padding:12px 18px;border-radius:999px;font-weight:800";
+  b.onclick=()=>{b.remove();try{window.evFxStart&&window.evFxStart("__")}catch(_){}renderEventBanner();};
+  document.body.appendChild(b);return true;
+};
 function closeEventSkinTest(){const page=$("eventSkinTestPage");if(page)page.classList.remove("show");document.body.style.overflow="";}
 $("eventSkinTestClose")?.addEventListener("click",closeEventSkinTest);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("eventSkinTestPage")?.classList.contains("show"))closeEventSkinTest()});
@@ -4516,7 +4527,8 @@ function previewEventData(d,shouldScroll=false){
 }
 function renderEventList(){
   const root=$("evList");if(!root)return;root.innerHTML="";
-  const builtRoot=$("evBuiltinList");if(builtRoot){builtRoot.innerHTML="";BUILTIN_EVENTS.forEach(e=>{const item=document.createElement("div");item.className="listitem";const info=document.createElement("div");info.className="iteminfo";const name=document.createElement("div");name.className="itemname";name.textContent=((e.msg&&(e.msg[curLang]||e.msg.en))||e.id);const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=e.start+" · "+e.days+" روز · خودکار";info.append(name,meta);const actions=document.createElement("div");actions.className="ev-list-actions";const preview=document.createElement("button");preview.type="button";preview.className="small";preview.innerHTML='<i class="ic ic-eye"></i> پیش‌نمایش';preview.onclick=()=>previewEventData({...e,name:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,msg:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,mediaUrl:e.mediaUrl||"",characterUrl:e.characterUrl||"",animation:e.animation||"none",subtitle:e.subtitle||""},true);actions.append(preview);item.append(info,actions);builtRoot.appendChild(item);});}
+  const builtRoot=$("evBuiltinList");if(builtRoot){builtRoot.innerHTML="";BUILTIN_EVENTS.forEach(e=>{const item=document.createElement("div");item.className="listitem";const info=document.createElement("div");info.className="iteminfo";const name=document.createElement("div");name.className="itemname";name.textContent=((e.msg&&(e.msg[curLang]||e.msg.en))||e.id);const meta=document.createElement("div");meta.className="itemmeta";meta.textContent=e.start+" · "+e.days+" روز · خودکار";info.append(name,meta);const actions=document.createElement("div");actions.className="ev-list-actions";const preview=document.createElement("button");preview.type="button";preview.className="small";preview.innerHTML='<i class="ic ic-eye"></i> پیش‌نمایش';preview.onclick=()=>(window.previewBuiltinSkin&&window.previewBuiltinSkin(e.id))||previewEventData({...e,name:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,msg:(e.msg&&(e.msg[curLang]||e.msg.en))||e.id,mediaUrl:e.mediaUrl||"",characterUrl:e.characterUrl||"",animation:e.animation||"none",subtitle:e.subtitle||""},true);actions.append(preview);item.append(info,actions);builtRoot.appendChild(item);});}
+  if(builtRoot&&(state.events?.custom||[]).length){const w=document.createElement("button");w.type="button";w.className="small danger";w.textContent="پاک‌کردن رویدادهای سفارشی ذخیره‌شده ("+state.events.custom.length+")";w.onclick=()=>{if(!confirm("همهٔ رویدادهای سفارشی ذخیره‌شده حذف شوند؟ (پوسته‌های داخلی پاک نمی‌شوند)"))return;state.events.custom=[];resetEventForm();lastEventKey="__";scheduleSave();renderEventList();renderEventBanner();};builtRoot.appendChild(w);}
   const ev=state.events||{custom:[]};
   const sel=$("evEnabled");
   if(sel&&document.activeElement!==sel)sel.value=ev.enabled===false?"off":"on";
@@ -6159,10 +6171,10 @@ async function syncFeedsForSection(section,button){
   if(!isAdmin){notify(t("msgNoAdmin"));return;}
   if(button)button.disabled=true;
   const label=button?.querySelector(".lbl");const oldLabel=label?.textContent;
-  if(label)label.textContent="در حال همگام‌سازی…";
+  if(label)label.textContent="در حال همگام‌سازی…";window.__syncBtnLbl=label||null;
   try{await syncChannelFeeds(true,"",section);}
   catch(e){notify("همگام‌سازی ناموفق بود: "+(e?.message||e));}
-  finally{if(button)button.disabled=false;if(label&&oldLabel)label.textContent=oldLabel;}
+  finally{window.__syncBtnLbl=null;if(button)button.disabled=false;if(label&&oldLabel)label.textContent=oldLabel;}
 }
 // Section-specific sync controls live inside each admin section, never in the public/top navigation.
 function mountSectionSyncButtons(){
@@ -6330,7 +6342,7 @@ $("fbClearButton").addEventListener("click",()=>{
   if(!isAdmin)return;
   state.fallback={type:"none",url:""};fallbackKey="";scheduleSave();notify(t("msgFbSaved"));
 });
-$("evEnabled").addEventListener("change",e=>{if(!isAdmin)return;state.events.enabled=e.target.value!=="off";lastEventKey="__";scheduleSave();renderEventList();});
+$("evEnabled").addEventListener("change",e=>{if(!isAdmin)return;state.events.enabled=e.target.value!=="off";lastEventKey="__";try{renderEventBanner()}catch(_){}scheduleSave();renderEventList();});
 $("evAddButton").addEventListener("click",async()=>{
   if(!isAdmin)return;
   const d=eventFormObject();
@@ -7475,4 +7487,3 @@ if(tg&&!$("kidsLockBtn")){
 
 </script>
 </body>
-        </html>
